@@ -161,14 +161,20 @@ sub writepl {
 sub define_delay {
 	my ($self) = @_;
 	my $vil = $self->{'vil'};
-	return if ($self->{'delay_live'} eq $self->{'live'});
 
-	$self->{'rolestate'} |= $sow->{'MASKSTATE_HEAL'};
-	$self->{'live'} = $self->{'delay_live'};
-	if( $self->{'live'} eq 'live' ){
-		$self->{'deathday'} = -1;
-	} else {
-		$self->{'deathday'} = $vil->{'turn'};
+	# 状態確定。
+	if ($self->{'delay_rolestate'} != $self->{'rolestate'}){
+		$self->{'rolestate'} = $self->{'delay_rolestate'};
+	}
+
+	# 生死確定。
+	if ($self->{'delay_live'} ne $self->{'live'}){
+		$self->{'live'} = $self->{'delay_live'};
+		if( $self->{'live'} eq 'live' ){
+			$self->{'deathday'} = -1;
+		} else {
+			$self->{'deathday'} = $vil->{'turn'};
+		}
 	}
 }
 
