@@ -1486,10 +1486,6 @@ sub Regret{
 	# 後追いした人に他の死因がないなら、後追いも表記。
 	# ただし、後追い者の行動は先に済ませてあるので、ここは表記のみ。
 	foreach $targetpl (@$pllist){
-		# 状態確定。
-		if ($targetpl->{'delay_rolestate'} != $targetpl->{'rolestate'}){
-			$targetpl->{'rolestate'} = $targetpl->{'delay_rolestate'};
-		}
 		$targetpl->define_delay();
 		if ($targetpl->{'delay_live'} eq 'live' ){
 			# 他の理由では死ななかった人だけ、後追いチェック。
@@ -1635,17 +1631,8 @@ sub revenge {
 
 sub nowdead {
 	my ($sow, $vil, $killer, $deadpl, $deadflag, $logfile, $score) = @_;
-	if ( 'zombie' eq $deadflag ){
-		# 感染の処理。
-		&toZombie($sow,$vil,$deadpl,$logfile);
-	} else {
-		$deadpl->{'deathday'} = $vil->{'turn'};
-		$deadpl->{      'live'} = $deadflag;
-		$deadpl->{'delay_live'} = $deadflag;
-		&cycle($sow, $vil, $deadpl, $logfile, $score);
-		&revenge($sow, $vil, $killer, $deadpl, $logfile, $score);
-	}
-
+	&dead($sow, $vil, $killer, $deadpl, $deadflag, $logfile, $score);
+	$deadpl->define_delay();
 }
 
 sub dead {
@@ -1665,7 +1652,7 @@ sub heal {
 
 	# 蘇生した場合、ゾンビ状態、負傷状態が癒える。
 	$deadpl->{'delay_live'} = 'live';
-	$deadpl->{'rolestate'} |= $sow->{'MASKSTATE_HEAL'};
+	$deadpl->{'delay_rolestate'} |= $sow->{'MASKSTATE_HEAL'};
 
 	# 能力行使のリセット
 	$deadpl->{'vote1'} = $sow->{'TARGETID_TRUST'};

@@ -56,134 +56,133 @@ sub GetConfig {
 		'saving',
 	);
 
-		# 発言制限
-		my %saycnt_say5x200 = (
-			CAPTION     => '寡黙への挑戦',
-			HELP        => ' （24h回復） 200字x5回/5act',
-			COST_SAY    => 'count', # 回数勘定
-			COST_MEMO   => 'none',  # 無制限
-			COST_ACT    => 'count', # 回数勘定
-			RECOVERY    =>   1, # 発言復活
-			MAX_SAY     =>   5, # 発言/憑依回数
-			MAX_TSAY    =>   5, # 独り言発言回数
-			MAX_SPSAY   =>   5, # 共鳴発言回数
-			MAX_WSAY    =>  10, # 囁き/念話発言回数
-			MAX_GSAY    =>  10, # うめき発言回数
-			MAX_PSAY    =>  10, # プロローグ発言回数
-			MAX_ESAY    => 999, # エピローグ発言回数
-			MAX_SAY_ACT =>   5, # アクション回数
-			ADD_SAY     =>   0, # 促しで増える発言回数
-			MAX_ADDSAY  =>   0, # 促しの回数
-			MAX_MESCNT  => 200, # 一発言の最大文字数
-			MAX_MESLINE =>  10, # 一発言の最大行数
-		);
+	# 発言制限
+	my %saycnt_say5x200 = (
+		CAPTION     => '寡黙への挑戦',
+		HELP        => ' （24h回復） 200字x5回/5act',
+		COST_SAY    => 'count', # 回数勘定
+		COST_MEMO   => 'none',  # 無制限
+		COST_ACT    => 'count', # 回数勘定
+		RECOVERY    =>   1, # 発言復活
+		MAX_SAY     =>   5, # 発言/憑依回数
+		MAX_TSAY    =>   5, # 独り言発言回数
+		MAX_SPSAY   =>   5, # 共鳴発言回数
+		MAX_WSAY    =>  10, # 囁き/念話発言回数
+		MAX_GSAY    =>  10, # うめき発言回数
+		MAX_PSAY    =>  10, # プロローグ発言回数
+		MAX_ESAY    => 999, # エピローグ発言回数
+		MAX_SAY_ACT =>   5, # アクション回数
+		ADD_SAY     =>   0, # 促しで増える発言回数
+		MAX_ADDSAY  =>   0, # 促しの回数
+		MAX_MESCNT  => 200, # 一発言の最大文字数
+		MAX_MESLINE =>  10, # 一発言の最大行数
+	);
 
-		# 発言制限
-		my %saycnt_say5x300 = (
-			CAPTION     => '小論文への挑戦',
-			HELP        => ' （24h回復） 300字x5回/15act',
-			COST_SAY    => 'count', # 回数勘定
-			COST_MEMO   => 'none',  # 無制限
-			COST_ACT    => 'count', # 回数勘定
-			RECOVERY    =>   1, # 発言復活
-			MAX_SAY     =>   5, # 発言/憑依回数
-			MAX_TSAY    =>   5, # 独り言発言回数
-			MAX_SPSAY   =>   5, # 共鳴発言回数
-			MAX_WSAY    =>  10, # 囁き/念話発言回数
-			MAX_GSAY    =>  10, # うめき発言回数
-			MAX_PSAY    =>  10, # プロローグ発言回数
-			MAX_ESAY    => 999, # エピローグ発言回数
-			MAX_SAY_ACT =>  15, # アクション回数
-			ADD_SAY     =>   0, # 促しで増える発言回数
-			MAX_ADDSAY  =>   0, # 促しの回数
-			MAX_MESCNT  => 300, # 一発言の最大文字数
-			MAX_MESLINE =>  10, # 一発言の最大行数
-		);
+	# 発言制限
+	my %saycnt_say5x300 = (
+		CAPTION     => '小論文への挑戦',
+		HELP        => ' （24h回復） 300字x5回/15act',
+		COST_SAY    => 'count', # 回数勘定
+		COST_MEMO   => 'none',  # 無制限
+		COST_ACT    => 'count', # 回数勘定
+		RECOVERY    =>   1, # 発言復活
+		MAX_SAY     =>   5, # 発言/憑依回数
+		MAX_TSAY    =>   5, # 独り言発言回数
+		MAX_SPSAY   =>   5, # 共鳴発言回数
+		MAX_WSAY    =>  10, # 囁き/念話発言回数
+		MAX_GSAY    =>  10, # うめき発言回数
+		MAX_PSAY    =>  10, # プロローグ発言回数
+		MAX_ESAY    => 999, # エピローグ発言回数
+		MAX_SAY_ACT =>  15, # アクション回数
+		ADD_SAY     =>   0, # 促しで増える発言回数
+		MAX_ADDSAY  =>   0, # 促しの回数
+		MAX_MESCNT  => 300, # 一発言の最大文字数
+		MAX_MESLINE =>  10, # 一発言の最大行数
+	);
 
-		my %saycnt_saving = (
-			CAPTION     => '節約',
-			HELP        => '250字x20回/15act',
-			COST_SAY    => 'count', # 回数勘定
-			COST_MEMO   => 'count', # 回数勘定
-			COST_ACT    => 'count', # 回数勘定
-			RECOVERY    =>   0, # 発言復活
-			MAX_SAY     =>  20, # 発言/憑依回数
-			MAX_TSAY    =>  10, # 独り言発言回数
-			MAX_SPSAY   =>  10, # 共鳴発言回数
-			MAX_WSAY    =>  30, # 囁き/念話発言回数
-			MAX_GSAY    =>  20, # うめき発言回数
-			MAX_PSAY    =>  20, # プロローグ発言回数
-			MAX_ESAY    => 999, # エピローグ発言回数
-			MAX_SAY_ACT =>  15, # アクション回数
-			ADD_SAY     =>   0, # 促しで増える発言回数
-			MAX_ADDSAY  =>   0, # 促しの回数
-			MAX_MESCNT  => 250, # 一発言の最大文字数
-			MAX_MESLINE =>  10, # 一発言の最大行数
-		);
+	my %saycnt_saving = (
+		CAPTION     => '節約',
+		HELP        => '250字x20回/15act',
+		COST_SAY    => 'count', # 回数勘定
+		COST_MEMO   => 'count', # 回数勘定
+		COST_ACT    => 'count', # 回数勘定
+		RECOVERY    =>   0, # 発言復活
+		MAX_SAY     =>  20, # 発言/憑依回数
+		MAX_TSAY    =>  10, # 独り言発言回数
+		MAX_SPSAY   =>  10, # 共鳴発言回数
+		MAX_WSAY    =>  30, # 囁き/念話発言回数
+		MAX_GSAY    =>  20, # うめき発言回数
+		MAX_PSAY    =>  20, # プロローグ発言回数
+		MAX_ESAY    => 999, # エピローグ発言回数
+		MAX_SAY_ACT =>  15, # アクション回数
+		ADD_SAY     =>   0, # 促しで増える発言回数
+		MAX_ADDSAY  =>   0, # 促しの回数
+		MAX_MESCNT  => 250, # 一発言の最大文字数
+		MAX_MESLINE =>  10, # 一発言の最大行数
+	);
 
-		my %saycnt_tiny = (
-			CAPTION     => 'たりない',
-			HELP        => '（24h回復）（メモは20pt） 333pt/9act',
-			COST_SAY    => 'point', # バイト勘定
-			COST_MEMO   => 'point', # 20pt勘定
-			COST_ACT    => 'count', # 回数勘定
-			RECOVERY    =>    1, # 発言復活
-			MAX_SAY     =>  333, # 発言/憑依pt数
-			MAX_TSAY    =>  999, # 独り言発言pt数
-			MAX_SPSAY   =>  333, # 共鳴発言pt数
-			MAX_WSAY    =>  999, # 囁き/念話発言pt数
-			MAX_GSAY    =>  999, # うめき発言pt数
-			MAX_PSAY    =>  999, # プロローグ発言pt数
-			MAX_ESAY    => 9999, # エピローグ発言pt数
-			MAX_SAY_ACT =>    9, # アクション回数
-			ADD_SAY     =>    0, # 促しで増える発言pt数
-			MAX_ADDSAY  =>    0, # 促しの回数
-			MAX_MESCNT  =>  300, # 一発言の最大文字数
-			MAX_MESLINE =>   10, # 一発言の最大行数
-		);
+	my %saycnt_tiny = (
+		CAPTION     => 'たりない',
+		HELP        => '（24h回復）（メモは20pt） 333pt/9act',
+		COST_SAY    => 'point', # バイト勘定
+		COST_MEMO   => 'point', # 20pt勘定
+		COST_ACT    => 'count', # 回数勘定
+		RECOVERY    =>    1, # 発言復活
+		MAX_SAY     =>  333, # 発言/憑依pt数
+		MAX_TSAY    =>  999, # 独り言発言pt数
+		MAX_SPSAY   =>  333, # 共鳴発言pt数
+		MAX_WSAY    =>  999, # 囁き/念話発言pt数
+		MAX_GSAY    =>  999, # うめき発言pt数
+		MAX_PSAY    =>  999, # プロローグ発言pt数
+		MAX_ESAY    => 9999, # エピローグ発言pt数
+		MAX_SAY_ACT =>    9, # アクション回数
+		ADD_SAY     =>    0, # 促しで増える発言pt数
+		MAX_ADDSAY  =>    0, # 促しの回数
+		MAX_MESCNT  =>  300, # 一発言の最大文字数
+		MAX_MESLINE =>   10, # 一発言の最大行数
+	);
 
-		my %saycnt_weak = (
-			CAPTION     => 'むりせず',
-			HELP        => '（24h回復）（メモは20pt） 777pt/15act',
-			COST_SAY    => 'point', # バイト勘定
-			COST_MEMO   => 'point', # 20pt勘定
-			COST_ACT    => 'count', # 回数勘定
-			RECOVERY    =>    1, # 発言復活
-			MAX_SAY     =>  777, # 発言/憑依pt数
-			MAX_TSAY    =>  777, # 独り言発言pt数
-			MAX_SPSAY   =>  777, # 共鳴発言pt数
-			MAX_WSAY    =>  999, # 囁き/念話発言pt数
-			MAX_GSAY    =>  999, # うめき発言pt数
-			MAX_PSAY    => 1200, # プロローグ発言pt数
-			MAX_ESAY    => 9999, # エピローグ発言pt数
-			MAX_SAY_ACT =>   15, # アクション回数
-			ADD_SAY     =>    0, # 促しで増える発言pt数
-			MAX_ADDSAY  =>    0, # 促しの回数
-			MAX_MESCNT  =>  600, # 一発言の最大文字数
-			MAX_MESLINE =>   15, # 一発言の最大行数
-		);
+	my %saycnt_weak = (
+		CAPTION     => 'むりせず',
+		HELP        => '（24h回復）（メモは20pt） 777pt/15act',
+		COST_SAY    => 'point', # バイト勘定
+		COST_MEMO   => 'point', # 20pt勘定
+		COST_ACT    => 'count', # 回数勘定
+		RECOVERY    =>    1, # 発言復活
+		MAX_SAY     =>  777, # 発言/憑依pt数
+		MAX_TSAY    =>  777, # 独り言発言pt数
+		MAX_SPSAY   =>  777, # 共鳴発言pt数
+		MAX_WSAY    =>  999, # 囁き/念話発言pt数
+		MAX_GSAY    =>  999, # うめき発言pt数
+		MAX_PSAY    => 1200, # プロローグ発言pt数
+		MAX_ESAY    => 9999, # エピローグ発言pt数
+		MAX_SAY_ACT =>   15, # アクション回数
+		ADD_SAY     =>    0, # 促しで増える発言pt数
+		MAX_ADDSAY  =>    0, # 促しの回数
+		MAX_MESCNT  =>  600, # 一発言の最大文字数
+		MAX_MESLINE =>   15, # 一発言の最大行数
+	);
 
-		my %saycnt_juna = (
-			CAPTION     => 'しんもん',
-			HELP        => '（24h回復） 1200pt/24act',
-			COST_SAY    => 'point', # バイト勘定
-			COST_MEMO   => 'count', # 回数勘定
-			COST_ACT    => 'count', # 回数勘定
-			RECOVERY    =>    1, # 発言復活
-			MAX_SAY     => 1200, # 発言/憑依pt数
-			MAX_TSAY    =>  700, # 独り言発言pt数
-			MAX_SPSAY   =>  700, # 共鳴発言pt数
-			MAX_WSAY    => 3000, # 囁き/念話発言pt数
-			MAX_GSAY    => 2000, # うめき発言pt数
-			MAX_PSAY    => 2000, # プロローグ発言pt数
-			MAX_ESAY    => 9999, # エピローグ発言pt数
-			MAX_SAY_ACT =>   24, # アクション回数
-			ADD_SAY     =>  200, # 促しで増える発言pt数
-			MAX_ADDSAY  =>    0, # 促しの回数
-			MAX_MESCNT  => 1000, # 一発言の最大文字バイト数
-			MAX_MESLINE =>   20, # 一発言の最大行数
-		);
-
+	my %saycnt_juna = (
+		CAPTION     => 'しんもん',
+		HELP        => '（24h回復） 1200pt/24act',
+		COST_SAY    => 'point', # バイト勘定
+		COST_MEMO   => 'count', # 回数勘定
+		COST_ACT    => 'count', # 回数勘定
+		RECOVERY    =>    1, # 発言復活
+		MAX_SAY     => 1200, # 発言/憑依pt数
+		MAX_TSAY    =>  700, # 独り言発言pt数
+		MAX_SPSAY   =>  700, # 共鳴発言pt数
+		MAX_WSAY    => 3000, # 囁き/念話発言pt数
+		MAX_GSAY    => 2000, # うめき発言pt数
+		MAX_PSAY    => 2000, # プロローグ発言pt数
+		MAX_ESAY    => 9999, # エピローグ発言pt数
+		MAX_SAY_ACT =>   24, # アクション回数
+		ADD_SAY     =>  200, # 促しで増える発言pt数
+		MAX_ADDSAY  =>    0, # 促しの回数
+		MAX_MESCNT  => 1000, # 一発言の最大文字バイト数
+		MAX_MESLINE =>   20, # 一発言の最大行数
+	);
 
 	my %saycnt = (
 		ORDER    => \@saycnt_order,
