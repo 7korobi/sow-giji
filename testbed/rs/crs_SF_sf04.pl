@@ -1,4 +1,4 @@
-package SWResource_SF_sf10;
+package SWResource_SF_sf04;
 
 #----------------------------------------
 # キャラセット
@@ -69,8 +69,8 @@ sub GetRSChr {
 	);
 
 	my %charset = (
-		CAPTION        => '明後日への道標（ナユタ）',
-		NPCID          => 'sf10',
+		CAPTION        => '明後日への道標',
+		NPCID          => 'sf04',
 		CHRNAME        => \%chrname,
 		CHRJOB         => \%chrjob,
 		ORDER          => \@order,

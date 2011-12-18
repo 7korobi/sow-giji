@@ -1,4 +1,4 @@
-package SWResource_sf_sf10;
+package SWResource_SF_sf10;
 
 #----------------------------------------
 # キャラセット
