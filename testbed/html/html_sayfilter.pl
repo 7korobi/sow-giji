@@ -119,10 +119,11 @@ _HTML_
 
 	my $i;
 	for ($i = 0; $i <= $vil->{'turn'}; $i++) {
+    next if ($i > $vil->{'epilogue'});
+
 		my $turnname = "$i日目";
 		$turnname = "プロローグ" if ($i == 0);
 		$turnname = "エピローグ" if ($i == $vil->{'epilogue'});
-		$turnname = "終了" if ($i > $vil->{'epilogue'});
 
 		my $postturn = "";
     if ($i == $vil->{'turn'}){

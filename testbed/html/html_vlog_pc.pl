@@ -50,6 +50,18 @@ _HTML_
 		&SWHtmlSayFilter::OutHTMLTools    ($sow, $vil);
 		&SWHtmlSayFilter::OutHTMLFooter   ($sow, $vil);
 
+		my $secret_show = $vil->isepilogue();
+		print <<"_HTML_";
+<script>
+window.gon = {};
+_HTML_
+		$vil->gon_story($secret_show);
+		$vil->gon_event($secret_show);
+		$vil->gon_potofs($secret_show);
+		print <<"_HTML_";
+</script>
+_HTML_
+
 		return;
 	}
 

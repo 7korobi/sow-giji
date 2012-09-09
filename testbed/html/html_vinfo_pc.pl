@@ -30,29 +30,12 @@ sub OutHTMLVilInfo {
 	$vil->closevil();
 	my $totalcommit = &SWBase::GetTotalCommitID($sow, $vil);
 
-	print <<"_HTML_";
-<script>
-window.gon = {};
-_HTML_
-	$vil->gon_story();
-	$vil->gon_event();
-	$vil->gon_potofs();
-	print <<"_HTML_";
-gon.event.player.commit = $totalcommit;
-</script>
-_HTML_
-
 	require "$sow->{'cfg'}->{'DIR_LIB'}/log.pl";
 	require "$sow->{'cfg'}->{'DIR_LIB'}/file_log.pl";
 	my $vid = $vil->{'turn'};
 	$vid = $vil->{'epilogue'} if ($vid > $vil->{'epilogue'});
 	my $logfile = SWBoa->new($sow, $vil, $vid, 0);
 	$logfile->close();
-
-	# 日付別ログへのリンク
-	my $list = $logfile->getlist();
-	my @dummy;
-	&SWHtmlPC::OutHTMLTurnNavi($sow, $vil, \@dummy, $list);
 
 	print <<"_HTML_";
 <h2>村の情報</h2>
@@ -64,6 +47,28 @@ _HTML_
 	$sow->{'html'}->outcontentfooter();
 	$sow->{'html'}->outfooter(); # HTMLフッタの出力
 	$sow->{'http'}->outfooter();
+
+	# 発言フィルタ
+	require "$sow->{'cfg'}->{'DIR_HTML'}/html_sayfilter.pl";
+	$sow->{'html'}->outcontentfooter();
+
+	&SWHtmlSayFilter::OutHTMLHeader   ($sow, $vil);
+	&SWHtmlSayFilter::OutHTMLSayFilter($sow, $vil) if ($modesingle == 0);
+	&SWHtmlSayFilter::OutHTMLTools    ($sow, $vil);
+	&SWHtmlSayFilter::OutHTMLFooter   ($sow, $vil);
+
+	my $secret_show = $vil->isepilogue();
+	print <<"_HTML_";
+<script>
+window.gon = {};
+_HTML_
+	$vil->gon_story($secret_show);
+	$vil->gon_event($secret_show);
+	$vil->gon_potofs($secret_show);
+	print <<"_HTML_";
+</script>
+_HTML_
+
 }
 
 
