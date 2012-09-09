@@ -397,22 +397,4 @@ _HTML_
   return;
 }
 
-#----------------------------------------
-# タイトルの開始／更新予定時間
-#----------------------------------------
-sub GetTitleNextUpdate {
-  my ($sow, $vil) = @_;
-
-  my $title = '';
-   if (($vil->{'starttype'} eq 'wbbs') || ($vil->{'turn'} > 0)) {
-    my $date = $sow->{'dt'}->cvtdt($vil->{'nextupdatedt'});
-    my $extend = '延長' . $vil->{'extend'} . '回まで。' if $vil->{'extend'};
-    $title = " ($date に更新。 $extend)";
-  } else {
-    $title = ' (' . sprintf("%02d:%02d", $vil->{'updhour'}, $vil->{'updminite'}) . '更新)';
-  }
-
-  return $title;
-}
-
 1;

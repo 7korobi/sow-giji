@@ -874,22 +874,26 @@ sub gon_story {
 	print <<"_HTML_";
 gon.story = {
 	"vid": $vil->{'vid'},
-	"order": $vstatus,
 
 	"name":    "$vil->{'vname'}",
 	"rating":  "$vil->{'rating'}",
 	"comment": "$vil->{'vcomment'}",
 	"csid":    "$vil->{'csid'}",
-	"options": [],
+
+	"order": $vstatus,
 	"is_finish":    (0 != $isepilogue),
 	"is_epilogue":  (0 != $isepilogue),
 	"is_scrap":     (0 != $isscrap),
+
+	"options": [],
+
 	"card":{
 		"discard": "$vil->{'rolediscard'}".split('/').map(function(n) { return(SOW_RECORD.CABALA.gifts[n]) }).compact(),
 		"event":   "$vil->{'eventcard'}".split('/').map(function(n) { return(SOW_RECORD.CABALA.events[n]) }).compact(),
 		"config":  "$config".split('/')
 	},
 	"timer":{
+		"extend":   $vil->{'extend'},
 		"updateddt":    Date.create(1000 * $vil->{'updateddt'}),
 		"nextupdatedt": Date.create(1000 * $vil->{'nextupdatedt'}),
 		"nextchargedt": Date.create(1000 * $vil->{'nextchargedt'}),

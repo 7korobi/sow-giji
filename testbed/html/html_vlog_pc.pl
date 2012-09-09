@@ -28,12 +28,9 @@ sub OutHTMLVlogPC {
 
 
 	# 見出し（村名とRSS）
-	my $titleupdate = &SWHtmlPC::GetTitleNextUpdate($sow, $vil);
 	my $linkrss = " <a href=\"$link$amp". "cmd=rss\">RSS</a>";
 	$linkrss = '' if ($cfg->{'ENABLED_RSS'} == 0);
-	print "<h2>$query->{'vid'} $vil->{'vname'}";
-	print " $linkrss<br>$titleupdate" if ($vil->{'epilogue'} >= $vil->{'turn'});
-	print "</h2>\n\n";
+	print "<h2>$query->{'vid'} $vil->{'vname'} $linkrss</h2>\n\n";
 
 	# 終了表示
 	if (($sow->{'turn'} == $vil->{'turn'}) && ($vil->{'epilogue'} < $vil->{'turn'})) {

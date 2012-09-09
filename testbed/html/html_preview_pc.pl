@@ -30,7 +30,6 @@ sub OutHTMLPreviewPC {
 
 	&SWHtmlPC::OutHTMLLogin($sow); # ログイン欄の出力
 
-	my $titleupdate = &SWHtmlPC::GetTitleNextUpdate($sow, $vil);
 	print <<"_HTML_";
 <h2>$query->{'vid'} $vil->{'vname'}</h2>
 
@@ -64,19 +63,19 @@ _HTML_
 	# 属性値生成
 	$query->{'mes'} =~ s/<br( \/)?>/&#13\;/ig;
 	my @reqkeys = (
-		'csid_cid', 
-		'role', 
-		'mes', 
-		'think', 
-		'wolf', 
-		'maker', 
-		'muppet', 
-		'admin', 
-		'anonymous', 
-		'sympathy', 
-		'pixi', 
-		'monospace', 
-		'expression', 
+		'csid_cid',
+		'role',
+		'mes',
+		'think',
+		'wolf',
+		'maker',
+		'muppet',
+		'admin',
+		'anonymous',
+		'sympathy',
+		'pixi',
+		'monospace',
+		'expression',
 		'target'
 	);
 	push(@reqkeys, 'entrypwd') if ($vil->{'entrylimit'} eq 'password');

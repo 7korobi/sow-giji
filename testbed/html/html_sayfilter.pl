@@ -142,10 +142,17 @@ _HTML_
 </ul><br />
 </div>
 
-<h4 class="sayfilter_caption_enable"><a href="/ULTIMATE/stories">他の物語へ</a></h4>
+<h4 class="sayfilter_caption_enable">村の進行状況</h4>
+<div class="sayfilter_content"><ul>
+<li>あと {{story.timer.extend}}回、更新を延長できる。
+<li>{{lax_time(story.timer.nextupdatedt)}}に更新。
+<li>{{lax_time(story.timer.nextchargedt)}}に補充。
+<li>{{lax_time(story.timer.nextcommitdt)}}にコミット。
+<li>{{lax_time(story.timer.scraplimitdt)}}に廃村。
+</ul><br>
+</div>
 </div></div>
 _HTML_
-
 	return;
 }
 
@@ -171,22 +178,16 @@ sub OutHTMLSayFilter {
 <table class="table table-condensed">
 <thead>
 <tr>
-<th colspan="2" style="text-align:right">
-<code href_eval="sort_potofs('win_name')">陣営</code>
-<code href_eval="sort_potofs('role_names')">役割</code>
-<code href_eval="sort_potofs('select_name')">希望</code>
-<th>
-<code href_eval="sort_potofs('deathday')">日程</code>
-<code href_eval="sort_potofs('live')">状態</code>
-<code href_eval="sort_potofs('text')">補足</code>
-<code href_eval="sort_potofs('said_num')">発言</code>
+<th colspan="2" style="text-align:right"><code ng-click="potofs_is_small = ! potofs_is_small">スタイル</code>-<code href_eval="sort_potofs('deathday',0)">日程</code><code href_eval="sort_potofs('live','')">状態</code><code href_eval="sort_potofs('said_num',0)">発言</code>
+<th colspan="2"><code href_eval="sort_potofs('win_name','')">陣営</code><code href_eval="sort_potofs('role_names','')">役割</code><code href_eval="sort_potofs('select_name','')">希望</code><code href_eval="sort_potofs('text','')">補足</code>
 {{sum.actaddpt}}促
 </thead>
 <tbody ng-repeat="potof in potofs">
 <tr>
-<td>{{potof.name}}<div class="note"><i class="icon-user"></i>{{potof.auth}}</div>
-<td>{{potof.win_name}} :: {{potof.role_names.join('、')}}<div class="note">{{potof.select_name}}</div>
-<td>{{potof.stat}}<span ng-bind-html-unsafe="potof.text.join(' ')"></span>{{potof.bond_names.join('、')}}<div class="note"><i class="icon-comment"></i>{{potof.said}}</div>
+<td>{{potof.name}}<div class="note" ng-show="potof.auth && potofs_is_small"><i class="icon-user"></i>{{potof.auth}}</div>
+<td>{{potof.stat}}<div class="note" ng-show="potof.said && potofs_is_small"><i class="icon-comment"></i>{{potof.said}}</div>
+<td>{{potof.win_name}}::{{potof.role_names.join('、')}}<div class="note" ng-show="potof.select_name && potofs_is_small">{{potof.select_name}}</div>
+<td><span ng-bind-html-unsafe="potof.text.join(' ')"></span><div class="note" ng-show="potof.bond_names && potofs_is_small">{{potof.bond_names.join('、')}}</div>
 </tbody>
 </table>
 </div>
