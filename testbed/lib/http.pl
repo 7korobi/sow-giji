@@ -260,7 +260,7 @@ sub getquery {
 	}
 	$sow->{'QUERY_STRING'} = $buffer;
 
-	foreach (split(/[&;]/, $buffer)) { 
+	foreach (split(/[&;]/, $buffer)) {
 		my ($key, $data) = split(/=/);
 		next if ((!defined($key)) || ($key eq ''));
 
@@ -291,7 +291,7 @@ sub getquery {
 
 		# Not a Number(NaN)、Infinity(Inf) 対策
 		if (!defined($sow->{'QUERY_INVALID'}->{$key})) {
-			$sow->{'debug'}->writeaplog($sow->{'APLOG_CAUTION'}, "invalid querydata. [$key]");
+			$sow->{'debug'}->raise($sow->{'APLOG_CAUTION'}, "invalid querydata. [$key]");
 			$query{$key} = 'INVALID';
 		} elsif (($sow->{'QUERY_INVALID'}->{$key} == 0) && ($data =~ /(nan|inf)/i)) {
 			$query{$key} = 0;
@@ -428,7 +428,7 @@ sub SetIfModifiedSince {
 	}
 
 	return $result;
-}    
+}
 
 #----------------------------------------
 # エンティティタグの照合

@@ -31,15 +31,6 @@ sub SetDataCmdEditVil {
 	my $vil = SWFileVil->new($sow, $query->{'vid'});
 	$vil->readvil();
 
-	# 村編集時値チェック
-	my $errfrom = "[uid=$sow->{'uid'}, cmd=$query->{'cmd'}]";
-	if($sow->{'uid'} ne $sow->{'cfg'}->{'USERID_ADMIN'}){
-	  if($sow->{'uid'} eq $vil->{'makeruid'}){
-		$sow->{'debug'}->raise($sow->{'APLOG_CAUTION'}, "村作成者にはこの村の編集は行えません。", "no permition.$errfrom") if (($vil->isepilogue() > 0) && ($vil->{'winner'} == 0));
-	  }else{
-		$sow->{'debug'}->raise($sow->{'APLOG_CAUTION'}, "村作成者以外には村の編集は行えません。", "no permition.$errfrom") if (($vil->isepilogue() == 0));
-	  }
-	}
 
 	my $trsid = $sow->{'cfg'}->{'DEFAULT_TEXTRS'};
 	$trsid = $query->{'trsid'} if (defined($query->{'trsid'}));
@@ -103,12 +94,7 @@ sub SetDataCmdEditVil {
 			$vil->{"cnt$giftid->[$i]"} = int($countgift);
 		}
 
-		my $eventid = $sow->{'EVENTID'};
-		for ($i = 1; $i < @$eventid; $i++) {
-			my $countevent = 0;
-			$countevent = $query->{"cnt$eventid->[$i]"} if (defined($query->{"cnt$eventid->[$i]"}));
-			$vil->{"cnt$eventid->[$i]"} = int($countevent);
-		}
+		$vil->{'eventcard'} = $query->{'eventcard'};
 	} elsif ( $summarymanage ) {
 		&SWValidityMakeVil::CheckValidityMakeVilSummary($sow);
 		$vil->{'vname'}        = $query->{'vname'};

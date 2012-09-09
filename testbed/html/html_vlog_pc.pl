@@ -35,12 +35,6 @@ sub OutHTMLVlogPC {
 	print " $linkrss<br>$titleupdate" if ($vil->{'epilogue'} >= $vil->{'turn'});
 	print "</h2>\n\n";
 
-	# 日付別ログへのリンク
-	if ($modesingle == 0) {
-#		my $list = $logfile->getlist();
-		&SWHtmlPC::OutHTMLTurnNavi($sow, $vil, $logs, $logfilelist, $rows, 0);
-	}
-
 	# 終了表示
 	if (($sow->{'turn'} == $vil->{'turn'}) && ($vil->{'epilogue'} < $vil->{'turn'})) {
 		print <<"_HTML_";
@@ -106,12 +100,6 @@ _HTML_
 		&OutHTMLVlogFormArea($sow, $vil)
 	}
 
-	# 日付別ログへのリンク
-	if ($modesingle == 0) {
-#		my $list = $logfile->getlist();
-		&SWHtmlPC::OutHTMLTurnNavi($sow, $vil, $logs, $logfilelist, $rows, 1);
-	}
-
 	if ($modesingle == 0) {
 		$reqvals = &SWBase::GetRequestValues($sow);
 		$reqvals->{'order'} = '';
@@ -169,10 +157,23 @@ _HTML_
 
 	# 発言フィルタ
 	$sow->{'html'}->outcontentfooter();
+
 	&SWHtmlSayFilter::OutHTMLHeader   ($sow, $vil);
 	&SWHtmlSayFilter::OutHTMLSayFilter($sow, $vil) if ($modesingle == 0);
 	&SWHtmlSayFilter::OutHTMLTools    ($sow, $vil);
 	&SWHtmlSayFilter::OutHTMLFooter   ($sow, $vil);
+
+	my $secret_show = $vil->isepilogue();
+	print <<"_HTML_";
+<script>
+window.gon = {};
+_HTML_
+	$vil->gon_story($secret_show);
+	$vil->gon_event($secret_show);
+	$vil->gon_potofs($secret_show);
+	print <<"_HTML_";
+</script>
+_HTML_
 
 	return;
 }

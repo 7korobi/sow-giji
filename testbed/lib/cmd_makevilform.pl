@@ -10,45 +10,37 @@ sub CmdMakeVilForm {
 
 	require "$sow->{'cfg'}->{'DIR_HTML'}/html.pl";
 	require "$sow->{'cfg'}->{'DIR_HTML'}/html_makevilform.pl";
-	
-	%vil = (
-		vname => '',
-		vcomment => '',
-		vplcnt => 8,
-		vplcntstart => 8,
-		csid => '',
-		trsid => $sow->{'cfg'}->{'DEFAULT_TEXTRS'},
-		roletable => '',
-		updhour => 0,
-		updminite => 0,
-		updinterval => 1,
-		entrylimit => '',
-		entrypwd => '',
-		rating => 'default',
-		saycnttype => $sow->{'cfg'}->{'CSIDLIST'}->[0],
-		votetype => $sow->{'cfg'}->{'DEFAULT_VOTETYPE'},
-		starttype => 'manual',
-		randomtarget => 0,
-		showid => 0,
-		undead => 0,
-		noselrole => 0,
-	);
 
-	$vil{"cntmob"} = 0;
+	# ‘ºƒf[ƒ^‚Ì“Ç‚Ýž‚Ý
+	require "$sow->{'cfg'}->{'DIR_LIB'}/file_vil.pl";
+	my $vil = SWFileVil->new($sow, 0);
+	$vil->createbasevil();
+	$vil->{'vplcnt'} = 8;
+	$vil->{'vplcntstart'} = 8;
+	$vil->{'trsid'} = $sow->{'cfg'}->{'DEFAULT_TEXTRS'};
+	$vil->{'updhour'} = 0;
+	$vil->{'updminite'} = 0;
+	$vil->{'updinterval'} = 1;
+	$vil->{'rating'} = 'default';
+	$vil->{'saycnttype'} = $sow->{'cfg'}->{'CSIDLIST'}->[0];
+	$vil->{'votetype'} = $sow->{'cfg'}->{'DEFAULT_VOTETYPE'};
+	$vil->{'randomtarget'} = 0;
+	$vil->{'showid'} = 0;
+	$vil->{'undead'} = 0;
+	$vil->{'noselrole'} = 0;
+
+	$vil->{"cntmob"} = 0;
 	my $roleid = $sow->{'ROLEID'};
 	for ($i = 1; $i < @$roleid; $i++) {
-		$vil{"cnt$roleid->[$i]"} = 0;
+		$vil->{"cnt$roleid->[$i]"} = 0;
 	}
 	my $giftid = $sow->{'GIFTID'};
 	for ($i = 1; $i < @$giftid; $i++) {
-		$vil{"cnt$giftid->[$i]"} = 0;
+		$vil->{"cnt$giftid->[$i]"} = 0;
 	}
-	my $eventid = $sow->{'EVENTID'};
-	for ($i = 1; $i < @$eventid; $i++) {
-		$vil{"cnt$eventid->[$i]"} = 0;
-	}
+	$vil->{"eventcard"} = "";
 
-	&SWHtmlMakeVilForm::OutHTMLMakeVilForm($sow, \%vil);
+	&SWHtmlMakeVilForm::OutHTMLMakeVilForm($sow, $vil);
 }
 
 1;

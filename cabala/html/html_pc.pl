@@ -69,7 +69,7 @@ _HTML_
 
   print <<"_HTML_";
 <script type="text/javascript" src="http://www.google.com/jsapi"></script>
-<script type="text/javascript">  // google.load("jquery", "1");</script>
+<script type="text/javascript">   google.load("jquery", "1");</script>
 _HTML_
   # JavaScript‚Ìo—Í
   if (defined($sow->{'html'}->{'file_js'})) {

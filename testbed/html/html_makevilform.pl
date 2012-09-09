@@ -35,12 +35,8 @@ sub OutHTMLMakeVilForm {
 
 	&SWHtmlPC::OutHTMLLogin($sow); # ログインボタン
 
-	# 日付別ログへのリンク
-	&SWHtmlPC::OutHTMLTurnNavi($sow, $vil) if ($sow->{'query'}->{'cmd'} eq 'editvilform');
-
 	print <<"_HTML_";
 <h2>村の$vmode</h2>
-
 _HTML_
 
 	print "<p class=\"caution\">村を$vmodeするにはログインが必要です。</p>\n\n" if ($sow->{'user'}->logined() <= 0);
@@ -71,7 +67,6 @@ _HTML_
 	}
 
 	$reqvals->{'cmd'} = 'rule';
-	$reqvals->{'css'} = $sow->{'query'}->{'css'} if ($sow->{'query'}->{'css'} ne '');
 	my $url_rule = &SWBase::GetLinkValues($sow, $reqvals);
 	$url_rule = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$url_rule";
 
@@ -81,8 +76,7 @@ _HTML_
 
 <fieldset>
 <legend>村の名前と説明</legend>
-<input id="vname" type="text" name="vname" value="$vil->{'vname'}" size="30"$net>
-<br class="multicolumn_clear"$net>
+<input id="vname" type="text" name="vname" ng-model="story.name" size="50">
 _HTML_
 	if ( $fullmanage ) {
 		$vcomment =~ s/<br( \/)?>/\n/ig;
@@ -90,11 +84,11 @@ _HTML_
 <textarea id="vcomment" class="multicolumn_role" name="vcomment" cols="30" rows="10">$vcomment</textarea>
 </fieldset>
 <fieldset>
-<p class="multicolumn_role">
+<p>
 _HTML_
 	} else {
 		print <<"_HTML_";
-<p class="multicolumn_role">
+<p>
 $vcomment
 <br>
 _HTML_
@@ -110,7 +104,7 @@ _HTML_
 		my $name = $nrule->{'name'}->[$i];
 		print "<strong>".($i+1).".$name</strong><br$net>";
 	}
-	
+
 	print <<"_HTML_";
 </p>
 </fieldset>
@@ -125,191 +119,135 @@ _HTML_
 		print <<"_HTML_";
 <fieldset>
 <legend>基本設定</legend>
-
 <input type="hidden" name="trsid" value="$vil->{'trsid'}">
-<strong><a href="sow.cgi?cmd=trsdiff&trsid=$vil->{'trsid'}">$sow->{'textrs'}->{'CAPTION'} </a></strong>
-<p class="multicolumn_role">
-$sow->{'textrs'}->{'HELP'}
-</p>
+<dl>
+<dt>$sow->{'textrs'}->{'CAPTION'}
+<dd>$sow->{'textrs'}->{'HELP'}
+</dl>
+<dl class="dl-horizontal">
+<dt><label for="vplcnt">定員</label>
+<dd><input id="vplcnt" class="input-mini" type="text" name="vplcnt" ng-model="event.player.limit" size="5">人
+<dt><label for="vplcntstart" >最低人数</label>
+<dd><input id="vplcntstart" class="input-mini" type="text" name="vplcntstart" ng-model="event.player.start" size="5">人  ※開始方法が人狼BBS型の時のみ
+<dt><label for="updhour">更新時間</label>
+<dd><select id="updhour" name="hour" class="input-small" ng-model="story.upd.hour">
+</dl>
 
-<label for="vplcnt" class="multicolumn_label" >定員：</label>
-<input id="vplcnt" class="multicolumn_left" type="text" name="vplcnt" value="$vil->{'vplcnt'}" size="5"$net>人
-<br class="multicolumn_clear"$net>
-
-<label for="vplcntstart" class="multicolumn_label" >最低人数：</label>
-<input id="vplcntstart" class="multicolumn_left" type="text" name="vplcntstart" value="$vil->{'vplcntstart'}" size="5"$net>人  ※開始方法が人狼BBS型の時のみ
-<br class="multicolumn_clear"$net>
-
-<label for="updhour" class="multicolumn_label">更新時間：</label>
-<select id="updhour" name="hour" class="multicolumn_left">
 _HTML_
 
 		my $i;
 		for ($i = 0; $i < 24; $i++) {
-			my $selected = '';
-			$selected = " $sow->{'html'}->{'selected'}" if ($vil->{'updhour'} == $i);
-			print "      <option value=\"$i\"$selected>$i時$sow->{'html'}->{'option'}\n";
+			my $hour = sprintf('%02d時', $i);
+			print "<option value=\"$i\">$hour</option>\n";
 		}
 
 		print <<"_HTML_";
 </select>
-<select id="updminite" name="minite" class="multicolumn_left">
+<select id="updminite" name="minite" class="input-small" ng-model="story.upd.minute">
 _HTML_
 
 		for ($i = 0; $i < 60; $i += 30) {
 			my $min = sprintf('%02d分', $i);
-			my $selected = '';
-			$selected = " $sow->{'html'}->{'selected'}" if ($vil->{'updminite'} == $i);
-			print "      <option value=\"$i\"$selected>$min$sow->{'html'}->{'option'}\n";
+			print "<option value=\"$i\">$min</option>\n";
 		}
 
 		print <<"_HTML_";
 </select>に更新
-<br class="multicolumn_clear"$net>
 
-<label for="updinterval" class="multicolumn_label">更新間隔：</label>
-<select id="updinterval" name="updinterval" class="multicolumn_left">
+<dt><label for="updinterval">更新間隔</label>
+<dd><select id="updinterval" name="updinterval" class="input-large" ng-model="story.upd.interval">
 _HTML_
-
 
 		for ($i = 1; $i <= 3; $i++) {
 			my $interval = sprintf('%02d時間', $i * 24);
-			my $selected = '';
-			$selected = " $sow->{'html'}->{'selected'}" if ($vil->{'updinterval'} == $i);
-			print "      <option value=\"$i\"$selected>$interval$sow->{'html'}->{'option'}\n";
-		}
-
-		my $votetype_anonymity = " $sow->{'html'}->{'selected'}";
-		my $votetype_sign = '';
-		if ($vil->{'votetype'} eq 'sign') {
-			$votetype_anonymity = '';
-			$votetype_sign = " $sow->{'html'}->{'selected'}";
+			print "<option value=\"$i\">$interval</option>\n";
 		}
 
 		print <<"_HTML_";
 </select>ごとに更新
-<br class="multicolumn_clear"$net>
 
-<label for="votetype" class="multicolumn_label">投票方法：</label>
-<select id="votetype" name="votetype" class="multicolumn_left">
-<option value="anonymity"$votetype_anonymity>無記名投票$sow->{'html'}->{'option'}
-<option value="sign"$votetype_sign>記名投票$sow->{'html'}->{'option'}
+<dt><label for="votetype">投票方法</label>
+<dd><select id="votetype" name="votetype" ng-model="story.type.vote">
+<option value="anonymity">無記名投票</option>
+<option value="sign">記名投票</option>
 </select>
-<br class="multicolumn_clear"$net>
 
-<label for="roletable" class="multicolumn_label">役職配分：</label>
-<select id="roletable" name="roletable" class="multicolumn_left">
+<dt><label for="roletable">役職配分</label>
+<dd><select id="roletable" name="roletable" ng-model="story.type.roletable">
 _HTML_
 
 		my $order_roletable = $sow->{'ORDER_ROLETABLE'};
 		foreach (@$order_roletable) {
 			my $caption  = $sow->{'textrs'}->{'CAPTION_ROLETABLE'}->{$_};
 			next if (!defined($caption));
-			my $selected = '';
-			$selected = " $sow->{'html'}->{'selected'}" if ($vil->{'roletable'} eq $_);
-			print "      <option value=\"$_\"$selected>$caption$sow->{'html'}->{'option'}\n";
+			print "      <option value=\"$_\">$caption</option>\n";
 		}
-
-#      <option value="later">後で設定$sow->{'html'}->{'option'}
 
 		print <<"_HTML_";
 </select>
-<br class="multicolumn_clear"$net>
 </fieldset>
 
-<fieldset>
+<fieldset ng-show="story.type.roletable == 'custom'">
 <legend>役職配分自由設定</legend>
-<TABLE align=center class="multicolumn_role"><TBODY>
 _HTML_
 
-		my $cssid = 'default';
-		$cssid = $sow->{'query'}->{'css'} if ($sow->{'query'}->{'css'} ne '');
-		$cssid = 'default' if (!defined($cfg->{'CSS'}->{$cssid}));
-		my $csswidth = $cfg->{'CSS'}->{$cssid}->{'WIDTH'};
+		my $hr = '<hr>';
 		my $imgwidth = $charset->{'IMGBODYW'} + 2;
 		my $maxwidth = 460;
-		$maxwidth = 460 if ( 480 <= $csswidth);
-		$maxwidth = 560 if ( 800 <= $csswidth);
 		my $tdwidth = int( $maxwidth/140 );
 		my $roleid  = $sow->{'ROLEID'};
 		my $giftid  = $sow->{'GIFTID'};
 		my $eventid = $sow->{'EVENTID'};
-		my $d;
 		for ($i=0,$d=0; $i <= @$roleid; $i++) {
 			if    ($i == $sow->{'SIDEST_HUMANSIDE'} ){
-				print "\n\n<TR><TD colspan=$tdwidth><h3>人間</h3><TR>\n ";
-				$d = 0; 
+				print "\n\n<h3>人間</h3>\n ";
 			}elsif($i == $sow->{'SIDEST_ENEMY'} ){
 				my $enemy = "人狼側";
 				$enemy    = "破滅側" if( 1 == $cfg->{'ENABLED_AMBIDEXTER'} );
-				print "\n\n<TR><TD colspan=$tdwidth><h3>$enemyの人間</h3><TR>\n ";
-				$d = 0; 
+				print "\n\n<h3>$enemyの人間</h3>\n ";
 			}elsif($i == $sow->{'SIDEST_WOLFSIDE'} ){
-				print "\n\n<TR><TD colspan=$tdwidth><h3>人狼</h3><TR>\n ";
-				$d = 0; 
+				print "\n\n<h3>人狼</h3>\n ";
 			}elsif($i == $sow->{'SIDEST_PIXISIDE'} ){
-				print "\n\n<TR><TD colspan=$tdwidth><h3>妖精</h3><TR>\n ";
-				$d = 0; 
+				print "\n\n<h3>妖精</h3>\n ";
 			}elsif($i == $sow->{'SIDEST_OTHER'} ){
-				print "\n\n<TR><TD colspan=$tdwidth><h3>それ以外</h3><TR>\n ";
-				$d = 0; 
-			}elsif($d >= $tdwidth){
-				print "\n\n<TR> ";
-				$d = 0; 
+				print "\n\n<h3>それ以外</h3>\n ";
 			}
 			next if ( '' eq $sow->{'textrs'}->{'ROLESHORTNAME'}->[$i] );
-			$d++;
 			print <<"_HTML_";
-<TD nowrap align=right>
+<div class="rolebox input-append">
 <label for="cnt$roleid->[$i]">$sow->{'textrs'}->{'ROLENAME'}->[$i]</label>
-<input  id="cnt$roleid->[$i]" type="text" name="cnt$roleid->[$i]" size="3" value="$vil->{"cnt$roleid->[$i]"}"$net>人 
+<input  id="cnt$roleid->[$i]" type="text" name="cnt$roleid->[$i]" size="2" value="$vil->{"cnt$roleid->[$i]"}"$net><span class="add-on">人</span>
+</div>
 _HTML_
 		}
-		for ($i=$sow->{'SIDEST_DEAL'},$d=0; $i <= @$giftid; $i++) {
+		for ($i=$sow->{'SIDEST_DEAL'}; $i <= @$giftid; $i++) {
 			if    ($i == $sow->{'SIDEST_DEAL'} ){
-				print "\n\n<TR><TD colspan=$tdwidth><h3>恩恵</h3><TR>\n ";
-				$d = 0; 
-			}elsif($d >= $tdwidth){
-				print "\n\n<TR> ";
-				$d = 0; 
+				print "\n\n<h3>恩恵</h3>\n ";
 			}
 			next if ( '' eq $sow->{'textrs'}->{'GIFTSHORTNAME'}->[$i] );
-			$d++;
 			print <<"_HTML_";
-<TD nowrap align=right>
+<div class="rolebox input-append">
 <label for="cnt$giftid->[$i]">$sow->{'textrs'}->{'GIFTNAME'}->[$i]</label>
-<input id="cnt$giftid->[$i]" type="text" name="cnt$giftid->[$i]" size="3" value="$vil->{"cnt$giftid->[$i]"}"$net>人 
+<input id="cnt$giftid->[$i]" type="text" name="cnt$giftid->[$i]" size="2" value="$vil->{"cnt$giftid->[$i]"}"$net><span class="add-on">人</span>
+</div>
 _HTML_
 		}
-		for ($i=1,$d=0; $i <= @$eventid; $i++) {
-			if    ($i == 1 ){
-				print "\n\n<TR><TD colspan=$tdwidth><h3>事件</h3><TR>\n ";
-				$d = 0; 
-			}elsif($d >= $tdwidth){
-				print "\n\n<TR> ";
-				$d = 0; 
-			}
-			next if ( '' eq $sow->{'textrs'}->{'EVENTNAME'}->[$i] );
-			$d++;
-			print <<"_HTML_";
-<TD nowrap align=right>
-<label for="cnt$eventid->[$i]">$sow->{'textrs'}->{'EVENTNAME'}->[$i]</label>
-<input id="cnt$eventid->[$i]" type="text" name="cnt$eventid->[$i]" size="3" value="$vil->{"cnt$eventid->[$i]"}"$net>件
-_HTML_
-		}
-		for (; $d <3 ; $d++){
-			print "<TD><TD>";
-		}
+		print <<"_HTML_";
+</fieldset>
+<fieldset>
+<h3>事件</h3>
 
-		my $limitfree     = " $sow->{'html'}->{'checked'}";
-		my $limitpassword = '';
-		if ($vil->{'entrylimit'} eq 'password') {
-			$limitfree     = '';
-			$limitpassword = " $sow->{'html'}->{'checked'}";
+<input type="text" id="eventcard" name="eventcard" ng-init="tokenInput('#eventcard', 'events', story.card.event)">
+_HTML_
+
+		for ($i=1,$d=0; $i <= @$eventid; $i++) {
+			next if ( '' eq $sow->{'textrs'}->{'EVENTNAME'}->[$i] );
+			print <<"_HTML_";
+<span class="btn" onclick="tokenInput['#eventcard'].eventAdd('$eventid->[$i]')">$sow->{'textrs'}->{'EVENTNAME'}->[$i]</span>
+_HTML_
 		}
 
 		print <<"_HTML_";
-</TABLE>
 </fieldset>
 _HTML_
 
@@ -329,82 +267,62 @@ _HTML_
 プレイヤーIDはエピローグまで秘密です。また、狼・妖精は、死者と会話できません。また、役職希望を尊重し、投票・能\力の対象を、ランダムで決定することはできません。投票が同数になったときはランダムに解決し、人間の人数が人狼以下になったら村側の敗北です。
 <br class="multicolumn_clear"$net>
 _HTML_
-		
+
 		} else {
 
 			print <<"_HTML_";
 <fieldset>
 <legend>参加制限</legend>
-<label><input type="radio" name="entrylimit" value="free"$limitfree$net>制限なし</label><br$net>
+<label><input type="radio" name="entrylimit" value="free" ng-checked="0 == story.entry.password.length">制限なし</label><br>
 <label>
-<input type="radio" name="entrylimit" value="password"$limitpassword$net>参加用パスワード必須（半角８文字以内）
+<input type="radio" name="entrylimit" value="password" ng-checked="0 < story.entry.password.length">参加用パスワード必須（半角８文字以内）
 </label>
-<input type="password" name="entrypwd" maxlength="8" size="8" value="$vil->{'entrypwd'}"$net>
-<br class="multicolumn_clear"$net>
+<input type="text" name="entrypwd" maxlength="8" size="8" ng-model="story.entry.password">
+<br>
 </fieldset>
 
 <fieldset>
 <legend>拡張設定</legend>
+<dl class="dl-horizontal">
 _HTML_
-
 			# ランダム対象
 			if ($sow->{'cfg'}->{'ENABLED_RANDOMTARGET'} > 0) {
-				my $checkedrndtarget = '';
-				$checkedrndtarget = " $sow->{'html'}->{'checked'}" if ($vil->{'randomtarget'} > 0);
-
 				print <<"_HTML_";
-<label for="randomtarget" class="multicolumn_label">ランダム： </label>
-<input type="checkbox" id="randomtarget" class="multicolumn_left" name="randomtarget" value="on"$checkedrndtarget$net>投票・能\力の対象に「ランダム」を含める
-<br class="multicolumn_clear"$net>
+<dt><label for="randomtarget">ランダム</label>
+<dd><input id="randomtarget" name="randomtarget" type="checkbox" ng-checked="story.options.some('random-target')">
+  投票・能\力の対象に「ランダム」を含める
+_HTML_
+			}
 
+			if ($cfg->{'ENABLED_UNDEAD'} == 1){
+				print <<"_HTML_";
+<dt><label for="undead">幽界トーク</label>
+<dd><input id="undead" name="undead" type="checkbox" ng-checked="story.options.some('undead-talk')">
+  狼・妖精と死者との間で、会話ができる
 _HTML_
 			}
 
 			# 役職希望無視
-			my $checkednoselrole = '';
-			$checkednoselrole = " $sow->{'html'}->{'checked'}" if ($vil->{'noselrole'} > 0);
-
 			print <<"_HTML_";
-<label for="noselrole" class="multicolumn_label">役職希望： </label>
-<input type="checkbox" id="noselrole" class="multicolumn_left" name="noselrole" value="on"$checkednoselrole$net>役職希望を無視する
-<br class="multicolumn_clear"$net>
-
-_HTML_
-
-			my $checkedshowid = '';
-			$checkedshowid = " $sow->{'html'}->{'checked'}" if ($vil->{'showid'} > 0);
-			my $checkedundead = '';
-			$checkedundead = " $sow->{'html'}->{'checked'}" if ($vil->{'undead'} > 0);
-
-			if ($cfg->{'ENABLED_UNDEAD'} == 1){
-				print <<"_HTML_";
-<label for="undead" class="multicolumn_label">幽界トーク： </label>
-<input type="checkbox" id="undead" class="multicolumn_left" name="undead" value="on"$checkedundead$net>狼・妖精と死者との間で、会話ができる
-<br class="multicolumn_clear"$net>
-_HTML_
-			}
-
-			print <<"_HTML_";
-<label for="showid" class="multicolumn_label">ID公開： </label>
-<input type="checkbox" id="showid" class="multicolumn_left" name="showid" value="on"$checkedshowid$net>プレイヤーIDを公開する
-<br class="multicolumn_clear"$net>
-
-<label for="game" class="multicolumn_label">ゲームルール： </label>
-<select id="game" name="game" class="multicolumn_left">
+<dt><label for="noselrole">役職希望</label>
+<dd><input id="noselrole" name="noselrole" type="checkbox" ng-checked="! story.options.some('select-role')">
+  役職希望を無視する
+<dt><label for="showid">ID公開</label>
+<dd><input id="showid" name="showid" type="checkbox" ng-checked="story.options.some('show-id')">
+  プレイヤーIDを公開する
+<dt><label for="game">ゲームルール</label>
+<dd><select id="game" name="game" class="input-large" ng-model="story.type.game">
 _HTML_
 
 			my $game     = $sow->{'basictrs'}->{'GAME'};
 			my $gamelist = $sow->{'cfg'}->{'GAMELIST'};
 			foreach (@$gamelist) {
-				my $selected = '';
-				$selected = " $sow->{'html'}->{'selected'}" if ($vil->{'game'} eq $_);
-				print "<option value=\"$_\"$selected>$game->{$_}->{'CAPTION'}$sow->{'html'}->{'option'}\n";
+				print "<option value=\"$_\">$game->{$_}->{'CAPTION'}$sow->{'html'}->{'option'}\n";
 			}
 
 			# 見物人種類
 			print <<"_HTML_";
 </select>
-<br class="multicolumn_clear"$net>
 _HTML_
 		}
 	} else {
@@ -414,28 +332,25 @@ _HTML_
 _HTML_
 	}
 	print <<"_HTML_";
-<label for="rating" class="multicolumn_label">こだわり： </label>
-<select id="rating" name="rating" class="multicolumn_left" onFocus='javascript:chrImgChange(document.cd_img,this,"$cfg->{'DIR_IMG'}/cd_","",".png")' onChange='javascript:chrImgChange(document.cd_img,this,"$cfg->{'DIR_IMG'}/cd_","",".png")'>
+<dt><label for="rating">こだわり</label>
+<dd><select id="rating" name="rating" class="input-large" ng-model="story.rating">
 _HTML_
 
 	# レイティング
 	my $rating = $sow->{'cfg'}->{'RATING'};
 	foreach (@{$rating->{'ORDER'}}) {
-		my $selected = '';
-		$selected = "$sow->{'html'}->{'selected'}" if ($vil->{'rating'} eq $_);
-		print "<option value=\"$_\"$selected>$rating->{$_}->{'CAPTION'}$sow->{'html'}->{'option'}\n";
+		print "<option value=\"$_\">$rating->{$_}->{'CAPTION'}$sow->{'html'}->{'option'}\n";
 	}
 
 	print <<"_HTML_";
 </select>
-<img name=cd_img src="$cfg->{'DIR_IMG'}/cd_default.png">
-<br class="multicolumn_clear"$net>
+<img name=cd_img src="$cfg->{'DIR_IMG'}/icon/cd_{{story.rating}}.png">
 _HTML_
 
 	if ( $fullmanage ) {
 		print <<"_HTML_";
-<label for="csid" class="multicolumn_label">登場人物：</label>
-<select id="csid" name="csid" class="multicolumn_left">
+<dt><label for="csid">登場人物</label>
+<dd><select id="csid" name="csid" class="input-large" ng-model="story.csid">
 _HTML_
 
 		my $csidlist = $sow->{'cfg'}->{'CSIDLIST'};
@@ -447,8 +362,6 @@ _HTML_
 				push(@captions, $sow->{'charsets'}->{'csid'}->{$_}->{'CAPTION'});
 			}
 			my $caption = join('と', @captions);
-			my $selected = '';
-			$selected = " $sow->{'html'}->{'selected'}" if ($vil->{'csid'} eq $_);
 			print "      <option value=\"$_\"$selected> $caption$sow->{'html'}->{'option'}\n";
 		}
 
@@ -456,54 +369,41 @@ _HTML_
 
 		print <<"_HTML_";
 </select>
-<br class="multicolumn_clear"$net>
-
-<label for="saycnttype" class="multicolumn_label">発言制限： </label>
-<select id="saycnttype" name="saycnttype" class="multicolumn_left">
+<dt><label for="saycnttype">発言制限</label>
+<dd><select id="saycnttype" name="saycnttype" class="input-large" ng-model="story.type.say">
 _HTML_
 
 		my $countssay = $sow->{'cfg'}->{'COUNTS_SAY'};
 		my $countssay_order = $countssay->{'ORDER'};
 		foreach (@$countssay_order) {
-			my $selected = '';
-			$selected = " $sow->{'html'}->{'selected'}" if ($vil->{'saycnttype'} eq $_);
-			print "      <option value=\"$_\"$selected>$countssay->{$_}->{'CAPTION'}$sow->{'html'}->{'option'}\n";
+			print "      <option value=\"$_\">$countssay->{$_}->{'CAPTION'}$sow->{'html'}->{'option'}\n";
 		}
 
 		print <<"_HTML_";
 </select>
-<br class="multicolumn_clear"$net>
-
-<label for="starttype" class="multicolumn_label">開始方法： </label>
-<select id="starttype" name="starttype" class="multicolumn_left">
+<dt><label for="starttype">開始方法</label>
+<dd><select id="starttype" name="starttype" class="input-large" ng-model="story.type.start">
 _HTML_
 
 		my $starttype = $sow->{'basictrs'}->{'STARTTYPE'};
 		foreach (@{$starttype->{'ORDER'}}) {
-			my $selected = '';
-			$selected = " $sow->{'html'}->{'selected'}" if ($vil->{'starttype'} eq $_);
-			print "      <option value=\"$_\"$selected>$starttype->{$_}$sow->{'html'}->{'option'}\n";
+			print "      <option value=\"$_\">$starttype->{$_}$sow->{'html'}->{'option'}\n";
 		}
 
 		# 見物人種類
 		print <<"_HTML_";
 </select>
-<br class="multicolumn_clear"$net>
-
-<label for="cntmob" class="multicolumn_label">見物人： </label>
-<select id="mob" name="mob" class="multicolumn_left">
+<dt><label for="mob">見物人</label>
+<dd class="input-append"><select id="mob" name="mob" class="input-small" ng-model="story.type.mob">
 _HTML_
 		my $mob = $sow->{'basictrs'}->{'MOB'};
 		foreach (@{$mob->{'ORDER'}}) {
-			my $selected = '';
-			$selected = "$sow->{'html'}->{'selected'}" if ($vil->{'mob'} eq $_);
-			print "<option value=\"$_\"$selected>$mob->{$_}->{'CAPTION'}（$mob->{$_}->{'HELP'}）$sow->{'html'}->{'option'}\n";
+			print "<option value=\"$_\">$mob->{$_}->{'CAPTION'}（$mob->{$_}->{'HELP'}）$sow->{'html'}->{'option'}\n";
 		}
 
 		print <<"_HTML_";
 </select>に
-<input id="cntmob" type="text" name="cntmob" size="3" value="$vil->{"cntmob"}">人 
-<br class="multicolumn_clear"$net>
+<input id="cntmob" type="text" name="cntmob" size="3" value="$vil->{"cntmob"}"><span class="add-on">人</span>
 </fieldset>
 
 <div class="exevmake">
@@ -530,13 +430,27 @@ _HTML_
 _HTML_
 
 	# 日付別ログへのリンク
-	&SWHtmlPC::OutHTMLTurnNavi($sow, $vil) if ($sow->{'query'}->{'cmd'} eq 'editvilform');
-
 	&SWHtmlPC::OutHTMLReturnPC($sow); # トップページへ戻る
 
 	$sow->{'html'}->outcontentfooter();
+
+	require "$cfg->{'DIR_HTML'}/html_sayfilter.pl";
+	&SWHtmlSayFilter::OutHTMLHeader   ($sow, $vil);
+	&SWHtmlSayFilter::OutHTMLSayFilter($sow, $vil) if ($modesingle == 0);
+	&SWHtmlSayFilter::OutHTMLTools    ($sow, $vil);
+	&SWHtmlSayFilter::OutHTMLFooter   ($sow, $vil);
 	$sow->{'html'}->outfooter(); # HTMLフッタの出力
 	$sow->{'http'}->outfooter();
+
+	print <<"_HTML_";
+<script>
+window.gon = {};
+_HTML_
+	$vil->gon_story(true);
+	$vil->gon_event(true);
+	print <<"_HTML_";
+</script>
+_HTML_
 
 	return;
 }

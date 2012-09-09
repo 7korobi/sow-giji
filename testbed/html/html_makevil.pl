@@ -3,7 +3,7 @@ package SWHtmlMakeVil;
 #----------------------------------------
 # ‘ºì¬Š®—¹‰æ–Ê‚ÌHTMLo—Í
 #----------------------------------------
-sub OutHTMLMakeVil { 
+sub OutHTMLMakeVil {
 	my ($sow, $vil) = @_;
 	my $cfg = $sow->{'cfg'};
 	my $query = $sow->{'query'};
@@ -29,6 +29,13 @@ sub OutHTMLMakeVil {
 	my $urlsow = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}";
 
 	print <<"_HTML_";
+<script>
+window.gon = {};
+_HTML_
+	$vil->gon_story(true);
+	$vil->gon_event(true);
+	print <<"_HTML_";
+</script>
 <h2>$vmodeŠ®—¹</h2>
 
 <p class="info"><a href="$urlsow?$linkvalue">$query->{'vid'} $query->{'vname'}</a>$infotext‚µ‚Ü‚µ‚½B</p>

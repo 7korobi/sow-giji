@@ -25,6 +25,9 @@ sub InitSW {
 	require "$cfg->{'DIR_LIB'}/charsets.pl";
 
 	&LoadJcode($sow); # jcode.pl/JCode.pm の読み込み
+	$sow->{'lock'}  = SWLock->new($sow);
+	$sow->{'debug'} = SWDebug->new($sow);
+	$sow->{'dt'}    = SWDateTime->new($sow); # 日付変換用
 
 	$sow->{'http'}   = SWHttp->new($sow); # HTTP制御の初期化
 	$sow->{'query'}  = $sow->{'http'}->getquery(); # 入力値
@@ -39,11 +42,7 @@ sub InitSW {
 	$sow->{'charsets'} = SWCharsets->new($sow);
 	&LoadBasicTextRS($sow);
 
-	$sow->{'dt'}     = SWDateTime->new($sow); # 日付変換用
-	$sow->{'debug'} = SWDebug->new($sow);
-	$sow->{'lock'} = SWLock->new($sow);
 	$sow->{'lock'}->glock(); # ファイルロック
-
 	return $sow;
 }
 
@@ -482,9 +481,9 @@ sub CheckWriteSafetyRole {
 
 	my $curpl = &SWBase::GetCurrentPl($sow, $vil);
 	my $enablecheck = 0;
-	$enablecheck = 1 if ( $curpl->rolesayswitch($vil,1) ne ''); 
-	$enablecheck = 1 if ( $curpl->giftsayswitch($vil,1) ne ''); 
-	
+	$enablecheck = 1 if ( $curpl->rolesayswitch($vil,1) ne '');
+	$enablecheck = 1 if ( $curpl->giftsayswitch($vil,1) ne '');
+
 	return $enablecheck;
 }
 

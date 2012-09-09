@@ -54,10 +54,26 @@ sub createvil {
 	);
 	$self->{'file'} = $file;
 	$self->closevil();
+	$self->createbasevil();
+	return;
+}
 
-	$self->{'turn'}          = 0;
+#----------------------------------------
+# 村データの作成
+#----------------------------------------
+sub createbasevil {
+	my $self = shift;
+	my $sow = $self->{'sow'};
+
+	$self->{'turn'} = 0;
+	$self->{'vname'} = '';
+	$self->{'vcomment'} = '';
+	$self->{'csid'} = '';
+
+	$self->{'roletable'}     = '';
 	$self->{'rolediscard'}   = '';
 	$self->{'eventcard'}     = '';
+
 	$self->{'eclipse'}       = '';
 	$self->{'seance'}        = '';
 	$self->{'noselrole'}     = 1;
@@ -65,6 +81,7 @@ sub createvil {
 	$self->{'nextupdatedt'}  = $sow->{'time'};
 	$self->{'nextchargedt'}  = $sow->{'time'};
 	$self->{'nextcommitdt'}  = $sow->{'time'};
+	$self->{'scraplimitdt'}  = $sow->{'time'};
 	$self->{'epilogue'}      = 9999;
 	$self->{'winner'}        = 0;
 	$self->{'useless'}       = 0;
@@ -81,11 +98,12 @@ sub createvil {
 	$self->{'riot'}          = -1;
 	$self->{'scapegoat'}     = -1;
 	$self->{'event'}         = 0;
+	$self->{'entrylimit'}    = '';
+	$self->{'entrypwd'}      = '';
 	%{$self->{'pl'}} = ();
 	%{$self->{'plface'}} = ();
 	@{$self->{'pllist'}} = ();
 	%{$sow->{'csidlist'}} = ();
-	$sow->{'turn'} = 0;
 
 	return;
 }
@@ -97,24 +115,12 @@ sub createdummyvil {
 	my $self = shift;
 	my $sow = $self->{'sow'};
 
-	$self->{'turn'}         = 0;
-	$self->{'rolediscard'}  = '';
-	$self->{'updateddt'}    = $sow->{'time'};
-	$self->{'nextupdatedt'} = $sow->{'time'};
-	$self->{'nextchargedt'} = $sow->{'time'};
-	$self->{'nextcommitdt'} = $sow->{'time'};
-	$self->{'epilogue'}     = 9999;
-	$self->{'winner'}       = 0;
+	$self->createbasevil();
 	$self->{'randomtarget'} = 0;
 	$self->{'showid'}       = 0;
 	$self->{'undead'}       = 0;
 	$self->{'extend'}       = 2;
 	$self->{'emulated'}     = 1;
-	%{$self->{'pl'}} = ();
-	%{$self->{'plface'}} = ();
-	@{$self->{'pllist'}} = ();
-	%{$sow->{'csidlist'}} = ();
-	$sow->{'turn'} = 0;
 
 	return;
 }
@@ -552,7 +558,7 @@ sub getptcosts {
 	my $saycnt = $cfg->{'COUNTS_SAY'}->{$vil->{'saycnttype'}};
 	my $cost   = $saycnt->{$cost_key};
 	my $unit   = $sow->{'basictrs'}->{'SAYTEXT'}->{$cost}->{$unit_key};
-	
+
 	$cost = 'none'  if ($vil->isfreecost());
 	return ($saycnt,$cost,$unit);
 }
@@ -632,7 +638,7 @@ sub getText {
 	my ($self, $key) = @_;
 	my $sow  = $self->{'sow'};
 	my $text = $sow->{'textrs'}->{$key};
-	
+
 	return  $self->Tag2Text($text);
 }
 
@@ -717,6 +723,271 @@ sub isstartable {
 	$result = 0 if (($committablepl < 1)&&($vil->{'mob'} eq 'juror'));
 	return $result;
 }
+
+
+sub gon_potofs {
+	my ($vil, $secret) = @_;
+	print <<"_HTML_";
+gon.potofs=[];
+_HTML_
+	my $pllist = $vil->getallpllist();
+	foreach $pl (@$pllist) {
+		my $yourself = ($pl->{'uid'} eq $vil->{'sow'}->{'uid'});
+		my $longchrname  = $pl->getlongchrname();
+		my $shortchrname = $pl->getshortchrname();
+		my $live = $pl->{'live'};
+		$live = 'victim' if('live' ne $live);
+		print <<"_HTML_";
+var pl = {
+	"csid":    "$pl->{'csid'}",
+	"face_id": "$pl->{'cid'}",
+	"deathday": $pl->{'deathday'},
+
+	"name":    "$shortchrname",
+	"jobname": "$pl->{'jobname'}",
+    "longname": "$longchrname",
+    "shortname": "$shortchrname",
+	"clearance": $pl->{'clearance'},
+	"zapcount": $pl->{'zapcount'},
+	"postfix": "$pl->{'postfix'}",
+
+	"live": "$live",
+    "bonds": [],
+    "pseudobonds": [],
+
+	"point":{
+		"actaddpt":  $pl->{'actaddpt'},
+		"saidcount": $pl->{'saidcount'},
+		"saidpoint": $pl->{'saidpoint'}
+	},
+	"say":{
+		"say":   $pl->{'say'}
+	}
+};
+_HTML_
+		if ( 1 == $vil->{'showid'}){
+			print <<"_HTML_";
+pl.sow_auth_id = "$pl->{'uid'}";
+_HTML_
+		}
+		if ($secret || $yourself) {
+			my $love  = $pl->getvisiblelovestate();
+
+			my $win_visible = $pl->win_visible();
+			my $win_result  = $pl->winresult();
+
+			my $is_voter = $pl->isvoter();
+			my $is_human = $pl->ishuman();
+			my $is_enemy = $pl->isenemy();
+			my $is_wolf = $pl->iswolf();
+			my $is_pixi = $pl->ispixi();
+			my $is_sensible = $pl->issensible();
+			my $is_committer = $pl->iscommitter();
+			print <<"_HTML_";
+pl.win = {
+	visible: "$win_visible",
+	result:  "$win_result",
+};
+
+pl.live = "$pl->{'live'}";
+pl.role = [
+	SOW_RECORD.CABALA.roles[$pl->{'role'}],
+	SOW_RECORD.CABALA.gifts[$pl->{'gift'}]
+].compact();
+pl.rolestate = $pl->{'rolestate'};
+pl.select = SOW_RECORD.CABALA.roles[$pl->{'selrole'}];
+
+pl.history = "$pl->{'history'}";
+pl.sheep = "$pl->{'sheep'}";
+pl.overhear = [];
+
+pl.love = "$love";
+
+pl.is_voter = (0 != $is_voter);
+pl.is_human = (0 != $is_human);
+pl.is_enemy = (0 != $is_enemy);
+pl.is_wolf = (0 != $is_wolf);
+pl.is_pixi = (0 != $is_pixi);
+pl.is_sensible = (0 != $is_sensible);
+pl.is_committer = (0 != $is_committer);
+pl.say = {
+	"say":   $pl->{'say'},
+	"tsay":  $pl->{'tsay'},
+	"spsay": $pl->{'spsay'},
+	"wsay":  $pl->{'wsay'},
+	"gsay":  $pl->{'gsay'},
+	"say_act": $pl->{'say_act'}
+};
+pl.timer = {
+	"entrieddt":    Date.create(1000 * $pl->{'entrieddt'}),
+	"limitentrydt": Date.create(1000 * $pl->{'limitentrydt'})
+};
+_HTML_
+		}
+		print <<"_HTML_";
+gon.potofs.push(pl);
+_HTML_
+	}
+}
+
+sub gon_story {
+	my ($vil, $secret) = @_;
+	my $sow = $vil->{'sow'};
+	my $config;
+
+	my $roleid = $sow->{'ROLEID'};
+	my $giftid = $sow->{'GIFTID'};
+	my $eventid = $sow->{'EVENTID'};
+	my @config_list;
+	push(@config_list, 'villager');
+
+	require "$sow->{'cfg'}->{'DIR_LIB'}/setrole.pl";
+	my ( $rolematrix, $giftmatrix, $eventmatrix ) = &SWSetRole::GetSetRoleTable($sow, $vil, $vil->{'roletable'}, $vil->{'vplcnt'});
+
+	for ($i = 1; $i < @$roleid; $i++) {
+		$size = $rolematrix->[$i];
+		for ($j = 0; $j < $size; $j++) {
+			push(@config_list, $roleid->[$i]);
+		}
+	}
+
+	for ($i = 2; $i < @$giftid; $i++) {
+		$size = $giftmatrix->[$i];
+		for ($j = 0; $j < $size; $j++) {
+			push(@config_list, $giftid->[$i]);
+		}
+	}
+
+	for ($i = 1; $i < @$eventid; $i++) {
+		$size = $eventmatrix->[$i];
+		for ($j = 0; $j < $size; $j++) {
+			push(@config_list, $eventid->[$i]);
+		}
+	}
+	$config = join('/', @config_list);
+
+	my $vstatus = $vil->getvstatus();
+
+	my $isepilogue = $vil->isepilogue();
+	my $isscrap = $vil->isscrap();
+
+	print <<"_HTML_";
+gon.story = {
+	"vid": $vil->{'vid'},
+	"order": $vstatus,
+
+	"name":    "$vil->{'vname'}",
+	"rating":  "$vil->{'rating'}",
+	"comment": "$vil->{'vcomment'}",
+	"csid":    "$vil->{'csid'}",
+	"options": [],
+	"is_finish":    (0 != $isepilogue),
+	"is_epilogue":  (0 != $isepilogue),
+	"is_scrap":     (0 != $isscrap),
+	"card":{
+		"discard": "$vil->{'rolediscard'}".split('/').map(function(n) { return(SOW_RECORD.CABALA.gifts[n]) }).compact(),
+		"event":   "$vil->{'eventcard'}".split('/').map(function(n) { return(SOW_RECORD.CABALA.events[n]) }).compact(),
+		"config":  "$config".split('/')
+	},
+	"timer":{
+		"updateddt":    Date.create(1000 * $vil->{'updateddt'}),
+		"nextupdatedt": Date.create(1000 * $vil->{'nextupdatedt'}),
+		"nextchargedt": Date.create(1000 * $vil->{'nextchargedt'}),
+		"nextcommitdt": Date.create(1000 * $vil->{'nextcommitdt'}),
+		"scraplimitdt": Date.create(1000 * $vil->{'scraplimitdt'})
+	},
+	"type":{
+		"roletable": "$vil->{'roletable'}",
+		"say":   "$vil->{'saycnttype'}",
+		"start": "$vil->{'starttype'}",
+		"vote":  "$vil->{'votetype'}",
+		"mob":   "$vil->{'mob'}",
+		"game":  "$vil->{'game'}",
+	},
+	"upd":{
+		"interval": $vil->{'updinterval'},
+		"hour":     $vil->{'updhour'},
+		"minute":   $vil->{'updminite'}
+	},
+	"vpl":[
+		$vil->{'vplcnt'},
+		$vil->{'vplcntstart'}
+	]
+};
+if(1 == $vil->{'showid'      }){ gon.story.options.push("show-id");       }
+if(1 == $vil->{'undead'      }){ gon.story.options.push("undead-talk");   }
+if(1 == $vil->{'randomtarget'}){ gon.story.options.push("random-target"); }
+if(1 != $vil->{'noselrole'   }){ gon.story.options.push("select-role");   }
+_HTML_
+	if ($secret) {
+		print <<"_HTML_";
+gon.story.sow_auth_id = "$vil->{'makeruid'}";
+gon.story.entry = {
+	password: "$vil->{'entrypwd'}",
+	limit:    "$vil->{'entrylimit'}"
+}
+_HTML_
+	}
+}
+
+sub gon_event {
+	my ($vil, $secret) = @_;
+	my $isseance = $vil->isseance();
+	my $ispublic = $vil->ispublic();
+	my $iseclipse = $vil->iseclipse();
+	my $isfreecost = $vil->isfreecost();
+	my $isstartable = $vil->isstartable();
+
+	my $sayptcosts  = $vil->getsayptcosts();
+	my $actptcosts  = $vil->getactptcosts();
+	my $memoptcosts = $vil->getmemoptcosts();
+
+	my $committablepl = $vil->getcommittablepl();
+	my $votablepl    = $vil->getvotablepl();
+
+	print <<"_HTML_";
+gon.event = {
+    "turn":   $vil->{'turn'},
+    "winner": SOW_RECORD.CABALA.winners[$vil->{'winner'}],
+	"event":  SOW_RECORD.CABALA.events[$vil->{'event'}],
+	"riot":      $vil->{'riot'},
+	"scapegoat": $vil->{'scapegoat'},
+    "is_seance": (0 != $isseance),
+    "is_public": (0 != $ispublic),
+    "is_eclipse": (0 != $iseclipse),
+	"is_freecost": (0 != $isfreecost),
+	"is_startable": (0 != $isstartable),
+	"cost":{
+		"say":  "$sayptcosts",
+		"act":  "$actptcosts",
+		"memo": "$memoptcosts",
+	},
+	"player":{
+		"start": $vil->{'vplcntstart'},
+		"limit": $vil->{'vplcnt'},
+		"votable": $votablepl,
+		"commitable": $committablepl
+	},
+	"say":{
+		"modifiedsay":   Date.create(1000 * $vil->{'modifiedsay'}),
+		"modifiedwsay":  Date.create(1000 * $vil->{'modifiedwsay'}),
+		"modifiedgsay":  Date.create(1000 * $vil->{'modifiedgsay'}),
+		"modifiedspsay": Date.create(1000 * $vil->{'modifiedspsay'}),
+		"modifiedxsay":  Date.create(1000 * $vil->{'modifiedxsay'}),
+		"modifiedvsay":  Date.create(1000 * $vil->{'modifiedvsay'})
+	},
+	"messages": []
+};
+_HTML_
+	if ($secret) {
+		my $committedpl  = $vil->getcommittedpl();
+		print <<"_HTML_";
+gon.event.player.committed = $committedpl,
+gon.event.grudge = $vil->{'grudge'};
+_HTML_
+	}
+}
+
 
 #----------------------------------------
 # 村データラベル

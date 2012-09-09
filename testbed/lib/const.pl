@@ -134,6 +134,7 @@ sub InitConst {
 		cntogre         => 0,
 		cntfairy        => 0,
 		cntmob          => 0,
+		eventcard       => 1,
 		cntnothing      => 0,
 		cntaprilfool    => 0,
 		cntturnfink     => 0,
@@ -314,17 +315,17 @@ sub InitConst {
 
 	# 役職配分表リスト
 	my @order_roletable = (
-		'default',  
-		'mistery',  
-		'wbbs_c', 
-		'wbbs_f', 
-		'wbbs_g', 
-		'test1st', 
-		'test2nd', 
-		'starwars', 
-		'ocarina', 
-		'lover', 
-		'hater', 
+		'default',
+		'mistery',
+		'wbbs_c',
+		'wbbs_f',
+		'wbbs_g',
+		'test1st',
+		'test2nd',
+		'starwars',
+		'ocarina',
+		'lover',
+		'hater',
 		'custom',   # 自由設定
 	);
 
@@ -866,7 +867,7 @@ sub InitConst {
 		# 役職番号
 		ROLEID_UNDEF         =>  0,
 		SIDEST_HUMANSIDE     =>  1,
-		
+
 		ROLEID_VILLAGER      =>  1,
 		ROLEID_STIGMA        =>  2,
 		ROLEID_FM            =>  3,
@@ -895,7 +896,7 @@ sub InitConst {
 		ROLEID_GIRL          => 26,
 		ROLEID_SCAPEGOAT     => 27,
 		ROLEID_ELDER         => 28,
-		
+
 		SIDEED_HUMANSIDE     => 30,
 		SIDEST_ENEMY         => 30,
 
@@ -910,10 +911,10 @@ sub InitConst {
 		ROLEID_DYINGPOSSESS  => 46,
 		ROLEID_ORACLE        => 47,
 		ROLEID_SORCERER      => 48,
-		
+
 		SIDEED_ENEMY         => 50,
 		SIDEST_WOLFSIDE      => 50,
-		
+
 		ROLEID_HEADLESS      => 52,
 		ROLEID_WOLF          => 61,
 		ROLEID_AURAWOLF      => 62,
@@ -923,15 +924,15 @@ sub InitConst {
 		ROLEID_CHILDWOLF     => 66,
 		ROLEID_DYINGWOLF     => 67,
 		ROLEID_SILENTWOLF    => 68,
-		
+
 		SIDEED_WOLFSIDE      => 70,
 		SIDEST_PIXISIDE      => 70,
-		
+
 		ROLEID_HAMSTER       => 81,
 		ROLEID_MIMICRY       => 86,
 		ROLEID_DYINGPIXI     => 88,
 		ROLEID_TRICKSTER     => 89,
-		
+
 		SIDEED_PIXISIDE      => 90,
 		SIDEST_OTHER         => 90,
 

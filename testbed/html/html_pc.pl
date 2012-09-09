@@ -47,7 +47,7 @@ _HTML_
     next if ($_ ne $cssid); # alternateは取りあえず停止中
     $alternate = 'alternate ';
     $alternate = '' if ($_ eq $cssid);
-    print "  <link rel=\"" . $alternate . "stylesheet\" type=\"text/css\" href=\"$cfg->{'DIR_CSS'}/$css->{$_}->{'FILE'}\" title=\"$css->{$_}->{'TITLE'}\"$net>\n";
+    print "  <link rel=\"" . $alternate . "stylesheet\" type=\"text/css\" href=\"{{css}}\"$net>\n";
   }
 
   # RSSの出力
@@ -67,10 +67,6 @@ _HTML_
     print "  <link rel=\"$_->{'rel'}\" href=\"$_->{'url'}\" title=\"$_->{'title'}\"$net>\n";
   }
 
-  print <<"_HTML_";
-<script type="text/javascript" src="http://www.google.com/jsapi"></script>
-<script type="text/javascript">  // google.load("jquery", "1");</script>
-_HTML_
   # JavaScriptの出力
   if (defined($sow->{'html'}->{'file_js'})) {
     my $file_js = $sow->{'html'}->{'file_js'};
@@ -116,11 +112,6 @@ sub OutHTMLContentFrameHeader {
   my $query = $sow->{'query'};
   my $urlsow = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}";
 
-  my $classcontentframe = 'contentframe';
-  if (($sow->{'query'}->{'cmd'} eq '') && (defined($sow->{'query'}->{'vid'})) && ($sow->{'query'}->{'logid'} eq '') && ($sow->{'filter'}->{'layoutfilter'} eq '1')) {
-    $classcontentframe = 'contentframe_navileft';
-  }
-
   my $reqvals = &SWBase::GetRequestValues($sow);
   $reqvals->{'vid'} = '';
   $reqvals->{'turn'} = '';
@@ -133,27 +124,11 @@ sub OutHTMLContentFrameHeader {
     $titleend = '';
   }
 
-  my $cssid = 'default';
-  $cssid = $sow->{'query'}->{'css'} if ($sow->{'query'}->{'css'} ne '');
-  $cssid = 'default' if (!defined($cfg->{'CSS'}->{$cssid}));
-  my $css = $cfg->{'CSS'}->{$cssid};
-  my %topbanner = (
-    file   => $cfg->{'FILE_TOPBANNER'},
-    width  => $cfg->{'TOPBANNER_WIDTH'},
-    height => $cfg->{'TOPBANNER_HEIGHT'},
-  );
-  my $file_topbanner = ($css->{'FILE_TOPBANNER_N'},$css->{'FILE_TOPBANNER_D'})[((time-9*60*60)/(12*60*60))%2];
-  $topbanner{'file'}   = $file_topbanner            if (defined($file_topbanner));
-  $topbanner{'width'}  = $css->{'TOPBANNER_WIDTH'}  if (defined($css->{'TOPBANNER_WIDTH'}));
-  $topbanner{'height'} = $css->{'TOPBANNER_HEIGHT'} if (defined($css->{'TOPBANNER_HEIGHT'}));
-
   print <<"_HTML_";
-<div id="contentframe" class="$classcontentframe">
-
-<h1>$titlestart<img src="$cfg->{'DIR_IMG'}/$topbanner{'file'}" width="$topbanner{'width'}" height="$topbanner{'height'}" alt="$cfg->{'NAME_SW'}"$net>$titleend</h1>
+<div id="contentframe">
+<h1>$titlestart<img ng-src="{{h1.path}}" ng-cloak $net>$titleend</h1>
 
 <div class="inframe">
-
 _HTML_
 
 }
@@ -223,12 +198,12 @@ sub OutHTMLLogin {
     if ($cfg->{'ENABLED_TYPEKEY'} <= 0) {
       # 通常のログインフォーム
       print <<"_HTML_";
-<form action="$urlsow" method="$sow->{'cfg'}->{'METHOD_FORM'}" class="login">
+<form action="$urlsow" method="$sow->{'cfg'}->{'METHOD_FORM'}" class="form-inline">
 <p>
   <input type="hidden" name="cmd" value="login"$net>
   <input type="hidden" name="cmdfrom" value="$query->{'cmd'}"$net>$hidden
-  <label>user id: <input type="text" size="10" name="uid" value="$sow->{'uid'}"$net></label>
-  <label>password: <input type="password" size="10" name="pwd" value=""$net></label>
+  <label>user id: <input class="input-small" type="text" size="10" name="uid" value="$sow->{'uid'}"$net></label>
+  <label>password: <input class="input-small" type="password" size="10" name="pwd" value=""$net></label>
   <input type="submit" value="ログイン"$disabled$net>
 </p>
 </form>
@@ -240,7 +215,7 @@ _HTML_
       $reqvals->{'cmd'} = 'login';
       my $linkvalue = &SWBase::GetLinkValues($sow, $reqvals);
       print <<"_HTML_";
-<form action="https://www.typekey.com/t/typekey/login" method="$sow->{'cfg'}->{'METHOD_FORM'}" class="login">
+<form action="https://www.typekey.com/t/typekey/login" method="$sow->{'cfg'}->{'METHOD_FORM'}" class="form-inline">
 <p>
   <input type="hidden" name="t" value="$sow->{'cfg'}->{'TOKEN_TYPEKEY'}"$net>
   <input type="hidden" name="need_email" value="0"$net>
@@ -263,7 +238,6 @@ _HTML_
     my $urluser = $cfg->{'URL_USER'}.'?'.&SWBase::GetLinkValues($sow, \%link);
     my $uidtext = $sow->{'uid'};
     $uidtext =~ s/ /&nbsp\;/g;
-    $uidtext = "<a href=\"$urluser\">$uidtext</a>";
 
     my $disabled = '';
     $disabled = " $sow->{'html'}->{'disabled'}" if (($query->{'cmd'} eq 'entrypr') || ($query->{'cmd'} eq 'writepr') || ($query->{'prof'} ne '') || ($query->{'cmd'} eq 'editprofform') || ($query->{'cmd'} eq 'editprof'));
@@ -277,13 +251,12 @@ _HTML_
     if ($sow->{'cfg'}->{'ENABLED_TYPEKEY'} <= 0) {
       # 通常のログアウトフォーム
       print <<"_HTML_";
-<form action="$urlsow" method="$sow->{'cfg'}->{'METHOD_FORM'}" class="login">
+<form action="$urlsow" method="$sow->{'cfg'}->{'METHOD_FORM'}" class="form-inline">
 <p>
   <input type="hidden" name="cmd" value="logout"$net>
   <input type="hidden" name="cmdfrom" value="$query->{'cmd'}"$net>$hidden$linkadmin
   <span class="mes_date">ログイン情報は$sow->{'cookie_expires'}まで有効です。</span>
-  user id: $uidtext
-  <input type="submit" value="ログアウト"$disabled$net>
+  <input type="submit" value="$uidtext がログアウト"$disabled$net>
 </p>
 </form>
 <hr class="invisible_hr"$net>
@@ -294,7 +267,7 @@ _HTML_
       $reqvals->{'cmd'} = 'logout';
       my $linkvalue = &SWBase::GetLinkValues($sow, $reqvals);
       print <<"_HTML_";
-<form action="https://www.typekey.com/t/typekey/logout" method="$sow->{'cfg'}->{'METHOD_FORM'}" class="login">
+<form action="https://www.typekey.com/t/typekey/logout" method="$sow->{'cfg'}->{'METHOD_FORM'}" class="form-inline">
 <p>
   <input type="hidden" name="_return" value="$sow->{'cfg'}->{'URL_SW'}/$sow->{'cfg'}->{'FILE_SOW'}?$linkvalue"$net>$linkadmin
   user id: $uidtext
@@ -422,187 +395,6 @@ sub OutHTMLSayTextAreaPC {
 _HTML_
 
   return;
-}
-
-#----------------------------------------
-# 日付アンカーHTML出力
-#----------------------------------------
-sub OutHTMLTurnNavi {
-  my ($sow, $vil, $logs, $list, $rows, $position) = @_;
-  my $cfg   = $sow->{'cfg'};
-  my $query = $sow->{'query'};
-  my $amp   = $sow->{'html'}->{'amp'};
-  my $net   = $sow->{'html'}->{'net'};
-
-  $position = 0 if (!defined($position));
-
-  my $reqvals = &SWBase::GetRequestValues($sow);
-
-  $reqvals->{'turn'} = $sow->{'turn'};
-  my $linkvalues = &SWBase::GetLinkValues($sow, $reqvals);
-
-  $reqvals->{'mode'} = '';
-  my $linkmodes = &SWBase::GetLinkValues($sow, $reqvals);
-
-  $reqvals->{'turn'} = '';
-  my $linkturns = &SWBase::GetLinkValues($sow, $reqvals);
-
-  $reqvals->{'turn'} = $sow->{'turn'};
-  $reqvals->{'pno'} = '';
-  my $linkmemo = &SWBase::GetLinkValues($sow, $reqvals);
-
-  $reqvals->{'turn'} = '';
-  $reqvals->{'pno'} = '';
-  my $linknew = &SWBase::GetLinkValues($sow, $reqvals);
-  my $linkprologue = $linknew;
-
-  my $linktop = $amp."move=page".$amp."pageno=1";
-
-  my $anklog = "<a href=\"$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linkvalues\">ログ</a>";
-  my $ankmemo = "<a href=\"$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linkmemo$amp" . "cmd=memo\">メモ</a>";
-  my $ankmemohist = "<a href=\"$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linkmemo$amp" . "cmd=hist\">メモ履歴</a>";
-# $ankmemo .= " <a href=\"$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linkmemo$amp" . "cmd=memo&anonymous=on\">匿名メモ</a>";
-  $ankmemo .= " <a href=\"$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linkmemo$amp" . "cmd=memo&admin=on\">管理メモ</a>"  if ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'});
-  $ankmemo .= " <a href=\"$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linkmemo$amp" . "cmd=memo&maker=on\">村建メモ</a>" if ($sow->{'uid'} eq $vil->{'makeruid'});
-  $ankmemohist = 'メモ履歴' if (($query->{'cmd'} eq 'hist') || ($query->{'cmd'} eq 'vinfo') || ($sow->{'turn'} > $vil->{'epilogue'}));
-  $anklog = 'ログ' if (($query->{'cmd'} eq '') || ($query->{'cmd'} eq 'vinfo'));
-  my $ankform = "<a href=\"$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linknew#newsay\">発言欄へ</a>";
-  $ankform = '発言欄へ' if ($vil->{'turn'} > $vil->{'epilogue'});
-
-  if (($position > 0) && ($sow->{'turn'} <= $vil->{'epilogue'}) && ($query->{'cmd'} ne 'vinfo')) {
-    print "<p class=\"pagenavi\">\n";
-    &OutHTMLPageNaviPC($sow, $vil, $logs, $list, $rows);
-    print "[$ankmemo/$ankmemohist] / $ankform\n";
-    print "</p>\n\n";
-  }
-
-  # 視点切り替えモードの取得
-  my ($mode, $modes, $modename) = &SWHtml::GetViewMode($sow);
-
-  my $postmode = '';
-  $postmode = $amp . "mode=$mode" if ($vil->{'epilogue'} < $vil->{'turn'});
-
-  print "<p class=\"turnnavi\" id=\"$sow->{'turn'}\">\n";
-  if ($query->{'cmd'} eq 'vinfo') {
-    print "情報\n";
-  } else {
-    print "<a href=\"$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linknew$amp" . "cmd=vinfo\">情報</a>\n";
-  }
-
-  my $cmdlog = 0;
-  $cmdlog = 1 if (($query->{'cmd'} eq '') || ($query->{'cmd'} eq 'memo') || ($query->{'cmd'} eq 'hist'));
-  my $i;
-  for ($i = 0; $i <= $vil->{'turn'}; $i++) {
-    my $postturn = "";
-    $postturn = $amp . "turn=$i" if ($i != $vil->{'turn'});
-    my $turnname = "$i日目";
-    $turnname = "プロローグ" if ($i == 0);
-    $turnname = "エピローグ" if ($i == $vil->{'epilogue'});
-    $turnname = "終了" if ($i > $vil->{'epilogue'});
-
-    if (($i == $sow->{'turn'}) && ($cmdlog > 0) && ($query->{'logid'} eq '')) {
-        print "$turnname\n";
-    } else {
-      if ( $i == 0 ){
-        print "<a href=\"$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linkprologue$postturn$postmode".$linktop."\">$turnname</a>\n";
-      } else {
-        print "<a href=\"$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linkturns$postturn$postmode".$linktop."\">$turnname</a>\n";
-      }
-    }
-  }
-
-  print <<"_HTML_";
-/ <a href="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linknew#newsay">最新</a>
-</p>
-
-_HTML_
-
-  if (($position == 0) && ($sow->{'turn'} <= $vil->{'epilogue'}) && ($query->{'cmd'} ne 'vinfo')) {
-    print "<p class=\"pagenavi\">\n";
-    &OutHTMLPageNaviPC($sow, $vil, $logs, $list, $rows);
-    print "[$ankmemo/$ankmemohist] / $ankform\n";
-    print "</p>\n\n";
-  }
-
-  # 視点切り替え
-  if ($vil->{'epilogue'} < $vil->{'turn'}) {
-    print "<p class=\"turnnavi\">\n視点：\n";
-    my $postturn = $amp . "turn=$sow->{'turn'}";
-    my $i;
-    for ($i = 0; $i < @$modes; $i++) {
-      if ($mode eq $modes->[$i]) {
-        print "$modename->[$i]\n";
-      } else {
-        print "<a href=\"$sow->{'cfg'}->{'FILE_SOW'}?$linkmodes$postturn$amp"."$linktop$amp". "mode=$modes->[$i]\">$modename->[$i]</a>\n";
-      }
-    }
-  print "</p>\n\n";
-  }
-  return;
-}
-
-#----------------------------------------
-# ページリンクHTML出力
-#----------------------------------------
-sub OutHTMLPageNaviPC {
-  my ($sow, $vil, $logs, $list, $rows) = @_;
-  my $cfg   = $sow->{'cfg'};
-  my $query = $sow->{'query'};
-  my $net   = $sow->{'html'}->{'net'};
-  my $amp   = $sow->{'html'}->{'amp'};
-
-  if (!defined($logs)) {
-    my @logs;
-    $logs = \@logs;
-  }
-  if (!defined($rows)) {
-    $rows = {
-      start => 0,
-      end   => 0,
-    };
-  }
-
-
-  my $reqvals = &SWBase::GetRequestValues($sow);
-  $reqvals->{'cmd'} = '';
-  my $linkvalues = &SWBase::GetLinkValues($sow, $reqvals);
-  my $urlsow = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linkvalues";
-
-  # 可視ログのカウント
-  my ($pages, $indexno) = &SWHtml::GetPagesPermit($sow, $logs, $list);
-
-  # 行数の取得
-  my $row = $cfg->{'MAX_ROW'};
-  $row = $query->{'row'} if (defined($query->{'row'}));
-  $row = $cfg->{'MAX_ROW'} if ($row <= 0);
-
-  my $maxpage = int((@$pages + $row - 1) / $row); # 最大ページ
-  my $maxrow = $maxpage;
-
-  # 最初に表示するページリンク番号
-  my $firstpage = 0;
-
-  my $i;
-  my $endpage = int($indexno / $row);
-  $endpage = $query->{'pageno'} - 1 if (defined($query->{'pageno'}));
-  $endpage = $firstpage + $maxrow - 1 if (($rows->{'end'} != 0) || (!defined($logs->[$#$logs])));
-  $endpage = -1 if (($query->{'cmd'} eq 'memo') || ($query->{'cmd'} eq 'hist') || ($query->{'rowall'} ne ''));
-  for ($i = $firstpage; $i < $firstpage + $maxrow; $i++) {
-    my $pageno = $i + 1;
-    if (($i == $endpage) || ($query->{'cmd'} eq 'vinfo')) {
-      print " $pageno ";
-    } else {
-      my $log = $pages->[$i * $row];
-      my $logid = $log->{'logid'};
-      $logid = $log->{'maskedid'} if (($vil->isepilogue() == 0) && (defined($log->{'maskedid'})) && (($log->{'mestype'} == $sow->{'MESTYPE_INFOSP'}) || ($log->{'mestype'} == $sow->{'MESTYPE_TSAY'})));
-      print " <a href=\"$urlsow$amp" . "move=page$amp" . "pageno=$pageno\">$pageno</a> ";
-    }
-    if ($i < $firstpage + $maxrow - 1) {
-      print "\n";
-    } else {
-      print "\n";
-    }
-  }
 }
 
 #----------------------------------------

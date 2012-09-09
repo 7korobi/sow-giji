@@ -16,6 +16,8 @@ my @t = times();
 $t[0] = $t[0] + $t[1];
 
 use strict;
+use warnings;
+use CGI::Carp qw(fatalsToBrowser);
 
 srand; # —”’l‚Ì‰Šú‰»
 
@@ -324,8 +326,8 @@ sub TaskBranch {
 		&CheckValidityUpdate($sow);
 		require "$dirhtml/html_dialog.pl";
 		&SWHtmlDialog::OutHTMLDialog($sow);
-	} elsif (($cmd eq 'spec') 
-	       ||($cmd eq 'changelog') 
+	} elsif (($cmd eq 'spec')
+	       ||($cmd eq 'changelog')
 	       ||($cmd eq 'howto')
 	       ||($cmd eq 'operate')
 	       ||($cmd eq 'prohibit')
@@ -334,8 +336,8 @@ sub TaskBranch {
 	       ||($cmd eq 'rolematrix')
 	       ||($cmd eq 'rolelist')
 	       ||($cmd eq 'roleaspect')
-	       ||($cmd eq 'trsdiff')   
-	       ||($cmd eq 'trslist')   
+	       ||($cmd eq 'trsdiff')
+	       ||($cmd eq 'trslist')
 	       ){
 		# —V‚Ñ•û^ƒ‹[ƒ‹^ŠT—ª‚Ì•\¦
 		require "$dirhtml/html_doc.pl";

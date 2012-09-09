@@ -23,7 +23,7 @@ sub OutHTMLIndex {
 	my $urlimg  = $cfg->{'DIR_IMG'};
 
 	my $infodt = 0;
-	$infodt = (stat($urlinfo))[9] if (-e $urlinfo); 
+	$infodt = (stat($urlinfo))[9] if (-e $urlinfo);
 	my $changelogdt = (stat("./$cfg->{'DIR_RS'}/doc_changelog.pl"))[9];
 	$infodt = $changelogdt if ($changelogdt > $infodt);
 	&SetHTTPUpdateIndex($sow, $infodt, $vindex->getupdatedt());
@@ -47,11 +47,11 @@ sub OutHTMLIndex {
 		require $urlinfo;
 		&SWAdminInfo::OutHTMLAdminInfo($sow);
 	}
-	
+
 	print <<"_HTML_";
 <h2 style="font-size: xx-large;">$cfg->{'NAME_HOME'}</h2>
 _HTML_
-	
+
 	# 州を紹介
 	if (-e $urlinfo) {
 		require $urlinfo;
@@ -71,7 +71,6 @@ _HTML_
 
 	my $linkmake     = $urlwiki.'(Knowledge)Manual';
     my $linkroledeal = 'http://utage.sytes.net/WebRecord/dat_role_deals/'.$cfg->{'RULE'}.'/web';
-	my $linkscedure  = 'http://jsfun525.gamedb.info/wiki/?%B4%EB%B2%E8%C2%BC%CD%BD%C4%EA%C9%BD';
 	my $linkoperate = '(Knowledge)Operation';
 	my $linkspec    = '(What)Other';
 
@@ -130,7 +129,7 @@ _HTML_
 <dd>匿名のまま、遊びたい村の希望を出すことができる。誰かが村を建ててくれるかも？
 </dl>
 <dl class="paragraph">
-<dt><strong><a href="http://jsfun525.gamedb.info/wiki/?%B4%EB%B2%E8%C2%BC%CD%BD%C4%EA%C9%BD">企画村\予\定\表\</a></strong>（wiki：stinさん管理）
+<dt><strong><a href="{{link.plan}}">企画村\予\定\表\</a></strong>（wiki：stinさん管理）
 <dd>これから始まる村の予\定が並んでいる。ロールプレイヤー必見かも。
 </dl>
 <dl class="paragraph">
@@ -210,7 +209,7 @@ _HTML_
 <h2>村の建て方</h2>
 <p class="paragraph">
 まず<a href="$urlsow?$linkrule#make">村建て人の心構\え</a>、<a href="$linkmake">村建てマニュアル</a>を読んでから村を建てよう。<br>
-◆参考：<a href="$urlsow?$linkrolematrix">役職配分一覧</a>｜<a href="$linkroledeal">編成実績</a>｜<a href="$linkscedure">企画村予\定表\</a>（wiki：stinさん管理）<br>
+◆参考：<a href="$urlsow?$linkrolematrix">役職配分一覧</a>｜<a href="$linkroledeal">編成実績</a>｜<a href="{{link.scedure}}">企画村予\定表\</a>（wiki：stinさん管理）<br>
 <a href="sow.cgi?cmd=trsdiff">基本設定</a>を選んで「村の作成」を押すと、新しくゲームを作成できる。
 </p>
 <p class="paragraph">
@@ -287,27 +286,27 @@ _HTML_
 
 	print <<"_HTML_";
 
-<h2>謝辞</h2> 
-<p class="paragraph"> 
+<h2>謝辞</h2>
+<p class="paragraph">
 このCGIを作成するに辺り、以下のサイトを参考にさせて頂きました。ありがとうございます。
-</p> 
- 
-<ul> 
-  <li>人狼審問 - Neighbour Wolves - (終了)</li> 
-  <li>The Village of Headless Knight (一時休止中)</li> 
-  <li>おとぎの国の人狼（欧州 <a href="http://euros.sakura.ne.jp/wolf/">おしまい</a>）</li> 
-  <li><!-- a href="http://werewolves.jp/" -->人狼の悪夢 (閉鎖)<!-- /a --></li> 
-  <li><a href="http://homepage2.nifty.com/ninjinia/">人狼BBS</a></li> 
-  <li><a href="http://wolfbbs.jp/">人狼BBS まとめサイト</a></li> 
-  <li><a href="http://mshe.skr.jp/">人狼BBQ 四国</a></li> 
-  <li><a href="http://shadow.s63.xrea.com/jinro2/index.cgi">汝は人狼なりや？Shadow Gallery Ver 2.0</a></li> 
-  <li><a href="http://melon-cirrus.sakura.ne.jp/sow/">人狼物語 瓜科国</a></li> 
-  <li><a href="http://www3.marimo.or.jp/~fgmaster/cabala/sow.cgi">人狼物語 ぐたるてぃめっと</a></li> 
-  <li><a href="http://o8o8.o0o0.jp/wolf/sow.cgi">人狼物語暗黒編</a></li> 
-  <li><a href="http://tkingdom.dtdns.net/m_jinro/index.html">メビウス人狼</a></li> 
-  <li><a href="http://straws.sakura.ne.jp/madb01/">MAD PEOPLE</a></li> 
-  <li><a href="http://members.at.infoseek.co.jp/Paranoia_O/">PARANOIA O</a></li> 
-</ul> 
+</p>
+
+<ul>
+  <li>人狼審問 - Neighbour Wolves - (終了)</li>
+  <li>The Village of Headless Knight (一時休止中)</li>
+  <li>おとぎの国の人狼（欧州 おしまい）</li>
+  <li>人狼の悪夢 (閉鎖)</li>
+  <li>汝は人狼なりや？Shadow Gallery Ver 2.0（終了）</li>
+  <li>MAD PEOPLE（終了）</li>
+  <li><a href="http://ninjinix.com/">人狼BBS</a></li>
+  <li><a href="http://wolfbbs.jp/">人狼BBS まとめサイト</a></li>
+  <li><a href="http://mshe.skr.jp/">人狼BBQ 四国</a></li>
+  <li><a href="http://melon-cirrus.sakura.ne.jp/sow/">人狼物語 瓜科国</a></li>
+  <li><a href="http://www3.marimo.or.jp/~fgmaster/cabala/sow.cgi">人狼物語 ぐたるてぃめっと</a></li>
+  <li><a href="http://o8o8.o0o0.jp/wolf/sow.cgi">人狼物語暗黒編</a></li>
+  <li><a href="http://tkido.com/m_jinro/index.html">メビウス人狼</a></li>
+  <li><a href="http://members.at.infoseek.co.jp/Paranoia_O/">PARANOIA O</a></li>
+</ul>
 <hr class="invisible_hr"$net>
 
 _HTML_
