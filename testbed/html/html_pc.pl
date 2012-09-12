@@ -391,7 +391,7 @@ sub OutHTMLSayTextAreaPC {
   print <<"_HTML_";
       <textarea name="mes" cols="30" rows="5">$text</textarea><br$net>
       <input type="hidden" name="cmd" value="$cmd"$net>$hidden
-      <input type="submit" value="$htmlsay->{'buttonlabel'}"$disabled$net>$htmlsay->{'saycnttext'}
+      <input type="submit" class="btn" value="$htmlsay->{'buttonlabel'}"$disabled$net>$htmlsay->{'saycnttext'}
 _HTML_
 
   return;

@@ -745,15 +745,15 @@ var pl = {
 
 	"name":    "$shortchrname",
 	"jobname": "$pl->{'jobname'}",
-    "longname": "$longchrname",
-    "shortname": "$shortchrname",
+	"longname": "$longchrname",
+	"shortname": "$shortchrname",
 	"clearance": $pl->{'clearance'},
 	"zapcount": $pl->{'zapcount'},
 	"postfix": "$pl->{'postfix'}",
 
 	"live": "$live",
-    "bonds": [],
-    "pseudobonds": [],
+	"bonds": [],
+	"pseudobonds": [],
 
 	"point":{
 		"actaddpt":  $pl->{'actaddpt'},
@@ -827,6 +827,11 @@ _HTML_
 		print <<"_HTML_";
 gon.potofs.push(pl);
 _HTML_
+		if ($yourself) {
+			print <<"_HTML_";
+gon.potof = pl;
+_HTML_
+		}
 	}
 }
 

@@ -479,12 +479,12 @@ sub GetConfig {
 
   my @file_js = (
     'data.js',
-    '../assets/giji.js',
+    '../assets/base.js',
     'sow.js',
   );
   my @file_js_vil = (
     'data.js',
-    '../assets/giji.js',
+    '../assets/base.js',
     'sow.js',
   );
 

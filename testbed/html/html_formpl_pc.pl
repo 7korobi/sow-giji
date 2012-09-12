@@ -150,13 +150,15 @@ _HTML_
 
 	# テキストボックスと発言ボタン初め
 	print <<"_HTML_";
-<form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$cfg->{'METHOD_FORM'}">
+<form class="form-inline" action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$cfg->{'METHOD_FORM'}">
 _HTML_
 
 	# 表情選択欄
 	&OutHTMLExpressionFormPC($sow, $vil);
 
-	print "    <div class=\"formpl_content\">\n";
+	print <<"_HTML_";
+<div class="controls controls-row formpl_content">
+_HTML_
 
 	# 発言欄textarea要素の出力
 	my %htmlsay;
@@ -188,7 +190,7 @@ _HTML_
 	my $asaycnttext = $ssaycnttext;
 
 	print <<"_HTML_";
-<select name="target">
+<select name="target" class="input-medium">
 <option value="-1"$draft_say>$ssaycnttext ($sow->{'textrs'}->{'CAPTION_SAY_PC'})$sow->{'html'}->{'option'}
 <option value="$curpl->{'pno'}"$draft_tsay>$tsaycnttext ($sow->{'textrs'}->{'CAPTION_TSAY_PC'})$sow->{'html'}->{'option'}
 _HTML_
@@ -207,7 +209,7 @@ _HTML_
 	}
 	print <<"_HTML_";
 </select>
-<select name="monospace">
+<select name="monospace" class="input-mini">
 <option value="">(通常)
 <option value="monospace">等幅
 <option value="report">見出し
@@ -216,7 +218,8 @@ _HTML_
     </form>
 
 </div>
-<div class="msg">
+</table>
+<div class="">
 _HTML_
 
 	# アクション
@@ -224,7 +227,6 @@ _HTML_
 
 	print <<"_HTML_";
 </div>
-</table>
 <div class="clearboth">
   <hr class="invisible_hr"$net>
 </div>
@@ -253,10 +255,13 @@ sub OutHTMLActionFormPC {
 
 	my $chrname = $curpl->getchrname();
 	print <<"_HTML_";
+<div class="action">
+{{form.action.result()}}
+</div>
+<div class="action">
 <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_WRITE'}" method="$cfg->{'METHOD_FORM'}">
-<div class="formpl_action">
-$chrnameは、
-<select name="target">
+<div class="formpl_action controls controls-row">
+<select name="target" ng-model="form.action.target">
 <option value="-1">（選択しない）$sow->{'html'}->{'option'}
 _HTML_
 
@@ -273,7 +278,7 @@ _HTML_
 
 <fieldset class="action_type">
 <legend>アクション内容</legend>
-<select name="actionno">
+<select name="actionno" ng-model="form.action.no">
 <option value="-99">（↓自由に入力）$sow->{'html'}->{'option'}
 _HTML_
 	# 組み込み済みアクション
@@ -330,13 +335,13 @@ _HTML_
 
 	print <<"_HTML_";
 </select><br$net>
-<input type="hidden" name="cmd" value="action"$net>$hidden
-<input class="formpl_actiontext" type="text" name="actiontext" value="" size="30"$net><br$net>
+<input type="hidden" name="cmd" ng-model="form.action.text" value="action"$net>$hidden
+<input class="formpl_actiontext" type="text" name="actiontext" ng-model="form.action.text" value="" size="30"$net><br$net>
 </fieldset>
 <input type="submit" value="アクション"$disabled$net> $actcnttext
 </div>
 </form>
-
+</div>
 _HTML_
 
 	return;
@@ -810,7 +815,7 @@ _HTML_
 			my $selected = '';
 			$selected = " $sow->{'html'}->{'selected'}" if ($i == 0);
 			print "        <option value=\"$i\"$selected>$expression->[$i]$sow->{'html'}->{'option'}\n";
-		}		
+		}
 		print "      </select>\n";
 		print "    </div>\n";
 	}
@@ -855,7 +860,7 @@ _HTML_
 			my $chrname = $_->getlongchrname();
 			my $pno     = $_->{'pno'};
 			print "<option value=\"$pno\">$chrname$sow->{'html'}->{'option'}\n";
-		}	
+		}
 		print "</select>";
 		print <<"_HTML_";
     <input type="submit" value="この人に村を任せる！"$net><br$net>
@@ -881,7 +886,7 @@ _HTML_
 			my $chrname = $_->getlongchrname();
 			my $pno     = $_->{'pno'};
 			print "<option value=\"$pno\">$chrname$sow->{'html'}->{'option'}\n";
-		}	
+		}
 		print "</select>";
 		print <<"_HTML_";
     <input type="submit" value="退去いただこう、かな……"$net><br$net>
