@@ -31,7 +31,7 @@ sub OutHTMLEntryFormPC {
 	my $charset = $sow->{'charsets'}->{'csid'}->{$csidkey[0]}; # 仮
 	my $body = '';
 	$body = '_body' if ($charset->{'BODY'} ne '');
-	my $img = "$charset->{'DIR'}/undef$body$charset->{'EXT'}";
+	my $img = "{{img_csid_cid(form.csid_cid)}}";
 
 	# キャラ画像部とその他部の横幅を取得
 	my $imgwhid = 'BODY';
@@ -47,7 +47,7 @@ sub OutHTMLEntryFormPC {
 <td class="field"><div class="msg">
 <div class="formpl_content">
 <label for="selectcid">希望する配役：</label>
-<select id="selectcid" name="csid_cid" onFocus='javascript:chrImgChange(document.chr_img,this,"$charset->{'DIR'}/","$vil->{'csid'}","$body$charset->{'EXT'}")' onChange='javascript:chrImgChange(document.chr_img,this,"$charset->{'DIR'}/","$vil->{'csid'}","$body$charset->{'EXT'}")'>
+<select id="selectcid" name="csid_cid" ng-model="form.csid_cid">
 _HTML_
 
 	# 参加済みのキャラをチェック

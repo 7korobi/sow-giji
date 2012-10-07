@@ -393,7 +393,7 @@ sub fixque {
 
 			# キューから削除
 			$_->{'delete'} = 1;
-			
+
 			# 表発言なら、発言回数を増やす。
 			next if ( $log->{'mestype'} == $sow->{'MESTYPE_AIM'} );
 			my $pl = $vil->getpl($log->{'uid'});
@@ -496,7 +496,8 @@ sub GetVLogsForward {
 	my ($self, $mode, $skip, $maxrow, $masked) = @_;
 	my $sow = $self->{'sow'};
 	my $vil = $self->{'vil'};
-	my $query = $sow->{'query'};
+	my $query  = $sow->{'query'};
+	my $cookie = $sow->{'cookie'};
 	my $i;
 	my @logs;
 	my %logkeys;
@@ -510,9 +511,6 @@ sub GetVLogsForward {
 	my $pageno = -1;
 	$pageno = $query->{'pageno'} if (defined($query->{'pageno'}));
 	if (($query->{'move'} eq 'page') && ($pageno >= 0)) {
-#		$maxrow = $sow->{'cfg'}->{'MAX_PAGEROW_PC'};
-		$maxrow = $sow->{'cfg'}->{'MAX_ROW'};
-		$maxrow = $query->{'row'} if ((defined($query->{'row'})) && ($query->{'row'} > 0));
 		$pagefirst = ($pageno - 1) * $maxrow;
 		$skip = 1;
 	}
@@ -752,9 +750,9 @@ sub CheckLogPermition {
 	$logpermit = 1 if (($log->{'mestype'} == $sow->{'MESTYPE_SAY'})&&($log->{'logsubid'} ne $sow->{'LOGSUBID_BOOKMARK'})); # 通常発言
 	$logpermit = 1 if (($log->{'mestype'} == $sow->{'MESTYPE_MSAY'}));  # 憑依発言
 	# 見物人
-	$logpermit = 1 if (($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})&&($vil->{'mob'} eq 'alive')); 
-	$logpermit = 1 if (($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})&&($vil->{'mob'} ne 'alive')&&($vil->{'turn'} == 0)); 
-	$logpermit = 1 if (($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})&&($vil->{'mob'} ne 'alive')&&(defined($query->{'turn'}))&&($query->{'turn'} == 0)); 
+	$logpermit = 1 if (($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})&&($vil->{'mob'} eq 'alive'));
+	$logpermit = 1 if (($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})&&($vil->{'mob'} ne 'alive')&&($vil->{'turn'} == 0));
+	$logpermit = 1 if (($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})&&($vil->{'mob'} ne 'alive')&&(defined($query->{'turn'}))&&($query->{'turn'} == 0));
 
 	# 日蝕
 	if ($vil->iseclipse($sow->{'turn'})){
@@ -787,7 +785,7 @@ sub CheckLogPermition {
 	}
 
 	# 削除済み発言は見せない
-	$logpermit = 0 if (($log->{'mestype'} == $sow->{'MESTYPE_DELETED'}) && ($sow->{'cfg'}->{'ENABLED_DELETED'} == 0));	
+	$logpermit = 0 if (($log->{'mestype'} == $sow->{'MESTYPE_DELETED'}) && ($sow->{'cfg'}->{'ENABLED_DELETED'} == 0));
 
 	# 個人フィルタ
 	# 隠れ系のログに対しては動作しない。
@@ -797,7 +795,7 @@ sub CheckLogPermition {
 			my $targetid = -$query->{'pno'};
 			my $logtypeid    = $sow->{'MESTYPE2TYPEID'}->[$log->{'mestype'}];
 			$logpermit = 0 if ($logpermit != 1);
-			$logpermit = 0 if ($logtypeid != $targetid); 
+			$logpermit = 0 if ($logtypeid != $targetid);
 		} elsif ($sow->{'turn'} > 0) {
 			my $targetpl = $vil->getplbypno($query->{'pno'});
 			if (defined($targetpl->{'uid'})) {

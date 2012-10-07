@@ -43,15 +43,10 @@ _HTML_
 	&OutHTMLVilInfoInner($sow,$vil);
 
 	&SWHtmlPC::OutHTMLReturnPC($sow); # トップページへ戻る
-
 	$sow->{'html'}->outcontentfooter();
-	$sow->{'html'}->outfooter(); # HTMLフッタの出力
-	$sow->{'http'}->outfooter();
 
 	# 発言フィルタ
 	require "$sow->{'cfg'}->{'DIR_HTML'}/html_sayfilter.pl";
-	$sow->{'html'}->outcontentfooter();
-
 	&SWHtmlSayFilter::OutHTMLHeader   ($sow, $vil);
 	&SWHtmlSayFilter::OutHTMLSayFilter($sow, $vil) if ($modesingle == 0);
 	&SWHtmlSayFilter::OutHTMLTools    ($sow, $vil);
@@ -69,6 +64,8 @@ _HTML_
 </script>
 _HTML_
 
+	$sow->{'html'}->outfooter(); # HTMLフッタの出力
+	$sow->{'http'}->outfooter();
 }
 
 

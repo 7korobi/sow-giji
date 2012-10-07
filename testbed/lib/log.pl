@@ -364,28 +364,28 @@ sub CvtRandomText {
 	return $mes if ($cfg->{'ENABLED_RANDOMTEXT'} == 0);
 
 	# xDn
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_DICE'}\]\]/{my $a = &do_random_dice($1,1,$2);"<a title=\"(1..$2)x$1\"><strong>$a<\/strong><\/a>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_DICE'}\]\]/{my $a = &do_random_dice($1,1,$2);"<rand $a,$& = (1..$2)x$1>"}/eg;
 
 	# 1d6
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_1D6'}\]\]/ {my $a = &do_random_dice(1,1,6);"<strong>$a<\/strong><sup>(1..6)x1<\/sup>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_1D6'}\]\]/ {my $a = &do_random_dice(1,1,6);"<rand $a,$& = (1..6)>"}/eg;
 
 	# 1d10
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_1D10'}\]\]/{my $a = &do_random_dice(1,1,10);"<strong>$a<\/strong><sup>(1..10)x1<\/sup>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_1D10'}\]\]/{my $a = &do_random_dice(1,1,10);"<rand $a,$& = (1..10)>"}/eg;
 
 	# 1d20
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_1D20'}\]\]/{my $a = &do_random_dice(1,1,20);"<strong>$a<\/strong><sup>(1..20)x1<\/sup>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_1D20'}\]\]/{my $a = &do_random_dice(1,1,20);"<rand $a,$& = (1..20)>"}/eg;
 
 	# fortune
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_FORTUNE'}\]\]/{my $a = &do_random_dice(1,0,100);"<strong>$a<\/strong><sup>(0..100)x1<\/sup>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_FORTUNE'}\]\]/{my $a = &do_random_dice(1,0,100);"<rand $a,$& = (0..100)>"}/eg;
 
 	# who
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_LIVES'}\]\]/{my $a = &do_random_who($vil);"<strong>$a<\/strong><sup>$&<\/sup>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_LIVES'}\]\]/{my $a = &do_random_who($vil);"<rand $a,$&>"}/eg;
 
 	# omikuji
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_MIKUJI'}\]\]/{my $a = &do_random_mikuji($cfg);"<strong>$a<\/strong><sup>$&<\/sup>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_MIKUJI'}\]\]/{my $a = &do_random_mikuji($cfg);"<rand $a,$&>"}/eg;
 
 	# role
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_ROLE'}\]\]/{my $a = &do_random_role($sow,'ROLENAME');"<strong>$a<\/strong><sup>$&<\/sup>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_ROLE'}\]\]/{my $a = &do_random_role($sow,'ROLENAME');"<rand $a,$&>"}/eg;
 
 	return $mes;
 }

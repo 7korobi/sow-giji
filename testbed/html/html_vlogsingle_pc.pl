@@ -1,80 +1,6 @@
 package SWHtmlVlogSinglePC;
 
 #----------------------------------------
-# ログHTMLの表示（インフォメーション）
-#----------------------------------------
-sub OutHTMLSingleLogInfoPC {
-	my ($sow, $vil, $log, $no, $newsay, $anchor) = @_;
-	my $net = $sow->{'html'}->{'net'};
-	my $atr_id = $sow->{'html'}->{'atr_id'};
-
-	my $logmes = $log->{'log'};
-	$logmes = "<a $atr_id=\"newsay\">$logmes</a>" if ($newsay > 0);
-	&SWHtml::ConvertNET($sow, \$logmes);
-
-	my $class = &SWHtmlPC::OutHTMLMesStyle($sow,$vil,$log);
-
-	# ログのHTML出力
-	my %logpl->{'pno'} = -1;
-	&OutHTMLFilterDivHeader($sow, $vil, $log, $no, \%logpl, $modesingle);
-	print <<"_HTML_";
-<p class="$class">
-$logmes
-</p>
-<hr class="invisible_hr"$net>
-</div></div>
-_HTML_
-}
-
-#----------------------------------------
-# ログHTMLの表示（アクション）
-#----------------------------------------
-sub OutHTMLSingleLogActionPC {
-	my ($sow, $vil, $log, $no, $newsay, $anchor, $modesingle) = @_;
-	my $net = $sow->{'html'}->{'net'};
-	my $atr_id = $sow->{'html'}->{'atr_id'};
-
-	my $logpl = &GetLogPL($sow, $vil, $log);
-	my $date = $sow->{'dt'}->cvtdt($log->{'date'});
-
-	my $chrname = $log->{'chrname'};
-	$chrname = "<a $atr_id=\"newsay\">$chrname</a>" if ($newsay > 0);
-
-	my $class_action = "action";
-
-	# ID公開
-	my $showid = '';
-	$showid = $log->{'uid'} if  ($vil->{'showid'} > 0);
-	$showid = $log->{'uid'} if  ($vil->{'epilogue'} <= $sow->{'turn'});
-	$showid = ''            if (($log->{'mestype'} == $sow->{'MESTYPE_MAKER'}) || ($log->{'mestype'} == $sow->{'MESTYPE_ADMIN'}));
-
-	# 発言中のアンカー等を整形
-	&SWLog::ReplaceAnchorHTML($sow, $vil, \$log->{'log'}, $anchor);
-	&SWHtml::ConvertNET($sow, \$log->{'log'});
-
-	&OutHTMLFilterDivHeader($sow, $vil, $log, $no, $logpl, $modesingle);
-	my $messtyle = &SWHtmlPC::OutHTMLMesStyle($sow,$vil,$log);
-
-	print <<"_HTML_";
-<div class="$messtyle">
-<div class="$class_action">
-<p>
-<a $atr_id="$log->{'logid'}">$chrname</a>は、$log->{'log'}
-</p>
-_HTML_
-
-	print <<"_HTML_";
-<P class="mes_date">$showid $date</P>
-<hr class="invisible_hr"$net>
-</div>
-</div>
-</div></div>
-
-_HTML_
-
-}
-
-#----------------------------------------
 # ログHTMLの表示（キャラの発言）
 #----------------------------------------
 sub OutHTMLSingleLogSayPC {
@@ -190,52 +116,7 @@ _HTML_
 
 }
 
-#----------------------------------------
-# ログHTMLの表示（村建て人／管理人）
-#----------------------------------------
-sub OutHTMLSingleLogAdminPC {
-	my ($sow, $vil, $log, $no, $newsay, $anchor) = @_;
-	my $cfg = $sow->{'cfg'};
-	my $net = $sow->{'html'}->{'net'};
-	my $atr_id = $sow->{'html'}->{'atr_id'};
 
-	# 日時とキャラクター名
-	my $chrname;
-	my $curpl = $vil->getpl($log->{'uid'});
-	$chrname = $log->{'chrname'};
-	$chrname = "<a $atr_id=\"newsay\">$chrname</a>" if ($newsay > 0);
-	my $date = $sow->{'dt'}->cvtdt($log->{'date'});
-
-	# クラス名
-	my @messtyle = ('mes_maker', 'mes_admin');
-
-	# 発言中のアンカー等を整形
-	&SWLog::ReplaceAnchorHTML($sow, $vil, \$log->{'log'}, $anchor);
-	&SWHtml::ConvertNET($sow, \$log->{'log'});
-
-	my $loganchor = &SWLog::GetAnchorlogID($sow, $vil, $log);
-
-	# 等幅処理
-	my $mes_text = 'mes_text';
-	$mes_text = 'mes_text_monospace' if ((defined($log->{'monospace'})) && ($log->{'monospace'} == 1));
-	$mes_text = 'mes_text_report'    if ((defined($log->{'monospace'})) && ($log->{'monospace'} == 2));
-
-	# ログのHTML出力
-	my %logpl->{'pno'} = -1;
-	&OutHTMLFilterDivHeader($sow, $vil, $log, $no, \%logpl, $modesingle);
-	print <<"_HTML_";
-<div class="$messtyle[$log->{'mestype'} - $sow->{'MESTYPE_MAKER'}]">
-<div class="guide">
-<h3 class="mesname"><a $atr_id="$log->{'logid'}">$chrname</a></h3>
-<p class="$mes_text">$log->{'log'}</p>
-<P class="mes_date">$loganchor $date</P>
-</div>
-</div>
-</div></div>
-<hr class="invisible_hr"$net>
-_HTML_
-
-}
 
 #----------------------------------------
 # ログHTMLの表示（エピローグの配役一覧）
@@ -328,7 +209,7 @@ _HTML_
 <td>$roletext
 <br>$appendex</i>
 </tr>
-  
+
 _HTML_
 	}
 
@@ -346,24 +227,42 @@ _HTML_
 sub OutHTMLSingleLogPC {
 	my ($sow, $vil, $log, $no, $newsay, $anchor, $modesingle) = @_;
 
-	if (($log->{'mestype'} == $sow->{'MESTYPE_INFONOM'}) || ($log->{'mestype'} == $sow->{'MESTYPE_INFOWOLF'}) || ($log->{'mestype'} == $sow->{'MESTYPE_INFOSP'})) {
-		# インフォメーション
-		&OutHTMLSingleLogInfoPC($sow, $vil, $log, $no, $newsay, $anchor, $modesingle);
+	# ID公開
+	my $showid = '';
+	$showid = $log->{'uid'} if  ($vil->{'showid'} > 0);
+	$showid = $log->{'uid'} if  ($vil->{'epilogue'} <= $sow->{'turn'});
+	$showid = ''            if (($log->{'mestype'} == $sow->{'MESTYPE_MAKER'}) || ($log->{'mestype'} == $sow->{'MESTYPE_ADMIN'}));
 
-	} elsif ($log->{'mestype'} >= $sow->{'MESTYPE_UNDEF'}) {
-		if (($log->{'logsubid'} eq $sow->{'LOGSUBID_ACTION'})) {
-			# アクション／しおり
-			&OutHTMLSingleLogActionPC($sow, $vil, $log, $no, $newsay, $anchor, $modesingle);
-		} elsif (($log->{'mestype'} == $sow->{'MESTYPE_MAKER'}) || ($log->{'mestype'} == $sow->{'MESTYPE_ADMIN'})) {
-			&OutHTMLSingleLogAdminPC($sow, $vil, $log, $no, $newsay, $anchor, $modesingle);
-		} elsif ($log->{'mestype'} == $sow->{'MESTYPE_CAST'}) {
-			# 配役一覧
-			&OutHTMLSingleLogCastPC($sow, $vil, $log, $no, $newsay, $anchor, $modesingle);
-		} else {
-			# キャラクター発言
-			&OutHTMLSingleLogSayPC($sow, $vil, $log, $no, $newsay, $anchor, $modesingle);
-		}
+	my $to   = "";
+	my $name = $log->{'chrname'};
+	if ($log->{'mestype'} == $sow->{'MESTYPE_AIM'}) {
+		($name, $to) = split(' → ', $log->{'chrname'});
+
 	}
+
+	print <<"_HTML_";
+var mes = {
+	"subid":  "$log->{'logsubid'}",
+	"logid":  "$log->{'logid'}",
+	"csid":     "$log->{'csid'}",
+	"face_id":  "$log->{'cid'}",
+	"mesicon":  SOW_RECORD.CABALA.mestypeicons[$log->{'mestype'}],
+	"mestype":  SOW_RECORD.CABALA.mestypes[$log->{'mestype'}],
+	"style":    SOW_RECORD.CABALA.monospace[$log->{'monospace'}],
+	"name":  "$name",
+	"to":    "$to",
+	"log":   "$log->{'log'}",
+	"date":  Date.create(1000 * $log->{'date'})
+};
+_HTML_
+	if ($vil->{'showid'}) {
+		print <<"_HTML_"
+mes.sow_auth_id = "$showid";
+_HTML_
+	}
+	print <<"_HTML_";
+gon.event.messages.push(mes);
+_HTML_
 }
 
 #----------------------------------------

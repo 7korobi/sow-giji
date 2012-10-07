@@ -16,7 +16,7 @@ sub new {
 	return bless($self, $class);
 }
 
-sub getTurn { 
+sub getTurn {
 	my ($self,$pl) = @_;
 	my $sow = $self->{'sow'};
 
@@ -36,7 +36,7 @@ sub getTurn {
 #----------------------------------------
 # –ğEˆê——HTMLo—Í
 #----------------------------------------
-sub outhtml { 
+sub outhtml {
 	my $self  = shift;
 	my $sow   = $self->{'sow'};
 	my $net   = $sow->{'html'}->{'net'}; # Null End Tag
@@ -133,7 +133,7 @@ _HTML_
 			$plsingle->{'deathday'}  = -1;
 			$plsingle->{'title'}     = $rolename->[$plsingle->{'role'}];
 			$plsingle->{'lock'}      = $i if ((93==$i)||(94==$i));
-			
+
 			$no++;
 			push( @plstack1, $plsingle ) if ( 1 == $self->getTurn($plsingle) );
 			push( @plstack2, $plsingle ) if ( 1 <  $self->getTurn($plsingle) );
@@ -211,7 +211,7 @@ _HTML_
 				push( @plstack2, $mobpl );
 				push( @pllist, $mobpl );
 			}
-		
+
 		}
 	}
 
@@ -277,7 +277,7 @@ _HTML_
 		$vil->addpl($plsingle);   # ‘º‚Ö’Ç‰Á
 		$plsingle->setsaycount(); # ”­Œ¾”‰Šú‰»
 	}
-	
+
 	for ($i = 1; $i <= $emulatedays; $i++) {
 		$vil->{'turn'} = $i;
 		my $limit = $emulatedays - $i;
@@ -316,6 +316,12 @@ _HTML_
 		&SWHtmlPlayerFormPC::OutHTMLPlayerFormPC($sow, $vil);
 		print <<"_HTML_";
 <hr class="invisible_hr"$net>
+<script>
+window.gon = {};
+_HTML_
+	$vil->gon_potofs($secret_show);
+	print <<"_HTML_";
+</script>
 _HTML_
 	}
 	my $win_message = $sow->{'textrs'}->{'ANNOUNCE_WINNER'}->[$result];

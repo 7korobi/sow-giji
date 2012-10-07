@@ -65,44 +65,16 @@ _HTML_
 		return;
 	}
 
-	# 全表示リンク
-#	my $rowover = 0;
-	my $rowover = $rows->{'rowover'};
-	if ($modesingle == 0) {
-		if (($maxrow != 0) && ($rows->{'rowover'} > 0)) {
-			print "<p class=\"row_all\">\n<a href=\"$link$amp" . "rowall=on\">全て表\示</a>\n</p>\n\n";
-		}
-	}
-
-	# 村ログ表示
-	print "<hr class=\"invisible_hr\"$net>\n\n";
-	require "$cfg->{'DIR_HTML'}/html_vlogsingle_pc.pl";
-	my %anchor = (
-		logfile => $logfile,
-		logkeys => $logkeys,
-		rowover => $rowover,
-		reqvals => $reqvals,
-	);
-
-	if (($query->{'order'} eq 'desc') || ($query->{'order'} eq 'd')){
-		# 降順
-		my $i;
-		for ($i = $#$logs; $i >= 0; $i--) {
-			my $newsay = 0;
-			$newsay = 1 if ($i == 0);
-			my $log = $logfile->read($logs->[$i]->{'pos'},$logs->[$i]->{'logpermit'});
-			&SWHtmlVlogSinglePC::OutHTMLSingleLogPC($sow, $vil, $log, $i, $newsay, \%anchor, $modesingle);
-		}
-	} else {
-		# 昇順
-		my $i;
-		for ($i = 0; $i < @$logs; $i++) {
-			my $newsay = 0;
-			$newsay = 1 if ($i == $#$logs);
-			my $log = $logfile->read($logs->[$i]->{'pos'},$logs->[$i]->{'logpermit'});
-			&SWHtmlVlogSinglePC::OutHTMLSingleLogPC($sow, $vil, $log, $i, $newsay, \%anchor, $modesingle);
-		}
-	}
+	print <<"_HTML_";
+<div id="messages">
+<div class="message_filter" ng-bind-html-unsafe="log(message)" ng-repeat="message in messages"></div>
+<div class="message_filter">
+ <div class="badge" ng-class="page.go_next" ng-click="page.paginate('next')"> 次のページ</div>
+ <hr class="invisible_hr" />
+</div>
+<div class="message_filter drag" ng-bind-html-unsafe="log(message)" ng-repeat="message in anchors" style="z-index: {{message.z}}; top: {{message.top}}px; "></div>
+</div>
+_HTML_
 
 	# アナウンス／入力・参加フォーム表示
 	if (($modesingle == 0) && ($sow->{'turn'} == $vil->{'turn'}) && ($rows->{'end'} > 0)) {
@@ -128,34 +100,6 @@ _HTML_
 		}
 
 		print <<"_HTML_";
-<form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="get" class="viewform">
-<p>$hidden
-  <label for="row">表\示行数</label>
-  <select id="row" name="row">
-_HTML_
-
-		my $row_pc = $sow->{'cfg'}->{'ROW_PC'};
-		my $row = $sow->{'cfg'}->{'MAX_ROW'};
-		$row = $query->{'row'} if (defined($query->{'row'}));
-		foreach (@$row_pc) {
-			my $selected = '';
-			my $star = '';
-			if ($_ == $row) {
-				$selected = " $sow->{'html'}->{'selected'}";
-				$star = ' *';
-			}
-			print "    <option value=\"$_\"$selected>$_$star$option\n";
-		}
-
-		print <<"_HTML_";
-  </select>
-  <select name="order">
-    <option value="asc"$asc>上から下$star_asc$option
-    <option value="desc"$desc>下から上$star_desc$option
-  </select>
-  <input type="submit" value="変更"$net>
-</p>
-</form>
 <hr class="invisible_hr"$net>
 
 _HTML_
@@ -180,7 +124,30 @@ _HTML_
 	$vil->gon_story($secret_show);
 	$vil->gon_event($secret_show);
 	$vil->gon_potofs($secret_show);
+
+	# 村ログ表示
+	require "$cfg->{'DIR_HTML'}/html_vlogsingle_pc.pl";
+	my %anchor = (
+		logfile => $logfile,
+		logkeys => $logkeys,
+		rowover => $rowover,
+		reqvals => $reqvals,
+	);
+
+	my $i;
+	for ($i = 0; $i < @$logs; $i++) {
+		my $newsay = 0;
+		$newsay = 1 if ($i == $#$logs);
+		my $log = $logfile->read($logs->[$i]->{'pos'},$logs->[$i]->{'logpermit'});
+		&SWHtmlVlogSinglePC::OutHTMLSingleLogPC($sow, $vil, $log, $i, $newsay, \%anchor, $modesingle);
+	}
+
+
+	# 全表示リンク
+	my $is_news = 0 + (0 < $maxrow);
+
 	print <<"_HTML_";
+gon.event.is_news    = (0 != $is_news);
 </script>
 _HTML_
 

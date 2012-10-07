@@ -19,7 +19,7 @@ sub OutHTMLPreviewPC {
 	my $len = length($trimedlog);
 	$log->{'log'} = substr($srcmes, 0, $len);
 	my $deletedmes = substr($srcmes, $len);
-	$log->{'log'} .= "<span class=\"infotext\">$deletedmes</span>" if ($deletedmes ne '');
+	$log->{'log'} .= "<span class='infotext'>$deletedmes</span>" if ($deletedmes ne '');
 
 	$sow->{'html'} = SWHtml->new($sow); # HTMLモードの初期化
 	my $net = $sow->{'html'}->{'net'}; # Null End Tag
@@ -30,7 +30,29 @@ sub OutHTMLPreviewPC {
 
 	&SWHtmlPC::OutHTMLLogin($sow); # ログイン欄の出力
 
+    print <<"_HTML_";
+<script>
+gon = {
+	event: {
+		is_news: false,
+		messages: []
+	}
+}
+
+_HTML_
+
+	# 発言部分の表示
+	my %logfile = ();
+	my %logidx = ();
+	my %anchor = (
+		logfile => \%logfile,
+		logidx  => \%logidx,
+		rowover => 1,
+	);
+	&SWHtmlVlogSinglePC::OutHTMLSingleLogPC($sow, $vil, $log, -1, 0, \%anchor, 1);
+
 	print <<"_HTML_";
+</script>
 <h2>$query->{'vid'} $vil->{'vname'}</h2>
 
 <h3>発言のプレビュー$isquery</h3>
@@ -49,16 +71,6 @@ _HTML_
 
 _HTML_
 	}
-
-	# 発言部分の表示
-	my %logfile = ();
-	my %logidx = ();
-	my %anchor = (
-		logfile => \%logfile,
-		logidx  => \%logidx,
-		rowover => 1,
-	);
-	&SWHtmlVlogSinglePC::OutHTMLSingleLogPC($sow, $vil, $log, -1, 0, \%anchor, 1);
 
 	# 属性値生成
 	$query->{'mes'} =~ s/<br( \/)?>/&#13\;/ig;
@@ -108,6 +120,12 @@ _HTML_
 	if (($cost eq 'point') && ($sow->{'query'}->{'cmd'} ne 'entrypr') && (defined($sow->{'curpl'}->{$saytype}))) {
 		$pointtext = "（$point$unitsay消費 / 現在$sow->{'curpl'}->{$saytype}$unitsay）";
 	}
+
+	print <<"_HTML_";
+<div id="messages">
+<div class="message_filter" ng-bind-html-unsafe="log(message)" ng-repeat="message in messages"></div>
+</div>
+_HTML_
 
 	# 発言ボタンの表示
 	print <<"_HTML_";

@@ -61,9 +61,10 @@ sub SetDataCmdVLog {
 #----------------------------------------
 sub OutHTMLCmdVLog {
 	my ($sow, $vil) = @_;
-	my $cfg   = $sow->{'cfg'};
-	my $query = $sow->{'query'};
-	my $ua    = $sow->{'outmode'};
+	my $cfg    = $sow->{'cfg'};
+	my $query  = $sow->{'query'};
+	my $cookie = $sow->{'cookie'};
+	my $ua     = $sow->{'outmode'};
 
 	# HTML出力用ライブラリの読み込み
 	require "$cfg->{'DIR_HTML'}/html.pl";
@@ -116,8 +117,7 @@ sub OutHTMLCmdVLog {
 
 	# 表示行数の設定
 	my $maxrow = $sow->{'cfg'}->{'MAX_ROW'}; # 標準行数
-	$maxrow = $query->{'row'} if (defined($query->{'row'}) && ($query->{'row'} ne '')); # 引数による行数指定
-#	$query->{'rowall'} = 'on' if ((($ua ne 'mb')) && ($sow->{'turn'} < $vil->{'turn'})); # 自動全表示
+	$maxrow = $cookie->{'row'} if (defined($cookie->{'row'}) && ($cookie->{'row'} ne '')); # 引数による行数指定
 	$maxrow = -1 if (($maxrow eq 'all') || ($query->{'rowall'} ne '')); # 引数による全表示指定
 
 	# ログの取得

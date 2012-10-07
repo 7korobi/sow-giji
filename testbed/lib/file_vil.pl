@@ -956,7 +956,7 @@ sub gon_event {
 
 	print <<"_HTML_";
 gon.event = {
-    "turn":   $vil->{'turn'},
+    "turn":   $vil->{'sow'}->{'turn'},
     "winner": SOW_RECORD.CABALA.winners[$vil->{'winner'}],
 	"event":  SOW_RECORD.CABALA.events[$vil->{'event'}],
 	"riot":      $vil->{'riot'},

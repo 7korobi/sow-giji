@@ -209,7 +209,7 @@ _HTML_
 	}
 	print <<"_HTML_";
 </select>
-<select name="monospace" class="input-mini">
+<select name="monospace" class="input-small">
 <option value="">(通常)
 <option value="monospace">等幅
 <option value="report">見出し
@@ -255,13 +255,11 @@ sub OutHTMLActionFormPC {
 
 	my $chrname = $curpl->getchrname();
 	print <<"_HTML_";
+<form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_WRITE'}" method="$cfg->{'METHOD_FORM'}" >
 <div class="action">
-{{form.action.result()}}
-</div>
-<div class="action">
-<form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_WRITE'}" method="$cfg->{'METHOD_FORM'}">
-<div class="formpl_action controls controls-row">
-<select name="target" ng-model="form.action.target">
+<div class="controls controls-row">
+
+<select class="input-medium" name="target" ng-model="form.action.target">
 <option value="-1">（選択しない）$sow->{'html'}->{'option'}
 _HTML_
 
@@ -274,11 +272,9 @@ _HTML_
 	}
 
 	print <<"_HTML_";
-</select><br$net>
+</select>
 
-<fieldset class="action_type">
-<legend>アクション内容</legend>
-<select name="actionno" ng-model="form.action.no">
+<select class="input-medium" name="actionno" ng-model="form.action.no">
 <option value="-99">（↓自由に入力）$sow->{'html'}->{'option'}
 _HTML_
 	# 組み込み済みアクション
@@ -337,11 +333,15 @@ _HTML_
 </select><br$net>
 <input type="hidden" name="cmd" ng-model="form.action.text" value="action"$net>$hidden
 <input class="formpl_actiontext" type="text" name="actiontext" ng-model="form.action.text" value="" size="30"$net><br$net>
+</div>
+<fieldset class="formpl_action action_type">
+<legend>アクション内容</legend>
 </fieldset>
-<input type="submit" value="アクション"$disabled$net> $actcnttext
+<p class="text">{{form.action.result()}}</p>
+<p><input type="submit" class="btn" value="アクション"$disabled$net> $actcnttext</p>
 </div>
+
 </form>
-</div>
 _HTML_
 
 	return;
@@ -583,7 +583,7 @@ _HTML_
 	print <<"_HTML_";
   </select>
   <input type="hidden" name="cmd" value="commit"$net>$hidden
-  <input type="submit" value="変更"$disabled$net>
+  <input type="submit" class="btn" value="変更"$disabled$net>
   </div>
   </form>
 
@@ -711,7 +711,7 @@ _HTML_
 	print "\n";
 
 	print <<"_HTML_";
-      <input type="submit" value="変更"$disabled$net>
+      <input type="submit" class="btn" value="変更"$disabled$net>
       </div>
     </form>
 
@@ -863,7 +863,7 @@ _HTML_
 		}
 		print "</select>";
 		print <<"_HTML_";
-    <input type="submit" value="この人に村を任せる！"$net><br$net>
+    <input type="submit" class="btn" value="この人に村を任せる！"$net><br$net>
   </p>
   </form>
 
@@ -889,19 +889,19 @@ _HTML_
 		}
 		print "</select>";
 		print <<"_HTML_";
-    <input type="submit" value="退去いただこう、かな……"$net><br$net>
+    <input type="submit" class="btn" value="退去いただこう、かな……"$net><br$net>
   </p>
   </form>
   <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$sow->{'cfg'}->{'METHOD_FORM'}">
   <p class="commitbutton">
     <input type="hidden" name="cmd" value="editvilform"$net>$hidden
-    <input type="submit" value="村を編集しよう！"$net>
+    <input type="submit" class="btn" value="村を編集しよう！"$net>
   </p>
   </form>
   <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$sow->{'cfg'}->{'METHOD_FORM'}">
   <p class="commitbutton">
     <input type="hidden" name="cmd" value="musterpr"$net>$hidden
-    <input type="submit" value="点呼しよう！($upddatetimeまで)"$net>
+    <input type="submit" class="btn" value="点呼しよう！($upddatetimeまで)"$net>
   </p>
   </form>
 _HTML_
@@ -911,7 +911,7 @@ _HTML_
   <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$sow->{'cfg'}->{'METHOD_FORM'}">
   <p class="commitbutton">
     <input type="hidden" name="cmd" value="editvilform"$net>$hidden
-    <input type="submit" value="村を編集しよう！"$net>
+    <input type="submit" class="btn" value="村を編集しよう！"$net>
   </p>
   </form>
 _HTML_
@@ -922,7 +922,7 @@ _HTML_
   <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$sow->{'cfg'}->{'METHOD_FORM'}">
   <p class="commitbutton">
     <input type="hidden" name="cmd" value="updatepr"$net>$hidden
-    <input type="submit" value="更新しちゃおう！"$net>
+    <input type="submit" class="btn" value="更新しちゃおう！"$net>
   </p>
   </form>
 _HTML_
@@ -936,7 +936,7 @@ _HTML_
   <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$sow->{'cfg'}->{'METHOD_FORM'}">
   <p class="commitbutton">
     <input type="hidden" name="cmd" value="$button{'cmd'}"$net>$hidden
-    <input type="submit" value="$button{'label'}"$disabled$net>
+    <input type="submit" class="btn" value="$button{'label'}"$disabled$net>
   </p>
   </form>
 </div>
@@ -962,7 +962,7 @@ sub OutHTMLScrapVilButtonPC {
   <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$sow->{'cfg'}->{'METHOD_FORM'}">
   <p class="commitbutton">
     <input type="hidden" name="cmd" value="scrapvilpr"$net>$hidden
-    <input type="submit" value="廃村する"$net>
+    <input type="submit" class="btn" value="廃村する"$net>
   </p>
   </form>
 </div>
@@ -992,7 +992,7 @@ sub OutHTMLExitButtonPC {
   <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$sow->{'cfg'}->{'METHOD_FORM'}">
   <p class="commitbutton">
     <input type="hidden" name="cmd" value="exitpr"$net>$hidden
-    <input type="submit" value="村を出る"$disabled$net>
+    <input type="submit" class="btn" value="村を出る"$disabled$net>
   </p>
   </form>
 </div>
