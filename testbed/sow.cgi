@@ -231,7 +231,7 @@ sub TaskBranch {
 		&CheckValidityStart($sow);
 		require "$dirlib/cmd_start.pl";
 		&SWCmdStartSession::CmdStartSession($sow);
-	} elsif (($cmd eq 'vote') || ($cmd eq 'role') || ($cmd eq 'gift')){
+	} elsif (($cmd eq 'entrust') || ($cmd eq 'vote') || ($cmd eq 'role') || ($cmd eq 'gift')){
 		# “Š•[^”\—Í‘ÎÛİ’è
 		require "$dirlib/cmd_vote.pl";
 		&SWCmdVote::CmdVote($sow);

@@ -77,6 +77,8 @@ sub createbasevil {
 	$self->{'eclipse'}       = '';
 	$self->{'seance'}        = '';
 	$self->{'noselrole'}     = 1;
+	$self->{'seqevent'}      = 0;
+	$self->{'entrust'}       = 0;
 	$self->{'updateddt'}     = $sow->{'time'};
 	$self->{'nextupdatedt'}  = $sow->{'time'};
 	$self->{'nextchargedt'}  = $sow->{'time'};
@@ -117,6 +119,9 @@ sub createdummyvil {
 
 	$self->createbasevil();
 	$self->{'randomtarget'} = 0;
+	$self->{'noselrole'}    = 0;
+	$self->{'seqevent'}     = 0;
+	$self->{'entrust'}      = 0;
 	$self->{'showid'}       = 0;
 	$self->{'undead'}       = 0;
 	$self->{'extend'}       = 2;
@@ -735,6 +740,13 @@ _HTML_
 		my $yourself = ($pl->{'uid'} eq $vil->{'sow'}->{'uid'});
 		my $longchrname  = $pl->getlongchrname();
 		my $shortchrname = $pl->getshortchrname();
+		my $actaddpt = 0 + $pl->{'actaddpt'};
+		my $say   = 0 + $pl->{'say'};
+		my $tsay  = 0 + $pl->{'tsay'};
+		my $spsay = 0 + $pl->{'spsay'};
+		my $wsay  = 0 + $pl->{'wsay'};
+		my $gsay  = 0 + $pl->{'gsay'};
+		my $say_act = 0 + $pl->{'say_act'};
 		my $live = $pl->{'live'};
 		$live = 'victim' if('live' ne $live);
 		print <<"_HTML_";
@@ -756,12 +768,12 @@ var pl = {
 	"pseudobonds": [],
 
 	"point":{
-		"actaddpt":  $pl->{'actaddpt'},
+		"actaddpt":  $actaddpt,
 		"saidcount": $pl->{'saidcount'},
 		"saidpoint": $pl->{'saidpoint'}
 	},
 	"say":{
-		"say":   $pl->{'say'}
+		"say": $say
 	}
 };
 _HTML_
@@ -811,12 +823,12 @@ pl.is_pixi = (0 != $is_pixi);
 pl.is_sensible = (0 != $is_sensible);
 pl.is_committer = (0 != $is_committer);
 pl.say = {
-	"say":   $pl->{'say'},
-	"tsay":  $pl->{'tsay'},
-	"spsay": $pl->{'spsay'},
-	"wsay":  $pl->{'wsay'},
-	"gsay":  $pl->{'gsay'},
-	"say_act": $pl->{'say_act'}
+	"say":   $say,
+	"tsay":  $tsay,
+	"spsay": $spsay,
+	"wsay":  $wsay,
+	"gsay":  $gsay,
+	"say_act": $say_act
 };
 pl.timer = {
 	"entrieddt":    Date.create(1000 * $pl->{'entrieddt'}),
@@ -925,6 +937,8 @@ gon.story = {
 };
 if(1 == $vil->{'showid'      }){ gon.story.options.push("show-id");       }
 if(1 == $vil->{'undead'      }){ gon.story.options.push("undead-talk");   }
+if(1 == $vil->{'entrust'     }){ gon.story.options.push("entrust");       }
+if(1 == $vil->{'seqevent'    }){ gon.story.options.push("seq-event");     }
 if(1 == $vil->{'randomtarget'}){ gon.story.options.push("random-target"); }
 if(1 != $vil->{'noselrole'   }){ gon.story.options.push("select-role");   }
 _HTML_
@@ -953,10 +967,11 @@ sub gon_event {
 
 	my $committablepl = $vil->getcommittablepl();
 	my $votablepl    = $vil->getvotablepl();
+	my $turn = 0 + $vil->{'sow'}->{'turn'};
 
 	print <<"_HTML_";
 gon.event = {
-    "turn":   $vil->{'sow'}->{'turn'},
+    "turn":   $turn,
     "winner": SOW_RECORD.CABALA.winners[$vil->{'winner'}],
 	"event":  SOW_RECORD.CABALA.events[$vil->{'event'}],
 	"riot":      $vil->{'riot'},
@@ -1043,6 +1058,8 @@ sub GetVilDataLabel {
 		'showid',
 		'undead',
 		'extend',
+		'entrust',
+		'seqevent',
 		'noselrole',
 		'mob',
 		'cntvillager',

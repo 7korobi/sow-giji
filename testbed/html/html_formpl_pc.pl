@@ -146,7 +146,12 @@ _HTML_
 	}
 
 	# 投票先変更プルダウン
-	&OutHTMLVotePC($sow, $vil, 'vote');
+	if( $curpl->setvote_to($sow,$vil) != 0 ){
+		&OutHTMLVotePC($sow, $vil, 'vote');
+	}
+	if( $curpl->setentrust($sow,$vil) != 0 ){
+		&OutHTMLVotePC($sow, $vil, 'entrust');
+	}
 
 	# テキストボックスと発言ボタン初め
 	print <<"_HTML_";
@@ -605,9 +610,10 @@ sub OutHTMLVotePC {
 	my $query = $sow->{'query'};
 	my $net = $sow->{'html'}->{'net'};
 	my $curpl = $sow->{'curpl'};
-	return if ($cmd eq 'vote' && ! $curpl->isEnableVote($vil->{'turn'}) );
-	return if ($cmd eq 'role' && ! $curpl->isEnableRole($vil->{'turn'}) );
-	return if ($cmd eq 'gift' && ! $curpl->isEnableGift($vil->{'turn'}) );
+	return if ($cmd eq 'vote'    && ! $curpl->isEnableVote($vil->{'turn'}) );
+	return if ($cmd eq 'entrust' && ! $curpl->isEnableVote($vil->{'turn'}) );
+	return if ($cmd eq 'role'    && ! $curpl->isEnableRole($vil->{'turn'}) );
+	return if ($cmd eq 'gift'    && ! $curpl->isEnableGift($vil->{'turn'}) );
 
 	# 属性値の取得
 	my $reqvals = &SWBase::GetRequestValues($sow);
@@ -620,47 +626,12 @@ sub OutHTMLVotePC {
 _HTML_
 
 	# 投票／委任選択欄
-	if ($cmd eq 'vote') {
-		my $votelabels = $sow->{'textrs'}->{'VOTELABELS'};
-		my $selected_vote = " $sow->{'html'}->{'selected'}";
-		my $selectstar_vote = ' *';
-		my $selected_entrust = '';
-		my $selectstar_entrust = '';
-		if ($curpl->{'entrust'} > 0) {
-			$selected_vote = '';
-			$selectstar_vote = '';
-			$selected_entrust = " $sow->{'html'}->{'selected'}";
-			$selectstar_entrust = ' *';
-		}
-		my $option = $sow->{'html'}->{'option'};
-		if(     $curpl->setentrust($sow,$vil) == 0 ){
-			print <<"_HTML_";
-<select name="entrust">
-<option value=""$selected_vote>$votelabels->[0]$selectstar_vote$option
-</select>
-_HTML_
-		}elsif( $curpl->setvote_to($sow,$vil) == 0 ){
-			print <<"_HTML_";
-<select name="entrust">
-<option value="on"$selected_entrust>$votelabels->[1]$selectstar_entrust$option
-</select>
-_HTML_
-		}else{
-			print <<"_HTML_";
-<select name="entrust">
-<option value=""$selected_vote>$votelabels->[0]$selectstar_vote$option
-<option value="on"$selected_entrust>$votelabels->[1]$selectstar_entrust$option
-</select>
-_HTML_
-		}
-	} else {
-		my $votelabel = $curpl->getlabel($cmd);
-		print <<"_HTML_";
-<label for="select$cmd">$votelabel：</label>
-_HTML_
+	if ($curpl->{'entrust'} > 0) {
 	}
-
+	my $votelabel = $curpl->getlabel($cmd);
 	print <<"_HTML_";
+
+<label for="select$cmd">$votelabel：</label>
 <select id="select$cmd" name="target">
 _HTML_
 

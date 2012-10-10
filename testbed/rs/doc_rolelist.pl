@@ -133,6 +133,7 @@ _HTML_
 			$plsingle->{'deathday'}  = -1;
 			$plsingle->{'title'}     = $rolename->[$plsingle->{'role'}];
 			$plsingle->{'lock'}      = $i if ((93==$i)||(94==$i));
+			$plsingle->{'actaddpt'}  = 0;
 
 			$no++;
 			push( @plstack1, $plsingle ) if ( 1 == $self->getTurn($plsingle) );
@@ -156,6 +157,7 @@ _HTML_
 				$mobpl->{'rolestate'} = $sow->{'ROLESTATE_DEFAULT'};
 				$mobpl->{'live'}      = 'live' ;
 				$mobpl->{'deathday'}  =  -1;
+				$mobpl->{'actaddpt'}  = 0;
 				$mobpl->{'title'}     = $rolename->[$plsingle->{'role'}]."（能\力使用後）";
 
 				$no++;
@@ -183,6 +185,7 @@ _HTML_
 			$plsingle->{'rolestate'} = $sow->{'ROLESTATE_DEFAULT'};
 			$plsingle->{'live'}      = 'live' ;
 			$plsingle->{'deathday'}  = -1;
+			$plsingle->{'actaddpt'}  = 0;
 			$plsingle->{'title'}     = $giftname->[$plsingle->{'gift'}];
 
 			$no++;
@@ -205,6 +208,7 @@ _HTML_
 				$mobpl->{'rolestate'} = $sow->{'ROLESTATE_DEFAULT'};
 				$mobpl->{'live'}      = 'live' ;
 				$mobpl->{'deathday'}  =  -1;
+				$mobpl->{'actaddpt'}  = 0;
 				$mobpl->{'title'}     = $giftname->[$plsingle->{'gift'}]."（能\力使用後）";
 
 				$no++;
@@ -229,6 +233,7 @@ _HTML_
 		$mobpl->{'rolestate'} = $sow->{'ROLESTATE_CURSED'};
 		$mobpl->{'live'}      = 'live' ;
 		$mobpl->{'deathday'}  =  -1;
+		$mobpl->{'actaddpt'}  = 0;
 		$mobpl->{'title'}     = '能力を失った状態';
 
 		$no++;

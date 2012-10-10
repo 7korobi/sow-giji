@@ -73,6 +73,10 @@ sub SetDataCmdEditVil {
 		$vil->{'undead'}       = 1 if ($query->{'undead'} ne '');
 		$vil->{'noselrole'}    = 0;
 		$vil->{'noselrole'}    = 1 if ($query->{'noselrole'} ne '');
+		$vil->{'seqevent'}     = 0;
+		$vil->{'seqevent'}     = 1 if ($query->{'seqevent'} ne '');
+		$vil->{'entrust'}      = 0;
+		$vil->{'entrust'}      = 1 if ($query->{'entrust'} ne '');
 		$vil->{'mob'}          = $query->{'mob'};
 		$vil->{'game'}         = $query->{'game'};
 

@@ -140,7 +140,7 @@ _HTML_
 <dd><img name=cd_img src="$cfg->{'DIR_IMG'}/icon/cd_{{story.rating}}.png">
     $sow->{'cfg'}->{'RATING'}->{$rating}->{'CAPTION'}
 </dl>
-<p class="head" ng-bind-html-unsafe="story.comment"></p>
+<p class="text head" ng-bind-html-unsafe="story.comment"></p>
 <p>$ncomment</p>
 <p>
 ■<a href=\"sow.cgi?cmd=rule&css=$css#mind\">心構\え</a>
@@ -240,6 +240,54 @@ _HTML_
 </dl>
 </div>
 _HTML_
+	}
+
+	# 村建て人フォーム／管理人フォーム表示
+	my $reqvals = &SWBase::GetRequestValues($sow);
+	my $hidden = &SWBase::GetHiddenValues($sow, $reqvals, '    ');
+
+	if ($sow->{'user'}->logined() > 0) {
+		my $showbtn = 0;
+		$showbtn = 1 if ($sow->{'uid'} eq $vil->{'makeruid'});
+		$showbtn = 1 if ($sow->{'uid'} eq $sow->{'cfg'}->{'USERID_ADMIN'});
+		if ($showbtn){
+			print <<"_HTML_";
+<div class="formpl_gm">
+  <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$sow->{'cfg'}->{'METHOD_FORM'}">
+  <p class="commitbutton">
+    <input type="hidden" name="cmd" value="makerpr"$net>$hidden
+    <select id="maker" name="target">
+_HTML_
+			# 村建て権移譲
+			$targetlist = $vil->getallpllist();
+			foreach (@$targetlist) {
+				next if (($_->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'}));
+				my $chrname = $_->getlongchrname();
+				my $pno     = $_->{'pno'};
+				print "<option value=\"$pno\">$chrname$sow->{'html'}->{'option'}\n";
+			}
+			print "</select>";
+			print <<"_HTML_";
+    <input type="submit" class="btn" value="この人に村を任せる！"$net><br$net>
+  </p>
+  </form>
+_HTML_
+		}
+		my $showturn = 0;
+		$showturn = 1 if ($vil->{'turn'} == 0);
+		$showturn = 1 if ($vil->isepilogue() );
+
+		if ($showbtn and $showturn) {
+			print <<"_HTML_";
+  <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$sow->{'cfg'}->{'METHOD_FORM'}">
+  <p class="commitbutton">
+    <input type="hidden" name="cmd" value="editvilform"$net>$hidden
+    <input type="submit" class="btn" value="村を編集しよう！"$net>
+  </p>
+  </form>
+</div>
+_HTML_
+		}
 	}
 
 	return;

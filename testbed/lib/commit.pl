@@ -305,7 +305,7 @@ sub EventGM {
 
 	# 次の事件発生！
 	my $event_do;
-	if ($sow->{'cfg'}->{'ENABLED_SEQ_EVENT'} > 0) {
+	if ($vil->{'seq_event'} > 0) {
 		$event_do = 1;
 	} else {
 		$event_do = int(rand(@events));
@@ -584,9 +584,9 @@ sub Execution {
 
 		# ランダム委任
 		$plsingle->{'randomentrust'} = '';
-		if (($plsingle->{$entrust} > 0) && ($plsingle->{$vote} == $sow->{'TARGETID_RANDOM'})) {
+		if (($plsingle->{$entrust} > 0) && ($plsingle->{'entrust1'} == $sow->{'TARGETID_RANDOM'})) {
 			$plsingle->{$vote} = $livepllist->[rand(@$livepllist - 1)]->{'pno'};
-			$plsingle->{$vote} = $livepllist->[$#$livepllist]->{'pno'} if ($plsingle->{$vote} == $plsingle->{'pno'});
+			$plsingle->{$vote} = $livepllist->[$#$livepllist]->{'pno'} if ($plsingle->{'entrust1'} == $plsingle->{'pno'});
 			$plsingle->{'randomentrust'} = $vil->getText('RANDOMENTRUST');
 		}
 	}
@@ -605,7 +605,7 @@ sub Execution {
 			# 投票を他人に委任している人を配列に追加
 			push(@entrusts, $srcpl);
 			$i++;
-			$srcpl = $vil->getplbypno($srcpl->{$vote});
+			$srcpl = $vil->getplbypno($srcpl->{'entrust1'});
 			if (($i > $votablepl) || ($srcpl->{'live'} ne 'live')) {
 				# 委任ループに入っている時
 				# （又は委任先が死者の時）
@@ -633,7 +633,7 @@ sub Execution {
 			my $targetname = $srcpl->getchrname();
 			for ($i = 0; $i < @entrusts; $i++) {
 				#	委任先を参照して、投票へ変更。
-				$entrusts[$i]->{$vote} = $srcpl->{$vote};
+				$entrusts[$i]->{$vote} = $srcpl->{'entrust1'};
 				$entrusts[$i]->{$entrust} = 0;
 
 				my $randomvote = 0;
@@ -2214,6 +2214,7 @@ sub SetInitVoteTarget {
 			$plsingle->setInitTarget('role',2, $logfile, $plsingle->{'role1'}); # 仔狼死亡時とトリックスターで使い回し。
 		}
 		if( $plsingle->isvoter() ){
+			$plsingle->setInitTarget('entrust',1, $logfile, -1);
 			$plsingle->setInitTarget('vote',1, $logfile, -1);
 			$plsingle->setInitTarget('vote',2, $logfile, $plsingle->{'vote1'}); # 扇動者死亡時。
 		}

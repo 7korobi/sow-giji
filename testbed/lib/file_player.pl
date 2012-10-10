@@ -47,7 +47,6 @@ sub getdatalabel {
 		'countinfosp',
 		'countthink',
 		'entrust1',
-		'entrust2',
 		'vote1',
 		'vote2',
 		'role1',
@@ -93,6 +92,7 @@ sub createpl {
 	$self->{'jobname'}      = '';
 	$self->{'entrust'}      = 0;
 	$self->{'entrusted'}    = 1;
+	$self->{'entrust1'}     = 0;
 	$self->{'vote1'}        = 0;
 	$self->{'vote2'}        = 0;
 	$self->{'role1'}        = 0;
@@ -434,6 +434,7 @@ sub gettargetlist {
 #	$abstain = 0 if (($vil->{'debug'} == 1 ));
 	# 投票にはお任せを認めない。
 	$abstain = 0 if (($cmd eq 'vote'));
+	$abstain = 0 if (($cmd eq 'entrust'));
 	if (($cmd eq 'role')&&($turn == 1)){
 	# １日目、弟子、悪戯妖精、襲撃にはお任せを認めない。
 		$abstain = 0 if (($self->{'role'} == $sow->{'ROLEID_PASSION'}  ));
@@ -461,9 +462,10 @@ sub gettargetlist {
 	}
 
 	# 能力使用日以外は、パス以外選べない。
-	return \@targetlist if (($cmd eq 'vote')&&($self->isEnableVote($turn) == 0));
-	return \@targetlist if (($cmd eq 'role')&&($self->isEnableRole($turn) == 0));
-	return \@targetlist if (($cmd eq 'gift')&&($self->isEnableGift($turn) == 0));
+	return \@targetlist if (($cmd eq 'entrust')&&($self->isEnableVote($turn) == 0));
+	return \@targetlist if (($cmd eq 'vote'   )&&($self->isEnableVote($turn) == 0));
+	return \@targetlist if (($cmd eq 'role'   )&&($self->isEnableRole($turn) == 0));
+	return \@targetlist if (($cmd eq 'gift'   )&&($self->isEnableGift($turn) == 0));
 
 	# 自覚のない場合、特別扱い処理はしない。
 	# 少女の能力の場合
@@ -553,7 +555,7 @@ sub gettargetlist {
 				next if ( $self->isDisableState('MASKSTATE_ABI_GIFT') );
 			}
 		}
-		if (($cmd eq 'vote')) {
+		if (($cmd eq 'vote') or ($cmd eq 'entrust')) {
 			next if (($vil->{'scapegoat'} > 0)
                    &&($livepl->{'pno'} != $vil->{'scapegoat'})
                    &&($self->{'pno'}   != $vil->{'scapegoat'})
@@ -701,15 +703,27 @@ sub getlabel {
 	my $sow = $self->{'sow'};
 	my $vil = $self->{'vil'};
 
-	my $votelabel = "";
-	if ( $cmd eq 'role' ){
+    my $choice = '';
+	if      ( $cmd eq 'entrust'){
+		$choice = "* " if( 0 != $curpl->{'entrust'});
+		return $choice.$sow->{'textrs'}->{'VOTELABELS'}->[1]
+
+	} elsif ( $cmd eq 'vote' ){
+		$choice = "* " if( 0 == $curpl->{'entrust'});
+		return $choice.$sow->{'textrs'}->{'VOTELABELS'}->[0]
+	} elsif ( $cmd eq 'role' ){
 		if ( $self->issensible() ){
-			$votelabel =  $sow->{'textrs'}->{'ABI_ROLE'}->[$self->{'role'}] ;
+			$choice = "* ";
+			return $choice.$sow->{'textrs'}->{'ABI_ROLE'}->[$self->{'role'}] ;
 		} else {
-			$votelabel =  $sow->{'textrs'}->{'ABI_ROLE'}->[0] ;
+			return $choice.$sow->{'textrs'}->{'ABI_ROLE'}->[0] ;
 		}
+	} elsif ( $cmd eq 'gift' ){
+		$choice = "* ";
+		return $choice.$sow->{'textrs'}->{'ABI_GIFT'}->[$self->{'gift'}];
+	} else {
+		return "";
 	}
-	$votelabel =  $sow->{'textrs'}->{'ABI_GIFT'}->[$self->{'gift'}]  if ( $cmd eq 'gift' );
 	return $votelabel;
 }
 
@@ -720,10 +734,11 @@ sub gettargetlabel {
 	my ($self, $cmd, $turn) = @_;
 	my $sow = $self->{'sow'};
 	my $vil = $self->{'vil'};
-	my $targetlabel = '';
 	my $abi_vote = $sow->{'textrs'}->{'VOTELABELS'};
 	my $abi_role = $sow->{'textrs'}->{'ABI_ROLE'};
 	my $abi_gift = $sow->{'textrs'}->{'ABI_GIFT'};
+
+	my $targetlabel = '';
 
 	# 投票について。
 	if ($vil->{'riot'} == $turn) {

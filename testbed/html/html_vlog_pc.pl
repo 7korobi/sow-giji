@@ -13,6 +13,16 @@ sub OutHTMLVlogPC {
 	my $query = $sow->{'query'};
 
 	my $reqvals = &SWBase::GetRequestValues($sow);
+
+	$reqvals->{'row'} = '';
+	$reqvals->{'rowall'} = '';
+	my $news_link = &SWBase::GetLinkValues($sow, $reqvals);
+	$news_link   = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?" . $news_link;
+
+	$reqvals->{'rowall'} = 'on';
+	my $rowall_link = &SWBase::GetLinkValues($sow, $reqvals);
+	$rowall_link = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?" . $rowall_link;
+
 	my $link = &SWBase::GetLinkValues($sow, $reqvals);
 	$link = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$link";
 
@@ -30,7 +40,24 @@ sub OutHTMLVlogPC {
 	# 見出し（村名とRSS）
 	my $linkrss = " <a href=\"$link$amp". "cmd=rss\">RSS</a>";
 	$linkrss = '' if ($cfg->{'ENABLED_RSS'} == 0);
-	print "<h2>$query->{'vid'} $vil->{'vname'} $linkrss</h2>\n\n";
+
+	print <<"_HTML_";
+<h2>$query->{'vid'} $vil->{'vname'} $linkrss</h2>
+<div class="pagenavi">
+<form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="get" class="form-inline">
+<p>
+  <a ng-show="event.is_news" class="btn" href="$rowall_link">全て表\示</a>
+  <a ng-hide="event.is_news" class="btn" href="$news_link">ニュース</a>
+  <select ng-hide="event.is_news" ng-model="page.value" ng-options="pno.val as pno.name for pno in page.select" class="input-mini"></select>
+  <select name="order" class="input-medium" ng-model="order.value">
+    <option ng-class="order.asc" value="asc">上から下へ
+    <option ng-class="order.desc" value="desc">下から上へ
+  </select>
+  <select name="row" ng-model="row.value" ng-options="o.val as o.name for o in row.select" class="input-small"></select>
+</p>
+</form>
+</div>
+_HTML_
 
 	# 終了表示
 	if (($sow->{'turn'} == $vil->{'turn'}) && ($vil->{'epilogue'} < $vil->{'turn'})) {
@@ -69,7 +96,7 @@ _HTML_
 <div id="messages">
 <div class="message_filter" ng-bind-html-unsafe="log(message)" ng-repeat="message in messages"></div>
 <div class="message_filter">
- <div class="badge" ng-class="page.go_next" ng-click="page.paginate('next')"> 次のページ</div>
+ <div class="badge" ng-class="page.next.class" ng-click="page.move(page.next.val)"> 次のページ</div>
  <hr class="invisible_hr" />
 </div>
 <div class="message_filter drag" ng-bind-html-unsafe="log(message)" ng-repeat="message in anchors" style="z-index: {{message.z}}; top: {{message.top}}px; "></div>
@@ -101,7 +128,19 @@ _HTML_
 
 		print <<"_HTML_";
 <hr class="invisible_hr"$net>
-
+<div class="pagenavi">
+<form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="get" class="form-inline">
+<p>
+  <a ng-show="event.is_news" class="btn" href="$rowall_link">全て表\示</a>
+  <select ng-hide="event.is_news" ng-model="page.value" ng-options="pno.val as pno.name for pno in page.select" class="input-mini"></select>
+  <select name="order" class="input-medium" ng-model="order.value">
+    <option ng-class="order.asc" value="asc">上から下へ
+    <option ng-class="order.desc" value="desc">下から上へ
+  </select>
+  <select name="row" ng-model="row.value" ng-options="o.val as o.name for o in row.select" class="input-small"></select>
+</p>
+</form>
+</div>
 _HTML_
 	}
 

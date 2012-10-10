@@ -58,6 +58,8 @@ sub InitConst {
 		trsid        => 1, # 文字列リソースセット
 		randomtarget => 1, # ランダム対象
 		noselrole    => 1, # 役職希望無視
+		seqevent     => 1, # 事件整頓
+		entrust      => 1, # 委任可能
 		undead       => 1, # 幽界トーク
 		showid       => 1, # ID公開
 		mob          => 1, # 見物人タイプ
@@ -168,7 +170,6 @@ sub InitConst {
 		muppet     => 1, # 念話スイッチ
 		monospace  => 1, # 委任スイッチ
 		safety     => 1, # 誤爆防止チェック
-		entrust    => 1, # 委任スイッチ
 		expression => 0, # 表情ID
 		commit     => 0, # コミット
 		jobname    => 1, # 肩書き

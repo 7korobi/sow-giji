@@ -284,6 +284,18 @@ _HTML_
 <fieldset>
 <legend>拡張設定</legend>
 <dl class="dl-horizontal">
+<dt><label for="seqevent">事件正順</label>
+<dd><input id="seqevent" name="seqevent" type="checkbox" ng-checked="story.options.some('seq-event')">
+  事件が順序どおりに発生する
+<dt><label for="entrust">委任投票</label>
+<dd><input id="entrust" name="entrust" type="checkbox" ng-checked="story.options.some('entrust')">
+  委任投票をする
+<dt><label for="noselrole">役職希望</label>
+<dd><input id="noselrole" name="noselrole" type="checkbox" ng-checked="! story.options.some('select-role')">
+  役職希望を無視する
+<dt><label for="showid">ID公開</label>
+<dd><input id="showid" name="showid" type="checkbox" ng-checked="story.options.some('show-id')">
+  プレイヤーIDを公開する
 _HTML_
 			# ランダム対象
 			if ($sow->{'cfg'}->{'ENABLED_RANDOMTARGET'} > 0) {
@@ -304,12 +316,6 @@ _HTML_
 
 			# 役職希望無視
 			print <<"_HTML_";
-<dt><label for="noselrole">役職希望</label>
-<dd><input id="noselrole" name="noselrole" type="checkbox" ng-checked="! story.options.some('select-role')">
-  役職希望を無視する
-<dt><label for="showid">ID公開</label>
-<dd><input id="showid" name="showid" type="checkbox" ng-checked="story.options.some('show-id')">
-  プレイヤーIDを公開する
 <dt><label for="game">ゲームルール</label>
 <dd><select id="game" name="game" class="input-large" ng-model="story.type.game">
 _HTML_
@@ -440,7 +446,6 @@ _HTML_
 	&SWHtmlSayFilter::OutHTMLTools    ($sow, $vil);
 	&SWHtmlSayFilter::OutHTMLFooter   ($sow, $vil);
 	$sow->{'html'}->outfooter(); # HTMLフッタの出力
-	$sow->{'http'}->outfooter();
 
 	print <<"_HTML_";
 <script>
@@ -451,6 +456,7 @@ _HTML_
 	print <<"_HTML_";
 </script>
 _HTML_
+	$sow->{'http'}->outfooter();
 
 	return;
 }

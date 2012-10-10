@@ -15,6 +15,25 @@ sub OutHTMLMemoPC {
 	my $query = $sow->{'query'};
 
 	my $reqvals = &SWBase::GetRequestValues($sow);
+
+	$reqvals->{'cmd'} = '';
+	$reqvals->{'row'} = '';
+	$reqvals->{'rowall'} = '';
+	my $news_link = &SWBase::GetLinkValues($sow, $reqvals);
+	$news_link   = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?" . $news_link;
+
+	my $memo_link_text;
+    if ('memo' eq $query->{'cmd'}){
+		$reqvals->{'cmd'} = 'hist';
+		$memo_link_text = "履歴";
+	} else {
+		$reqvals->{'cmd'} = 'memo';
+		$memo_link_text = "最新";
+	}
+	$reqvals->{'rowall'} = 'on';
+	my $memo_link = &SWBase::GetLinkValues($sow, $reqvals);
+	$memo_link = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?" . $memo_link;
+
 	my $link = &SWBase::GetLinkValues($sow, $reqvals);
 	$link = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$link";
 
@@ -22,29 +41,26 @@ sub OutHTMLMemoPC {
 	$sow->{'html'}->outcontentheader();
 	&SWHtmlPC::OutHTMLLogin($sow);
 
-	# 村名
-	my $date = $sow->{'dt'}->cvtdt($vil->{'nextupdatedt'});
-	my $extend = '延長' . $vil->{'extend'} . '回まで。' if $vil->{'extend'};
-	my $titleupdate = " ($date に更新。 $extend)";
-
 	# 見出し（村名とRSS）
-	my $titleupdate = &SWHtmlPC::GetTitleNextUpdate($sow, $vil);
 	my $linkrss = " <a href=\"$link$amp". "cmd=rss\">RSS</a>";
 	$linkrss = '' if ($cfg->{'ENABLED_RSS'} == 0);
-	print "<h2>$query->{'vid'} $vil->{'vname'}";
-	print " $linkrss<br$net>$titleupdate" if ($vil->{'epilogue'} >= $vil->{'turn'});
-	print "</h2>\n\n";
-
-	# 日付別ログへのリンク
-	my $list = $logfile->getlist();
-	my @dummy;
-	&SWHtmlPC::OutHTMLTurnNavi($sow, $vil, \@dummy, $list);
+	print <<"_HTML_";
+<h2>$query->{'vid'} $vil->{'vname'} $linkrss</h2>
+<div class="pagenavi">
+<form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="get" class="form-inline">
+<p>
+  <a class="btn" href="$memo_link">$memo_link_text</a>
+  <a class="btn" href="$news_link">ニュース</a>
+</p>
+</form>
+</div>
+_HTML_
 
 	# メモ表示
 	my $title = '';
 	$title = '履歴' if ($query->{'cmd'} eq 'hist');
 	print <<"_HTML_";
-<div class="message_filter"> 
+<div class="message_filter">
 <h3><a name="MEMO">メモ$title</a></h3>
 _HTML_
 
@@ -91,14 +107,13 @@ _HTML_
 	}
 
 	print <<"_HTML_";
-</div> 
+</div>
 <hr class="invisible_hr" />
-
 _HTML_
 
 	my $writepl = &SWBase::GetCurrentPl($sow, $vil);
-	if (($query->{'cmd'} eq 'memo') 
-	  &&($sow->{'turn'} == $vil->{'turn'}) 
+	if (($query->{'cmd'} eq 'memo')
+	  &&($sow->{'turn'} == $vil->{'turn'})
 	  &&($vil->{'turn'} <= $vil->{'epilogue'})
 	  ){
 		if     ($query->{'admin'}  eq 'on' ){
@@ -111,12 +126,42 @@ _HTML_
 			&OutHTMLMemoFormPC($sow, $vil, $memofile, $logs, \%anchor);
 		}
 	}
-	# 日付別ログへのリンク
-	&SWHtmlPC::OutHTMLTurnNavi($sow, $vil, \@dummy, $list) if ($query->{'cmd'} eq 'hist');
+
+	print <<"_HTML_";
+<hr class="invisible_hr"$net>
+_HTML_
 
 	&SWHtmlPC::OutHTMLReturnPC($sow);
 
 	$sow->{'html'}->outcontentfooter();
+
+	print <<"_HTML_";
+<div id="tab" ng-cloak="ng-cloak">
+
+<div class="sayfilter" id="sayfilter">
+<h3 class="sayfilter_heading" ng-show="! navi.show.blank">ページをめくる</h3>
+_HTML_
+#	&SWHtmlSayFilter::OutHTMLHeader   ($sow, $vil);
+	&SWHtmlSayFilter::OutHTMLSayFilter($sow, $vil) if ($modesingle == 0);
+	&SWHtmlSayFilter::OutHTMLTools    ($sow, $vil);
+	&SWHtmlSayFilter::OutHTMLFooter   ($sow, $vil);
+
+	my $secret_show = $vil->isepilogue();
+	print <<"_HTML_";
+<script>
+window.gon = {};
+_HTML_
+	$vil->gon_story($secret_show);
+	$vil->gon_event($secret_show);
+	$vil->gon_potofs($secret_show);
+
+	# 全表示リンク
+	my $is_news = 0 + (0 < $maxrow);
+
+	print <<"_HTML_";
+gon.event.is_news    = (0 != $is_news);
+</script>
+_HTML_
 
 	return;
 }

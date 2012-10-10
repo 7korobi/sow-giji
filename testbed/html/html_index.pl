@@ -111,7 +111,7 @@ _HTML_
 
 	print <<"_HTML_";
 <h2><a name="welcome">$cfg->{'NAME_SW'}へようこそ</a></h2>
-<p class="paragraph">
+<div class="paragraph">
 <ol type="1">
 <li><a href="$urlsow?cmd=about">$cfg->{'NAME_SW'}とは？</a>
 <li><a href="$urlsow?$linkvalue">遊び方</a>、<a href="$urlwiki$linkoperate">操作方法</a>、<a href="$urlsow?$linkrule">ルール</a>、<a href="$urlsow?$linkrule#mind">心構\え</a>をよく読もう。なにをする遊び場かわかったら、すぐ下に村がある。
@@ -119,7 +119,7 @@ _HTML_
 <li>人狼ゲームの基本的な知識、人狼議事独自システムの説明は、公式まとめサイトで知ろう。
 <br><a href="http://crazy-crazy.sakura.ne.jp/giji/"><img src="$urlimg/banner/guide.png"></a>
 </ol>
-</p>
+</div>
 
 <hr class="invisible_hr"$net>
 
@@ -156,6 +156,7 @@ _HTML_
 <img src="$cfg->{'DIR_IMG'}/icon/cd_appare.png">
 <img src="$cfg->{'DIR_IMG'}/icon/cd_ukkari.png">
 <img src="$cfg->{'DIR_IMG'}/icon/cd_child.png">
+<img src="$cfg->{'DIR_IMG'}/icon/cd_biohazard.png">
 マークの付いた村は、<a href="$linkmake#mark">こだわり</a>のある村です。好みの別れる場合もありますので、まず村の情報欄を開いて内容を確認しましょう。
 </p>
 
@@ -182,21 +183,21 @@ _HTML_
 	print <<"_HTML_";
 <h3>終了済み</h3>
 
-<p class="paragraph">
+<div class="paragraph">
 <a href="$urlsow?$linkvalue">終了済みの村</a>
-</p>
+</div>
 <hr class="invisible_hr"$net>
 
 _HTML_
 	}
 
-	my $linkvmake = '<input type="submit" value="村の作成">';
+	my $linkvmake = '<input type="submit"  class="btn" value="村の作成">';
 	my $vcnt          = $sow->{'cfg'}->{'MAX_VILLAGES'} - $vindex->getactivevcnt() ;
 	my $caution_vmake = ' <span class="infotext">あと'.$vcnt.'村が建てられます。</span>';
 
 	$caution_vmake = ' <span class="infotext">村を作成する場合はログインして下さい。</span>' if ($sow->{'user'}->logined() <= 0);
 	if ($vcnt <= 0) {
-		$linkvmake = '<input type="submit" value="村の作成" disabled>';
+		$linkvmake = '<input type="submit"  class="btn" value="村の作成" disabled>';
 		$caution_vmake = ' <span class="infotext">現在稼働中の村の数が上限に達しているので、村を作成できません。</span>';
 	}
 
@@ -207,7 +208,7 @@ _HTML_
 
 		print <<"_HTML_";
 <h2>村の建て方</h2>
-<p class="paragraph">
+<div class="paragraph">
 まず<a href="$urlsow?$linkrule#make">村建て人の心構\え</a>、<a href="$linkmake">村建てマニュアル</a>を読んでから村を建てよう。<br>
 ◆参考：<a href="$urlsow?$linkrolematrix">役職配分一覧</a>｜<a href="$linkroledeal">編成実績</a>｜<a href="{{link.scedure}}">企画村予\定表\</a>（wiki：stinさん管理）<br>
 <a href="sow.cgi?cmd=trsdiff">基本設定</a>を選んで「村の作成」を押すと、新しくゲームを作成できる。
@@ -231,7 +232,7 @@ _HTML_
 </select>
 $linkvmake$caution_vmake<br$net>
 </form>
-</p>
+</div>
 
 _HTML_
 		$sow->{'trsid'} = $defaulttrsid;
@@ -241,6 +242,7 @@ _HTML_
 <hr class="invisible_hr"$net>
 
 <h2>キャラクター画像一覧</h2>
+<div class="paragraph">
 <ul>
 _HTML_
 
@@ -256,9 +258,10 @@ _HTML_
 
 	print <<"_HTML_";
 </ul>
+</div>
 
 <h2>ゲーム内での文章</h2>
-<p class="paragraph">
+<div class="paragraph">
 　ゲーム内で現れる文章の一覧を見ることができます。参考にどうぞ。
 <form action="$urlsow" method="get" >
 <input type="hidden" name="cmd" value="trslist">
@@ -278,9 +281,9 @@ _HTML_
 
 	print <<"_HTML_";
 </select>
-<input type="submit" value="文章を見る">
+<input type="submit"  class="btn" value="文章を見る">
 </form>
-</p>
+</div>
 
 _HTML_
 

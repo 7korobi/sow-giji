@@ -65,7 +65,8 @@ sub SetDataCmdVote {
 		$debug->raise($sow->{'APLOG_CAUTION'}, "‘I‘ð‚Å‚«‚È‚¢‘ÎÛ‚Q‚ð‘I‚ñ‚Å‚¢‚Ü‚·B", "cannot vote.") if (( $target2count == 0));
 	}
 
-	$debug->raise($sow->{'APLOG_CAUTION'}, "¡“ú‚Í“Š•[‚Å‚«‚é“ú‚Å‚Í‚ ‚è‚Ü‚¹‚ñB", "cannot vote.")                  if (($cmd eq 'vote') && ($curpl->isEnableVote($vil->{'turn'}) == 0));
+	$debug->raise($sow->{'APLOG_CAUTION'}, "¡“ú‚Í“Š•[‚Å‚«‚é“ú‚Å‚Í‚ ‚è‚Ü‚¹‚ñB", "cannot vote.")              if (($cmd eq 'entrust') && ($curpl->isEnableVote($vil->{'turn'}) == 0));
+	$debug->raise($sow->{'APLOG_CAUTION'}, "¡“ú‚Í“Š•[‚Å‚«‚é“ú‚Å‚Í‚ ‚è‚Ü‚¹‚ñB", "cannot vote.")                 if (($cmd eq 'vote') && ($curpl->isEnableVote($vil->{'turn'}) == 0));
 	$debug->raise($sow->{'APLOG_CAUTION'}, "¡“ú‚Í”\\—Í‘ÎÛ‚ðÝ’è‚Å‚«‚é“ú‚Å‚Í‚ ‚è‚Ü‚¹‚ñB", "cannot set target.") if (($cmd eq 'role') && ($curpl->isEnableRole($vil->{'turn'}) == 0));
 	$debug->raise($sow->{'APLOG_CAUTION'}, "¡“ú‚Í”\\—Í‘ÎÛ‚ðÝ’è‚Å‚«‚é“ú‚Å‚Í‚ ‚è‚Ü‚¹‚ñB", "cannot set target.") if (($cmd eq 'gift') && ($curpl->isEnableGift($vil->{'turn'}) == 0));
 
@@ -80,16 +81,12 @@ sub SetDataCmdVote {
 			$modified = 1;
 		}
 	}
-	my $saveentrust = $curpl->{'entrust'};
-	if ($query->{'cmd'} eq 'vote') {
-		# ˆÏ”C
-		$curpl->queryentrust($sow,$vil,$query);
-	}
+	$curpl->queryentrust($sow,$vil,$query) if (($query->{'cmd'} eq 'vote') or ($query->{'cmd'} eq 'entrust'));
 	$curpl->{'modified'} = $sow->{'time'} if (($modified > 0) || ($saveentrust != $curpl->{'entrust'}));
 	$vil->writevil();
 
 	# “Š•[^”\—Í‘ÎÛ•ÏX‘€ì‚ð‘ºƒƒO‚Ö‘‚«ž‚Ý
-	if ((($vil->{'event'} == $sow->{'EVENTID_FORCE'})||($sow->{'cfg'}->{'ENABLED_PLLOG'} > 0)) 
+	if ((($vil->{'event'} == $sow->{'EVENTID_FORCE'})||($sow->{'cfg'}->{'ENABLED_PLLOG'} > 0))
 	 && (($modified > 0) || ($saveentrust != $curpl->{'entrust'}))  ){
 		require "$sow->{'cfg'}->{'DIR_LIB'}/log.pl";
 		require "$sow->{'cfg'}->{'DIR_LIB'}/file_log.pl";
