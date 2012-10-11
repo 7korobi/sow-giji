@@ -111,7 +111,7 @@ sub OutHTMLHeader {
 <div id="tab" ng-cloak="ng-cloak">
 
 <div class="sayfilter" id="sayfilter">
-<h3 class="sayfilter_heading" ng-show="! navi.show.blank">ページをめくる</h3>
+<h4 class="sayfilter_heading" ng-show="! navi.show.blank">{{story.name}}</h4>
 
 <div class="insayfilter" ng-show="navi.show.link"><div class="paragraph">
 <h4 class="sayfilter_caption_enable">他の場面へ</h4>
@@ -188,7 +188,8 @@ sub OutHTMLSayFilter {
 <table class="table table-condensed">
 <thead>
 <tr>
-<th colspan="2" style="text-align:right"><code ng-click="potofs_is_small = ! potofs_is_small">スタイル</code>-<code href_eval="sort_potofs('deathday',0)">日程</code><code href_eval="sort_potofs('live','')">状態</code><code href_eval="sort_potofs('said_num',0)" ng-show="potofs_is_small">発言</code>
+<th><code ng-click="potofs_is_small = ! potofs_is_small">スタイル</code>
+<th><code href_eval="sort_potofs('deathday',0)">日程</code><code href_eval="sort_potofs('live','')">状態</code><code href_eval="sort_potofs('said_num',0)" ng-show="potofs_is_small">発言</code>
 <th colspan="2"><code href_eval="sort_potofs('win_name','')">陣営</code><code href_eval="sort_potofs('role_names','')">役割</code><code href_eval="sort_potofs('select_name','')" ng-show="potofs_is_small">希望</code><code href_eval="sort_potofs('text','')">補足</code>
 {{sum.actaddpt}}促
 </thead>

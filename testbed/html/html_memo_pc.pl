@@ -44,13 +44,16 @@ sub OutHTMLMemoPC {
 	# 見出し（村名とRSS）
 	my $linkrss = " <a href=\"$link$amp". "cmd=rss\">RSS</a>";
 	$linkrss = '' if ($cfg->{'ENABLED_RSS'} == 0);
+
+    &SWHtmlPC::OutHTMLChangeCSS($sow);
+
 	print <<"_HTML_";
 <h2>$query->{'vid'} $vil->{'vname'} $linkrss</h2>
 <div class="pagenavi">
 <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="get" class="form-inline">
 <p>
   <a class="btn" href="$memo_link">$memo_link_text</a>
-  <a class="btn" href="$news_link">ニュース</a>
+  <a class="btn" href="$news_link">最新の発言</a>
 </p>
 </form>
 </div>
@@ -139,7 +142,15 @@ _HTML_
 <div id="tab" ng-cloak="ng-cloak">
 
 <div class="sayfilter" id="sayfilter">
-<h3 class="sayfilter_heading" ng-show="! navi.show.blank">ページをめくる</h3>
+<h4 class="sayfilter_heading" ng-show="! navi.show.blank">{{story.name}}</h4>
+<div class="insayfilter" ng-show="navi.show.link"><div class="paragraph">
+<h4 class="sayfilter_caption_enable">他の場面へ</h4>
+<div class="sayfilter_content">
+<a class="btn" href="$memo_link">$memo_link_text</a>
+<a class="btn" href="$news_link">最新の発言</a>
+<br />
+</div>
+</div></div>
 _HTML_
 #	&SWHtmlSayFilter::OutHTMLHeader   ($sow, $vil);
 	&SWHtmlSayFilter::OutHTMLSayFilter($sow, $vil) if ($modesingle == 0);
@@ -261,13 +272,11 @@ sub OutHTMLMemoFormPC {
 _HTML_
 
 	# 名前とID
-	my $reqvals = &SWBase::GetRequestValues($sow);
-	$reqvals->{'prof'} = $sow->{'uid'};
-	my $link = &SWBase::GetLinkValues($sow, $reqvals);
 	my $uidtext = $sow->{'uid'};
 	$uidtext =~ s/ /&nbsp\;/g;
-	$uidtext = "<a href=\"$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$link\">$uidtext</a>";
+	$uidtext = '<a class="sow-id">'.$uidtext.'</a>';
 	my $chrname = $curpl->getlongchrname();
+
 	print <<"_HTML_";
 <td class="field"><div class="msg">
 <div class="formpl_content">$chrname ($uidtext)</div>
@@ -297,7 +306,7 @@ _HTML_
 	&SWHtmlPC::OutHTMLSayTextAreaPC($sow, 'wrmemo', \%htmlsay);
 
 	print <<"_HTML_";
-<select name="monospace">
+<select name="monospace" class="input-small">
 <option value="">(通常)
 <option value="monospace">等幅
 <option value="report">見出し
@@ -356,6 +365,7 @@ _HTML_
 	# 名前とID
 	my $chrname = $sow->{'charsets'}->getchrname($imgpl{'csid'}, $imgpl{'cid'});
 	my $uidtext = $sow->{'uid'};
+	$uidtext = '<a class="sow-id">'.$uidtext.'</a>';
 	print <<"_HTML_";
 <td class="field"><div class="msg">
 <div class="formpl_content">$chrname ($uidtext)</div>
@@ -378,7 +388,7 @@ _HTML_
 	&SWHtmlPC::OutHTMLSayTextAreaPC($sow, 'wrmemo', \%htmlsay);
 
 	print <<"_HTML_";
-<select name="monospace">
+<select name="monospace" class="input-small">
 <option value="">(通常)
 <option value="monospace">等幅
 <option value="report">見出し

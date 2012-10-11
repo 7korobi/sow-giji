@@ -48,6 +48,7 @@ sub OutHTMLIndex {
 		&SWAdminInfo::OutHTMLAdminInfo($sow);
 	}
 
+    &SWHtmlPC::OutHTMLChangeCSS($sow);
 	print <<"_HTML_";
 <h2 style="font-size: xx-large;">$cfg->{'NAME_HOME'}</h2>
 _HTML_

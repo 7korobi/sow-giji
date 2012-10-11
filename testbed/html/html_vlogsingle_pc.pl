@@ -157,12 +157,7 @@ _HTML_
 	my $livename = $sow->{'textrs'}->{'STATUS_LIVE'};
 	my $pllist   = $vil->getallpllist();
 	foreach (@$pllist) {
-		my %link = (
-			'user' => $_    ->{'uid'},
-			'css'  => $query->{'css'},
-		);
-		my $urluser = $cfg->{'URL_USER'}.'?'.&SWBase::GetLinkValues($sow, \%link);
-		my $uidtext = '<a href="'.$urluser.'">'.$_->{'uid'}.'</a>';
+		my $uidtext = '<a class="sow-id">'.$_->{'uid'}.'</a>';
 		my $chrname = $_->getlongchrname();
 		my $deathday = "";
 		$deathday = $_->{'deathday'}."“ú" if (0 < $_->{'deathday'});

@@ -41,13 +41,15 @@ sub OutHTMLVlogPC {
 	my $linkrss = " <a href=\"$link$amp". "cmd=rss\">RSS</a>";
 	$linkrss = '' if ($cfg->{'ENABLED_RSS'} == 0);
 
+    &SWHtmlPC::OutHTMLChangeCSS($sow);
+
 	print <<"_HTML_";
 <h2>$query->{'vid'} $vil->{'vname'} $linkrss</h2>
 <div class="pagenavi">
 <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="get" class="form-inline">
 <p>
   <a ng-show="event.is_news" class="btn" href="$rowall_link">全て表\示</a>
-  <a ng-hide="event.is_news" class="btn" href="$news_link">ニュース</a>
+  <a ng-hide="event.is_news" class="btn" href="$news_link">最新の発言</a>
   <select ng-hide="event.is_news" ng-model="page.value" ng-options="pno.val as pno.name for pno in page.select" class="input-mini"></select>
   <select name="order" class="input-medium" ng-model="order.value">
     <option ng-class="order.asc" value="asc">上から下へ
@@ -99,7 +101,7 @@ _HTML_
  <div class="badge" ng-class="page.next.class" ng-click="page.move(page.next.val)"> 次のページ</div>
  <hr class="invisible_hr" />
 </div>
-<div class="message_filter drag" ng-bind-html-unsafe="log(message)" ng-repeat="message in anchors" style="z-index: {{message.z}}; top: {{message.top}}px; "></div>
+<div class="message_filter drag" ng-bind-html-unsafe="log(message)" ng-repeat="message in anchors" ng-style="drag(message)"></div>
 </div>
 _HTML_
 
@@ -132,6 +134,7 @@ _HTML_
 <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="get" class="form-inline">
 <p>
   <a ng-show="event.is_news" class="btn" href="$rowall_link">全て表\示</a>
+  <a ng-hide="event.is_news" class="btn" href="$news_link">最新の発言</a>
   <select ng-hide="event.is_news" ng-model="page.value" ng-options="pno.val as pno.name for pno in page.select" class="input-mini"></select>
   <select name="order" class="input-medium" ng-model="order.value">
     <option ng-class="order.asc" value="asc">上から下へ

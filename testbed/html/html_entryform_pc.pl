@@ -47,7 +47,7 @@ sub OutHTMLEntryFormPC {
 <td class="field"><div class="msg">
 <div class="formpl_content">
 <label for="selectcid">希望する配役：</label>
-<select id="selectcid" name="csid_cid" ng-model="form.csid_cid">
+<select class="input-medium" id="selectcid" name="csid_cid" ng-model="form.csid_cid">
 _HTML_
 
 	# 参加済みのキャラをチェック
@@ -74,7 +74,7 @@ _HTML_
 
 <div class="formpl_content">
 <label for="selectrole">希望する能\力：</label>
-<select id="selectrole" name="role">
+<select class="input-medium" id="selectrole" name="role">
 _HTML_
 	# 希望する能力の表示
 	if ($isplok) {
@@ -116,7 +116,7 @@ _HTML_
 	&SWHtmlPC::OutHTMLSayTextAreaPC($sow, 'entrypr', \%htmlsay);
 
 	print <<"_HTML_";
-<select name="monospace">
+<select name="monospace" class="input-small">
 <option value="">(通常)
 <option value="monospace">等幅
 <option value="report">見出し
@@ -130,7 +130,7 @@ _HTML_
 
     <div class="formpl_content">
       <label for="entrypwd">参加パスワード：</label>
-      <input id="entrypwd" type="password" name="entrypwd" maxlength="8" size="8" value=""$net>
+      <input class="input-medium" id="entrypwd" type="password" name="entrypwd" maxlength="8" size="8" value=""$net>
     </div>
 _HTML_
 	}

@@ -97,18 +97,10 @@ sub OutHTMLSayPC {
 
 _HTML_
 
-# 名前とID
-#	my $reqvals = &SWBase::GetRequestValues($sow);
-#	$reqvals->{'prof'} = $sow->{'uid'};
-#	my $link    = &SWBase::GetLinkValues($sow, $reqvals);
-	my %link = (
-		'user' => $sow  ->{'uid'},
-		'css'  => $query->{'css'},
-	);
-	my $urluser = $cfg->{'URL_USER'}.'?'.&SWBase::GetLinkValues($sow, \%link);
+	# 名前とID
 	my $uidtext = $sow->{'uid'};
 	$uidtext =~ s/ /&nbsp\;/g;
-	$uidtext = '<a href="'.$urluser.'">'.$uidtext.'</a>';
+	$uidtext = '<a class="sow-id">'.$uidtext.'</a>';
 	my $chrname = $curpl->getlongchrname();
 
 	print <<"_HTML_";
@@ -121,7 +113,7 @@ _HTML_
 		print <<"_HTML_";
 <div class="formpl_content">
 <label for="selectrole">希望する能\力：</label>
-<select id="selectrole" name="role">
+<select id="selectrole" name="role" class="input-medium">
 <option value="-1">ランダム$sow->{'html'}->{'option'}
 _HTML_
 		require "$sow->{'cfg'}->{'DIR_LIB'}/setrole.pl";
@@ -749,7 +741,7 @@ _HTML_
 	&SWHtmlPC::OutHTMLSayTextAreaPC($sow, 'writepr', \%htmlsay);
 
 	print <<"_HTML_";
-<select name="monospace">
+<select name="monospace" class="input-medium">
 <option value="">(通常)
 <option value="monospace">等幅
 <option value="report">見出し
@@ -822,7 +814,7 @@ sub OutHTMLUpdateSessionButtonPC {
   <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$sow->{'cfg'}->{'METHOD_FORM'}">
   <p class="commitbutton">
     <input type="hidden" name="cmd" value="makerpr"$net>$hidden
-    <select id="maker" name="target">
+    <select id="maker" name="target" class="input-medium">
 _HTML_
 		# 村建て権移譲
 		$targetlist = $vil->getallpllist();
@@ -848,7 +840,7 @@ _HTML_
   <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$sow->{'cfg'}->{'METHOD_FORM'}">
   <p class="commitbutton">
     <input type="hidden" name="cmd" value="kickpr"$net>$hidden
-    <select id="kick" name="target">
+    <select id="kick" name="target" class="input-medium">
 _HTML_
 		# キック機能
 		$targetlist = $vil->getallpllist();

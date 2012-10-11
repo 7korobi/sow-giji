@@ -11,6 +11,7 @@ sub OutHTMLHeaderPC {
   my ($sow, $title) = @_;
   my $net = $sow->{'html'}->{'net'};
   my $cfg = $sow->{'cfg'};
+  my $cookie = $sow->{'cookie'};
 
   $title = $title . ' - ' if ($title ne '');
 
@@ -43,12 +44,9 @@ sub OutHTMLHeaderPC {
 _HTML_
 
   # スタイルシートの出力
-  foreach (@csskey) {
-    next if ($_ ne $cssid); # alternateは取りあえず停止中
-    $alternate = 'alternate ';
-    $alternate = '' if ($_ eq $cssid);
-    print "  <link rel=\"" . $alternate . "stylesheet\" type=\"text/css\" href=\"{{css}}\"$net>\n";
-  }
+  my $css = "cinema800";
+  my $css = $cookie->{'theme'} . $cookie->{'width'} if ( $cookie->{"theme"} && $cookie->{"width"} );
+  print "  <link id=\"giji_css\" href=\"$sow->{'cfg'}->{'DIR_CSS'}/$css.css\" rel=\"stylesheet\" type=\"text/css\">\n";
 
   # RSSの出力
   if (($sow->{'html'}->{'rss'} ne '') && ($cfg->{'ENABLED_RSS'} > 0)) {
@@ -303,6 +301,27 @@ sub OutHTMLReturnPC {
 </p>
 <hr class="invisible_hr"$net>
 
+_HTML_
+}
+
+#----------------------------------------
+# スタイル変更
+#----------------------------------------
+sub OutHTMLChangeCSS {
+  my $sow = $_[0];
+  my $cfg = $sow->{'cfg'};
+
+  my $css_select = '<p class="css_changer"><span><a href="sow.cgi?ua=mb">携帯</a></span> | <span ng-repeat="o in theme.select"><a ng-class="o.class" ng-click="theme.move(o.val)">{{o.name}}</a>&nbsp;</span>｜<span ng-repeat="o in width.select"><a ng-class="o.class" ng-click="width.move(o.val)">{{o.name}}</a>&nbsp;</span></p>';
+
+  if( 'PAN' eq $cfg->{'RULE'} ){
+    $css_select = '<a href="sow.cgi">標準</a> <a href="sow.cgi?css=sow800">新</a> <a href="sow.cgi?css=sow480">iPhone</a>｜<a href="sow.cgi?css=junawide">審問</a> <a href="sow.cgi?css=juna800">新</a> <a href="sow.cgi?css=juna480">iPhone</a>｜<a href="sow.cgi?ua=mb">携帯</a>';
+  }
+  print <<"_HTML_";
+<div class="choice">
+<p style="text-align:right; font-size: 100%;">
+$css_select
+</p>
+</div>
 _HTML_
 }
 
