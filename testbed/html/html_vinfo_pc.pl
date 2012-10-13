@@ -53,15 +53,13 @@ _HTML_
 	&SWHtmlSayFilter::OutHTMLSayFilter($sow, $vil) if ($modesingle == 0);
 	&SWHtmlSayFilter::OutHTMLTools    ($sow, $vil);
 	&SWHtmlSayFilter::OutHTMLFooter   ($sow, $vil);
-
-	my $secret_show = $vil->isepilogue();
 	print <<"_HTML_";
 <script>
 window.gon = {};
 _HTML_
-	$vil->gon_story($secret_show);
-	$vil->gon_event($secret_show);
-	$vil->gon_potofs($secret_show);
+	$vil->gon_story();
+	$vil->gon_event();
+	$vil->gon_potofs();
 	print <<"_HTML_";
 </script>
 _HTML_
@@ -142,6 +140,7 @@ _HTML_
 <dd><img name=cd_img src="$cfg->{'DIR_IMG'}/icon/cd_{{story.rating}}.png">
     $sow->{'cfg'}->{'RATING'}->{$rating}->{'CAPTION'}
 </dl>
+
 <p class="text head" ng-bind-html-unsafe="story.comment"></p>
 <p>$ncomment</p>
 <p>

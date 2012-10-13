@@ -731,127 +731,43 @@ sub isstartable {
 
 
 sub gon_potofs {
-	my ($vil, $secret) = @_;
+	my ($vil) = @_;
+	my $sow = $vil->{'sow'};
+	my $cfg = $sow->{'cfg'};
+
+	my $secret = $vil->isepilogue();
+	$secret = 1 if ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'});
+
 	print <<"_HTML_";
 gon.potofs=[];
 _HTML_
 	my $pllist = $vil->getallpllist();
 	foreach $pl (@$pllist) {
-		my $yourself = ($pl->{'uid'} eq $vil->{'sow'}->{'uid'});
-		my $longchrname  = $pl->getlongchrname();
-		my $shortchrname = $pl->getshortchrname();
-		my $actaddpt = 0 + $pl->{'actaddpt'};
-		my $say   = 0 + $pl->{'say'};
-		my $tsay  = 0 + $pl->{'tsay'};
-		my $spsay = 0 + $pl->{'spsay'};
-		my $wsay  = 0 + $pl->{'wsay'};
-		my $gsay  = 0 + $pl->{'gsay'};
-		my $say_act = 0 + $pl->{'say_act'};
-		my $live = $pl->{'live'};
-		$live = 'victim' if('live' ne $live);
-		print <<"_HTML_";
-var pl = {
-	"csid":    "$pl->{'csid'}",
-	"face_id": "$pl->{'cid'}",
-	"deathday": $pl->{'deathday'},
+		$pl->gon_potof($vil);
+		my $yourself = ($pl->{'uid'} eq $sow->{'uid'});
 
-	"name":    "$shortchrname",
-	"jobname": "$pl->{'jobname'}",
-	"longname": "$longchrname",
-	"shortname": "$shortchrname",
-	"clearance": $pl->{'clearance'},
-	"zapcount": $pl->{'zapcount'},
-	"postfix": "$pl->{'postfix'}",
-
-	"live": "$live",
-	"bonds": [],
-	"pseudobonds": [],
-
-	"point":{
-		"actaddpt":  $actaddpt,
-		"saidcount": $pl->{'saidcount'},
-		"saidpoint": $pl->{'saidpoint'}
-	},
-	"say":{
-		"say": $say
-	}
-};
-_HTML_
-		if ( 1 == $vil->{'showid'}){
-			print <<"_HTML_";
-pl.sow_auth_id = "$pl->{'uid'}";
-_HTML_
-		}
-		if ($secret || $yourself) {
-			my $love  = $pl->getvisiblelovestate();
-
-			my $win_visible = $pl->win_visible();
-			my $win_result  = $pl->winresult();
-
-			my $is_voter = $pl->isvoter();
-			my $is_human = $pl->ishuman();
-			my $is_enemy = $pl->isenemy();
-			my $is_wolf = $pl->iswolf();
-			my $is_pixi = $pl->ispixi();
-			my $is_sensible = $pl->issensible();
-			my $is_committer = $pl->iscommitter();
-			print <<"_HTML_";
-pl.win = {
-	visible: "$win_visible",
-	result:  "$win_result",
-};
-
-pl.live = "$pl->{'live'}";
-pl.role = [
-	SOW_RECORD.CABALA.roles[$pl->{'role'}],
-	SOW_RECORD.CABALA.gifts[$pl->{'gift'}]
-].compact();
-pl.rolestate = $pl->{'rolestate'};
-pl.select = SOW_RECORD.CABALA.roles[$pl->{'selrole'}];
-
-pl.history = "$pl->{'history'}";
-pl.sheep = "$pl->{'sheep'}";
-pl.overhear = [];
-
-pl.love = "$love";
-
-pl.is_voter = (0 != $is_voter);
-pl.is_human = (0 != $is_human);
-pl.is_enemy = (0 != $is_enemy);
-pl.is_wolf = (0 != $is_wolf);
-pl.is_pixi = (0 != $is_pixi);
-pl.is_sensible = (0 != $is_sensible);
-pl.is_committer = (0 != $is_committer);
-pl.say = {
-	"say":   $say,
-	"tsay":  $tsay,
-	"spsay": $spsay,
-	"wsay":  $wsay,
-	"gsay":  $gsay,
-	"say_act": $say_act
-};
-pl.timer = {
-	"entrieddt":    Date.create(1000 * $pl->{'entrieddt'}),
-	"limitentrydt": Date.create(1000 * $pl->{'limitentrydt'})
-};
-_HTML_
-		}
-		print <<"_HTML_";
-gon.potofs.push(pl);
-_HTML_
 		if ($yourself) {
 			print <<"_HTML_";
-gon.potof = pl;
+gon.potofs.push(pl);;
+gon.potof = pl
+_HTML_
+		} else {
+			print <<"_HTML_";
+gon.potofs.push(pl);
 _HTML_
 		}
 	}
 }
 
 sub gon_story {
-	my ($vil, $secret) = @_;
+	my ($vil) = @_;
 	my $sow = $vil->{'sow'};
-	my $config;
+	my $cfg = $sow->{'cfg'};
 
+	my $secret = $vil->isepilogue();
+	$secret = 1 if ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'});
+
+	my $config;
 	my $roleid = $sow->{'ROLEID'};
 	my $giftid = $sow->{'GIFTID'};
 	my $eventid = $sow->{'EVENTID'};
@@ -954,7 +870,13 @@ _HTML_
 }
 
 sub gon_event {
-	my ($vil, $secret) = @_;
+	my ($vil) = @_;
+	my $sow = $vil->{'sow'};
+	my $cfg = $sow->{'cfg'};
+
+	my $secret = $vil->isepilogue();
+	$secret = 1 if ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'});
+
 	my $isseance = $vil->isseance();
 	my $ispublic = $vil->ispublic();
 	my $iseclipse = $vil->iseclipse();
@@ -967,7 +889,7 @@ sub gon_event {
 
 	my $committablepl = $vil->getcommittablepl();
 	my $votablepl    = $vil->getvotablepl();
-	my $turn = 0 + $vil->{'sow'}->{'turn'};
+	my $turn = 0 + $sow->{'turn'};
 
 	print <<"_HTML_";
 gon.event = {

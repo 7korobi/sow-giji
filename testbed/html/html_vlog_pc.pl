@@ -78,15 +78,13 @@ _HTML_
 		&SWHtmlSayFilter::OutHTMLSayFilter($sow, $vil) if ($modesingle == 0);
 		&SWHtmlSayFilter::OutHTMLTools    ($sow, $vil);
 		&SWHtmlSayFilter::OutHTMLFooter   ($sow, $vil);
-
-		my $secret_show = $vil->isepilogue();
 		print <<"_HTML_";
 <script>
 window.gon = {};
 _HTML_
-		$vil->gon_story($secret_show);
-		$vil->gon_event($secret_show);
-		$vil->gon_potofs($secret_show);
+		$vil->gon_story();
+		$vil->gon_event();
+		$vil->gon_potofs();
 		print <<"_HTML_";
 </script>
 _HTML_
@@ -157,15 +155,13 @@ _HTML_
 	&SWHtmlSayFilter::OutHTMLSayFilter($sow, $vil) if ($modesingle == 0);
 	&SWHtmlSayFilter::OutHTMLTools    ($sow, $vil);
 	&SWHtmlSayFilter::OutHTMLFooter   ($sow, $vil);
-
-	my $secret_show = $vil->isepilogue();
 	print <<"_HTML_";
 <script>
 window.gon = {};
 _HTML_
-	$vil->gon_story($secret_show);
-	$vil->gon_event($secret_show);
-	$vil->gon_potofs($secret_show);
+	$vil->gon_story();
+	$vil->gon_event();
+	$vil->gon_potofs();
 
 	# ‘ºƒƒO•\Ž¦
 	require "$cfg->{'DIR_HTML'}/html_vlogsingle_pc.pl";

@@ -119,14 +119,17 @@ _HTML_
 	  &&($sow->{'turn'} == $vil->{'turn'})
 	  &&($vil->{'turn'} <= $vil->{'epilogue'})
 	  ){
-		if     ($query->{'admin'}  eq 'on' ){
-			&OutHTMLVilMakerPC($sow, $vil, 'admin');
-		}elsif ($query->{'maker'}  eq 'on' ){
-			&OutHTMLVilMakerPC($sow, $vil, 'maker');
-		}elsif ($query->{'anonymous'}  eq 'on' ){
-			&OutHTMLVilMakerPC($sow, $vil, 'anonymous');
-		}elsif ($vil->checkentried() >= 0) {
+		if ($vil->checkentried() >= 0) {
 			&OutHTMLMemoFormPC($sow, $vil, $memofile, $logs, \%anchor);
+		}
+		if ($vil->{'makeruid'} eq $sow->{'uid'}) {
+			&OutHTMLVilMakerPC($sow, $vil, 'maker');
+		}
+		if ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'}) {
+			&OutHTMLVilMakerPC($sow, $vil, 'admin');
+		}
+		if ($query->{'anonymous'}  eq 'on' ){
+			&OutHTMLVilMakerPC($sow, $vil, 'anonymous');
 		}
 	}
 
@@ -139,7 +142,7 @@ _HTML_
 	$sow->{'html'}->outcontentfooter();
 
 	print <<"_HTML_";
-<div id="tab" ng-cloak="ng-cloak">
+<div id="tab" ng-cloak="ng-cloak" ng-init="event.is_news = true">
 
 <div class="sayfilter" id="sayfilter">
 <h4 class="sayfilter_heading" ng-show="! navi.show.blank">{{story.name}}</h4>
@@ -150,21 +153,19 @@ _HTML_
 <a class="btn" href="$news_link">最新の発言</a>
 <br />
 </div>
-</div></div>
 _HTML_
 #	&SWHtmlSayFilter::OutHTMLHeader   ($sow, $vil);
+ 	&SWHtmlSayFilter::OutHTMLTurnLink ($sow, $vil);
 	&SWHtmlSayFilter::OutHTMLSayFilter($sow, $vil) if ($modesingle == 0);
 	&SWHtmlSayFilter::OutHTMLTools    ($sow, $vil);
 	&SWHtmlSayFilter::OutHTMLFooter   ($sow, $vil);
-
-	my $secret_show = $vil->isepilogue();
 	print <<"_HTML_";
 <script>
 window.gon = {};
 _HTML_
-	$vil->gon_story($secret_show);
-	$vil->gon_event($secret_show);
-	$vil->gon_potofs($secret_show);
+	$vil->gon_story();
+	$vil->gon_event();
+	$vil->gon_potofs();
 
 	# 全表示リンク
 	my $is_news = 0 + (0 < $maxrow);

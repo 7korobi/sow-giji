@@ -102,11 +102,6 @@ sub OutHTMLHeader {
   my $rowall_link = &SWBase::GetLinkValues($sow, $reqvals);
   $rowall_link = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?" . $rowall_link;
 
-  $reqvals->{'rowall'} = '';
-  $reqvals->{'cmd'} = 'vinfo';
-  my $linkvinfo = &SWBase::GetLinkValues($sow, $reqvals);
-  $linkvinfo   = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?" . $linkvinfo;
-
 	print <<"_HTML_";
 <div id="tab" ng-cloak="ng-cloak">
 
@@ -121,17 +116,33 @@ sub OutHTMLHeader {
 <nav><span ng-repeat="o in mode.select"><a class="btn" ng-class="o.class" ng-click="mode.move(o.val)">{{o.name}}</a></span></nav>
 <br />
 </div>
+_HTML_
+  OutHTMLTurnLink($sow, $vil);
+  return;
+}
+
+sub OutHTMLTurnLink {
+  my ($sow, $vil) = @_;
+  my $cfg = $sow->{'cfg'};
+  my $amp = $sow->{'html'}->{'amp'};
+  my $cfg = $sow->{'cfg'};
+
+  my $reqvals = &SWBase::GetRequestValues($sow);
+  $reqvals->{'turn'} = '';
+  my $linkturns = &SWBase::GetLinkValues($sow, $reqvals);
+
+  $reqvals->{'rowall'} = '';
+  $reqvals->{'cmd'} = 'vinfo';
+  my $linkvinfo = &SWBase::GetLinkValues($sow, $reqvals);
+  $linkvinfo   = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?" . $linkvinfo;
+
+  print <<"_HTML_";
 <h4 class="sayfilter_caption_enable">他の章へ</h4>
 
 <div class="sayfilter_content">
 <ul>
 <li><a href="$linkvinfo"> - 村の情報 - </a>
 _HTML_
-
-	my $reqvals = &SWBase::GetRequestValues($sow);
-
-	$reqvals->{'turn'} = '';
-	my $linkturns = &SWBase::GetLinkValues($sow, $reqvals);
 
 	my $cmdlog = 0;
 	$cmdlog = 1 if (($query->{'cmd'} eq '') || ($query->{'cmd'} eq 'memo') || ($query->{'cmd'} eq 'hist'));
@@ -189,16 +200,21 @@ sub OutHTMLSayFilter {
 <thead>
 <tr>
 <th><code ng-click="potofs_is_small = ! potofs_is_small">スタイル</code>
-<th><code href_eval="sort_potofs('deathday',0)">日程</code><code href_eval="sort_potofs('live','')">状態</code><code href_eval="sort_potofs('said_num',0)" ng-show="potofs_is_small">発言</code>
-<th colspan="2"><code href_eval="sort_potofs('win_name','')">陣営</code><code href_eval="sort_potofs('role_names','')">役割</code><code href_eval="sort_potofs('select_name','')" ng-show="potofs_is_small">希望</code><code href_eval="sort_potofs('text','')">補足</code>
 {{sum.actaddpt}}促
+<th><code href_eval="sort_potofs('deathday',0)">日程</code><code href_eval="sort_potofs('live','')">状態</code><code href_eval="sort_potofs('said_num',0)" ng-show="potofs_is_small">発言</code>
+<th colspan="2"><code ng-show="potofs_is_small" href_eval="sort_potofs('win_name','')">陣営</code><code href_eval="sort_potofs('role_names','')">役割</code><span ng-show="potofs_is_small"><code href_eval="sort_potofs('select_name','')">希望</code><code href_eval="sort_potofs('text','')">補足</code></span>
 </thead>
-<tbody ng-repeat="potof in potofs">
-<tr>
+<tbody>
+<tr ng-repeat="potof in potofs" ng-click="potof_toggle(potof)" ng-class="potof.is_hide && 'btn-inverse'">
 <td>{{potof.name}}<div class="note" ng-show="potof.auth && potofs_is_small"><i class="icon-user"></i>{{potof.auth}}</div>
-<td>{{potof.stat}}<div class="note" ng-show="potof.said && potofs_is_small"><i class="icon-comment"></i>{{potof.said}}</div>
-<td>{{potof.win_name}}::{{potof.role_names.join('、')}}<div class="note" ng-show="potof.select_name && potofs_is_small">{{potof.select_name}}</div>
+<td style="text-align: right;">{{potof.stat}}<div class="note" ng-show="potof.said && potofs_is_small"><i class="icon-comment"></i>{{potof.said}}</div>
+<td><span ng-show="potofs_is_small">{{potof.win_name}}::</span>{{potof.role_names.join('、')}}<div class="note" ng-show="potof.select_name && potofs_is_small">{{potof.select_name}}</div>
 <td><span ng-bind-html-unsafe="potof.text.join(' ')"></span><div class="note" ng-show="potof.bond_names && potofs_is_small">{{potof.bond_names.join('、')}}</div>
+<tr ng-click="other_toggle()" ng-class="others_hide && 'btn-inverse'">
+<td>他の人々
+<td>
+<td>
+<td>
 </tbody>
 </table>
 </div>
@@ -209,18 +225,22 @@ _HTML_
 
 sub OutHTMLTools {
 	my ($sow, $vil) = @_;
+  my $totalcommit = &SWBase::GetTotalCommitID($sow, $vil);
+
 	print <<"_HTML_";
 <div class="insayfilter" ng-show="navi.show.calc"><div class="paragraph">
 <h4 class="sayfilter_caption_enable">村の進行状況</h4>
 <div class="sayfilter_content">
-<div>あと {{story.timer.extend}}回、更新を延長できる。</div>
-<div class="small">{{lax_time(story.timer.nextupdatedt)}}に更新</div>
-<div class="small">{{lax_time(story.timer.nextchargedt)}}に補充</div>
+<ul>
+<li>あと {{story.timer.extend}}回、更新を延長できる。</li>
+<li class="small">{{story.timer.nextupdatedt.relative('ja')}}に更新</li>
+<li class="small">{{story.timer.nextchargedt.relative('ja')}}に補充</li>
 _HTML_
 
-  print "<div class=\"small\">{{lax_time(story.timer.nextcommitdt)}}にcommit</div>" if (0 < $vil->{'turn'});
-  print "<div class=\"small\">{{lax_time(story.timer.scraplimitdt)}}に廃村</div>" if (0 == $vil->{'turn'});
+  print "<li class=\"small\">{{story.timer.nextcommitdt.relative('ja')}}にcommit</li>" if ($totalcommit == 3);
+  print "<li class=\"small\">{{story.timer.scraplimitdt.relative('ja')}}に廃村</li>" if (0 == $vil->{'turn'});
   print <<"_HTML_";
+</ul>
 </div>
 </div></div>
 _HTML_
