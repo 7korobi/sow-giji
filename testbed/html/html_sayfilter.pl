@@ -112,8 +112,8 @@ sub OutHTMLHeader {
 <h4 class="sayfilter_caption_enable">他の場面へ</h4>
 <div class="sayfilter_content">
 <nav ng-show="event.is_news"><a class="btn" href="$rowall_link">全て表\示</a></nav>
-<nav ng-hide="event.is_news"><a class="btn" ng-class="page.first.class" ng-click="page.move(page.first.val)">{{page.first.name}}</a><a class="btn" ng-class="page.second.class" ng-click="page.move(page.second.val)">{{page.second.name}}</a><span ng-class="page.prev_gap.class">…</span><a class="btn" ng-class="page.prev.class" ng-click="page.move(page.prev.val)">{{page.prev.name}}</a><select ng-model="page.value" ng-options="pno.val as pno.name for pno in page.select" class="input-mini"></select><a class="btn" ng-class="page.next.class" ng-click="page.move(page.next.val)">{{page.next.name}}</a><span ng-class="page.next_gap.class">…</span><a class="btn" ng-class="page.penu.class" ng-click="page.move(page.penu.val)">{{page.penu.name}}</a><a class="btn" ng-class="page.last.class" ng-click="page.move(page.last.val)">{{page.last.name}}</a></nav>
-<nav><span ng-repeat="o in mode.select"><a class="btn" ng-class="o.class" ng-click="mode.move(o.val)">{{o.name}}</a></span></nav>
+<nav template="navi/paginate" ng-hide="event.is_news"></nav>
+<nav template="navi/page_filter"></nav>
 <br />
 </div>
 _HTML_
@@ -127,51 +127,10 @@ sub OutHTMLTurnLink {
   my $amp = $sow->{'html'}->{'amp'};
   my $cfg = $sow->{'cfg'};
 
-  my $reqvals = &SWBase::GetRequestValues($sow);
-  $reqvals->{'turn'} = '';
-  my $linkturns = &SWBase::GetLinkValues($sow, $reqvals);
-
-  $reqvals->{'rowall'} = '';
-  $reqvals->{'cmd'} = 'vinfo';
-  my $linkvinfo = &SWBase::GetLinkValues($sow, $reqvals);
-  $linkvinfo   = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?" . $linkvinfo;
-
   print <<"_HTML_";
 <h4 class="sayfilter_caption_enable">他の章へ</h4>
 
-<div class="sayfilter_content">
-<ul>
-<li><a href="$linkvinfo"> - 村の情報 - </a>
-_HTML_
-
-	my $cmdlog = 0;
-	$cmdlog = 1 if (($query->{'cmd'} eq '') || ($query->{'cmd'} eq 'memo') || ($query->{'cmd'} eq 'hist'));
-
-	my $i;
-	for ($i = 0; $i <= $vil->{'turn'}; $i++) {
-    next if ($i > $vil->{'epilogue'});
-
-		my $turnname = "$i日目";
-		$turnname = "プロローグ" if ($i == 0);
-		$turnname = "エピローグ" if ($i == $vil->{'epilogue'});
-
-		my $postturn = "";
-    if ($i == $vil->{'turn'}){
-      $turnname .= " (最新)";
-      $postturn = $amp."turn=$i";
-    } else {
-      $postturn = $amp."turn=$i".$amp."rowall=on";
-    }
-
-		my $link_to = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linkturns$postturn";
-		print <<"_HTML_";
-<li><a href="$link_to">$turnname</a>
-_HTML_
-	}
-
-	print <<"_HTML_";
-</ul><br />
-</div>
+<div class="sayfilter_content" template="navi/events"></div>
 </div></div>
 _HTML_
 	return;
@@ -195,29 +154,7 @@ sub OutHTMLSayFilter {
 	my ($sow, $vil) = @_;
 	print <<"_HTML_";
 <div class="insayfilter" ng-show="navi.show.info"><div class="paragraph" ng-show="potofs">
-<div class="sayfilter_content">
-<table class="table table-condensed">
-<thead>
-<tr>
-<th><code ng-click="potofs_is_small = ! potofs_is_small">スタイル</code>
-{{sum.actaddpt}}促
-<th><code href_eval="sort_potofs('deathday',0)">日程</code><code href_eval="sort_potofs('live','')">状態</code><code href_eval="sort_potofs('said_num',0)" ng-show="potofs_is_small">発言</code>
-<th colspan="2"><code ng-show="potofs_is_small" href_eval="sort_potofs('win_name','')">陣営</code><code href_eval="sort_potofs('role_names','')">役割</code><span ng-show="potofs_is_small"><code href_eval="sort_potofs('select_name','')">希望</code><code href_eval="sort_potofs('text','')">補足</code></span>
-</thead>
-<tbody>
-<tr ng-repeat="potof in potofs" ng-click="potof_toggle(potof)" ng-class="potof.is_hide && 'btn-inverse'">
-<td>{{potof.name}}<div class="note" ng-show="potof.auth && potofs_is_small"><i class="icon-user"></i>{{potof.auth}}</div>
-<td style="text-align: right;">{{potof.stat}}<div class="note" ng-show="potof.said && potofs_is_small"><i class="icon-comment"></i>{{potof.said}}</div>
-<td><span ng-show="potofs_is_small">{{potof.win_name}}::</span>{{potof.role_names.join('、')}}<div class="note" ng-show="potof.select_name && potofs_is_small">{{potof.select_name}}</div>
-<td><span ng-bind-html-unsafe="potof.text.join(' ')"></span><div class="note" ng-show="potof.bond_names && potofs_is_small">{{potof.bond_names.join('、')}}</div>
-<tr ng-click="other_toggle()" ng-class="others_hide && 'btn-inverse'">
-<td>他の人々
-<td>
-<td>
-<td>
-</tbody>
-</table>
-</div>
+<div class="sayfilter_content" template="navi/potofs"></div>
 </div></div>
 _HTML_
 	return;

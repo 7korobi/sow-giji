@@ -45,62 +45,14 @@ sub OutHTMLVlogPC {
 
 	print <<"_HTML_";
 <h2>$query->{'vid'} $vil->{'vname'} $linkrss</h2>
-<div class="pagenavi">
-<form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="get" class="form-inline">
-<p>
-  <a ng-show="event.is_news" class="btn" href="$rowall_link">全て表\示</a>
-  <a ng-hide="event.is_news" class="btn" href="$news_link">最新の発言</a>
-  <select ng-hide="event.is_news" ng-model="page.value" ng-options="pno.val as pno.name for pno in page.select" class="input-mini"></select>
-  <select name="order" class="input-medium" ng-model="order.value">
-    <option ng-class="order.asc" value="asc">上から下へ
-    <option ng-class="order.desc" value="desc">下から上へ
-  </select>
-  <select name="row" ng-model="row.value" ng-options="o.val as o.name for o in row.select" class="input-small"></select>
-</p>
-</form>
+<div class="pagenavi" template="navi/page_navi">
+<a ng-show="event.is_news" class="btn" href="$rowall_link">全て表\示</a>
+<a ng-hide="event.is_news" class="btn" href="$news_link">最新の発言</a>
 </div>
 _HTML_
-
-	# 終了表示
-	if (($sow->{'turn'} == $vil->{'turn'}) && ($vil->{'epilogue'} < $vil->{'turn'})) {
-		print <<"_HTML_";
-<p class="caution">
-終了しました。
-</p>
-_HTML_
-		print <<"_HTML_";
-<hr class="invisible_hr"$net>
-_HTML_
-
-		&SWHtmlPC::OutHTMLReturnPC($sow); # トップページへ戻る
-		$sow->{'html'}->outcontentfooter();
-		&SWHtmlSayFilter::OutHTMLHeader   ($sow, $vil);
-		&SWHtmlSayFilter::OutHTMLSayFilter($sow, $vil) if ($modesingle == 0);
-		&SWHtmlSayFilter::OutHTMLTools    ($sow, $vil);
-		&SWHtmlSayFilter::OutHTMLFooter   ($sow, $vil);
-		print <<"_HTML_";
-<script>
-window.gon = {};
-_HTML_
-		$vil->gon_story();
-		$vil->gon_event();
-		$vil->gon_potofs();
-		print <<"_HTML_";
-</script>
-_HTML_
-
-		return;
-	}
 
 	print <<"_HTML_";
-<div id="messages">
-<div class="message_filter" ng-bind-html-unsafe="log(message)" ng-repeat="message in messages"></div>
-<div class="message_filter">
- <div class="badge" ng-class="page.next.class" ng-click="page.move(page.next.val)"> 次のページ</div>
- <hr class="invisible_hr" />
-</div>
-<div class="message_filter drag" ng-bind-html-unsafe="log(message)" ng-repeat="message in anchors" ng-style="drag(message)"></div>
-</div>
+<div id="messages" template="navi/messages"></div>
 _HTML_
 
 	# アナウンス／入力・参加フォーム表示
@@ -128,19 +80,9 @@ _HTML_
 
 		print <<"_HTML_";
 <hr class="invisible_hr"$net>
-<div class="pagenavi">
-<form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="get" class="form-inline">
-<p>
-  <a ng-show="event.is_news" class="btn" href="$rowall_link">全て表\示</a>
-  <a ng-hide="event.is_news" class="btn" href="$news_link">最新の発言</a>
-  <select ng-hide="event.is_news" ng-model="page.value" ng-options="pno.val as pno.name for pno in page.select" class="input-mini"></select>
-  <select name="order" class="input-medium" ng-model="order.value">
-    <option ng-class="order.asc" value="asc">上から下へ
-    <option ng-class="order.desc" value="desc">下から上へ
-  </select>
-  <select name="row" ng-model="row.value" ng-options="o.val as o.name for o in row.select" class="input-small"></select>
-</p>
-</form>
+<div class="pagenavi" template="navi/page_navi">
+<a ng-show="event.is_news" class="btn" href="$rowall_link">全て表\示</a>
+<a ng-hide="event.is_news" class="btn" href="$news_link">最新の発言</a>
 </div>
 _HTML_
 	}
@@ -172,14 +114,28 @@ _HTML_
 		reqvals => $reqvals,
 	);
 
-	my $i;
-	for ($i = 0; $i < @$logs; $i++) {
-		my $newsay = 0;
-		$newsay = 1 if ($i == $#$logs);
-		my $log = $logfile->read($logs->[$i]->{'pos'},$logs->[$i]->{'logpermit'});
-		&SWHtmlVlogSinglePC::OutHTMLSingleLogPC($sow, $vil, $log, $i, $newsay, \%anchor, $modesingle);
-	}
 
+	if (($sow->{'turn'} == $vil->{'turn'}) && ($vil->{'epilogue'} < $vil->{'turn'})) {
+		print <<"_HTML_"
+var mes = {
+	"subid":  "I",
+	"logid":  "IX00000",
+	"mestype":  "CAUTION",
+	"style":    "head",
+	"log":   "終了しました。",
+	"date":  new Date
+};
+gon.event.messages.push(mes);
+_HTML_
+	} else {
+		my $i;
+		for ($i = 0; $i < @$logs; $i++) {
+			my $newsay = 0;
+			$newsay = 1 if ($i == $#$logs);
+			my $log = $logfile->read($logs->[$i]->{'pos'},$logs->[$i]->{'logpermit'});
+			&SWHtmlVlogSinglePC::OutHTMLSingleLogPC($sow, $vil, $log, $i, $newsay, \%anchor, $modesingle);
+		}
+	}
 
 	# 全表示リンク
 	my $is_news = 0 + (0 < $maxrow);
@@ -249,15 +205,12 @@ _HTML_
 		if ($sow->{'user'}->logined() > 0) {
 			# ログイン済み
 			if ($vil->checkentried() >= 0) {
-				if ($sow->{'curpl'}->{'limitentrydt'} > 0) {
-					my $limitdate = $sow->{'dt'}->cvtdt($sow->{'curpl'}->{'limitentrydt'});
-					print <<"_HTML_";
-<p class="caution">
-$limitdateまでに一度も発言せず村も開始されなかった場合、あなたは自動的に村から追い出されます。<br$net>
+				print <<"_HTML_";
+<p class="caution" ng-show="0 < potof.timer.limitentrydt">
+{{potof.timer.entry_limit()}}までに一度も発言せず村も開始されなかった場合、あなたは自動的に村から追い出されます。<br$net>
 ※発言すると期限が延長されます。
 </p>
 _HTML_
-				}
 
 				# 発言欄の表示
 				require "$cfg->{'DIR_HTML'}/html_formpl_pc.pl";

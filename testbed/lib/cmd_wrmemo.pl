@@ -98,7 +98,7 @@ sub SetDataCmdWriteMemo {
 	# メモデータファイルへの書き込み
 	my $monospace = 0;
 	$monospace = 1 if ($query->{'monospace'} eq 'monospace');
-	$monospace = 2 if ($query->{'monospace'} eq 'report'); 
+	$monospace = 2 if ($query->{'monospace'} eq 'report');
 
 	if ($checknosay == 0) {
 		$mes = '';
@@ -118,7 +118,7 @@ sub SetDataCmdWriteMemo {
 		csid      => $writepl->{'csid'},
 		chrname   => $chrname,
 		date      => $sow->{'time'},
-		log       => $mes,
+		log       => &SWLog::CvtRandomText($sow, $vil, $mes),
 		monospace => $monospace,
 	);
 	$memofile->add(\%memo);

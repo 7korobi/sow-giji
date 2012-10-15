@@ -304,7 +304,7 @@ sub outhtmlmb {
 </p>
 <h3><a name="nation">国のルール</a></h3>
 <p class="paragraph">
-<dl>
+<dl class="accordion">
 _HTML_
 	$list = $nrule->{'name'};
 	for( $i=0; $i<@$list; $i++ ){
@@ -322,7 +322,7 @@ _HTML_
 <hr class="invisible_hr"$net>
 <h3><a name="village">村のルール</a></h3>
 <p class="paragraph">
-<dl>
+<dl class="accordion">
 _HTML_
 	$list = $vrule->{'name'};
 	for( $i=0; $i<@$list; $i++ ){
@@ -351,7 +351,7 @@ _HTML_
 心構\えを守って、楽しく、強く遊ぼう。<br$net>
 </p>
 <p class="paragraph">
-<dl>
+<dl class="accordion">
 _HTML_
 	$list = $pmind->{'name'};
 	for( $i=0; $i<@$list; $i++ ){
@@ -377,7 +377,7 @@ _HTML_
 <hr class="invisible_hr"$net>
 <h3>村建て人の心構\え</h3>
 <p class="paragraph">
-<dl>
+<dl class="accordion">
 _HTML_
 	$list = $vmind->{'name'};
 	for( $i=0; $i<@$list; $i++ ){

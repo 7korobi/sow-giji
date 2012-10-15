@@ -49,13 +49,9 @@ sub OutHTMLMemoPC {
 
 	print <<"_HTML_";
 <h2>$query->{'vid'} $vil->{'vname'} $linkrss</h2>
-<div class="pagenavi">
-<form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="get" class="form-inline">
-<p>
-  <a class="btn" href="$memo_link">$memo_link_text</a>
-  <a class="btn" href="$news_link">最新の発言</a>
-</p>
-</form>
+<div class="pagenavi" template="navi/page_navi">
+<a class="btn" href="$memo_link">$memo_link_text</a>
+<a class="btn" href="$news_link">最新の発言</a>
 </div>
 _HTML_
 
@@ -63,53 +59,11 @@ _HTML_
 	my $title = '';
 	$title = '履歴' if ($query->{'cmd'} eq 'hist');
 	print <<"_HTML_";
-<div class="message_filter">
 <h3><a name="MEMO">メモ$title</a></h3>
-_HTML_
-
-	if (@$logs > 0) {
-		print <<"_HTML_";
-<table border="1" class="memo" summary="メモ$title">
-<tbody>
-_HTML_
-	} else {
-		print <<"_HTML_";
-<p class="paragraph">
-メモはありません。
-</p>
-_HTML_
-	}
-
-	my %logkeys;
-	my %anchor = (
-		logfile => $logfile,
-		logkeys => \%logkeys,
-		rowover => 1,
-		reqvals => $reqvals,
-	);
-
-	my $order = 'desc';
-	$order = 'asc' if ($query->{'cmd'} eq 'hist');
-	$order = $query->{'order'} if ($query->{'order'} ne '');
-	if (($order eq 'desc') || ($order eq 'd')) {
-		my $i;
-		for ($i = $#$logs; $i >= 0; $i--) {
-			&OutHTMLMemoSinglePC($sow, $vil, $memofile, $logs->[$i], \%anchor);
-		}
-	} else {
-		foreach (@$logs) {
-			&OutHTMLMemoSinglePC($sow, $vil, $memofile, $_, \%anchor);
-		}
-	}
-
-	if (@$logs > 0) {
-		print <<"_HTML_";
-</tbody>
-</table>
-_HTML_
-	}
-
-	print <<"_HTML_";
+<div id="messages" template="navi/messages"></div>
+<div class="pagenavi" template="navi/page_navi">
+<a class="btn" href="$memo_link">$memo_link_text</a>
+<a class="btn" href="$news_link">最新の発言</a>
 </div>
 <hr class="invisible_hr" />
 _HTML_
@@ -142,13 +96,14 @@ _HTML_
 	$sow->{'html'}->outcontentfooter();
 
 	print <<"_HTML_";
-<div id="tab" ng-cloak="ng-cloak" ng-init="event.is_news = true">
+<div id="tab" ng-cloak="ng-cloak" ng-init="mode = 'memo'">
 
 <div class="sayfilter" id="sayfilter">
 <h4 class="sayfilter_heading" ng-show="! navi.show.blank">{{story.name}}</h4>
 <div class="insayfilter" ng-show="navi.show.link"><div class="paragraph">
 <h4 class="sayfilter_caption_enable">他の場面へ</h4>
 <div class="sayfilter_content">
+<nav template="navi/paginate" ng-hide="event.is_news"></nav>
 <a class="btn" href="$memo_link">$memo_link_text</a>
 <a class="btn" href="$news_link">最新の発言</a>
 <br />
@@ -168,10 +123,49 @@ _HTML_
 	$vil->gon_potofs();
 
 	# 全表示リンク
-	my $is_news = 0 + (0 < $maxrow);
+	my $is_news = 0 + ('memo' eq $query->{'cmd'});
+
+	if (@$logs > 0) {
+		my %logkeys;
+		my %anchor = (
+			logfile => $logfile,
+			logkeys => \%logkeys,
+			rowover => 1,
+			reqvals => $reqvals,
+		);
+
+		my $order = 'desc';
+		$order = 'asc' if ($query->{'cmd'} eq 'hist');
+		$order = $query->{'order'} if ($query->{'order'} ne '');
+		if (($order eq 'desc') || ($order eq 'd')) {
+			my $i;
+			for ($i = $#$logs; $i >= 0; $i--) {
+				&OutHTMLMemoSinglePC($sow, $vil, $memofile, $logs->[$i], \%anchor);
+			}
+		} else {
+			foreach (@$logs) {
+				&OutHTMLMemoSinglePC($sow, $vil, $memofile, $_, \%anchor);
+			}
+		}
+	} else {
+		print <<"_HTML_";
+var mes = {
+	"subid":  "I",
+	"logid":  "IX00000",
+	"mestype":  "CAUTION",
+	"style":    "head",
+	"log":   "メモはありません。",
+	"date":  new Date
+};
+_HTML_
+		print <<"_HTML_";
+gon.event.messages.push(mes);
+_HTML_
+	}
 
 	print <<"_HTML_";
-gon.event.is_news    = (0 != $is_news);
+gon.event.is_news = (0 != $is_news);
+gon.event.is_deny_messages = true;
 </script>
 _HTML_
 
@@ -186,9 +180,9 @@ sub OutHTMLMemoSinglePC {
 	my $query = $sow->{'query'};
 	my $cfg   = $sow->{'cfg'};
 
-	my $memo = $memofile->read($memoidx->{'pos'},$memoidx->{'logpermit'});
-	my $chrname = $memo->{'chrname'};
+	my $log = $memofile->read($memoidx->{'pos'},$memoidx->{'logpermit'});
 	my $append  = "<br>(村を出ました)";
+
 	my $curpl = $vil->getplbyface($memoidx->{'csid'},$memoidx->{'cid'});
 	if ((defined($curpl->{'entrieddt'})) && ($curpl->{'entrieddt'} < $memoidx->{'date'})){
 		if( 0 == ($sow->{'turn'} ) ){
@@ -198,49 +192,43 @@ sub OutHTMLMemoSinglePC {
 			$append  = "（匿名）";
 		} elsif ($memo->{'mestype'} == $sow->{'MESTYPE_INFOSP'}){
 			$append = "";
-		} else {
-			my $reqvals = &SWBase::GetRequestValues($sow);
-			my $link = &SWBase::GetLinkValues($sow, $reqvals);
-			$link = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$link&move=page&pageno=1&pno=$curpl->{'pno'}";
-			$append = "<br><a href=\"".$link."\">注目</a>";
 		}
 	}
-	my $mes = $memo->{'log'};
-	$mes = '（メモをはがした）' if ($memo->{'log'} eq '');
-	&SWLog::ReplaceAnchorHTML($sow, $vil, \$mes, $anchor);
-	&SWHtml::ConvertNET($sow, \$mes);
-	my $mestext = "mes_text";
-	$mestext = 'mes_text_monospace' if ((defined($memo->{'monospace'})) && ($memo->{'monospace'} == 1));
-	$mestext = 'mes_text_report'    if ((defined($memo->{'monospace'})) && ($memo->{'monospace'} == 2));
-	my $date = $sow->{'dt'}->cvtdt($memo->{'date'});
-	my $memodate = '';
-	$memodate = "<div class=\"mes_date\">$date</div>\n" if ($sow->{'query'}->{'cmd'} eq 'hist');
+	if ($log->{'log'} eq '') {
+		$log->{'log'} = '（メモをはがした）' ;
+	}
 
 	# ID公開
 	my $showid = '';
-	$showid = "<br$net>($memoidx->{'uid'})" if ($vil->{'showid'} > 0);
+	$showid = $log->{'uid'} if  ($vil->{'showid'} > 0);
+	$showid = $log->{'uid'} if  ($vil->{'epilogue'} <= $sow->{'turn'});
+	$showid = ''            if (($log->{'mestype'} == $sow->{'MESTYPE_MAKER'}) || ($log->{'mestype'} == $sow->{'MESTYPE_ADMIN'}));
 
-	# クラス名
-	my $messtyle = &SWHtmlPC::OutHTMLMesStyle($sow,$vil,$memo);
+	my $name = $log->{'chrname'};
 
-	if (($memo->{'mestype'} == $sow->{'MESTYPE_MAKER'}) || ($memo->{'mestype'} == $sow->{'MESTYPE_ADMIN'})) {
-		print <<"_HTML_";
-<tr>
-<td colspan=2 class="$messtyle">
-<div class="guide">
-<h3 class="mesname">$chrname</h3>
-<p class="$mestext">$mes</p>
-<p class="mes_date">$memodate</p>
-</div>
+	print <<"_HTML_";
+var mes = {
+	"subid":  "M",
+	"logid":  "MM$log->{'logid'}",
+	"csid":     "$log->{'csid'}",
+	"face_id":  "$log->{'cid'}",
+	"mesicon":  SOW_RECORD.CABALA.mestypeicons[$log->{'mestype'}],
+	"mestype":  SOW_RECORD.CABALA.mestypes[$log->{'mestype'}],
+	"style":    SOW_RECORD.CABALA.monospace[$log->{'monospace'}],
+	"name":  "$name",
+	"to":    "$to",
+	"log":   "$log->{'log'}",
+	"date":  Date.create(1000 * $log->{'date'})
+};
 _HTML_
-	} else {
-		print <<"_HTML_";
-<tr class="$messtyle">
-<th class="memoleft">$chrname $append $showid
-<td class="memoright"><p class="$mestext">$mes</p>$memodate
-
+	if ($vil->{'showid'}) {
+		print <<"_HTML_"
+mes.sow_auth_id = "$showid";
 _HTML_
 	}
+	print <<"_HTML_";
+gon.event.messages.push(mes);
+_HTML_
 }
 
 #----------------------------------------

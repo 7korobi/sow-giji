@@ -113,8 +113,6 @@ _HTML_
 	my $css = $query->{'css'};
 	my $nrule = $doc->{'n_rule'};
 	my $saycnttype = $sow->{'cfg'}->{'COUNTS_SAY'}->{$vil->{'saycnttype'}};
-	my $recovery = ' （発言の補充はありません。）';
-	$recovery    = ' （発言の補充があります。）' if (( 1 == $saycnttype->{'RECOVERY'} )&&( 1 < $vil->{'updinterval'} ));
 
 	my $ncomment = "■<a href=\"sow.cgi?cmd=rule&css=$css#rule\">国のルール</a>";
 	$list = $nrule->{'name'};
@@ -161,59 +159,16 @@ _HTML_
 <dl class="dl-horizontal">
 <dt>登場人物<dd>$csidcaptions
 <dt>更新時間<dd>{{story.upd.time_text}}
-<dt>更新間隔<dd>{{story.upd.interval_text}}$recovery
-<dt>発言制限<dd>$saycnttype->{'CAPTION'}<br>$saycnttype->{'HELP'}
-<dt>役職配分<dd>$sow->{'textrs'}->{'CAPTION_ROLETABLE'}->{$vil->{'roletable'}}
+<dt>更新間隔<dd>{{story.upd.interval_text}}{{story.type.recovery}}
+<dt>発言制限<dd>{{story.type.saycnt.CAPTION}}<br>{{story.type.saycnt.HELP}}
+<dt>役職配分<dd>{{story.type.roletable_text}}
 <br>{{story.card.config_names}}
-_HTML_
-
-	my $plcnt;
-	if ($vil->{'turn'} == 0) {
-		print <<"_HTML_";
-<dt>定員<dd>{{event.player.limit}}人 （ダミーキャラを含む）</p>
-_HTML_
-	} else {
-		$plcnt = @$pllist;
-		print <<"_HTML_";
-<dt>人数<dd>$plcnt人 （ダミーキャラを含む）</p>
-_HTML_
-	}
-
-	if (($vil->{'starttype'} eq 'wbbs') && ($vil->{'turn'} == 0)) {
-		print <<"_HTML_";
-<dt>最低人数<dd>{{event.player.start}}人
-_HTML_
-	}
-
-	my $mob = 'visiter';
-	if ($vil->{'mob'} ne ''){
-		$mob = $vil->{'mob'};
-		print <<"_HTML_";
-<dt>見物人<dd>$sow->{'basictrs'}->{'MOB'}->{$mob}->{'CAPTION'}に $vil->{'cntmob'}人まで （$sow->{'basictrs'}->{'MOB'}->{$mob}->{'HELP'}）
-_HTML_
-	}
-
-	my %votecaption = (
-		anonymity => '無記名投票',
-		sign => '記名投票',
-	);
-	my $votetype = '----';
-	if (defined($vil->{'votetype'})) {
-		$votetype = $votecaption{$vil->{'votetype'}} if (defined($votecaption{$vil->{'votetype'}}));
-	}
-	print <<"_HTML_";
-<dt>投票方法<dd>$votetype
-_HTML_
-
-	if ($vil->{'turn'} == 0) {
-		my $scraplimit = $sow->{'dt'}->cvtdt($vil->{'scraplimitdt'});
-		$scraplimit = '自動廃村なし' if ($vil->{'scraplimitdt'} == 0);
-		print <<"_HTML_";
+<dt>定員<dd>{{event.player.limit}}人 （ダミーキャラを含む）
+<dt>人数<dd>{{potofs.length}}人 （ダミーキャラを含む）
+<dt ng-show="story.is_wbbs">最低人数<dd ng-show="story.is_wbbs">{{event.player.start}}人 （ダミーキャラを含む）
+<dt>投票方法<dd>{{story.type.vote_text.CAPTION}}
+<dt>見物人<dd>{{story.type.mob_text.CAPTION}}に {{event.player.mob}}人まで （{{story.type.mob_text.HELP}}）
 <dt>廃村期限<dd>{{lax_time(story.timer.scraplimitdt)}}
-_HTML_
-	}
-
-	print <<"_HTML_";
 </dl>
 </div>
 <div class="mes_maker">

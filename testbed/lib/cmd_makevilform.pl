@@ -28,6 +28,10 @@ sub CmdMakeVilForm {
 	$vil->{'showid'} = 0;
 	$vil->{'undead'} = 0;
 	$vil->{'noselrole'} = 0;
+	$vil->{'roletable'} = 'default';
+	$vil->{'game'} = 'MISTERY';
+	$vil->{'starttype'} = 'manual';
+	$vil->{'mob'} = 'visiter';
 
 	$vil->{"cntmob"} = 0;
 	my $roleid = $sow->{'ROLEID'};

@@ -441,7 +441,16 @@ _HTML_
 	$sow->{'html'}->outcontentfooter();
 
 	require "$cfg->{'DIR_HTML'}/html_sayfilter.pl";
-	&SWHtmlSayFilter::OutHTMLHeader   ($sow, $vil);
+	print <<"_HTML_";
+<div id="tab" ng-cloak="ng-cloak">
+
+<div class="sayfilter" id="sayfilter">
+<h4 class="sayfilter_heading" ng-show="! navi.show.blank">ê›íË</h4>
+<div class="insayfilter" ng-show="navi.show.link"><div class="paragraph">
+</div>
+</div>
+_HTML_
+#	&SWHtmlSayFilter::OutHTMLHeader   ($sow, $vil);
 	&SWHtmlSayFilter::OutHTMLSayFilter($sow, $vil) if ($modesingle == 0);
 	&SWHtmlSayFilter::OutHTMLTools    ($sow, $vil);
 	&SWHtmlSayFilter::OutHTMLFooter   ($sow, $vil);

@@ -763,6 +763,7 @@ sub gon_story {
 	my ($vil) = @_;
 	my $sow = $vil->{'sow'};
 	my $cfg = $sow->{'cfg'};
+	my $amp = $sow->{'html'}->{'amp'};
 
 	my $secret = $vil->isepilogue();
 	$secret = 1 if ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'});
@@ -804,10 +805,26 @@ sub gon_story {
 	my $isepilogue = $vil->isepilogue();
 	my $isscrap = $vil->isscrap();
 
+	my $reqvals = &SWBase::GetRequestValues($sow);
+	$reqvals->{'turn'} = '';
+	my $linkturns = &SWBase::GetLinkValues($sow, $reqvals);
+
+	$reqvals->{'rowall'} = '';
+	$reqvals->{'cmd'} = 'vinfo';
+	my $linkvinfo = &SWBase::GetLinkValues($sow, $reqvals);
+	$linkvinfo   = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?" . $linkvinfo;
+
+	my $cmdlog = 0;
+	$cmdlog = 1 if (($query->{'cmd'} eq '') || ($query->{'cmd'} eq 'memo') || ($query->{'cmd'} eq 'hist'));
+
+	my $turn = 0 + $vil->{'turn'};
+
 	print <<"_HTML_";
 gon.story = {
 	"vid": $vil->{'vid'},
+    "turn":   $turn,
 
+	"link":    "$linkvinfo".unescapeHTML(),
 	"name":    "$vil->{'vname'}",
 	"rating":  "$vil->{'rating'}",
 	"comment": "$vil->{'vcomment'}",
@@ -867,6 +884,36 @@ gon.story.entry = {
 }
 _HTML_
 	}
+	print <<"_HTML_";
+gon.events = []
+_HTML_
+
+	my $i;
+	for ($i = 0; $i <= $vil->{'turn'}; $i++) {
+    	next if ($i > $vil->{'epilogue'});
+
+		my $turnname = "$i日目";
+		$turnname = "プロローグ" if ($i == 0);
+		$turnname = "エピローグ" if ($i == $vil->{'epilogue'});
+
+		my $postturn = "";
+	    if ($i == $vil->{'turn'}){
+	      $turnname .= " (最新)";
+	      $postturn = $amp."turn=$i";
+	    } else {
+	      $postturn = $amp."turn=$i".$amp."rowall=on";
+	    }
+
+		my $link_to = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linkturns$postturn";
+		print <<"_HTML_";
+var event = {
+	"name": "$turnname",
+	"link": "$link_to".unescapeHTML(),
+}
+gon.events.push(event);
+_HTML_
+	}
+	return;
 }
 
 sub gon_event {
@@ -911,6 +958,7 @@ gon.event = {
 	"player":{
 		"start": $vil->{'vplcntstart'},
 		"limit": $vil->{'vplcnt'},
+		"mob":   $vil->{'cntmob'},
 		"votable": $votablepl,
 		"commitable": $committablepl
 	},
