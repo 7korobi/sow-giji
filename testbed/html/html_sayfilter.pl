@@ -112,7 +112,7 @@ sub OutHTMLHeader {
 <h4 class="sayfilter_caption_enable">‘¼‚Ìê–Ê‚Ö</h4>
 <div class="sayfilter_content">
 <nav ng-show="event.is_news"><a class="btn" href="$rowall_link">‘S‚Ä•\\¦</a></nav>
-<nav template="navi/paginate" ng-hide="event.is_news"></nav>
+<nav class="form-inline" template="navi/paginate" ng-hide="event.is_news"></nav>
 <nav template="navi/page_filter"></nav>
 <br />
 </div>

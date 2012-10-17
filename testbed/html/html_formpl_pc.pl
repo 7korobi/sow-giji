@@ -612,7 +612,7 @@ sub OutHTMLVotePC {
 	my $hidden = &SWBase::GetHiddenValues($sow, $reqvals, '      ');
 
 	print <<"_HTML_";
-    <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$cfg->{'METHOD_FORM'}">
+    <form class="form-inline" action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$cfg->{'METHOD_FORM'}">
       <div class="formpl_content">$hidden
       <input type="hidden" name="cmd" value="$cmd"$net>
 _HTML_

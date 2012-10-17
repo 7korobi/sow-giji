@@ -49,7 +49,7 @@ sub OutHTMLMemoPC {
 
 	print <<"_HTML_";
 <h2>$query->{'vid'} $vil->{'vname'} $linkrss</h2>
-<div class="pagenavi" template="navi/page_navi">
+<div class="pagenavi" template="navi/page_navi" class="form-inline">
 <a class="btn" href="$memo_link">$memo_link_text</a>
 <a class="btn" href="$news_link">ÅV‚Ì”­Œ¾</a>
 </div>
@@ -61,7 +61,7 @@ _HTML_
 	print <<"_HTML_";
 <h3><a name="MEMO">ƒƒ‚$title</a></h3>
 <div id="messages" template="navi/messages"></div>
-<div class="pagenavi" template="navi/page_navi">
+<div class="pagenavi" template="navi/page_navi" class="form-inline">
 <a class="btn" href="$memo_link">$memo_link_text</a>
 <a class="btn" href="$news_link">ÅV‚Ì”­Œ¾</a>
 </div>
@@ -103,7 +103,7 @@ _HTML_
 <div class="insayfilter" ng-show="navi.show.link"><div class="paragraph">
 <h4 class="sayfilter_caption_enable">‘¼‚Ìê–Ê‚Ö</h4>
 <div class="sayfilter_content">
-<nav template="navi/paginate" ng-hide="event.is_news"></nav>
+<nav class="form-inline" template="navi/paginate" ng-hide="event.is_news"></nav>
 <a class="btn" href="$memo_link">$memo_link_text</a>
 <a class="btn" href="$news_link">ÅV‚Ì”­Œ¾</a>
 <br />

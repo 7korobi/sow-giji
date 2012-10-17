@@ -311,15 +311,12 @@ sub OutHTMLChangeCSS {
   my $sow = $_[0];
   my $cfg = $sow->{'cfg'};
 
-  my $css_select = '<p class="css_changer"><span><a href="sow.cgi?ua=mb">ågë—</a></span> | <span ng-repeat="o in theme.select"><a ng-class="o.class" ng-click="theme.move(o.val)">{{o.name}}</a>&nbsp;</span>Åb<span ng-repeat="o in width.select"><a ng-class="o.class" ng-click="width.move(o.val)">{{o.name}}</a>&nbsp;</span></p>';
-
-  if( 'PAN' eq $cfg->{'RULE'} ){
-    $css_select = '<a href="sow.cgi">ïWèÄ</a> <a href="sow.cgi?css=sow800">êV</a> <a href="sow.cgi?css=sow480">iPhone</a>Åb<a href="sow.cgi?css=junawide">êRñ‚</a> <a href="sow.cgi?css=juna800">êV</a> <a href="sow.cgi?css=juna480">iPhone</a>Åb<a href="sow.cgi?ua=mb">ågë—</a>';
-  }
   print <<"_HTML_";
 <div class="choice">
-<p style="text-align:right; font-size: 100%;">
-$css_select
+<p style="text-align:right; font-size: 100%;" template="navi/css">
+<span><a href="sow.cgi?ua=mb">ågë—</a></span>
+Åb
+
 </p>
 </div>
 _HTML_

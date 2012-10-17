@@ -1448,6 +1448,7 @@ sub setvote_to {
 sub setentrust {
 	my($curpl,$sow,$vil) = @_;
 	my $setentrust = 1;
+	$setentrust = 0 if (($vil->{'entrust'} == 1));
 	$setentrust = 0 if (($vil->{'mob'} eq 'juror'));
 	$setentrust = 0 if (($vil->{'scapegoat'} > 0));
 	$setentrust = 0 if (($vil->{'event'} == $sow->{'EVENTID_APRIL_FOOL'})&&( 0 < $curpl->getallbondlist() ));

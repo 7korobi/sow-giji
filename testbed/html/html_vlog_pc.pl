@@ -45,7 +45,7 @@ sub OutHTMLVlogPC {
 
 	print <<"_HTML_";
 <h2>$query->{'vid'} $vil->{'vname'} $linkrss</h2>
-<div class="pagenavi" template="navi/page_navi">
+<div class="pagenavi" template="navi/page_navi" class="form-inline">
 <a ng-show="event.is_news" class="btn" href="$rowall_link">全て表\示</a>
 <a ng-hide="event.is_news" class="btn" href="$news_link">最新の発言</a>
 </div>
@@ -80,7 +80,7 @@ _HTML_
 
 		print <<"_HTML_";
 <hr class="invisible_hr"$net>
-<div class="pagenavi" template="navi/page_navi">
+<div class="pagenavi" template="navi/page_navi" class="form-inline">
 <a ng-show="event.is_news" class="btn" href="$rowall_link">全て表\示</a>
 <a ng-hide="event.is_news" class="btn" href="$news_link">最新の発言</a>
 </div>
