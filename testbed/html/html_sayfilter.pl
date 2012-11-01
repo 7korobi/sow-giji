@@ -178,6 +178,7 @@ _HTML_
   print "<li class=\"small\">{{story.timer.scraplimitdt.relative('ja')}}‚É”p‘º</li>" if (0 == $vil->{'turn'});
   print <<"_HTML_";
 </ul>
+<br>
 </div>
 </div></div>
 _HTML_

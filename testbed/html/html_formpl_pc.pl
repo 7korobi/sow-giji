@@ -114,7 +114,7 @@ sub OutHTMLSayPC {
 		my $memo = $memofile->getnewmemo($curpl);
 		$mes = $memo->{'log'};
 		$mes = &SWLog::ReplaceAnchorHTMLRSS($sow, $vil, $mes, $anchor);
-		$mes =~ s/<br( \/)?>/&#13\;/ig;
+		$mes =~ s/<br( \/)?>/\\n/ig;
 		&SWHtml::ConvertJSON(\$mes);
 	}
 
@@ -350,6 +350,7 @@ sub OutHTMLRolePC {
 	my $net = $sow->{'html'}->{'net'};
 	my $curpl = $sow->{'curpl'};
 
+	my $longname    = $curpl->getlongchrname();
 	my $win_visible = $curpl->win_visible();
 		print <<"_HTML_";
 gon.form.win = "$win_visible";
@@ -408,6 +409,7 @@ text_form = {
 	cmd: "write",
 	jst: "silent",
 	mestype: "TSAY",
+	longname: "$longname",
 	longname: "",
 	csid_cid: "$img",
 	votes: [],
@@ -429,7 +431,7 @@ text_form = {
 	cmd: "write",
 	jst: "silent",
 	mestype: "TSAY",
-	longname: "",
+	longname: "$longname",
 	csid_cid: "$img",
 	votes: [],
 };
@@ -522,7 +524,7 @@ text_form = {
 		size: $max_size,
 	},
 	csid_cid: "$img",
-	longname: "",
+	longname: "$longname",
 	votes: [],
 	style: "",
 	target: "-1",

@@ -907,6 +907,7 @@ _HTML_
 		my $link_to = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linkturns$postturn";
 		print <<"_HTML_";
 var event = {
+	"turn": $i,
 	"name": "$turnname",
 	"link": "$link_to".unescapeHTML(),
 }
