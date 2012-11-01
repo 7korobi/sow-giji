@@ -111,7 +111,7 @@ sub OutHTMLHeader {
 <div class="insayfilter" ng-show="navi.show.link"><div class="paragraph">
 <h4 class="sayfilter_caption_enable">他の場面へ</h4>
 <div class="sayfilter_content">
-<nav ng-show="event.is_news"><a class="btn" href="$rowall_link">全て表\示</a></nav>
+<nav ng-show="event.is_news"><a class="btn" href="$rowall_link">ページ表\示</a></nav>
 <nav class="form-inline" template="navi/paginate" ng-hide="event.is_news"></nav>
 <nav template="navi/page_filter"></nav>
 <br />

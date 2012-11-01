@@ -291,6 +291,15 @@ sub ReplaceAnchorHTMLRSS {
 
 		$mes =~ s/$anchortext/ &gt;&gt;$linktext/;
 	}
+	while ($mes =~ /<rand ([^,]+),([^>]+)>/) {
+		my $randtext = $&;
+		my $valtext = $1;
+
+		# ê≥ãKï\åªÇ≈ÇÃåÎîFéØÇñhÇÆ
+		&BackQuoteAnchorMark(\$randtext);
+
+		$mes =~ s/$randtext/ $valtext/;
+	}
 	$mes =~ s/<(\/)?strong>//g;
 
 	return $mes;
@@ -310,6 +319,10 @@ sub BackQuoteAnchorMark {
 	$$anchortext =~ s/\!/\\\!/g;
 	$$anchortext =~ s/\=/\\\=/g;
 	$$anchortext =~ s/\@/\\\@/g;
+	$$anchortext =~ s/\[/\\[/g;
+	$$anchortext =~ s/\]/\\]/g;
+	$$anchortext =~ s/\(/\\(/g;
+	$$anchortext =~ s/\)/\\)/g;
 
 	return $anchortext;
 }
@@ -357,6 +370,13 @@ sub do_random_mikuji {
 	return $mikuji->[$index];
 }
 
+sub trim_random_cap {
+	my ($src) = @_;
+	$src =~ s/\[//g;
+	$src =~ s/\]//g;
+	return $src;
+}
+
 sub CvtRandomText {
 	my ($sow, $vil, $mes) = @_;
 	my $cfg = $sow->{'cfg'};
@@ -364,28 +384,19 @@ sub CvtRandomText {
 	return $mes if ($cfg->{'ENABLED_RANDOMTEXT'} == 0);
 
 	# xDn
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_DICE'}\]\]/{my $a = &do_random_dice($1,1,$2);"<rand $a,$& = (1..$2)x$1>"}/eg;
-
-	# 1d6
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_1D6'}\]\]/ {my $a = &do_random_dice(1,1,6);"<rand $a,$& = (1..6)>"}/eg;
-
-	# 1d10
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_1D10'}\]\]/{my $a = &do_random_dice(1,1,10);"<rand $a,$& = (1..10)>"}/eg;
-
-	# 1d20
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_1D20'}\]\]/{my $a = &do_random_dice(1,1,20);"<rand $a,$& = (1..20)>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_DICE'}\]\]/{my $a = &do_random_dice($1,1,$2);my $b = &trim_random_cap($&);"<rand $a,$b = (1..$2)x$1>"}/eg;
 
 	# fortune
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_FORTUNE'}\]\]/{my $a = &do_random_dice(1,0,100);"<rand $a,$& = (0..100)>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_FORTUNE'}\]\]/{my $a = &do_random_dice(1,0,100);my $b = &trim_random_cap($&);"<rand $a,$b = (0..100)>"}/eg;
 
 	# who
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_LIVES'}\]\]/{my $a = &do_random_who($vil);"<rand $a,$&>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_LIVES'}\]\]/{my $a = &do_random_who($vil);my $b = &trim_random_cap($&);"<rand $a,$b>"}/eg;
 
 	# omikuji
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_MIKUJI'}\]\]/{my $a = &do_random_mikuji($cfg);"<rand $a,$&>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_MIKUJI'}\]\]/{my $a = &do_random_mikuji($cfg);my $b = &trim_random_cap($&);"<rand $a,$b>"}/eg;
 
 	# role
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_ROLE'}\]\]/{my $a = &do_random_role($sow,'ROLENAME');"<rand $a,$&>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_ROLE'}\]\]/{my $a = &do_random_role($sow,'ROLENAME');my $b = &trim_random_cap($&);"<rand $a,$b>"}/eg;
 
 	return $mes;
 }

@@ -4,7 +4,7 @@ package SWHtmlVlogPC;
 # 村ログ表示（PCモード）のHTML出力
 #----------------------------------------
 sub OutHTMLVlogPC {
-	my ($sow, $vil, $logfile, $maxrow, $logs, $logkeys, $rows) = @_;
+	my ($sow, $vil, $maxrow, $logfile, $logs, $logkeys, $logrows, $memofile, $memos, $memokeys, $memorows) = @_;
 	my $pllist = $vil->getpllist();
 
 	my $net   = $sow->{'html'}->{'net'}; # Null End Tag
@@ -45,43 +45,22 @@ sub OutHTMLVlogPC {
 
 	print <<"_HTML_";
 <h2>$query->{'vid'} $vil->{'vname'} $linkrss</h2>
-<div class="pagenavi" template="navi/page_navi" class="form-inline">
-<a ng-show="event.is_news" class="btn" href="$rowall_link">全て表\示</a>
+<div class="pagenavi form-inline input-prepend" template="navi/page_navi">
+<a ng-show="event.is_news" class="btn" href="$rowall_link">ページ表\示</a>
 <a ng-hide="event.is_news" class="btn" href="$news_link">最新の発言</a>
 </div>
 _HTML_
 
 	print <<"_HTML_";
-<div id="messages" template="navi/messages"></div>
+<div template="navi/messages" id="messages"></div>
+<div template="navi/forms"></div>
 _HTML_
 
-	# アナウンス／入力・参加フォーム表示
-	if (($modesingle == 0) && ($sow->{'turn'} == $vil->{'turn'}) && ($rows->{'end'} > 0)) {
-		&OutHTMLVlogFormArea($sow, $vil)
-	}
-
 	if ($modesingle == 0) {
-		$reqvals = &SWBase::GetRequestValues($sow);
-		$reqvals->{'order'} = '';
-		$reqvals->{'row'} = '';
-		my $hidden = &SWBase::GetHiddenValues($sow, $reqvals, '  ');
-
-		my $option = $sow->{'html'}->{'option'};
-		my $desc = '';
-		my $asc = " $sow->{'html'}->{'selected'}";
-		my $star_desc = '';
-		my $star_asc = ' *';
-		if (($query->{'order'} eq 'd') || ($query->{'order'} eq 'desc')) {
-			$desc = " $sow->{'html'}->{'selected'}";
-			$asc = '';
-			$star_desc = ' *';
-			$star_asc = '';
-		}
-
 		print <<"_HTML_";
 <hr class="invisible_hr"$net>
-<div class="pagenavi" template="navi/page_navi" class="form-inline">
-<a ng-show="event.is_news" class="btn" href="$rowall_link">全て表\示</a>
+<div class="pagenavi form-inline input-prepend" template="navi/page_navi">
+<a ng-show="event.is_news" class="btn" href="$rowall_link">ページ表\示</a>
 <a ng-hide="event.is_news" class="btn" href="$news_link">最新の発言</a>
 </div>
 _HTML_
@@ -99,21 +78,28 @@ _HTML_
 	&SWHtmlSayFilter::OutHTMLFooter   ($sow, $vil);
 	print <<"_HTML_";
 <script>
-window.gon = {};
+window.gon = {
+	form: ({}).merge(OPTION.form).merge({
+		uri: "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}",
+		side: [],
+		links: [],
+		texts: [],
+		secrets: [],
+		commands: {},
+	}),
+	cautions: [],
+};
 _HTML_
+	# アナウンス／入力・参加フォーム表示
+	if (($modesingle == 0) && ($sow->{'turn'} == $vil->{'turn'}) && ($logrows->{'end'} > 0)) {
+		&OutHTMLVlogFormArea($sow, $vil, $memofile)
+	}
 	$vil->gon_story();
 	$vil->gon_event();
 	$vil->gon_potofs();
 
 	# 村ログ表示
 	require "$cfg->{'DIR_HTML'}/html_vlogsingle_pc.pl";
-	my %anchor = (
-		logfile => $logfile,
-		logkeys => $logkeys,
-		rowover => $rowover,
-		reqvals => $reqvals,
-	);
-
 
 	if (($sow->{'turn'} == $vil->{'turn'}) && ($vil->{'epilogue'} < $vil->{'turn'})) {
 		print <<"_HTML_"
@@ -128,6 +114,13 @@ var mes = {
 gon.event.messages.push(mes);
 _HTML_
 	} else {
+		my %anchor = (
+			logfile => $logfile,
+			logkeys => $logkeys,
+			rowover => $rowover,
+			reqvals => $reqvals,
+		);
+
 		my $i;
 		for ($i = 0; $i < @$logs; $i++) {
 			my $newsay = 0;
@@ -136,6 +129,34 @@ _HTML_
 			&SWHtmlVlogSinglePC::OutHTMLSingleLogPC($sow, $vil, $log, $i, $newsay, \%anchor, $modesingle);
 		}
 	}
+
+	if (@$memos > 0) {
+		my %memokeys;
+		my %anchor = (
+			logfile => $logfile,
+			logkeys => \%memokeys,
+			rowover => 1,
+			reqvals => $reqvals,
+		);
+		foreach (@$memos) {
+			&SWHtmlVlogSinglePC::OutHTMLMemoSinglePC($sow, $vil, $memofile, $_, \%anchor);
+		}
+	} else {
+		print <<"_HTML_";
+var mes = {
+	"subid":  "I",
+	"logid":  "IX00000",
+	"mestype":  "CAUTION",
+	"style":    "head",
+	"log":   "メモはありません。",
+	"date":  new Date
+};
+_HTML_
+		print <<"_HTML_";
+gon.event.messages.push(mes);
+_HTML_
+	}
+
 
 	# 全表示リンク
 	my $is_news = 0 + (0 < $maxrow);
@@ -152,7 +173,7 @@ _HTML_
 # アナウンス／入力・参加フォーム表示
 #----------------------------------------
 sub OutHTMLVlogFormArea {
-	my ($sow, $vil) = @_;
+	my ($sow, $vil, $memofile) = @_;
 	my $cfg = $sow->{'cfg'};
 	my $net = $sow->{'html'}->{'net'};
 	my $pllist = $vil->getpllist();
@@ -160,16 +181,13 @@ sub OutHTMLVlogFormArea {
 
 	if (($vil->{'turn'} == 0) && ($vil->checkentried() < 0) && ($vil->{'vplcnt'} > @$pllist)) {
 		# プロローグ未参加／未ログイン時アナウンス
-		my $scraplimit = "\n\n<p class=\"caution\">\n" . $sow->{'dt'}->cvtdt($vil->{'scraplimitdt'}) . "までに開始しなかった場合、この村は廃村となります。\n</p>";
+		my $scraplimit = "{{lax_time(story.timer.scraplimitdt)}}までに開始しなかった場合、この村は廃村となります。";
 		$scraplimit = '' if ($vil->{'scraplimitdt'} == 0);
 		print <<"_HTML_";
-<p class="caution">
-演じたいキャラクターを選び、発言してください。<br$net>
-ルールをよく理解した上でご参加下さい。<br$net>
-※希望能\力についての発言は控えてください。
-</p>$scraplimit
-<hr class="invisible_hr"$net>
-
+gon.cautions.push("演じたいキャラクターを選び、発言してください。");
+gon.cautions.push("ルールをよく理解した上でご参加下さい。");
+gon.cautions.push("※希望能\力についての発言は控えてください。");
+gon.cautions.push("$scraplimit");
 _HTML_
 	} elsif ($vil->isepilogue() > 0) {
 		# エピローグ用アナウンス
@@ -184,19 +202,16 @@ _HTML_
 		&SWHtml::ConvertNET($sow, \$epiloguetext);
 
 		print <<"_HTML_";
-<p class="caution">
-$epiloguetext
-</p>
-<hr class="invisible_hr"$net>
-
+gon.cautions.push("$epiloguetext");
 _HTML_
 	}
 
 	# 未発言者リストの表示
 	my $nosaytext = &SWHtmlVlog::GetNoSayListText($sow, $vil);
 	if (($vil->isepilogue() == 0) && ($nosaytext ne '')) {
-		print "<p class=\"caution\">$nosaytext</p>\n";
-		print "<hr class=\"invisible_hr\"$net>\n\n";
+		print <<"_HTML_";
+gon.cautions.push("$nosaytext");
+_HTML_
 	}
 
 	# 発言欄／エントリーフォーム
@@ -206,15 +221,13 @@ _HTML_
 			# ログイン済み
 			if ($vil->checkentried() >= 0) {
 				print <<"_HTML_";
-<p class="caution" ng-show="0 < potof.timer.limitentrydt">
-{{potof.timer.entry_limit()}}までに一度も発言せず村も開始されなかった場合、あなたは自動的に村から追い出されます。<br$net>
-※発言すると期限が延長されます。
-</p>
+gon.cautions.push("{{potof.timer.entry_limit()}}までに一度も発言せず村も開始されなかった場合、あなたは自動的に村から追い出されます。");
+gon.cautions.push("※発言すると期限が延長されます。");
 _HTML_
 
 				# 発言欄の表示
 				require "$cfg->{'DIR_HTML'}/html_formpl_pc.pl";
-				&SWHtmlPlayerFormPC::OutHTMLPlayerFormPC($sow, $vil);
+				&SWHtmlPlayerFormPC::OutHTMLPlayerFormPC($sow, $vil, $memofile);
 			} else {
 				# エントリーフォームの表示
 				require "$cfg->{'DIR_HTML'}/html_entryform_pc.pl";
@@ -224,11 +237,13 @@ _HTML_
 		} else {
 			# 未ログイン
 			if ($vil->{'vplcnt'} > @$pllist) {
-				print "<p class=\"infonologin\">\nゲーム参加者希望者はログインして下さい。\n</p>\n";
-				print "<hr class=\"invisible_hr\"$net>\n\n";
+				print <<"_HTML_";
+gon.cautions.push("ゲーム参加者希望者はログインして下さい。");
+_HTML_
 			} else {
-				print "<p class=\"caution\">\n既に定員に達しています。\n</p>\n";
-				print "<hr class=\"invisible_hr\"$net>\n\n";
+				print <<"_HTML_";
+gon.cautions.push("すでに定員に達しています。");
+_HTML_
 			}
 		}
 	} else {
@@ -244,9 +259,9 @@ _HTML_
 				&OutHTMLVilMakerInFormPlPC($sow, $vil);
 			}
 		} elsif ($vil->isepilogue() == 0) {
-			# 未ログイン
-			print "<p class=\"infonologin\">\n参加者はログインして下さい。\n</p>\n";
-			print "<hr class=\"invisible_hr\"$net>\n\n";
+			print <<"_HTML_";
+gon.cautions.push("参加者はログインしてください。");
+_HTML_
 		}
 	}
 	return;
@@ -262,19 +277,15 @@ sub OutHTMLVilMakerInFormPlPC {
 
 	if ($vil->{'makeruid'} eq $sow->{'uid'}) {
 		require "$cfg->{'DIR_HTML'}/html_formpl_pc.pl";
-		print "<div class=\"formpl_frame\">\n";
 		&SWHtmlPlayerFormPC::OutHTMLVilMakerPC($sow, $vil, 'maker');
 		&SWHtmlPlayerFormPC::OutHTMLUpdateSessionButtonPC($sow, $vil);
-		print "</div>\n";
 	}
 
 	if ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'}) {
 		require "$cfg->{'DIR_HTML'}/html_formpl_pc.pl";
-		print "<div class=\"formpl_frame\">\n";
 		&SWHtmlPlayerFormPC::OutHTMLVilMakerPC($sow, $vil, 'admin');
 		&SWHtmlPlayerFormPC::OutHTMLUpdateSessionButtonPC($sow, $vil);
 		&SWHtmlPlayerFormPC::OutHTMLScrapVilButtonPC($sow, $vil) if ($vil->{'turn'} < $vil->{'epilogue'});
-		print "</div>\n";
 	}
 
 	return;

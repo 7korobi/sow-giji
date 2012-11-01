@@ -19,7 +19,7 @@ sub CmdWriteMemo {
 		&SWCmdMemo::CmdMemo($sow);
 	} else {
 		my $reqvals = &SWBase::GetRequestValues($sow);
-		$reqvals->{'cmd'}  = 'memo';
+		$reqvals->{'cmd'}  = '';
 		$reqvals->{'turn'} = '';
 		my $link = &SWBase::GetLinkValues($sow, $reqvals);
 		$link = "$cfg->{'URL_SW'}/$cfg->{'FILE_SOW'}?$link#newsay";

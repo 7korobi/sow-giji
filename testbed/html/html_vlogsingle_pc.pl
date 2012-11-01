@@ -142,6 +142,64 @@ gon.event.messages.push(mes);
 _HTML_
 }
 
+#----------------------------------------
+# メモ発言欄HTML表示（一行分）
+#----------------------------------------
+sub OutHTMLMemoSinglePC {
+	my ($sow, $vil, $memofile, $memoidx, $anchor) = @_;
+	my $query = $sow->{'query'};
+	my $cfg   = $sow->{'cfg'};
+
+	my $log = $memofile->read($memoidx->{'pos'},$memoidx->{'logpermit'});
+	my $append  = "<br>(村を出ました)";
+
+	my $curpl = $vil->getplbyface($memoidx->{'csid'},$memoidx->{'cid'});
+	if ((defined($curpl->{'entrieddt'})) && ($curpl->{'entrieddt'} < $memoidx->{'date'})){
+		if( 0 == ($sow->{'turn'} ) ){
+			$append = "";
+		} elsif ($memo->{'mestype'} == $sow->{'MESTYPE_ANONYMOUS'}){
+			$chrname = "" if ( 0 == $vil->isepilogue() );
+			$append  = "（匿名）";
+		} elsif ($memo->{'mestype'} == $sow->{'MESTYPE_INFOSP'}){
+			$append = "";
+		}
+	}
+	if ($log->{'log'} eq '') {
+		$log->{'log'} = '（メモをはがした）' ;
+	}
+
+	# ID公開
+	my $showid = '';
+	$showid = $log->{'uid'} if  ($vil->{'showid'} > 0);
+	$showid = $log->{'uid'} if  ($vil->{'epilogue'} <= $sow->{'turn'});
+	$showid = ''            if (($log->{'mestype'} == $sow->{'MESTYPE_MAKER'}) || ($log->{'mestype'} == $sow->{'MESTYPE_ADMIN'}));
+
+	my $name = $log->{'chrname'};
+
+	print <<"_HTML_";
+var mes = {
+	"subid":  "M",
+	"logid":  "MM$log->{'logid'}",
+	"csid":     "$log->{'csid'}",
+	"face_id":  "$log->{'cid'}",
+	"mesicon":  SOW_RECORD.CABALA.mestypeicons[$log->{'mestype'}],
+	"mestype":  SOW_RECORD.CABALA.mestypes[$log->{'mestype'}],
+	"style":    SOW_RECORD.CABALA.monospace[$log->{'monospace'}],
+	"name":  "$name",
+	"to":    "$to",
+	"log":   "$log->{'log'}",
+	"date":  Date.create(1000 * $log->{'date'})
+};
+_HTML_
+	if ($vil->{'showid'}) {
+		print <<"_HTML_"
+mes.sow_auth_id = "$showid";
+_HTML_
+	}
+	print <<"_HTML_";
+gon.event.messages.push(mes);
+_HTML_
+}
 
 #----------------------------------------
 # 指定したログの発言者データの取得

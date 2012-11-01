@@ -123,7 +123,7 @@ _HTML_
 
 	print <<"_HTML_";
 <div id="messages" ng-init="mode.value = 'all'">
-<div class="message_filter" ng-bind-html-unsafe="log(message)" ng-repeat="message in messages"></div>
+<div id="messages" template="navi/messages"></div>
 </div>
 _HTML_
 

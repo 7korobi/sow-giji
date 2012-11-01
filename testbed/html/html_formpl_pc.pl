@@ -4,12 +4,12 @@ package SWHtmlPlayerFormPC;
 # プレイヤー発言／行動欄HTML出力
 #----------------------------------------
 sub OutHTMLPlayerFormPC {
-	my ($sow, $vil) = @_;
+	my ($sow, $vil, $memofile) = @_;
 	my $query = $sow->{'query'};
 	my $curpl = $sow->{'curpl'};
 
 	# 発言欄HTML出力
-	&OutHTMLSayPC($sow, $vil);
+	&OutHTMLSayPC($sow, $vil, $memofile);
 
 	# コミットボタン
 	&OutHTMLCommitFormPC($sow, $vil) if (($vil->{'turn'} > 0) && ($vil->isepilogue() == 0) && ($sow->{'curpl'}->iscommitter()));
@@ -48,7 +48,7 @@ sub OutHTMLPlayerFormPC {
 	}
 
 	&OutHTMLRolePC($sow, $vil, \%role);
-	&OutHTMLExitButtonPC($sow, $vil) if ($vil->{'turn'} == 0);
+	&OutHTMLExitButtonPC() if ($vil->{'turn'} == 0);
 
 	# 村建て人フォーム／管理人フォーム表示
 	if ($sow->{'user'}->logined() > 0) {
@@ -72,7 +72,7 @@ sub OutHTMLPlayerFormPC {
 # 発言欄HTML出力
 #----------------------------------------
 sub OutHTMLSayPC {
-	my ($sow, $vil) = @_;
+	my ($sow, $vil, $memofile) = @_;
 	my $query = $sow->{'query'};
 	my $cfg   = $sow->{'cfg'};
 	my $net   = $sow->{'html'}->{'net'};
@@ -80,118 +80,85 @@ sub OutHTMLSayPC {
 	my $curpl   = $sow->{'curpl'};
 	my $charset = $sow->{'charsets'}->{'csid'}->{$curpl->{'csid'}};
 
-	# キャラ画像アドレスの取得
-	my $img = &SWHtmlPC::GetImgUrl($sow, $curpl, $charset->{'BODY'});
-
-	my $rolename = $sow->{'curpl'}->getrolename();
-
-	my $markbonds = '';
-	$markbonds = " ★$sow->{'textrs'}->{'MARK_BONDS'}" if ($curpl->isvisiblebonds($vil));
+	my $rolename = $curpl->getrolename();
+	my $longchrname  = $curpl->getlongchrname();
 
 	# キャラ画像
-	print <<"_HTML_";
-<table class="formpl_common">
-<tr class="say">
-<td class="img">
-<img src="$img" width="$charset->{'IMGBODYW'}" height="$charset->{'IMGBODYH'}" alt=""$net>
+	my $img = $curpl->{'csid'}."/".$curpl->{'cid'};
 
-_HTML_
+    my $mestype = "SAY";
+    $mestype = "GSAY" if('live' ne $curpl->{'live'});
 
-	# 名前とID
-	my $uidtext = $sow->{'uid'};
-	$uidtext =~ s/ /&nbsp\;/g;
-	$uidtext = '<a class="sow-id">'.$uidtext.'</a>';
-	my $chrname = $curpl->getlongchrname();
-
-	print <<"_HTML_";
-<td class="field">
-<div class="msg">
-<div class="formpl_content">$chrname ($uidtext) $rolename $markbonds</div>
-
-_HTML_
-	if ( $vil->{'turn'} < 0){
-		print <<"_HTML_";
-<div class="formpl_content">
-<label for="selectrole">希望する能\力：</label>
-<select id="selectrole" name="role" class="input-medium">
-<option value="-1">ランダム$sow->{'html'}->{'option'}
-_HTML_
-		require "$sow->{'cfg'}->{'DIR_LIB'}/setrole.pl";
-		# 希望する能力の表示
-		my $rolename = $sow->{'textrs'}->{'ROLENAME'};
-		my ( $rolematrix, $giftmatrix ) = &SWSetRole::GetSetRoleTable($sow, $vil, $vil->{'roletable'}, $vil->{'vplcnt'});
-
-		my $i;
-		foreach ($i = 0; $i < @{$sow->{'ROLEID'}}; $i++) {
-			my $output = $rolematrix->[$i];
-			$output = 1 if ($i == 0); # おまかせは必ず表示
-			if ($i == $curpl->{'selrole'}){
-				print "        <option value=\"$i\" selected>$rolename->[$i] *$sow->{'html'}->{'option'}\n";
-			}else{
-				print "        <option value=\"$i\">$rolename->[$i]$sow->{'html'}->{'option'}\n" if ($output > 0);
-			}
-		}
-		print <<"_HTML_";
-</select>
-</div>
-_HTML_
-	}
-
-	# 投票先変更プルダウン
-	if( $curpl->setvote_to($sow,$vil) != 0 ){
-		&OutHTMLVotePC($sow, $vil, 'vote');
-	}
-	if( $curpl->setentrust($sow,$vil) != 0 ){
-		&OutHTMLVotePC($sow, $vil, 'entrust');
-	}
-
-	# テキストボックスと発言ボタン初め
-	print <<"_HTML_";
-<form class="form-inline" action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$cfg->{'METHOD_FORM'}">
-_HTML_
-
-	# 表情選択欄
-	&OutHTMLExpressionFormPC($sow, $vil);
-
-	print <<"_HTML_";
-<div class="controls controls-row formpl_content">
-_HTML_
-
-	# 発言欄textarea要素の出力
-	my %htmlsay;
-	$htmlsay{'saycnttext'}  = '';
-	$htmlsay{'buttonlabel'} = $curpl->getsaybuttonlabel( $vil, $sow->{'textrs'}->{'CAPTION_SAY_PC'}, $sow->{'textrs'}->{'CAPTION_GSAY_PC'}, $sow->{'textrs'}->{'BUTTONLABEL_PC'} );
-	$htmlsay{'disabled'} = 0;
-	$htmlsay{'disabled'} = 1 if ($vil->{'emulated'} > 0);
-	my $draft = 0;
-	$draft = 1 if (($sow->{'savedraft'} ne '') && (($sow->{'draftmestype'} == $sow->{'MESTYPE_SAY'}) || ($sow->{'draftmestype'} == $sow->{'MESTYPE_TSAY'})));
-	if (($query->{'mes'} ne '') && (($query->{'cmdfrom'} eq 'write') || ($query->{'cmdfrom'} eq 'writepr'))) {
-		my $mes = $query->{'mes'};
-		$mes =~ s/<br( \/)?>/\n/ig;
-#		&SWBase::ExtractChrRef(\$mes);
-		$htmlsay{'text'} = $mes;
-	} elsif ($draft > 0) {
-		my $mes = $sow->{'savedraft'};
-		$mes =~ s/<br( \/)?>/\n/ig;
-		$htmlsay{'text'} = $mes;
-	}
-
-	&SWHtmlPC::OutHTMLSayTextAreaPC($sow, 'writepr', \%htmlsay);
-
-	# 独り言チェックボックス
-	my ($saycnt,$cost,$unit) = $vil->getsayptcosts();
-	my $draft_say  = ' selected' if ($sow->{'draftmestype'} == $sow->{'MESTYPE_SAY' });
-	my $draft_tsay = ' selected' if ($sow->{'draftmestype'} == $sow->{'MESTYPE_TSAY'});
+    # 発言/独り言/内緒話
+	my ($saycnt,$cost,$unit, $max_unit,$max_line,$max_size) = $vil->getsayptcosts();
 	my $tsaycnttext = "あと".$curpl->{'tsay'}.$unit                                if ($cost ne 'none');
 	my $ssaycnttext = "あと".&SWBase::GetSayCountText($sow, $vil, $sow->{'curpl'}) if ($cost ne 'none');
 	my $asaycnttext = $ssaycnttext;
 
-	print <<"_HTML_";
-<select name="target" class="input-medium">
-<option value="-1"$draft_say>$ssaycnttext ($sow->{'textrs'}->{'CAPTION_SAY_PC'})$sow->{'html'}->{'option'}
-<option value="$curpl->{'pno'}"$draft_tsay>$tsaycnttext ($sow->{'textrs'}->{'CAPTION_TSAY_PC'})$sow->{'html'}->{'option'}
-_HTML_
+	# 発言欄textarea要素の出力
+	my $caption_say = $sow->{'textrs'}->{'CAPTION_SAY_PC'};
+	my $title = $sow->{'textrs'}->{'BUTTONLABEL_PC'};
+	$title =~ s/_BUTTON_/$caption_say/g;
 
+    # メモ関連
+	my ($saycnt,$cost,$unitaction, $max_unit,$max_line,$max_size) = $vil->getmemoptcosts();
+	my $memocost = '無制限に貼り付けられ';
+	my $memocnttext;
+	$memocost    = '使うとアクション回数を消費し' if( $cost eq 'count' );
+	$memocost    = '使うと発言を20pt消費し'       if( $cost eq 'point' );
+	$memocnttext = "あと".$curpl->{'say_act'}.$unitaction                       if( $cost eq 'count' );
+	$memocnttext = "あと".&SWBase::GetSayCountText($sow, $vil, $sow->{'curpl'}) if( $cost eq 'point' );
+
+	my $mes = "";
+	if ($memofile){
+		my $memo = $memofile->getnewmemo($curpl);
+		$mes = $memo->{'log'};
+		$mes = &SWLog::ReplaceAnchorHTMLRSS($sow, $vil, $mes, $anchor);
+		$mes =~ s/<br( \/)?>/&#13\;/ig;
+		&SWHtml::ConvertJSON(\$mes);
+	}
+
+	print <<"_HTML_";
+text_form = {
+	cmd: "wrmemo",
+	jst: "memo",
+	text: "$mes",
+	title: "メモを貼\る",
+	count: "$memocnttext",
+	caption: "※メモを$memocostます。",
+	max: {
+		unit: "$max_unit",
+		line: $max_line,
+		size: $max_size,
+	},
+	mestype: "$mestype",
+	csid_cid: "$img",
+	longname: "$longchrname",
+	votes: [],
+	style: "",
+}
+gon.form.texts.push(text_form);
+
+text_form = {
+	cmd: "write",
+	jst: "open",
+	text: "",
+	title: "$title",
+	caption: "",
+	max: {
+		unit: "$max_unit",
+		line: $max_line,
+		size: $max_size,
+	},
+	csid_cid: "$img",
+	longname: "$longchrname",
+	votes: [],
+	style: "",
+	target: "-1",
+	targets: [
+{val:"-1",          mestype:"$mestype", name:"$ssaycnttext ($sow->{'textrs'}->{'CAPTION_SAY_PC'})"},
+{val:"$curpl->{'pno'}", mestype:"TSAY", name:"$tsaycnttext ($sow->{'textrs'}->{'CAPTION_TSAY_PC'})"},
+_HTML_
 	if ((1 == $cfg->{'ENABLED_AIMING'})
       ||($sow->{'uid'} eq $cfg->{'USERID_ADMIN'})
       ||($sow->{'uid'} eq $cfg->{'USERID_NPC'})){
@@ -201,35 +168,53 @@ _HTML_
 			next if (0 == $curpl->isAim($_));
 
 			my $targetname = $_->getshortchrname();
-			print "<option value=\"$_->{'pno'}\">$asaycnttext $targetnameと内緒話$sow->{'html'}->{'option'}\n";
+			print <<"_HTML_";
+{val:"$_->{'pno'}", mestype:"AIM", name:"$asaycnttext $targetnameと内緒話"},
+_HTML_
 		}
 	}
 	print <<"_HTML_";
-</select>
-<select name="monospace" class="input-small">
-<option value="">(通常)
-<option value="monospace">等幅
-<option value="report">見出し
-</select><br$net>
-    </div>
-    </form>
-
-</div>
-</table>
-<div class="">
+	],
+	roles: [
 _HTML_
+	# 希望する能力の表示
+	if ( $vil->{'turn'} < 1){
+		if ($isplok) {
+			print "{val:\"-1\", name:\"$sow->{'textrs'}->{'RANDOMROLE'}\"},\n";
+			my $rolename = $sow->{'textrs'}->{'ROLENAME'};
+			my ( $rolematrix, $giftmatrix ) = &SWSetRole::GetSetRoleTable($sow, $vil, $vil->{'roletable'}, $vil->{'vplcnt'});
+
+			my $i;
+			foreach ($i = 0; $i < @{$sow->{'ROLEID'}}; $i++) {
+				my $output = $rolematrix->[$i];
+				$output = 1 if ($i == 0); # おまかせは必ず表示
+				print "{val:\"$i\", name:\"$rolename->[$i]\"},\n" if ($output > 0);
+			}
+		}
+		if ($ismobok){
+			my $mob = $sow->{'basictrs'}->{'MOB'}->{$vil->{'mob'}}->{'CAPTION'};
+			print "{val:\"$sow->{'ROLEID_MOB'}\", name:\"$mobで見物\"},\n";
+		}
+	}
+	print <<"_HTML_";
+	],
+};
+gon.form.texts.push(text_form);
+_HTML_
+
+	# 投票先変更プルダウン
+	if( $curpl->setvote_to($sow,$vil) != 0 ){
+		&OutHTMLVotePC($sow, $vil, 'vote');
+	}
+	if( $curpl->setentrust($sow,$vil) != 0 ){
+		&OutHTMLVotePC($sow, $vil, 'entrust');
+	}
+
+	# 表情選択欄
+	#&OutHTMLExpressionFormPC($sow, $vil);
 
 	# アクション
 	&OutHTMLActionFormPC($sow, $vil);
-
-	print <<"_HTML_";
-</div>
-<div class="clearboth">
-  <hr class="invisible_hr"$net>
-</div>
-
-_HTML_
-
 	return;
 }
 
@@ -251,45 +236,65 @@ sub OutHTMLActionFormPC {
 	my $hidden = &SWBase::GetHiddenValues($sow, $reqvals, '      ');
 
 	my $chrname = $curpl->getchrname();
+
+	# アクション入力欄とアクションボタン
+	my ($saycnt,$costaction,$unitaction, $max_unit,$max_line,$max_size) = $vil->getactptcosts();
+	my $actcnttext = "あと".$curpl->{'say_act'}.$unitaction  if ($costaction ne 'none');
+
 	print <<"_HTML_";
-<form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_WRITE'}" method="$cfg->{'METHOD_FORM'}" >
-<div class="action">
-<div class="controls controls-row">
-
-<select class="input-medium" name="target" ng-model="form.action.target">
-<option value="-1">（選択しない）$sow->{'html'}->{'option'}
+text_form = {
+	cmd: "action",
+	jst: "action",
+	text: "",
+	title: "アクション",
+	count: "$actcnttext",
+	max: {
+		unit: "$max_unit",
+		line: $max_line,
+		size: $max_size,
+	},
+	mestype: "SAY",
+	shortname: "$chrname",
+	target: "-1",
+	targets: [
+{val:"-1", name:"（選択しない）"},
 _HTML_
-
 	# アクションの対象者
 	foreach (@$pllist) {
 		next if (0 == $curpl->isAction($_));
 
 		my $targetname = $_->getchrname();
-		print "        <option value=\"$_->{'pno'}\">$targetname$sow->{'html'}->{'option'}\n";
+		print <<"_HTML_";
+{val:"$_->{'pno'}", name:"$targetname"},
+_HTML_
 	}
-
 	print <<"_HTML_";
-</select>
-
-<select class="input-medium" name="actionno" ng-model="form.action.no">
-<option value="-99">（↓自由に入力）$sow->{'html'}->{'option'}
+	],
+	action: "-99",
+	actions: [
+{val:"-99", name:"（↓自由に入力）"},
 _HTML_
 	# 組み込み済みアクション
 	my $actions = $sow->{'textrs'}->{'ACTIONS'};
 	my $i;
 	for ($i = 0; $i < @$actions; $i++) {
-		print "<option value=\"$i\">$actions->[$i]$sow->{'html'}->{'option'}\n";
+		print <<"_HTML_";
+{val:"$i", name:"$actions->[$i]"},
+_HTML_
 	}
-
 	if ($curpl->{'live'} eq 'live'){
 		# 昇進と降格
 		my $actions_up = $sow->{'textrs'}->{'ACTIONS_CLEARANCE_UP'};
 		if( $actions_up ){
-			print "<option value=\"-4\">$actions_up$sow->{'html'}->{'option'}\n";
+			print <<"_HTML_";
+{val:"-4", name:"$actions_up"},
+_HTML_
 		}
 		my $actions_down = $sow->{'textrs'}->{'ACTIONS_CLEARANCE_DOWN'};
 		if( $actions_down ){
-			print "<option value=\"-5\">$actions_down$sow->{'html'}->{'option'}\n";
+			print <<"_HTML_";
+{val:"-5", name:"$actions_down"},
+_HTML_
 		}
 
 		# zap!zap!zap!
@@ -299,12 +304,16 @@ _HTML_
 			my $zapcount = $sow->{'textrs'}->{'ACTIONS_ZAPCOUNT'};
 			$zapcount =~ s/_POINT_/$curpl->{'zapcount'}/g;
 			$actions_zap =~ s/_COUNT_/$zapcount/g;
-			print "<option value=\"-3\">$actions_zap$sow->{'html'}->{'option'}\n";
+			print <<"_HTML_";
+{val:"-3", name:"$actions_zap"},
+_HTML_
 		}
 
 		# しおり
 		my $actions_bookmark = $sow->{'textrs'}->{'ACTIONS_BOOKMARK'};
-		print "<option value=\"-2\">$actions_bookmark$sow->{'html'}->{'option'}\n";
+		print <<"_HTML_";
+{val:"-2", name:"$actions_bookmark"},
+_HTML_
 
 		# 促し
 		if ((defined($curpl->{'actaddpt'})) && ($curpl->{'actaddpt'} > 0)) {
@@ -312,35 +321,23 @@ _HTML_
 			my $actions_addpt = $sow->{'textrs'}->{'ACTIONS_ADDPT'};
 			$restaddpt =~ s/_POINT_/$curpl->{'actaddpt'}/g;
 			$actions_addpt =~ s/_REST_/$restaddpt/g;
-			print "<option value=\"-1\">$actions_addpt$sow->{'html'}->{'option'}\n";
+			print <<"_HTML_";
+{val:"-1", name:"$actions_addpt"},
+_HTML_
 		}
 	} else {
 		# しおり
 		my $actions_bookmark = $sow->{'textrs'}->{'ACTIONS_BOOKMARK'};
-		print "<option value=\"-2\">$actions_bookmark$sow->{'html'}->{'option'}\n";
+		print <<"_HTML_";
+{val:"-2", name:"$actions_bookmark"},
+_HTML_
 	}
 
-	# アクション入力欄とアクションボタン
-	my ($saycnt,$costaction,$unitaction) = $vil->getactptcosts();
-	my $actcnttext = "あと".$curpl->{'say_act'}.$unitaction  if ($costaction ne 'none');
-	my $disabled = '';
-	$disabled = " $sow->{'html'}->{'disabled'}" if ($vil->{'emulated'} > 0);
-
 	print <<"_HTML_";
-</select><br$net>
-<input type="hidden" name="cmd" ng-model="form.action.text" value="action"$net>$hidden
-<input class="formpl_actiontext" type="text" name="actiontext" ng-model="form.action.text" value="" size="30"$net><br$net>
-</div>
-<fieldset class="formpl_action action_type">
-<legend>アクション内容</legend>
-</fieldset>
-<p class="text">{{form.action.result()}}</p>
-<p><input type="submit" class="btn" value="アクション"$disabled$net> $actcnttext</p>
-</div>
-
-</form>
+	],
+};
+gon.form.texts.push(text_form);
 _HTML_
-
 	return;
 }
 
@@ -353,87 +350,100 @@ sub OutHTMLRolePC {
 	my $net = $sow->{'html'}->{'net'};
 	my $curpl = $sow->{'curpl'};
 
-	# 能力者欄のスタイルシートのクラス名
-	my $rolestyle = $curpl->win_visible();
+	my $win_visible = $curpl->win_visible();
+		print <<"_HTML_";
+gon.form.win = "$win_visible";
+_HTML_
+
+	# キャラ画像
+	my $img = $curpl->{'csid'}."/".$curpl->{'cid'};
 
 	if (($curpl->{'role'} == -1) || ($curpl->{'role'} == $sow->{'ROLEID_MOB'})) {
 		# 能力希望表示
 		my $mes = $curpl->rolemessage( $role->{'explain'} );
-		&SWHtml::ConvertNET($sow, \$mes);
+		&SWHtml::ConvertJSON(\$mes);
 		print <<"_HTML_";
-<div class="$rolestyle">
-$mes
-</div>
-
+gon.form.secrets.push("$mes");
 _HTML_
 	} elsif (($vil->isepilogue() == 0) && ($curpl->{'live'} ne 'live')) {
 		# 能力欄表示（墓下）
 		my $mes = $role->{'explain'};
-		&SWHtml::ConvertNET($sow, \$mes);
+		&SWHtml::ConvertJSON(\$mes);
 		print <<"_HTML_";
-<div class="$rolestyle">
-$mes
-</div>
-
+gon.form.secrets.push("$mes");
 _HTML_
 	} else {
 		# 能力欄表示
 		my $charset = $sow->{'charsets'}->{'csid'}->{$curpl->{'csid'}};
 
+		# 能力者説明の表示
+		my $rolemes = $curpl->rolemessage( $role->{'explain_role'}->[$role->{'role'}] );
+		&SWHtml::ConvertJSON(\$rolemes);
+
+		# アイテム説明の表示
+		my $giftmes = $curpl->rolemessage( $role->{'explain_gift'}->[$role->{'gift'}] );
+		&SWHtml::ConvertJSON(\$giftmes);
+
+		# 能力結果履歴
+		my $history = $curpl->{'history'};
+		&SWHtml::ConvertJSON(\$history);
+
 		my $winmes = '';
 		if ($vil->isepilogue() == 0){
 			$winmes = $curpl->winmessage();
+			&SWHtml::ConvertJSON(\$winmes);
 		}
-
-		# キャラ画像アドレスの取得
-		my $img = &SWHtmlPC::GetImgUrl($sow, $curpl, $charset->{'BODY'});
-
-		print <<"_HTML_";
-<table class="$rolestyle">
-<tr class="say">
-<td>
-_HTML_
-
-		# 能力対象先変更プルダウン
-		&OutHTMLVotePC($sow, $vil, 'role');
 
 		# 囁き/共鳴/念話
 		my $sayswitch = "";
 		$sayswitch = $curpl->rolesayswitch($vil);
 		if ( '' ne $sayswitch ){
+
 			my $label   = $sow->{'textrs'}->{'CAPTION_ROLESAY'}->[$curpl->{'role'}];
 			my $countid = $sow->{'ROLESAYCOUNTID'}->[$curpl->{'role'}];
-			&OutHTMLSayTextAreaExtPC($sow,$vil, $sayswitch, $label,$countid );
-		}
-		# 能力者説明の表示
-		my $rolemes = $curpl->rolemessage( $role->{'explain_role'}->[$role->{'role'}] );
-		&SWHtml::ConvertNET($sow, \$rolemes);
-		print <<"_HTML_";
-<div class="formpl_content">$rolemes</div>
+			&OutHTMLSayTextAreaExtPC($sow, $vil, $img, $sayswitch, $label, $countid );
+		} elsif ($curpl->isEnableRole($vil->{'turn'})) {
+			print <<"_HTML_";
+text_form = {
+	cmd: "write",
+	jst: "silent",
+	mestype: "TSAY",
+	longname: "",
+	csid_cid: "$img",
+	votes: [],
+};
+gon.form.texts.push(text_form);
 _HTML_
-
-		# 能力対象先変更プルダウン
-		&OutHTMLVotePC($sow, $vil, 'gift');
+		}
+		&OutHTMLVotePC($sow, $vil, 'role');
 
 		# 囁き/共鳴/念話
 		$sayswitch = $curpl->giftsayswitch($vil);
 		if ( '' ne $sayswitch ){
 			my $label   = $sow->{'textrs'}->{'CAPTION_GIFTSAY'}->[$curpl->{'gift'}];
 			my $countid = $sow->{'GIFTSAYCOUNTID'}->[$curpl->{'gift'}];
-			&OutHTMLSayTextAreaExtPC($sow,$vil, $sayswitch, $label,$countid );
-		}
-		# アイテム説明の表示
-		my $giftmes = $curpl->rolemessage( $role->{'explain_gift'}->[$role->{'gift'}] );
-		&SWHtml::ConvertNET($sow, \$giftmes);
-		print <<"_HTML_";
-<div class="formpl_content">$giftmes</div>
-<div class="formpl_content">$winmes</div>
+			&OutHTMLSayTextAreaExtPC($sow, $vil, $img, $sayswitch, $label, $countid );
+		} elsif ($curpl->isEnableGift($vil->{'turn'})) {
+			print <<"_HTML_";
+text_form = {
+	cmd: "write",
+	jst: "silent",
+	mestype: "TSAY",
+	longname: "",
+	csid_cid: "$img",
+	votes: [],
+};
+gon.form.texts.push(text_form);
 _HTML_
+		}
+		&OutHTMLVotePC($sow, $vil, 'gift');
 
-		# 能力結果履歴
-		my $history = $curpl->{'history'};
-		&SWHtml::ConvertNET($sow, \$history);
-		print "    <div class=\"formpl_content\"><p><strong>$history</strong></p>\n" if ($history ne '');
+		print <<"_HTML_";
+gon.form.secrets.push("$rolemes");
+gon.form.secrets.push("$giftmes");
+gon.form.secrets.push("$winmes");
+gon.form.secrets.push("$history");
+_HTML_
 
 		# 運命の絆
 		my $lovestate = $curpl->getvisiblelovestate();
@@ -442,20 +452,18 @@ _HTML_
 		$love = 'つまり、あなたは殺意満々なのです。'   if ($lovestate eq 'hate');
 		my $targets = $curpl->getvisiblebonds($vil);
 		foreach $target (@$targets) {
-			print "<p>";
 			my $targetname   = $target->getchrname();
 			my $resultbonds  = $sow->{'textrs'}->{'STATE_BONDS'};
 			$resultbonds =~ s/_TARGET_/$targetname/g;
-			print "<strong>$resultbonds</strong><br$net>\n";
-			print "</p>";
+			print "gon.form.secrets.push(\"$resultbonds\");\n";
 		}
 		if ( '' ne $love ) {
-			print "<strong>$love</strong><br$net>\n";
+			print "gon.form.secrets.push(\"$love\");\n";
 		}
 		# 誘い込まれた
 		if ($curpl->{'sheep'} ne '') {
 			my $sheeps = $vil->getsheeppllist();
-			print "<p><strong>";
+			print "gon.form.secrets.push(\"";
 			if ( 1 < scalar(@$sheeps) ) {
 				foreach (@$sheeps) {
 					next if ($curpl eq $_);
@@ -464,21 +472,15 @@ _HTML_
 				}
 			}
 			print "$sow->{'textrs'}->{'STATE_SHEEPS'}";
-			print "</strong></p>";
+			print "\");\n";
 		}
 
 		# 状態
-		my $textAbility = $curpl->textDisableAbility();
-		print "<p><strong>$textAbility</strong></p>" if ( $curpl->hasDisableAbility() && $curpl->issensible() );
-
-		print <<"_HTML_";
-</div>
-<hr class="invisible_hr"$net>
-</div>
-<td>
-<img src="$img" width="$charset->{'IMGBODYW'}" height="$charset->{'IMGBODYH'}" alt=""$net>
-</table>
-_HTML_
+		if ( $curpl->hasDisableAbility() && $curpl->issensible() ){
+			my $textAbility = $curpl->textDisableAbility();
+			&SWHtml::ConvertJSON(\$textAbility);
+			print "gon.form.secrets.push(\"$textAbility\");\n";
+		}
 	}
 
 	return;
@@ -489,7 +491,7 @@ _HTML_
 # 能力者の発言欄
 #----------------------------------------
 sub  OutHTMLSayTextAreaExtPC {
-	my ($sow, $vil, $sayswitch, $label, $countid ) = @_;
+	my ($sow, $vil, $img, $sayswitch, $label, $countid ) = @_;
 	my $cfg = $sow->{'cfg'};
 	my $net = $sow->{'html'}->{'net'};
 	my $curpl = $sow->{'curpl'};
@@ -497,45 +499,86 @@ sub  OutHTMLSayTextAreaExtPC {
 	# 人形遣いのための特別コード。本当は、file_player#GetMesTypeを使うべき。
 	$curpl = $vil->getpl( $sow->{'cfg'}->{'USERID_NPC'} ) if ('muppet' eq $sayswitch);
 
-	print <<"_HTML_";
-<form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$cfg->{'METHOD_FORM'}">
-_HTML_
-
 	# 表情選択欄
-	&OutHTMLExpressionFormPC($sow, $vil);
-
-	print <<"_HTML_";
-<div class="formpl_content">
-_HTML_
+	# &OutHTMLExpressionFormPC($sow, $vil);
 
 	# 発言欄textarea要素の出力
-	my ($saycnt,$cost,$unit) = $vil->getsayptcosts();
-	my %htmlsay;
-	$htmlsay{'buttonlabel'} = $sow->{'textrs'}->{'BUTTONLABEL_PC'};
-	$htmlsay{'buttonlabel'} =~ s/_BUTTON_/$label/g;
-	$htmlsay{'saycnttext'}  = " あと$curpl->{$countid}$unit" if ($cost ne 'none');
-	$htmlsay{'disabled'} = 0;
-	$htmlsay{'disabled'} = 1 if ($vil->{'emulated'} > 0);
+	my ($saycnt,$cost,$unit, $max_unit,$max_line,$max_size) = $vil->getsayptcosts();
+	my $title = $sow->{'textrs'}->{'BUTTONLABEL_PC'};
+	$title =~ s/_BUTTON_/$label/g;
+	my $count = " あと$curpl->{$countid}$unit" if ($cost ne 'none');
 
-	my $draft = 0;
-	$draft = 1 if (($sow->{'savedraft'} ne '') && (($sow->{'draftmestype'} == $sow->{'MESTYPE_WSAY'}) || ($sow->{'draftmestype'} == $sow->{'MESTYPE_SPSAY'}) || ($sow->{'draftmestype'} == $sow->{'MESTYPE_XSAY'})));
-	if ($draft > 0) {
-		my $mes = $sow->{'savedraft'};
-		$mes =~ s/<br( \/)?>/\n/ig;
-		$htmlsay{'text'} = $mes;
-	}
-	&SWHtmlPC::OutHTMLSayTextAreaPC($sow, 'writepr', \%htmlsay);
 	print <<"_HTML_";
-<select name="monospace">
-<option value="">(通常)
-<option value="monospace">等幅
-<option value="report">見出し
-</select>
-<input type="hidden" name="$sayswitch" value="on"$net>
-<input type="hidden" name="target" value="-1"$net>
-</div>
-</form>
+text_form = {
+	cmd: "write",
+	jst: "secret",
+	text: "",
+	title: "$label",
+	count: "$count",
+	caption: "",
+	max: {
+		unit: "$max_unit",
+		line: $max_line,
+		size: $max_size,
+	},
+	csid_cid: "$img",
+	longname: "",
+	votes: [],
+	style: "",
+	target: "-1",
+	switch: "$sayswitch",
+	mestype: SOW.switch["$sayswitch"].mestype,
+};
+gon.form.texts.push(text_form);
 _HTML_
+}
+
+#----------------------------------------
+# 村建て人欄HTML出力
+#----------------------------------------
+sub OutHTMLVilMakerPC {
+	my ($sow, $vil, $writemode) = @_;
+	my $query = $sow->{'query'};
+	my $cfg   = $sow->{'cfg'};
+	my $net = $sow->{'html'}->{'net'};
+
+	my $curpl = $sow->{'curpl'};
+	my $csidlist = $sow->{'csidlist'};
+	my @keys = keys(%$csidlist);
+
+	# 名前とID
+	my $longname = $sow->{'charsets'}->getchrname($keys[0], $writemode);
+
+	# 発言欄textarea要素の出力
+	my ($saycnt,$cost,$unit, $max_unit,$max_line,$max_size) = $vil->getsayptcosts();
+	my $caption_say = $sow->{'textrs'}->{'CAPTION_SAY_PC'};
+	my $title = $sow->{'textrs'}->{'BUTTONLABEL_PC'};
+	$title =~ s/_BUTTON_/$caption_say/g;
+
+	print <<"_HTML_";
+text_form = {
+	cmd: "write",
+	jst: "secret",
+	text: "",
+	style: "",
+	count: "",
+	title: "$title",
+	caption: "",
+	max: {
+		unit: "$max_unit",
+		line: $max_line,
+		size: $max_size,
+	},
+	votes: [],
+	target: "-1",
+	switch: "$writemode",
+	mestype: "SAY",
+	longname: "$longname",
+	csid_cid: "$keys[0]/$writemode",
+};
+gon.form.texts.push(text_form);
+_HTML_
+	return;
 }
 
 #----------------------------------------
@@ -553,42 +596,23 @@ sub OutHTMLCommitFormPC {
 	my $nosay = '';
 	if (($sow->{'curpl'}->{'saidcount'} == 0)&&($vil->{'event'} != $sow->{'EVENTID_NIGHTMARE'})) {
 		$disabled = " $sow->{'html'}->{'disabled'}";
-		$nosay = "<br$net><br$net>最低一発言して確定しないと、時間を進める事ができません。";
+		$nosay = "<br><br>最低一発言して確定しないと、時間を進める事ができません。";
 	}
 
 	print <<"_HTML_";
-<div class="formpl_gm">
-  <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$sow->{'cfg'}->{'METHOD_FORM'}">
-  <div class="formpl_content">
-  <select name="commit"$disabled>
+command = {
+	cmd: "commit",
+	jst: "commit",
+	title: "変更",
+	caption: "全員が「時間を進める」を選ぶと前倒しで更新されます。$nosay",
+	commit: "$sow->{'curpl'}->{'commit'}",
+	commits: [
+{val:"0", name:"時間を進めない"},
+{val:"1", name:"時間を進める"},
+	],
+}
+gon.form.commands[command.cmd] = command;
 _HTML_
-
-	my $star = ' *';
-	my $option = $sow->{'html'}->{'option'};
-	if ($sow->{'curpl'}->{'commit'} > 0) {
-		print <<"_HTML_";
-    <option value="0">時間を進めない$option
-    <option value="1" $sow->{'html'}->{'selected'}>時間を進める$star$option
-_HTML_
-	} else {
-		print <<"_HTML_";
-    <option value="0" $sow->{'html'}->{'selected'}>時間を進めない$star$option
-    <option value="1">時間を進める$option
-_HTML_
-	}
-
-	print <<"_HTML_";
-  </select>
-  <input type="hidden" name="cmd" value="commit"$net>$hidden
-  <input type="submit" class="btn" value="変更"$disabled$net>
-  </div>
-  </form>
-
-  <p class="formpl_content">全員が「時間を進める」を選ぶと前倒しで更新されます。$nosay</p>
-</div>
-
-_HTML_
-
 	return;
 }
 
@@ -611,178 +635,46 @@ sub OutHTMLVotePC {
 	my $reqvals = &SWBase::GetRequestValues($sow);
 	my $hidden = &SWBase::GetHiddenValues($sow, $reqvals, '      ');
 
-	print <<"_HTML_";
-    <form class="form-inline" action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$cfg->{'METHOD_FORM'}">
-      <div class="formpl_content">$hidden
-      <input type="hidden" name="cmd" value="$cmd"$net>
-_HTML_
-
 	# 投票／委任選択欄
-	if ($curpl->{'entrust'} > 0) {
-	}
 	my $votelabel = $curpl->getlabel($cmd);
-	print <<"_HTML_";
+	my $target_label = $curpl->gettargetlabel($cmd,$vil->{'turn'});
 
-<label for="select$cmd">$votelabel：</label>
-<select id="select$cmd" name="target">
+    my $jst = "";
+	if ($target_label ne ''){
+		$jst = 'vote2';
+	} else {
+		$jst = 'vote1';
+	}
+
+    my $target1 = $curpl->{$cmd.'1'};
+    my $target2 = $curpl->{$cmd.'2'};
+
+	print <<"_HTML_";
+vote = {
+	cmd: "$cmd",
+	jst: "$jst",
+	title: "$votelabel",
+	target1: "$target1",
+	target2: "$target2",
+	targets: [
 _HTML_
+	if (($cmd eq 'vote')&&( $curpl->{$cmd.'1'} == $curpl->{'pno'})){
+		my $pno      = $curpl->{'pno'};
+		my $chrname  = $curpl->getlongchrname();
+		print "{val:\"$pno\", name:\"自分へ投票\"},\n";
+	}
 
 	# 対象の表示
 	$targetlist = $curpl->gettargetlistwithrandom($cmd);
 	foreach (@$targetlist) {
-		my $selected = '';
-		my $selstar = '';
-		if ($curpl->{$cmd.'1'} == $_->{'pno'}) {
-			$selected = " $sow->{'html'}->{'selected'}";
-			$selstar = ' *';
-		}
-		print "<option value=\"$_->{'pno'}\"$selected>$_->{'chrname'}$selstar$sow->{'html'}->{'option'}\n";
+		print "{val:\"$_->{'pno'}\", name:\"$_->{'chrname'}\"},\n";
 	}
-	if (($cmd eq 'vote')&&( $curpl->{$cmd.'1'} == $curpl->{'pno'})){
-		my $pno      = $curpl->{'pno'};
-		my $chrname  = $curpl->getlongchrname();
-		my $selected = $sow->{'html'}->{'selected'};
-		my $option   = $sow->{'html'}->{'option'};
-		print '<option value="'.$pno.'" '.$selected.'>自分へ投票 *'.$option."\n";
-	}
-
-	my $disabled = '';
-	$disabled = " $sow->{'html'}->{'disabled'}" if ($vil->{'emulated'} > 0);
-
-	print "</select>";
-
-	my $votelabel = $curpl->gettargetlabel($cmd,$vil->{'turn'});
-	if ( $votelabel ne '' ) {
-		print " と、";
-		print <<"_HTML_";
-<select id="select2$cmd" name="target2">
-_HTML_
-
-		# 対象の表示
-		$targetlist = $curpl->gettargetlistwithrandom($cmd);
-		foreach (@$targetlist) {
-			my $selected = '';
-			my $selstar = '';
-			if ($curpl->{$cmd.'2'} == $_->{'pno'}) {
-				$selected = " $sow->{'html'}->{'selected'}";
-				$selstar = ' *';
-			}
-			print "<option value=\"$_->{'pno'}\"$selected>$_->{'chrname'}$selstar$sow->{'html'}->{'option'}\n";
-		}
-		print "</select>";
-	}
-	print "\n";
-
 	print <<"_HTML_";
-      <input type="submit" class="btn" value="変更"$disabled$net>
-      </div>
-    </form>
-
+	],
+};
+text_form.votes.push(vote);
 _HTML_
-
 	return;
-}
-
-#----------------------------------------
-# 村建て人欄HTML出力
-#----------------------------------------
-sub OutHTMLVilMakerPC {
-	my ($sow, $vil, $writemode) = @_;
-	my $query = $sow->{'query'};
-	my $cfg   = $sow->{'cfg'};
-	my $net = $sow->{'html'}->{'net'};
-
-	my $curpl = $sow->{'curpl'};
-	my $csidlist = $sow->{'csidlist'};
-	my @keys = keys(%$csidlist);
-	my %imgpl = (
-		cid      => $writemode,
-		csid     => $keys[0],
-		deathday => -1,
-	);
-	$imgpl{'deathday'} = $curpl->{'deathday'} if (defined($curpl->{'deathday'}));
-	my $charset = $sow->{'charsets'}->{'csid'}->{$imgpl{'csid'}};
-
-	# キャラ画像アドレスの取得
-	my $img = &SWHtmlPC::GetImgUrl($sow, \%imgpl, $charset->{'BODY'});
-
-	# キャラ画像
-	print <<"_HTML_";
-<table class="formpl_common">
-<tr class="say">
-<td class="img">
-<img src="$img" width="$charset->{'IMGBODYW'}" height="$charset->{'IMGBODYH'}" alt=""$net>
-
-_HTML_
-
-	# 名前とID
-	my $chrname = $sow->{'charsets'}->getchrname($imgpl{'csid'}, $imgpl{'cid'});
-	print <<"_HTML_";
-<td class="field">
-<div class="msg">
-<div class="formpl_content">$chrname ($sow->{'uid'})</div>
-
-_HTML_
-
-	# テキストボックスと発言ボタン初め
-	print <<"_HTML_";
-    <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$cfg->{'METHOD_FORM'}">
-    <div class="formpl_content">
-_HTML_
-
-	# 発言欄textarea要素の出力
-	my %htmlsay;
-	$htmlsay{'saycnttext'} = '';
-	$htmlsay{'buttonlabel'} = $sow->{'textrs'}->{'BUTTONLABEL_PC'};
-	my $caption_say = $sow->{'textrs'}->{'CAPTION_SAY_PC'};
-	$htmlsay{'buttonlabel'} =~ s/_BUTTON_/$caption_say/g;
-	$htmlsay{'disabled'} = 0;
-	$htmlsay{'disabled'} = 1 if ($vil->{'emulated'} > 0);
-	&SWHtmlPC::OutHTMLSayTextAreaPC($sow, 'writepr', \%htmlsay);
-
-	print <<"_HTML_";
-<select name="monospace" class="input-medium">
-<option value="">(通常)
-<option value="monospace">等幅
-<option value="report">見出し
-</select>
-<input type="hidden" name="$writemode" value="on"$net>
-</div>
-</form>
-
-</div>
-</table>
-
-_HTML_
-
-	return;
-}
-
-#----------------------------------------
-# 表情選択欄HTML出力
-#----------------------------------------
-sub OutHTMLExpressionFormPC {
-	my ($sow, $vil) = @_;
-	my $net = $sow->{'html'}->{'net'};
-
-	my $expression = $sow->{'charsets'}->{'csid'}->{$sow->{'curpl'}->{'csid'}}->{'EXPRESSION'};
-	if (@$expression > 0) {
-		print <<"_HTML_";
-    <div class="formpl_content">
-      <label for="expression">表\情：</label>
-      <select id="expression" name="expression">
-_HTML_
-
-		my $i;
-		for ($i = 0; $i < @$expression; $i++) {
-			my $selected = '';
-			$selected = " $sow->{'html'}->{'selected'}" if ($i == 0);
-			print "        <option value=\"$i\"$selected>$expression->[$i]$sow->{'html'}->{'option'}\n";
-		}
-		print "      </select>\n";
-		print "    </div>\n";
-	}
-
 }
 
 #----------------------------------------
@@ -810,11 +702,11 @@ sub OutHTMLUpdateSessionButtonPC {
 	my $hidden = &SWBase::GetHiddenValues($sow, $reqvals, '    ');
 
 	print <<"_HTML_";
-<div class="formpl_gm">
-  <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$sow->{'cfg'}->{'METHOD_FORM'}">
-  <p class="commitbutton">
-    <input type="hidden" name="cmd" value="makerpr"$net>$hidden
-    <select id="maker" name="target" class="input-medium">
+command = {
+	cmd: "maker",
+	jst: "target",
+	title: "この人に村を任せる！",
+	targets: [
 _HTML_
 		# 村建て権移譲
 		$targetlist = $vil->getallpllist();
@@ -822,14 +714,12 @@ _HTML_
 			next if (($_->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'}));
 			my $chrname = $_->getlongchrname();
 			my $pno     = $_->{'pno'};
-			print "<option value=\"$pno\">$chrname$sow->{'html'}->{'option'}\n";
+			print "{val:\"$pno\", name:\"$chrname\"},\n";
 		}
-		print "</select>";
 		print <<"_HTML_";
-    <input type="submit" class="btn" value="この人に村を任せる！"$net><br$net>
-  </p>
-  </form>
-
+	],
+};
+gon.form.commands[command.cmd] = command;
 _HTML_
 
 	my $disabled = '';
@@ -837,10 +727,11 @@ _HTML_
 		my $upddatetime = sprintf('%02d:%02d',$vil->{'updhour'},$vil->{'updminite'});
 
 		print <<"_HTML_";
-  <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$sow->{'cfg'}->{'METHOD_FORM'}">
-  <p class="commitbutton">
-    <input type="hidden" name="cmd" value="kickpr"$net>$hidden
-    <select id="kick" name="target" class="input-medium">
+command = {
+	cmd: "kick",
+	jst: "target",
+	title: "退去いただこう、かな…",
+	targets: [
 _HTML_
 		# キック機能
 		$targetlist = $vil->getallpllist();
@@ -848,46 +739,45 @@ _HTML_
 			next if (($_->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'}));
 			my $chrname = $_->getlongchrname();
 			my $pno     = $_->{'pno'};
-			print "<option value=\"$pno\">$chrname$sow->{'html'}->{'option'}\n";
+			print "{val:\"$pno\", name:\"$chrname\"},\n";
 		}
-		print "</select>";
 		print <<"_HTML_";
-    <input type="submit" class="btn" value="退去いただこう、かな……"$net><br$net>
-  </p>
-  </form>
-  <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$sow->{'cfg'}->{'METHOD_FORM'}">
-  <p class="commitbutton">
-    <input type="hidden" name="cmd" value="editvilform"$net>$hidden
-    <input type="submit" class="btn" value="村を編集しよう！"$net>
-  </p>
-  </form>
-  <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$sow->{'cfg'}->{'METHOD_FORM'}">
-  <p class="commitbutton">
-    <input type="hidden" name="cmd" value="musterpr"$net>$hidden
-    <input type="submit" class="btn" value="点呼しよう！($upddatetimeまで)"$net>
-  </p>
-  </form>
+	],
+};
+gon.form.commands[command.cmd] = command;
+command = {
+	cmd: "editvilform",
+	jst: "button",
+	title: "村を編集しよう！",
+};
+gon.form.commands[command.cmd] = command;
+command = {
+	cmd: "muster",
+	jst: "button",
+	title: "点呼しよう！($upddatetimeまで)",
+};
+gon.form.commands[command.cmd] = command;
 _HTML_
 	} else {
 		if ($vil->isepilogue()) {
 			print <<"_HTML_";
-  <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$sow->{'cfg'}->{'METHOD_FORM'}">
-  <p class="commitbutton">
-    <input type="hidden" name="cmd" value="editvilform"$net>$hidden
-    <input type="submit" class="btn" value="村を編集しよう！"$net>
-  </p>
-  </form>
+command = {
+	cmd: "editvilform",
+	jst: "button",
+	title: "村を編集しよう！",
+};
+gon.form.commands[command.cmd] = command;
 _HTML_
 		}
 
 		if ($sow->{'uid'} eq $sow->{'cfg'}->{'USERID_ADMIN'}) {
 			print <<"_HTML_";
-  <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$sow->{'cfg'}->{'METHOD_FORM'}">
-  <p class="commitbutton">
-    <input type="hidden" name="cmd" value="updatepr"$net>$hidden
-    <input type="submit" class="btn" value="更新しちゃおう！"$net>
-  </p>
-  </form>
+command = {
+	cmd: "update",
+	jst: "button",
+	title: "更新しちゃおう！",
+};
+gon.form.commands[command.cmd] = command;
 _HTML_
 		} else {
 			# 村立て人の延長機能利用は制限あり
@@ -896,14 +786,12 @@ _HTML_
 	}
 
 	print <<"_HTML_";
-  <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$sow->{'cfg'}->{'METHOD_FORM'}">
-  <p class="commitbutton">
-    <input type="hidden" name="cmd" value="$button{'cmd'}"$net>$hidden
-    <input type="submit" class="btn" value="$button{'label'}"$disabled$net>
-  </p>
-  </form>
-</div>
-
+command = {
+	cmd: "$button{'cmd'}",
+	jst: "button",
+	title: "$button{'label'}",
+};
+gon.form.commands[command.cmd] = command;
 _HTML_
 
 	return;
@@ -913,25 +801,14 @@ _HTML_
 # 廃村ボタンHTML出力
 #----------------------------------------
 sub OutHTMLScrapVilButtonPC {
-	my ($sow, $vil) = @_;
-	my $cfg = $sow->{'cfg'};
-	my $net = $sow->{'html'}->{'net'};
-
-	my $reqvals = &SWBase::GetRequestValues($sow);
-	my $hidden = &SWBase::GetHiddenValues($sow, $reqvals, '    ');
-
 	print <<"_HTML_";
-<div class="formpl_gm">
-  <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$sow->{'cfg'}->{'METHOD_FORM'}">
-  <p class="commitbutton">
-    <input type="hidden" name="cmd" value="scrapvilpr"$net>$hidden
-    <input type="submit" class="btn" value="廃村する"$net>
-  </p>
-  </form>
-</div>
-
+command = {
+	cmd: "scrapvil",
+	jst: "button",
+	title: "廃村する",
+}
+gon.form.commands[command.cmd] = command;
 _HTML_
-
 	return;
 }
 
@@ -941,27 +818,14 @@ _HTML_
 # 「村を出る」HTML出力
 #----------------------------------------
 sub OutHTMLExitButtonPC {
-	my ($sow, $vil) = @_;
-	my $cfg = $sow->{'cfg'};
-	my $net = $sow->{'html'}->{'net'};
-
-	my $reqvals = &SWBase::GetRequestValues($sow);
-	my $hidden = &SWBase::GetHiddenValues($sow, $reqvals, '    ');
-	my $disabled = '';
-	$disabled = " $sow->{'html'}->{'disabled'}" if ($sow->{'uid'} eq $cfg->{'USERID_NPC'});
-
 	print <<"_HTML_";
-<div class="formpl_gm">
-  <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$sow->{'cfg'}->{'METHOD_FORM'}">
-  <p class="commitbutton">
-    <input type="hidden" name="cmd" value="exitpr"$net>$hidden
-    <input type="submit" class="btn" value="村を出る"$disabled$net>
-  </p>
-  </form>
-</div>
-
+command = {
+	cmd: "exit",
+	jst: "button",
+	title: "村を出る",
+};
+gon.form.commands[command.cmd] = command;
 _HTML_
-
 	return;
 }
 

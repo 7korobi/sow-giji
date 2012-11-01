@@ -58,7 +58,6 @@ sub outhtml {
 	print <<"_HTML_";
 <hr class="invisible_hr"$net>
 <h2>役職能\力早見表\</h2>
-<p>能\力の行使結果はランダムで生成しています。変だなと思ったら、リロードしてみましょう。</p>
 _HTML_
 
 	# ダミーデータの生成
@@ -263,11 +262,22 @@ _HTML_
 	push( @pllist, $mobpl );
 
 	print <<"_HTML_";
-<a href="sow.cgi?cmd=roleaspect&$docid#rolerule">役職とルールの細かい点はこちら。</a>
+<div class="paragraph">
+<p>能\力の行使結果はランダムで生成しています。変だなと思ったら、リロードしてみましょう。</p>
+<p><a href="sow.cgi?cmd=roleaspect&$docid#rolerule">役職とルールの細かい点はこちら。</a></p>
+<p>見たい役職は：<select ng-model="search.title" ng-options="f.title as f.title group by f.win for f in forms"></select></p>
+</div>
 <hr class="invisible_hr"$net>
 <h2>インターフェイス</h2>
-
+<div ng-repeat="form in forms | filter:search | limitTo: 1">
+<h3>{{form.title}}</h3>
+<div template="navi/forms"></div>
+</div>
+<script>
+window.gon = {};
+gon.forms = [];
 _HTML_
+	$vil->gon_potofs();
 
 	require "$cfg->{'DIR_LIB'}/commit.pl";
 	# ログ・メモデータファイルの作成
@@ -307,6 +317,18 @@ _HTML_
 	}
 	require "$cfg->{'DIR_HTML'}/html_formpl_pc.pl";
 	foreach $pl (@pllist){
+		print <<"_HTML_";
+gon.form = ({}).merge(OPTION.form).merge({
+		title: "$pl->{'title'}",
+		uri: "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}",
+		side: [],
+		links: [],
+		texts: [],
+		secrets: [],
+		commands: {},
+});
+_HTML_
+
 		$pl->{'role'} = $pl->{'lock'} if( 0 < $pl->{'lock'}  );
 		next if (($query->{'roleid'} ne '')&&($sow->{$query->{'roleid'}} ne $pl->{'selrole'}));
 		next if (($query->{'giftid'} ne '')&&($sow->{$query->{'giftid'}} ne $pl->{'gift'}));
@@ -314,21 +336,18 @@ _HTML_
 		if( $sow->{'ROLEID_ROBBER'} == $pl->{'pno'} ){
 			$pl->{'role'} = $pl->{'pno'};
 		}
-		print "<h3>$pl->{'title'}</h3>\n";
 		$sow->{'curpl'} = $pl;
 		$sow->{'uid'}   = $sow->{'curpl'}->{'uid'};
 
 		&SWHtmlPlayerFormPC::OutHTMLPlayerFormPC($sow, $vil);
 		print <<"_HTML_";
-<hr class="invisible_hr"$net>
-<script>
-window.gon = {};
+gon.forms.push(gon.form);
 _HTML_
-	$vil->gon_potofs($secret_show);
+	}
 	print <<"_HTML_";
 </script>
 _HTML_
-	}
+
 	my $win_message = $sow->{'textrs'}->{'ANNOUNCE_WINNER'}->[$result];
 
 	if (defined($sow->{'query'}->{'emulatedays'})){

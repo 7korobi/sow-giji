@@ -154,9 +154,8 @@ sub GetConfig {
   my @copyrights = (
     'あっぱれ、うっかりアイコン by 小由流',
     '人狼議事キャラセット by りりんら',
-    '管理 <a href="mailto:7korobi@gmail.com">ななころび</a> Sol・la',
-    '人狼議事で使っているキャラチップは、原則として他所での利用を許諾しておりません。
-ご了承ください。',
+    '管理<code> sol・la</code><code><a href="mailto:7korobi@gmail.com">ななころび</a></code>',
+    '<code style="display:inline-block;">人狼議事で使っているキャラチップは原則として、　　<br />他所での利用を許諾しておりません。ご了承ください。</code>',
   );
 
   my %css_star480 = (

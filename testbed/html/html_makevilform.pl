@@ -132,7 +132,6 @@ _HTML_
 <dt><label for="updhour">更新時間</label>
 <dd><select id="updhour" name="hour" class="input-small" ng-model="story.upd.hour">
 </dl>
-
 _HTML_
 
 		my $i;
@@ -189,52 +188,65 @@ _HTML_
 
 <fieldset ng-show="story.type.roletable == 'custom'">
 <legend>役職配分自由設定</legend>
+<TABLE class="multicolumn_role"><TBODY>
 _HTML_
 
 		my $hr = '<hr>';
 		my $imgwidth = $charset->{'IMGBODYW'} + 2;
-		my $maxwidth = 460;
-		my $tdwidth = int( $maxwidth/140 );
+		my $tdwidth = 4;
 		my $roleid  = $sow->{'ROLEID'};
 		my $giftid  = $sow->{'GIFTID'};
 		my $eventid = $sow->{'EVENTID'};
 		for ($i=0,$d=0; $i <= @$roleid; $i++) {
 			if    ($i == $sow->{'SIDEST_HUMANSIDE'} ){
-				print "\n\n<h3>人間</h3>\n ";
+				print "\n\n<TR><TD colspan=$tdwidth><h3>人間</h3><TR>\n ";
+                $d = 0;
 			}elsif($i == $sow->{'SIDEST_ENEMY'} ){
 				my $enemy = "人狼側";
 				$enemy    = "破滅側" if( 1 == $cfg->{'ENABLED_AMBIDEXTER'} );
-				print "\n\n<h3>$enemyの人間</h3>\n ";
+				print "\n\n<TR><TD colspan=$tdwidth><h3>$enemyの人間</h3><TR>\n ";
+                $d = 0;
 			}elsif($i == $sow->{'SIDEST_WOLFSIDE'} ){
-				print "\n\n<h3>人狼</h3>\n ";
+				print "\n\n<TR><TD colspan=$tdwidth><h3>人狼</h3><TR>\n ";
+                $d = 0;
 			}elsif($i == $sow->{'SIDEST_PIXISIDE'} ){
-				print "\n\n<h3>妖精</h3>\n ";
+				print "\n\n<TR><TD colspan=$tdwidth><h3>妖精</h3><TR>\n ";
+                $d = 0;
 			}elsif($i == $sow->{'SIDEST_OTHER'} ){
-				print "\n\n<h3>それ以外</h3>\n ";
-			}
+				print "\n\n<TR><TD colspan=$tdwidth><h3>それ以外</h3><TR>\n ";
+                $d = 0;
+            }elsif($d >= $tdwidth){
+                print "\n\n<TR> ";
+                $d = 0;
+            }
 			next if ( '' eq $sow->{'textrs'}->{'ROLESHORTNAME'}->[$i] );
+            $d++;
 			print <<"_HTML_";
-<div class="rolebox input-append">
-<label for="cnt$roleid->[$i]">$sow->{'textrs'}->{'ROLENAME'}->[$i]</label>
-<input  id="cnt$roleid->[$i]" type="text" name="cnt$roleid->[$i]" size="2" value="$vil->{"cnt$roleid->[$i]"}"$net><span class="add-on">人</span>
-</div>
+<TD nowrap align=right class="input-append input-prepend">
+<label for="cnt$roleid->[$i]" class="add-on">$sow->{'textrs'}->{'ROLENAME'}->[$i]</label>
+<input  id="cnt$roleid->[$i]" type="text" name="cnt$roleid->[$i]" class="input-tiny" size="2" value="$vil->{"cnt$roleid->[$i]"}"$net><span class="add-on">人</span>
 _HTML_
 		}
 		for ($i=$sow->{'SIDEST_DEAL'}; $i <= @$giftid; $i++) {
 			if    ($i == $sow->{'SIDEST_DEAL'} ){
-				print "\n\n<h3>恩恵</h3>\n ";
-			}
+				print "\n\n<TR><TD colspan=$tdwidth><h3>恩恵</h3><TR>\n ";
+                $d = 0;
+            }elsif($d >= $tdwidth){
+                print "\n\n<TR> ";
+                $d = 0;
+            }
 			next if ( '' eq $sow->{'textrs'}->{'GIFTSHORTNAME'}->[$i] );
+            $d++;
 			print <<"_HTML_";
-<div class="rolebox input-append">
-<label for="cnt$giftid->[$i]">$sow->{'textrs'}->{'GIFTNAME'}->[$i]</label>
-<input id="cnt$giftid->[$i]" type="text" name="cnt$giftid->[$i]" size="2" value="$vil->{"cnt$giftid->[$i]"}"$net><span class="add-on">人</span>
-</div>
+<TD nowrap align=right class="input-append input-prepend">
+<label for="cnt$giftid->[$i]" class="add-on">$sow->{'textrs'}->{'GIFTNAME'}->[$i]</label>
+<input  id="cnt$giftid->[$i]" type="text" name="cnt$giftid->[$i]" class="input-tiny" size="2" value="$vil->{"cnt$giftid->[$i]"}"$net><span class="add-on">人</span>
 _HTML_
 		}
 		print <<"_HTML_";
+</TABLE>
 </fieldset>
-<fieldset>
+<fieldset style="text-align:center;">
 <h3>事件</h3>
 
 <input type="text" id="eventcard" name="eventcard" ng-init="tokenInput('#eventcard', 'events', story.card.event)">
@@ -400,7 +412,7 @@ _HTML_
 		print <<"_HTML_";
 </select>
 <dt><label for="mob">見物人</label>
-<dd class="input-append"><select id="mob" name="mob" class="input-small" ng-model="story.type.mob">
+<dd class="input-append input-prepend"><select id="mob" name="mob" class="input-small" ng-model="story.type.mob">
 _HTML_
 		my $mob = $sow->{'basictrs'}->{'MOB'};
 		foreach (@{$mob->{'ORDER'}}) {
@@ -408,8 +420,10 @@ _HTML_
 		}
 
 		print <<"_HTML_";
-</select>に
-<input id="cntmob" type="text" name="cntmob" size="3" value="$vil->{"cntmob"}"><span class="add-on">人</span>
+</select>
+<span class="add-on">に</span>
+<input id="cntmob" type="text" name="cntmob" class="input-tiny" size="3" value="$vil->{"cntmob"}">
+<span class="add-on">人</span>
 </fieldset>
 
 <div class="exevmake">

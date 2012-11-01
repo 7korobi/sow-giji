@@ -123,7 +123,7 @@ sub OutHTMLContentFrameHeader {
   }
 
   print <<"_HTML_";
-<div id="contentframe">
+<div id="contentframe" class="contentframe">
 <h1>$titlestart<img ng-src="{{h1.path}}" ng-cloak $net>$titleend</h1>
 
 <div class="inframe">
@@ -136,8 +136,21 @@ _HTML_
 #----------------------------------------
 sub OutHTMLContentFrameFooter {
   my $sow = $_[0];
+  my $net = $sow->{'html'}->{'net'};
+  my $atr_id = $sow->{'html'}->{'atr_id'};
 
   print <<"_HTML_";
+<address>
+<a $atr_id="bottom">$sow->{'VERSION_SW'}</a> <a href="$sow->{'URL_AUTHOR'}">$sow->{'COPY_AUTHOR'}</a><br$net>
+_HTML_
+
+  my $copyrights = $sow->{'cfg'}->{'COPYRIGHTS'};
+  foreach (@$copyrights) {
+    print "$_<br$net>\n";
+  }
+
+  print <<"_HTML_";
+</address>
 </div><!-- inframe footer -->
 </div><!-- contentframe footer -->
 
@@ -151,26 +164,10 @@ _HTML_
 sub OutHTMLFooterPC {
   my $sow = $_[0];
   my $cput = int($_[1] * 1000) / 1000;
-
   my $net = $sow->{'html'}->{'net'};
-  my $atr_id = $sow->{'html'}->{'atr_id'};
 
   print <<"_HTML_";
-<div class="inframe">
-<address>
 ($cput CPUs)<br$net>
-<a $atr_id="bottom">$sow->{'VERSION_SW'}</a> <a href="$sow->{'URL_AUTHOR'}">$sow->{'COPY_AUTHOR'}</a><br$net>
-_HTML_
-
-  my $copyrights = $sow->{'cfg'}->{'COPYRIGHTS'};
-  foreach (@$copyrights) {
-    print "$_<br$net>\n";
-  }
-
-  print <<"_HTML_";
-</address>
-</div>
-
 </div>
 </body>
 </html>
@@ -313,7 +310,7 @@ sub OutHTMLChangeCSS {
 
   print <<"_HTML_";
 <div class="choice">
-<p style="text-align:right; font-size: 100%;" template="navi/css">
+<p style="text-align:right; font-size: 100%;" theme="giji">
 <span><a href="sow.cgi?ua=mb">ågë—</a></span>
 Åb
 

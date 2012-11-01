@@ -30,6 +30,7 @@ sub SetDataCmdVLog {
 
 	require "$sow->{'cfg'}->{'DIR_LIB'}/log.pl";
 	require "$sow->{'cfg'}->{'DIR_LIB'}/file_log.pl";
+	require "$sow->{'cfg'}->{'DIR_LIB'}/file_memo.pl";
 
 	# 発言確定処理
 	if ($vil->{'epilogue'} >= $vil->{'turn'}) {
@@ -72,9 +73,6 @@ sub OutHTMLCmdVLog {
 
 	my $turn = $sow->{'turn'};
 	$turn = $vil->{'epilogue'} if ($sow->{'turn'} > $vil->{'epilogue'}); # 終了している時は終了日
-
-	# 村ログファイルを開く
-	my $logfile = SWBoa->new($sow, $vil, $turn, 0);
 
 	$sow->{'cookie'}->{'modified'} = 'js' if (!defined($sow->{'cookie'}->{'modified'}));
 
@@ -120,23 +118,39 @@ sub OutHTMLCmdVLog {
 	$maxrow = $cookie->{'row'} if (defined($cookie->{'row'}) && ($cookie->{'row'} ne '')); # 引数による行数指定
 	$maxrow = -1 if (($maxrow eq 'all') || ($query->{'rowall'} ne '')); # 引数による全表示指定
 
-	# ログの取得
-	my ($logs, $logkeys, $rows);
-	if (($sow->{'turn'} != $vil->{'turn'}) || ($vil->{'epilogue'} >= $vil->{'turn'})) {
-		($logs, $logkeys, $rows) = $logfile->getvlogs($maxrow);
-	}
-	$sow->{'lock'}->gunlock();
 
 	# HTMLの出力
 	if ($ua eq 'mb') {
+		# ログの取得
+		my $logfile  = SWBoa->new($sow, $vil, $turn, 0);
+		my ($logs, $logkeys, $rows);
+		if (($sow->{'turn'} != $vil->{'turn'}) || ($vil->{'epilogue'} >= $vil->{'turn'})) {
+			($logs,  $logkeys, $rows) = $logfile->getvlogs($maxrow);
+		}
+		$sow->{'lock'}->gunlock();
+
 		require "$cfg->{'DIR_HTML'}/html_vlog_mb.pl";
 		&SWHtmlVlogMb::OutHTMLVlogMb($sow, $vil, $logfile, $maxrow, $logs, $logkeys, $rows);
+
+		$logfile->close();
 	} else {
+		# ログの取得
+		my $logfile  = SWBoa->new($sow, $vil, $turn, 0);
+		my $memofile = SWSnake->new($sow, $vil, $turn, 0);
+		my ($logs, $logkeys, $logrows, $memos, $memokeys, $memorows);
+		if (($sow->{'turn'} != $vil->{'turn'}) || ($vil->{'epilogue'} >= $vil->{'turn'})) {
+			($logs,  $logkeys,  $logrows)  = $logfile->getvlogs($maxrow);
+			($memos, $memokeys, $memorows) = $memofile->getmemo($maxrow);
+		}
+		$sow->{'lock'}->gunlock();
+
 		require "$cfg->{'DIR_HTML'}/html_vlog_pc.pl";
 		require "$cfg->{'DIR_HTML'}/html_sayfilter.pl";
-		&SWHtmlVlogPC::OutHTMLVlogPC($sow, $vil, $logfile, $maxrow, $logs, $logkeys, $rows);
+		&SWHtmlVlogPC::OutHTMLVlogPC($sow, $vil, $maxrow, $logfile, $logs, $logkeys, $logrows, $memofile, $memos, $memokeys, $memorows);
+
+		$logfile->close();
+		$memofile->close();
 	}
-	$logfile->close();
 
 	$sow->{'html'}->outfooter(); # HTMLフッタの出力
 	$sow->{'http'}->outfooter();

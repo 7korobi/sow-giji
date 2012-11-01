@@ -1842,6 +1842,7 @@ sub gon_potof {
 	my $longchrname  = $pl->getlongchrname();
 	my $shortchrname = $pl->getshortchrname();
 	my $actaddpt = 0 + $pl->{'actaddpt'};
+	my $selrole = 0 + $pl->{'selrole'};
 	my $say   = 0 + $pl->{'say'};
 	my $tsay  = 0 + $pl->{'tsay'};
 	my $spsay = 0 + $pl->{'spsay'};
@@ -1849,7 +1850,7 @@ sub gon_potof {
 	my $gsay  = 0 + $pl->{'gsay'};
 	my $say_act = 0 + $pl->{'say_act'};
 	my $live = $pl->{'live'};
-	$live = 'victim' if(('executed' ne $live)and('suddendead' ne $live)and('live' ne $live));
+	$live = 'victim' if(('executed' ne $live)and('suddendead' ne $live)and('live' ne $live)and('mob' ne $live));
 	print <<"_HTML_";
 var pl = {
 	"csid":    "$pl->{'csid'}",
@@ -1878,7 +1879,7 @@ var pl = {
 	}
 };
 _HTML_
-	if ( 1 == $vil->{'showid'} ){
+	if ($secret || 1 == $vil->{'showid'} ){
 		print <<"_HTML_";
 pl.sow_auth_id = "$pl->{'uid'}";
 _HTML_
@@ -1908,7 +1909,7 @@ pl.role = [
 	SOW_RECORD.CABALA.gifts[$pl->{'gift'}]
 ].compact();
 pl.rolestate = $pl->{'rolestate'};
-pl.select = SOW_RECORD.CABALA.roles[$pl->{'selrole'}];
+pl.select = SOW_RECORD.CABALA.roles[$selrole];
 
 pl.history = "$pl->{'history'}";
 pl.sheep = "$pl->{'sheep'}";

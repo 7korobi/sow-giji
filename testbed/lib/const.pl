@@ -95,6 +95,7 @@ sub InitConst {
 		cntgirl         => 0,
 		cntscapegoat    => 0,
 		cntelder        => 0,
+
 		cntpossess      => 0,
 		cntfanatic      => 0,
 		cntmuppeting    => 0,
@@ -103,6 +104,8 @@ sub InitConst {
 		cntdyingpossess => 0,
 		cntoracle       => 0,
 		cntsorcerer     => 0,
+		cntwalpurgis    => 0,
+
 		cntwolf         => 0,
 		cntaurawolf     => 0,
 		cntintwolf      => 0,
@@ -112,6 +115,7 @@ sub InitConst {
 		cntdyingwolf    => 0,
 		cntsilentwolf   => 0,
 		cntheadless     => 0,
+
 		cnthamster      => 0,
 		cntguru         => 0,
 		cntbat          => 0,
@@ -121,6 +125,7 @@ sub InitConst {
 		cntsnatch       => 0,
 		cnttelepathy    => 0,
 		cntdyingpixi    => 0,
+
 		cntrobber       => 0,
 		cntlover        => 0,
 		cntlonewolf     => 0,
@@ -129,6 +134,8 @@ sub InitConst {
 		cntpassion      => 0,
 		cntdish         => 0,
 		cntbitch        => 0,
+        cnttangle       => 0,
+
 		cntdecide       => 0,
 		cntshield       => 0,
 		cntglass        => 0,
@@ -609,7 +616,7 @@ sub InitConst {
 		'dyingpossess',
 		'oracle',
 		'sorcerer',
-		'49th',
+		'walpurgis',
 		'50th',
 		'51th',
 		'headless',
@@ -662,7 +669,7 @@ sub InitConst {
 		'99th',
 		'100th',
 		'bitch',
-		'102th',
+		'tangle',
 		'103th',
 		'104th',
 		'105th',
@@ -912,6 +919,7 @@ sub InitConst {
 		ROLEID_DYINGPOSSESS  => 46,
 		ROLEID_ORACLE        => 47,
 		ROLEID_SORCERER      => 48,
+		ROLEID_WALPURGIS     => 49,
 
 		SIDEED_ENEMY         => 50,
 		SIDEST_WOLFSIDE      => 50,
@@ -946,6 +954,7 @@ sub InitConst {
 		ROLEID_GURU          => 97,
 		ROLEID_DISH          => 98,
 		ROLEID_BITCH         => 101,
+		ROLEID_TANGLE        => 102,
 		SIDEED_OTHER         => 110,
 		ROLEID_MOB           => 999,
 

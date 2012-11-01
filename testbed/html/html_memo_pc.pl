@@ -49,7 +49,7 @@ sub OutHTMLMemoPC {
 
 	print <<"_HTML_";
 <h2>$query->{'vid'} $vil->{'vname'} $linkrss</h2>
-<div class="pagenavi" template="navi/page_navi" class="form-inline">
+<div class="pagenavi form-inline input-prepend" template="navi/page_navi">
 <a class="btn" href="$memo_link">$memo_link_text</a>
 <a class="btn" href="$news_link">ÅV‚Ì”­Œ¾</a>
 </div>
@@ -61,7 +61,7 @@ _HTML_
 	print <<"_HTML_";
 <h3><a name="MEMO">ƒƒ‚$title</a></h3>
 <div id="messages" template="navi/messages"></div>
-<div class="pagenavi" template="navi/page_navi" class="form-inline">
+<div class="pagenavi form-inline input-prepend" template="navi/page_navi">
 <a class="btn" href="$memo_link">$memo_link_text</a>
 <a class="btn" href="$news_link">ÅV‚Ì”­Œ¾</a>
 </div>

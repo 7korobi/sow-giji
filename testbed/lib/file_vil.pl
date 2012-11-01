@@ -563,9 +563,11 @@ sub getptcosts {
 	my $saycnt = $cfg->{'COUNTS_SAY'}->{$vil->{'saycnttype'}};
 	my $cost   = $saycnt->{$cost_key};
 	my $unit   = $sow->{'basictrs'}->{'SAYTEXT'}->{$cost}->{$unit_key};
-
+	my $max_unit = $saycnt->{'COST_SAY'};
+    my $max_line = $saycnt->{'MAX_MESLINE'};
+    my $max_size = $saycnt->{'MAX_MESCNT'};
 	$cost = 'none'  if ($vil->isfreecost());
-	return ($saycnt,$cost,$unit);
+	return ($saycnt,$cost,$unit, $max_unit,$max_line,$max_size);
 }
 
 sub getsayptcosts {
@@ -735,9 +737,6 @@ sub gon_potofs {
 	my $sow = $vil->{'sow'};
 	my $cfg = $sow->{'cfg'};
 
-	my $secret = $vil->isepilogue();
-	$secret = 1 if ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'});
-
 	print <<"_HTML_";
 gon.potofs=[];
 _HTML_
@@ -837,6 +836,10 @@ gon.story = {
 
 	"options": [],
 
+	"entry": {
+		"limit":   "$vil->{'entrylimit'}",
+	},
+
 	"card":{
 		"discard": "$vil->{'rolediscard'}".split('/').map(function(n) { return(SOW_RECORD.CABALA.gifts[n]) }).compact(),
 		"event":   "$vil->{'eventcard'}".split('/').map(function(n) { return(SOW_RECORD.CABALA.events[n]) }).compact(),
@@ -877,11 +880,8 @@ if(1 != $vil->{'noselrole'   }){ gon.story.options.push("select-role");   }
 _HTML_
 	if ($secret) {
 		print <<"_HTML_";
-gon.story.sow_auth_id = "$vil->{'makeruid'}";
-gon.story.entry = {
-	password: "$vil->{'entrypwd'}",
-	limit:    "$vil->{'entrylimit'}"
-}
+gon.story.sow_auth_id    = "$vil->{'makeruid'}";
+gon.story.entry.password = "$vil->{'entrypwd'}";
 _HTML_
 	}
 	print <<"_HTML_";
@@ -948,8 +948,8 @@ gon.event = {
     "is_seance": (0 != $isseance),
     "is_public": (0 != $ispublic),
     "is_eclipse": (0 != $iseclipse),
-	"is_freecost": (0 != $isfreecost),
-	"is_startable": (0 != $isstartable),
+    "is_freecost": (0 != $isfreecost),
+    "is_startable": (0 != $isstartable),
 	"cost":{
 		"say":  "$sayptcosts",
 		"act":  "$actptcosts",
