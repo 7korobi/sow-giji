@@ -141,8 +141,8 @@ sub outheader {
 
 		# 303未対応ブラウザのためのHTML出力
 		print <<"_HTML_";
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html lang="ja">
+<!doctype html>
+<html lang="ja" ng-controller="CGI">
 <head>
   <meta http-equiv="refresh" content="0; URL=$self->{'location'}">
   <title>See Other</title>

@@ -307,10 +307,11 @@ _HTML_
 sub OutHTMLChangeCSS {
   my $sow = $_[0];
   my $cfg = $sow->{'cfg'};
+  my $theme = $cfg->{'THEME'};
 
   print <<"_HTML_";
 <div class="choice">
-<p style="text-align:right; font-size: 100%;" theme="giji">
+<p style="text-align:right; font-size: 100%;" theme="$theme">
 <span><a href="sow.cgi?ua=mb">ågë—</a></span>
 Åb
 

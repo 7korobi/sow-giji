@@ -428,8 +428,8 @@ sub InstallCheck {
 Content-Type: text/html; charset=Shift_JIS
 Content-Style-Type: text/css
 
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html lang="ja">
+<!doctype html>
+<html lang="ja" ng-controller="CGI">
 <head>
   <meta name="robots" content="noindex,nofollow">
   <meta name="robots" content="noarchive">
