@@ -16,6 +16,9 @@ sub OutHTMLEntryFormPC {
 	my $isplok    = $vil->{'vplcnt'} - @$pllist;
 	my $ismobok   = $vil->{'cntmob'} - @$mobs  ;
 
+	# 発言欄textarea要素の出力
+	my ($saycnt,$cost,$unit, $max_unit,$max_line,$max_size) = $vil->getsayptcosts();
+
 	print <<"_HTML_" unless ($isplok);
 gon.cautions.push("既に定員に達しています。");
 _HTML_
@@ -40,12 +43,20 @@ gon.potof || (gon.potof = {
     sow_auth_id: "$sow->{'uid'}",
 });
 text_form = {
+
+
 	cmd: "entry",
 	jst: "entry",
 	text: "",
 	style: "",
 	count: "",
 	title: "この村に参加",
+	caption: "",
+	max: {
+		unit: "$max_unit",
+		line: $max_line,
+		size: $max_size,
+	},
 	mestype: "SAY",
 	longname: "",
 	csid_cids: [

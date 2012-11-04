@@ -1633,6 +1633,15 @@ sub revenge {
 	if (($deadpl->isbindrole($sow->{'ROLEID_ALCHEMIST'}))&&($deadpl->{'role1'} == $deadpl->{'pno'})) {
 		&dead($sow, $vil, $killer, $killer, 'cursed', $logfile, $score);
 	}
+
+	# Ž€–S‚µ‚½‰…—ì‚ÍA’N‚©‚ð‘h¶‚µA‚»‚Ì”\—Í‚ð‹¤—L‚·‚éB
+	# ‚±‚ê‚É‚æ‚Á‚Ä‰‚ß‚ÄŸ—˜ðŒ‚ð“¾‚éB
+	if (($deadpl->iscanrole($sow->{'ROLEID_TANGLE'}))){
+		my $targetpl = $vil->getplbypno($deadpl->{'role1'});
+
+		&WitchHeal($sow, $vil, $deadpl, $targetpl, $logfile, $score);
+		$deadpl->{'role'} = $->{'role'};
+	}
 }
 
 sub nowdead {
@@ -1996,25 +2005,31 @@ sub Witch{
 				# ‘h¶–ò‚ª‚È‚¢ê‡NG
 				next if ($plsingle->isDisableState('MASKSTATE_ABI_LIVE'));
 				$plsingle->{'delay_rolestate'} &= $sow->{'ROLESTATE_ABI_LIVE'};
-				# ‘h¶–ò‚ðŽg‚¤
-				if ($plsingle->issensible()){
-					my $result = $plsingle->getText('EXECUTELIVEWITCH');
-					$result =~ s/_TARGET_/$targetname/g;
-					$logfile->writeinfo($plsingle->{'uid'}, $sow->{'MESTYPE_INFOSP'}, $result);
-					$result = $vil->getText('RESULT_LIVE');
-					$result =~ s/_TARGET_/$targetname/g;
-					$plsingle->addhistory($result);
-				}
-
-				my $scorehead = $sow->{'textrs'}->{'STATUS_LIVE'}->{'live'};
-				$score->addresult($scorehead, $targetname );
-
-				&heal($sow, $vil, $targetpl, $logfile, $score);
+				&WitchHeal($sow, $vil, $plsingle, $targetpl, $logfile, $score);
 			}
-
 		}
 	}
 }
+
+sub WitchHeal{
+	my ($sow, $vil, $deadpl, $plsingle, $logfile, $score) = @_;
+
+	# ‘h¶–ò‚ðŽg‚¤
+	if ($plsingle->issensible()){
+		my $result = $plsingle->getText('EXECUTELIVEWITCH');
+		$result =~ s/_TARGET_/$targetname/g;
+		$logfile->writeinfo($plsingle->{'uid'}, $sow->{'MESTYPE_INFOSP'}, $result);
+		$result = $vil->getText('RESULT_LIVE');
+		$result =~ s/_TARGET_/$targetname/g;
+		$plsingle->addhistory($result);
+	}
+
+	my $scorehead = $sow->{'textrs'}->{'STATUS_LIVE'}->{'live'};
+	$score->addresult($scorehead, $targetname );
+
+	&heal($sow, $vil, $targetpl, $logfile, $score);
+}
+
 
 sub GetResultSeerEncount {
 	my ($sow, $vil, $score, $targetpl, $jammed) = @_;

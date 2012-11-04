@@ -123,6 +123,8 @@ text_form = {
 	cmd: "wrmemo",
 	jst: "memo",
 	text: "$mes",
+	votes: [],
+	style: "",
 	title: "メモを貼\る",
 	count: "$memocnttext",
 	caption: "※メモを$memocostます。",
@@ -134,8 +136,6 @@ text_form = {
 	mestype: "$mestype",
 	csid_cid: "$img",
 	longname: "$longchrname",
-	votes: [],
-	style: "",
 }
 gon.form.texts.push(text_form);
 
@@ -143,6 +143,8 @@ text_form = {
 	cmd: "write",
 	jst: "open",
 	text: "",
+	votes: [],
+	style: "",
 	title: "$title",
 	caption: "",
 	max: {
@@ -152,8 +154,6 @@ text_form = {
 	},
 	csid_cid: "$img",
 	longname: "$longchrname",
-	votes: [],
-	style: "",
 	target: "-1",
 	targets: [
 {val:"-1",          mestype:"$mestype", name:"$ssaycnttext ($sow->{'textrs'}->{'CAPTION_SAY_PC'})"},
@@ -402,17 +402,16 @@ _HTML_
 
 			my $label   = $sow->{'textrs'}->{'CAPTION_ROLESAY'}->[$curpl->{'role'}];
 			my $countid = $sow->{'ROLESAYCOUNTID'}->[$curpl->{'role'}];
-			&OutHTMLSayTextAreaExtPC($sow, $vil, $img, $sayswitch, $label, $countid );
+			&OutHTMLSayTextAreaExtPC($sow, $vil, $sayswitch, $label, $countid );
 		} elsif ($curpl->isEnableRole($vil->{'turn'})) {
 			print <<"_HTML_";
 text_form = {
 	cmd: "write",
 	jst: "silent",
+	votes: [],
 	mestype: "TSAY",
 	longname: "$longname",
-	longname: "",
 	csid_cid: "$img",
-	votes: [],
 };
 gon.form.texts.push(text_form);
 _HTML_
@@ -424,16 +423,16 @@ _HTML_
 		if ( '' ne $sayswitch ){
 			my $label   = $sow->{'textrs'}->{'CAPTION_GIFTSAY'}->[$curpl->{'gift'}];
 			my $countid = $sow->{'GIFTSAYCOUNTID'}->[$curpl->{'gift'}];
-			&OutHTMLSayTextAreaExtPC($sow, $vil, $img, $sayswitch, $label, $countid );
+			&OutHTMLSayTextAreaExtPC($sow, $vil, $sayswitch, $label, $countid );
 		} elsif ($curpl->isEnableGift($vil->{'turn'})) {
 			print <<"_HTML_";
 text_form = {
 	cmd: "write",
 	jst: "silent",
+	votes: [],
 	mestype: "TSAY",
 	longname: "$longname",
 	csid_cid: "$img",
-	votes: [],
 };
 gon.form.texts.push(text_form);
 _HTML_
@@ -493,13 +492,18 @@ _HTML_
 # 能力者の発言欄
 #----------------------------------------
 sub  OutHTMLSayTextAreaExtPC {
-	my ($sow, $vil, $img, $sayswitch, $label, $countid ) = @_;
+	my ($sow, $vil, $sayswitch, $label, $countid ) = @_;
 	my $cfg = $sow->{'cfg'};
 	my $net = $sow->{'html'}->{'net'};
 	my $curpl = $sow->{'curpl'};
 
 	# 人形遣いのための特別コード。本当は、file_player#GetMesTypeを使うべき。
 	$curpl = $vil->getpl( $sow->{'cfg'}->{'USERID_NPC'} ) if ('muppet' eq $sayswitch);
+
+	# キャラ画像
+	my $img = $curpl->{'csid'}."/".$curpl->{'cid'};
+
+	my $longname = $curpl->getlongchrname();
 
 	# 表情選択欄
 	# &OutHTMLExpressionFormPC($sow, $vil);
@@ -523,13 +527,13 @@ text_form = {
 		line: $max_line,
 		size: $max_size,
 	},
-	csid_cid: "$img",
-	longname: "$longname",
 	votes: [],
 	style: "",
 	target: "-1",
 	switch: "$sayswitch",
 	mestype: SOW.switch["$sayswitch"].mestype,
+	csid_cid: "$img",
+	longname: "$longname",
 };
 gon.form.texts.push(text_form);
 _HTML_
@@ -559,12 +563,33 @@ sub OutHTMLVilMakerPC {
 
 	print <<"_HTML_";
 text_form = {
+	cmd: "wrmemo",
+	jst: "memo",
+	text: "",
+	style: "",
+	title: "メモを貼\る",
+	count: "",
+	caption: "",
+	max: {
+		unit: "$max_unit",
+		line: $max_line,
+		size: $max_size,
+	},
+	votes: [],
+	switch: "$writemode",
+	mestype: "SAY",
+	longname: "$longname",
+	csid_cid: "$keys[0]/$writemode",
+}
+gon.form.texts.push(text_form);
+
+text_form = {
 	cmd: "write",
 	jst: "secret",
 	text: "",
 	style: "",
-	count: "",
 	title: "$title",
+	count: "",
 	caption: "",
 	max: {
 		unit: "$max_unit",
@@ -691,12 +716,12 @@ sub OutHTMLUpdateSessionButtonPC {
 	if ($vil->{'turn'} == 0) {
 		%button = (
 			label => '村を始めちゃおう',
-			cmd   => 'startpr',
+			cmd   => 'start',
 		);
 	} else {
 		%button = (
 			label => '更新を延長しよう！（あと'.$vil->{'extend'}.'回）',
-			cmd   => 'extendpr',
+			cmd   => 'extend',
 		);
 	}
 
@@ -725,7 +750,7 @@ gon.form.commands[command.cmd] = command;
 _HTML_
 
 	my $disabled = '';
-	if ($button{'cmd'} eq 'startpr') {
+	if ($button{'cmd'} eq 'start') {
 		my $upddatetime = sprintf('%02d:%02d',$vil->{'updhour'},$vil->{'updminite'});
 
 		print <<"_HTML_";

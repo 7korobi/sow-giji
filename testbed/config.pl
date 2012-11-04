@@ -519,17 +519,17 @@ sub GetConfig {
     BASEDIR_DAT    => "./data",
     BASEDIR_DOC    => "http://localhost",
 
-    ENABLED_DELETED      => 0, # 削除発言を表示するかどうか
-    ENABLED_WINNER_LABEL => 0, # 1:勝利者表示をする。
+    ENABLED_DELETED      => 1, # 削除発言を表示するかどうか
+    ENABLED_WINNER_LABEL => 1, # 1:勝利者表示をする。
     ENABLED_MAX_ESAY     => 0, # エピローグを発言制限対象に 0:しない、1:する
     ENABLED_RANDOMTARGET => 1, # 1:投票・能力先に「ランダム」を含める
     ENABLED_SUDDENDEATH  => 1, # 1:突然死あり
-    ENABLED_BITTY        => 0, # 少女や交霊者ののぞきみがひらがなのみ。
+    ENABLED_BITTY        => 1, # 少女や交霊者ののぞきみがひらがなのみ。
     ENABLED_PERMIT_DEAD  => 1, # 墓下の人狼/共鳴者/コウモリ人間が囁きを見られるかどうか
     ENABLED_UNDEAD       => 1, # 1:幽界トーク村を設定可能
     ENABLED_AIMING       => 1, # 1:対象を指定した発言（内緒話）を含める
     ENABLED_MOB_AIMING   => 1, # 1:見物人が内緒話を使える。
-    ENABLED_AMBIDEXTER   => 0, # 1:狂人の裏切りを認める（狂人は、人狼陣営ではなく裏切りの陣営＝村が負ければよい）
+    ENABLED_AMBIDEXTER   => 1, # 1:狂人の裏切りを認める（狂人は、人狼陣営ではなく裏切りの陣営＝村が負ければよい）
     ENABLED_SUICIDE_VOTE => 1, # 1:自殺投票
     DEFAULT_VOTETYPE     => "anonymity", # 標準の投票方法(sign: 記名、anonymity:無記名)
     ENABLED_POPUP        => 0, # アンカーのポップアップ

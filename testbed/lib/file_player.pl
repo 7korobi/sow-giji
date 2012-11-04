@@ -522,10 +522,13 @@ sub gettargetlist {
 			next if ($livepl->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'});
 			next if ($livepl->{'pno'} eq $self->{'pno'});
 		} elsif ($cmd eq 'role'){
-			if ($self->{'role'} == $sow->{'ROLEID_WITCH'}) {
+			if ($self->{'role'} == $sow->{'ROLEID_WITCH' }) {
 				next if ( $self->isDisableState('MASKSTATE_ABI_ROLE') );
 				next if (($self->isDisableState('MASKSTATE_ABI_LIVE') )&&($livepl->{'live'} ne 'live'));
 				next if (($self->isDisableState('MASKSTATE_ABI_KILL') )&&($livepl->{'live'} eq 'live'));
+				next if (($livepl->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'})); # ダミーは投薬の対象にしない。
+			} elsif ($self->{'role'} == $sow->{'ROLEID_TANGLE'}) {
+				next if ($livepl->{'live'} eq 'live');
 				next if (($livepl->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'})); # ダミーは投薬の対象にしない。
 			}else{
 				next if ($livepl->{'live'} ne 'live');
@@ -540,11 +543,15 @@ sub gettargetlist {
 			if (($self->{'role'} == $sow->{'ROLEID_TRICKSTER'})
 			  ||($self->{'role'} == $sow->{'ROLEID_LOVEANGEL'})
 			  ||($self->{'role'} == $sow->{'ROLEID_HATEDEVIL'})) {
-				next if ($livepl->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'}); # ピクシーの対象にはダミーキャラを含まない
-			} elsif ($self->{'role'} == $sow->{'ROLEID_BITCH'}){
-				next if ($livepl->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'}); # ピクシーの対象にはダミーキャラを含まない
+				# ピクシーの対象にはダミーキャラを含まない
+				next if ($livepl->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'});
+			} elsif (($self->{'role'} == $sow->{'ROLEID_BITCH' })
+				   ||($self->{'role'} == $sow->{'ROLEID_TANGLE'})){
+				# 遊び人、怨霊の対象にはダミー、自分自身を含まない。
+				next if ($livepl->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'});
 				next if (($livepl->{'uid'} eq $self->{'uid'}));
 			} else {
+				# 以外では、対象に自分自身を含まない。
 				next if (($livepl->{'uid'} eq $self->{'uid'}));
 			}
 		}
@@ -1116,12 +1123,12 @@ sub iskiller {
 	                                &&( $self->{'role'}  < $sow->{'SIDEED_WOLFSIDE'} ));
 	return $iskill;
 }
+
 sub cankiller {
 	my ($self) = @_;
 	my $cankillrole = ($self->iskiller('role'))&&($self->isEnableState('MASKSTATE_ABI_ROLE'));
 	my $cankillgift = ($self->iskiller('gift'))&&($self->isEnableState('MASKSTATE_ABI_GIFT'));
 	return ( $cankillrole || $cankillgift );
-
 }
 
 

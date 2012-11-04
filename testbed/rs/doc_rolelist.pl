@@ -275,6 +275,9 @@ _HTML_
 </div>
 <script>
 window.gon = {};
+gon.form_show = {
+	find: function(o){return true;}
+};
 gon.forms = [];
 _HTML_
 	$vil->gon_potofs();
