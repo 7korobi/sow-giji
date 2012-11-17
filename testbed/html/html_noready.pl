@@ -20,6 +20,8 @@ sub OutHTMLNoReady {
 	$sow->{'html'}->outcontentheader();
 
 	&SWHtmlPC::OutHTMLLogin($sow); # ƒƒOƒCƒ“—“‚Ìo—Í
+    &SWHtmlPC::OutHTMLChangeCSS($sow);
+
 	my $net = $sow->{'html'}->{'net'}; # Null End Tag
 
 	print <<"_HTML_";

@@ -190,7 +190,7 @@ sub GetTextRS {
 		'霊能者'  , '信仰霊能者', '導師'      ,   '降霊者'  , '追従者'  , '煽動者'  , '賞金稼'  , '人犬'    , '王子様'  , '狼血族'  ,
 		'医師'    , '呪人'      , '預言者'    ,   '病人'    , '錬金術師', '魔女'    , '少女'    , '生贄'    , '長老'    , '疫病神'  ,
 		''        , '邪魔之民'  , '宿借之民'  ,   '念波之民', ''        , ''        , ''        , ''        , '封印狂人', '悟られ狂人',
-		''        , '狂人'      , '狂信者'    ,   '人形使い', '囁き狂人', '半狼'    , ''        , '魔神官'  , '魔術師'  , '邪魔女'        ,
+		''        , '狂人'      , '狂信者'    ,   '人形使い', '囁き狂人', '半狼'    , ''        , '魔神官'  , '魔術師'  , '魔法少年',
 		''        , ''         , '首無騎士'  ,   ''        , ''        , ''        , ''        , ''        , ''        , ''        ,
 		''        , '人狼'      , '憑狼'      ,   '智狼'    , '呪狼'    , '白狼'    , '仔狼'    , '衰狼'    , '黙狼'    , ''        ,
 		''        , ''          , ''          ,   ''        , ''        , ''        , ''        , ''        , ''        , ''        ,
@@ -343,7 +343,7 @@ sub GetTextRS {
 '<p>あなたは、未定義の役職です。</p>',
 '<p>あなたは<A href="http://crazy-crazy.sakura.ne.jp/giji/?(Role)ROLEID_ORACLE" TARGET="_blank">魔神官</A>です。<br>'.$act_medium.$know_wisdom.'<br>'.$stat_enemy.'</p>',
 '<p>あなたは<A href="http://crazy-crazy.sakura.ne.jp/giji/?(Role)ROLEID_SORCERER" TARGET="_blank">魔術師</A>です。<br>'.$act_seer.$know_wisdom.'<br>'.$stat_seer.'<br>'.$stat_enemy.'</p>',
-'<p>あなたは<A href="http://crazy-crazy.sakura.ne.jp/giji/?(Role)ROLEID_WALPURGIS" TARGET="_blank">邪魔女</A>です。<br>やがて命を落とすと魔女になると宿命付けられています。'.$stat_enemy.'未実装です。</p>',
+'<p>あなたは<A href="http://crazy-crazy.sakura.ne.jp/giji/?(Role)ROLEID_WALPURGIS" TARGET="_blank">魔法少年</A>です。<br>やがて命を落とすと魔女になると宿命付けられています。'.$stat_enemy.'</p>',
 
 '<p>あなたは、未定義の役職です。</p>',
 '<p>あなたは、未定義の役職です。</p>',

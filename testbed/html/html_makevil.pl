@@ -22,6 +22,7 @@ sub OutHTMLMakeVil {
 	$sow->{'html'}->outcontentheader();
 
 	&SWHtmlPC::OutHTMLLogin($sow); # ログインボタン表示
+    &SWHtmlPC::OutHTMLChangeCSS($sow);
 
 	my $reqvals = &SWBase::GetRequestValues($sow);
 	$reqvals->{'vid'} = $query->{'vid'};

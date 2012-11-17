@@ -18,6 +18,7 @@ sub CmdChrList {
 	$sow->{'html'}->outcontentheader();
 
 	&SWHtmlPC::OutHTMLLogin($sow); # ログインボタン
+    &SWHtmlPC::OutHTMLChangeCSS($sow);
 
 	# キャラ一覧画面のHTML出力
 	&SWHtmlChrList::OutHTMLChrList($sow);

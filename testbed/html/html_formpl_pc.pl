@@ -237,6 +237,9 @@ sub OutHTMLActionFormPC {
 
 	my $chrname = $curpl->getchrname();
 
+    my $mestype = "SAY";
+    $mestype = "GSAY" if('live' ne $curpl->{'live'});
+
 	# アクション入力欄とアクションボタン
 	my ($saycnt,$costaction,$unitaction, $max_unit,$max_line,$max_size) = $vil->getactptcosts();
 	my $actcnttext = "あと".$curpl->{'say_act'}.$unitaction  if ($costaction ne 'none');
@@ -253,7 +256,7 @@ text_form = {
 		line: $max_line,
 		size: $max_size,
 	},
-	mestype: "SAY",
+	mestype: "$mestype",
 	shortname: "$chrname",
 	target: "-1",
 	targets: [
@@ -366,7 +369,7 @@ _HTML_
 		print <<"_HTML_";
 gon.form.secrets.push("$mes");
 _HTML_
-	} elsif (($vil->isepilogue() == 0) && ($curpl->{'live'} ne 'live')) {
+	} elsif ($curpl->ispowerlessgrave($vil) ) {
 		# 能力欄表示（墓下）
 		my $mes = $role->{'explain'};
 		&SWHtml::ConvertJSON(\$mes);

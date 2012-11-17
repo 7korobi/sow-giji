@@ -521,7 +521,8 @@ sub Equipment{
 			# 魔女の投薬
 			# 使う薬の種類は、操作時に誰を対象に選んでいるか、で決まる。この時点の生死を保存する。
 			# （ただし、突然死は投薬時にキャンセルする。）
-			if ( $plsingle->iscanrole($sow->{'ROLEID_WITCH'}) ){
+			if ( $plsingle->iscanrole($sow->{'ROLEID_WITCH'})
+			  || $plsingle->iscanrole($sow->{'ROLEID_WALPURGIS'}) ){
 				$plsingle->{'tmp_targetlive'} = $targetpl->{'live'};
 				$sow->{'debug'}->writeaplog($sow->{'APLOG_OTHERS'}, "target is " . $plsingle->{'tmp_targetlive'} );
 			}
@@ -1972,13 +1973,15 @@ sub Alchemist{
 
 sub Witch{
 	my ($sow, $vil, $logfile, $score, $jammtargetpl) = @_;
-	my $pllist = $vil->getlivepllist();
+	my $pllist = $vil->getactivepllist();
 	foreach $plsingle (@$pllist) {
 		next if (1 != $plsingle->isdo('role1')); # おまかせは除外
 		my $targetpl = $vil->getplbypno($plsingle->{'role1'});
 		my $targetname = $targetpl->getchrname();
 		# 魔女の投薬
-		if ($plsingle->iscanrole($sow->{'ROLEID_WITCH'})){
+		if ($plsingle->iscanrole($sow->{'ROLEID_WITCH'})
+		  ||$plsingle->iscanrole($sow->{'ROLEID_WALPURGIS'})){
+
 			# 実際の生死にかかわらず、薬を使う。
 			if ($plsingle->{'tmp_targetlive'} eq 'live'){
 				# 毒薬がない場合NG
@@ -2195,10 +2198,10 @@ sub GetResultRole {
 #----------------------------------------
 sub SetRandomTarget {
 	my ($sow, $vil, $logfile, $role,$abi_role) = @_;
-	my $livepllist = $vil->getlivepllist();
+	my $pllist = $vil->getactivepllist();
 
 	my $srcpl;
-	foreach $srcpl (@$livepllist) {
+	foreach $srcpl (@$pllist) {
 		my $abirole = $vil->getTextByID($abi_role,$srcpl->{$role});
 		if ($srcpl->{$role.'1'} == $sow->{'TARGETID_RANDOM'}) {
 			# ランダム対象
@@ -2220,9 +2223,8 @@ sub SetInitVoteTarget {
 	my ($sow, $vil, $logfile) = @_;
 	my $allpllist = $vil->getallpllist();
 
-	$sow->{'debug'}->writeaplog($sow->{'APLOG_OTHERS'}, "Start: SetInitVoteTarget.");
 	foreach $plsingle (@$allpllist) {
-		if( $plsingle->{'live'} eq 'live' ){
+		if( $plsingle->isactive() ){
 			$plsingle->setInitTarget('gift',1, $logfile, -1);
 			$plsingle->setInitTarget('gift',2, $logfile, $plsingle->{'gift1'}); # 仔狼死亡時。
 			$plsingle->setInitTarget('role',1, $logfile, -1);

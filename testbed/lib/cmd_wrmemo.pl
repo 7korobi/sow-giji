@@ -109,9 +109,11 @@ sub SetDataCmdWriteMemo {
 		mes     => $mes,
 		mestype => $mestype,
 	);
+
+    my $memoid = sprintf("%05d", $vil->{'cntmemo'});
 	$mes = &SWLog::ReplaceAnchor($sow, $vil, \%say);
 	my %memo = (
-		logid     => sprintf("%05d", $vil->{'cntmemo'}),
+		logid     => $memoid,
 		mestype   => $mestype,
 		uid       => $writepl->{'uid'},
 		cid       => $writepl->{'cid'},
@@ -129,7 +131,7 @@ sub SetDataCmdWriteMemo {
 	if ($checknosay > 0) {
 		# ƒƒ‚‚ğ“\‚é
 		$query->{'mes'} = 'ƒƒ‚‚ğ“\‚Á‚½B';
-		&SWWrite::ExecuteCmdWrite($sow, $vil, $writepl, $memo{'logid'});
+		&SWWrite::ExecuteCmdWrite($sow, $vil, $writepl, $memo{'logid'}, '<mw MM'.$memoid.','.$vil->{'turn'}.',ƒƒ‚>');
 
 		$debug->writeaplog($sow->{'APLOG_POSTED'}, "WriteMemo. [uid=$sow->{'uid'}, vid=$vil->{'vid'}]");
 	} else {

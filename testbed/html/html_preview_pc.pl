@@ -29,6 +29,7 @@ sub OutHTMLPreviewPC {
 	$sow->{'html'}->outcontentheader();
 
 	&SWHtmlPC::OutHTMLLogin($sow); # ƒƒOƒCƒ“—“‚Ìo—Í
+    &SWHtmlPC::OutHTMLChangeCSS($sow);
 
     print <<"_HTML_";
 <script>

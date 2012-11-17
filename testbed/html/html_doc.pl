@@ -57,12 +57,12 @@ sub OutHTMLDocument {
 	$sow->{'html'}->outcontentheader();
 
 	&SWHtmlPC::OutHTMLLogin($sow); # ƒƒOƒCƒ“—“‚Ìo—Í
+    &SWHtmlPC::OutHTMLChangeCSS($sow);
 
 	$sow->{'query'}->{'trsid'} = $sow->{'cfg'}->{'DEFAULT_TEXTRS'} if ( "" eq $sow->{'query'}->{'trsid'});
 	my $theme = $cfg->{'THEME'};
 	print <<"_HTML_";
 <div class="choice">
-<p style="text-align:right; font-size: 100%;" theme="$theme">
 <p class="paragraph">
 <form action="$urlsow" method="get" class="form-inline">
 <input type="hidden" name="cmd" value="$sow->{'query'}->{'cmd'}">

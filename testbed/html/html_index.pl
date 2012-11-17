@@ -40,6 +40,7 @@ sub OutHTMLIndex {
 
 	print "<DIV class=toppage>";
 	&SWHtmlPC::OutHTMLLogin($sow); # ログイン欄の出力
+
 	my $net = $sow->{'html'}->{'net'}; # Null End Tag
 
 	# 管理人からのお知らせ

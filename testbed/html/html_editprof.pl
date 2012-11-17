@@ -3,7 +3,7 @@ package SWHtmlEditProfile;
 #----------------------------------------
 # ユーザー情報編集完了画面のHTML出力
 #----------------------------------------
-sub OutHTMLEditProfile { 
+sub OutHTMLEditProfile {
 	my $sow = shift;
 	my $cfg = $sow->{'cfg'};
 	my $query = $sow->{'query'};
@@ -20,6 +20,7 @@ sub OutHTMLEditProfile {
 	my $urlsow = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}";
 
 	&SWHtmlPC::OutHTMLLogin($sow); # ログインボタン表示
+    &SWHtmlPC::OutHTMLChangeCSS($sow);
 
 	print <<"_HTML_";
 <h2>ユーザー情報編集完了</h2>

@@ -10,6 +10,7 @@ sub OutHTMLRestRecord {
 	my $net   = $sow->{'html'}->{'net'}; # Null End Tag
 
 	&SWHtmlPC::OutHTMLLogin($sow); # ƒƒOƒCƒ“—“‚Ìo—Í
+    &SWHtmlPC::OutHTMLChangeCSS($sow);
 
 	my $reqvals = &SWBase::GetRequestValues($sow);
 	$reqvals->{'cmd'} = 'restrec';

@@ -22,6 +22,7 @@ sub OutHTMLVilInfo {
 	$sow->{'html'}->outcontentheader();
 
 	&SWHtmlPC::OutHTMLLogin($sow); # ログインボタン表示
+    &SWHtmlPC::OutHTMLChangeCSS($sow);
 
 	require "$sow->{'cfg'}->{'DIR_LIB'}/file_vil.pl";
 	# 村データの読み込み
@@ -58,7 +59,6 @@ _HTML_
 window.gon = {};
 _HTML_
 	$vil->gon_story();
-	$vil->gon_event();
 	$vil->gon_potofs();
 	print <<"_HTML_";
 </script>

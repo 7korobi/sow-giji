@@ -456,6 +456,17 @@ sub getlivepllist {
 	return \@livepllist;
 }
 
+sub getactivepllist {
+	my $self = shift;
+	my $sow = $self->{'sow'};
+
+	my @pllist;
+	foreach (@{$self->{'pllist'}}) {
+		push(@pllist, $_) if ($_->isactive());
+	}
+	return \@pllist;
+}
+
 #----------------------------------------
 # アクセスしているプレイヤーが参加済みかどうかを得る
 #----------------------------------------
@@ -896,11 +907,14 @@ _HTML_
 		$turnname = "プロローグ" if ($i == 0);
 		$turnname = "エピローグ" if ($i == $vil->{'epilogue'});
 
+		my $is_news = 0;
 		my $postturn = "";
 	    if ($i == $vil->{'turn'}){
+	      $is_news  = 1;
 	      $turnname .= " (最新)";
 	      $postturn = $amp."turn=$i";
 	    } else {
+	      $is_news  = 0;
 	      $postturn = $amp."turn=$i".$amp."rowall=on";
 	    }
 
@@ -910,6 +924,7 @@ var event = {
 	"turn": $i,
 	"name": "$turnname",
 	"link": "$link_to".unescapeHTML(),
+	"is_news": (1 == $is_news),
 }
 gon.events.push(event);
 _HTML_

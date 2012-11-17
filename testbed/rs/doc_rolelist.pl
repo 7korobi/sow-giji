@@ -129,6 +129,7 @@ _HTML_
 			$plsingle->{'role'}      = $i;
 			$plsingle->{'rolestate'} = $sow->{'ROLESTATE_DEFAULT'};
 			$plsingle->{'live'}      = 'live' ;
+			$plsingle->{'live'}      = 'executed' if ( $i == $sow->{'ROLEID_WALPURGIS'});
 			$plsingle->{'deathday'}  = -1;
 			$plsingle->{'title'}     = $rolename->[$plsingle->{'role'}];
 			$plsingle->{'lock'}      = $i if ((93==$i)||(94==$i));

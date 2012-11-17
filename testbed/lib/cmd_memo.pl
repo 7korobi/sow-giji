@@ -90,10 +90,6 @@ sub OutHTMLCmdMemo {
 	if ($ua eq 'mb') {
 		require "$cfg->{'DIR_HTML'}/html_memo_mb.pl";
 		&SWHtmlMemoMb::OutHTMLMemoMb($sow, $vil, $logfile, $memofile, $maxrow, $logs, $logkeys, $rows);
-	} else {
-		require "$cfg->{'DIR_HTML'}/html_memo_pc.pl";
-		require "$cfg->{'DIR_HTML'}/html_sayfilter.pl";
-		&SWHtmlMemoPC::OutHTMLMemoPC($sow, $vil, $logfile, $memofile, $maxrow, $logs, $logkeys, $rows);
 	}
 	$memofile->close();
 	$logfile->close();

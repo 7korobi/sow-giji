@@ -19,10 +19,6 @@ sub OutHTMLVlogPC {
 	my $news_link = &SWBase::GetLinkValues($sow, $reqvals);
 	$news_link   = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?" . $news_link;
 
-	$reqvals->{'rowall'} = 'on';
-	my $rowall_link = &SWBase::GetLinkValues($sow, $reqvals);
-	$rowall_link = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?" . $rowall_link;
-
 	my $link = &SWBase::GetLinkValues($sow, $reqvals);
 	$link = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$link";
 
@@ -35,7 +31,7 @@ sub OutHTMLVlogPC {
 	# ログインHTML
 	$sow->{'html'}->outcontentheader();
 	&SWHtmlPC::OutHTMLLogin($sow) if ($modesingle == 0);
-
+    &SWHtmlPC::OutHTMLChangeCSS($sow);
 
 	# 見出し（村名とRSS）
 	my $linkrss = " <a href=\"$link$amp". "cmd=rss\">RSS</a>";
@@ -44,12 +40,18 @@ sub OutHTMLVlogPC {
     &SWHtmlPC::OutHTMLChangeCSS($sow);
 
 	print <<"_HTML_";
-<h2>$query->{'vid'} $vil->{'vname'} $linkrss</h2>
+<h2>{{story.vid}} {{title}} $linkrss</h2>
+<h3>{{event.name}}</h3>
+_HTML_
+
+	if ($modesingle == 0) {
+		print <<"_HTML_";
 <div class="pagenavi form-inline input-prepend" template="navi/page_navi">
-<a ng-show="event.is_news" class="btn" href="$rowall_link">ページ表\示</a>
-<a ng-hide="event.is_news || story.turn != event.turn" class="btn" href="$news_link">最新の発言</a>
+<a ng-show="event.is_news" class="btn" ng-click="ajax_event(event.turn, event.link + 'rowall=on')">ページ表\示</a>
+<a ng-hide="event.is_news || story.turn != event.turn" class="btn" ng-click="ajax_event(event.turn, event.link, true)">最新の発言</a>
 </div>
 _HTML_
+	}
 
 	print <<"_HTML_";
 <div template="navi/messages" id="messages"></div>
@@ -60,8 +62,8 @@ _HTML_
 		print <<"_HTML_";
 <hr class="invisible_hr"$net>
 <div class="pagenavi form-inline input-prepend" template="navi/page_navi">
-<a ng-show="event.is_news" class="btn" href="$rowall_link">ページ表\示</a>
-<a ng-hide="event.is_news || story.turn != event.turn" class="btn" href="$news_link">最新の発言</a>
+<a ng-show="event.is_news" class="btn" ng-click="ajax_event(event.turn, event.link + 'rowall=on')">ページ表\示</a>
+<a ng-hide="event.is_news || story.turn != event.turn" class="btn" ng-click="ajax_event(event.turn, event.link, true)">最新の発言</a>
 </div>
 _HTML_
 	}

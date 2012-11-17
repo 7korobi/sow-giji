@@ -214,8 +214,9 @@ sub setInitTarget {
 	my $trusttarget = 0;
 	if ( $self->issensible() ){
 		$trusttarget = 1 if (($vil->{'turn'} > 1)&&($self->iskiller($targethd)));
-		$trusttarget = 1 if (($targethd eq 'role')&&($self->{'role'} eq $sow->{'ROLEID_SNATCH'}));
-		$trusttarget = 1 if (($targethd eq 'role')&&($self->{'role'} eq $sow->{'ROLEID_WITCH' }));
+		$trusttarget = 1 if (($targethd eq 'role')&&($self->{'role'} == $sow->{'ROLEID_SNATCH'   }));
+		$trusttarget = 1 if (($targethd eq 'role')&&($self->{'role'} == $sow->{'ROLEID_WITCH'    }));
+		$trusttarget = 1 if (($targethd eq 'role')&&($self->{'role'} == $sow->{'ROLEID_WALPURGIS'}));
 	}
 #	$trusttarget = 0;
 
@@ -227,7 +228,6 @@ sub setInitTarget {
 	}
 	if ($trusttarget == 1){
 		$self->{$targetid} = $sow->{'TARGETID_TRUST'}; # ‚¨‚Ü‚©‚¹
-		$sow->{'debug'}->writeaplog($sow->{'APLOG_OTHERS'}, "ChangeTarget UNDEF (Wolf): $self->{'uid'}($self->{'pno'})=$self->{$targetid}");
 	}
 	if ($trusttarget == 2){
 		$self->{$targetid} = $self->{'pno'};
@@ -924,6 +924,17 @@ sub winmessage {
 	return $winmes;
 }
 
+sub ispowerlessgrave {
+	my ($self, $vil) = @_;
+	my $sow = $self->{'sow'};
+
+	my $result = 1;
+	$result = 0 if ($vil->isepilogue());
+	$result = 0 if ($self->{'live'} eq 'live');
+	$result = 0 if ($self->{'role'} eq $sow->{'ROLEID_WALPURGIS'});
+	return $result;
+}
+
 sub ischeckedday {
 	my ($self,$turn,$target) = @_;
 	my @eclipse = split('/', $self->{$target});
@@ -1030,13 +1041,25 @@ sub isbindgift {
 # ‚»‚Ì–ðE”\—Í‚ª‰Â”\‚©B
 #----------------------------------------
 
+sub isactive {
+	my ($self) = @_;
+	my $sow = $self->{'sow'};
+	my $isok = 0;
+
+	if ($self->{'live'} eq 'live'){
+		$isok = 1;
+	} else {
+		$isok = 1 if ($self->{'role'} == $sow->{'ROLEID_WALPURGIS'});
+	}
+	return $isok;
+}
+
 sub iscanrole {
 	my ($self,$roleid) = @_;
-	my $sow = $self->{'sow'};
-	my $isok = 1;
+	my $isok = $self->isactive();
 	$isok = 0 if ( $self->{'role'} != $roleid  );
-	$isok = 0 if ( $self->isDisableState('MASKSTATE_HURT')      && ($roleid == $sow->{'ROLEID_ELDER'})   );
-	$isok = 0 if ( $self->isDisableState('MASKSTATE_HURT')      && ($roleid == $sow->{'ROLEID_WEREDOG'}) );
+	$isok = 0 if ( $self->isDisableState('MASKSTATE_HURT') && ($roleid == $sow->{'ROLEID_ELDER'})    );
+	$isok = 0 if ( $self->isDisableState('MASKSTATE_HURT') && ($roleid == $sow->{'ROLEID_WEREDOG'})  );
 	$isok = 0 if ( $self->isDisableState('MASKSTATE_ZOMBIE') );
 	$isok = 0 if ( $self->isDisableState('MASKSTATE_ABI_ROLE') );
 	return $isok;
@@ -1342,6 +1365,9 @@ sub isEnableRole {
 	return 0 if ($self->isDisableState('MASKSTATE_ABI_ROLE'));
 	return 0 if ($abi_role->[$self->{'role'}] eq '');
 	my $result = 1;
+	$result = 0 if (($self->{'role'} == $sow->{'ROLEID_WALPURGIS'}) && ($self->{'live'} eq 'live'));
+	$result = 0 if (($self->{'role'} == $sow->{'ROLEID_WALPURGIS'}) && ($turn == 1));
+
 	$result = 0 if (($self->{'role'} == $sow->{'ROLEID_GIRL'}) && ($turn == 1));
 	$result = 0 if (($self->{'role'} == $sow->{'ROLEID_WITCH'}) && ($turn == 1));
 	$result = 0 if (($self->{'role'} == $sow->{'ROLEID_GUARD'})  && ($turn == 1));

@@ -109,9 +109,9 @@ sub OutHTMLHeader {
 <h4 class="sayfilter_heading" ng-show="! navi.show.blank">{{story.name}}</h4>
 
 <div class="insayfilter" ng-show="navi.show.link"><div class="paragraph">
-<h4 class="sayfilter_caption_enable">他の場面へ</h4>
-<div class="sayfilter_content">
-<nav ng-show="event.is_news"><a class="btn" href="$rowall_link">ページ表\示</a></nav>
+<h4 class="sayfilter_caption_enable" ng-show="page">他の場面へ</h4>
+<div class="sayfilter_content" ng-show="page">
+<nav ng-show="event.is_news"><a class="btn" ng-click="ajax_event(event.turn, event.link + 'rowall=on')">ページ表\示</a></nav>
 <nav class="form-inline" template="navi/paginate" ng-hide="event.is_news"></nav>
 <nav template="navi/page_filter"></nav>
 <br />

@@ -34,6 +34,7 @@ sub OutHTMLMakeVilForm {
 	&SWBase::LoadTextRS($sow, $vil);
 
 	&SWHtmlPC::OutHTMLLogin($sow); # ログインボタン
+    &SWHtmlPC::OutHTMLChangeCSS($sow);
 
 	print <<"_HTML_";
 <h2>村の$vmode</h2>

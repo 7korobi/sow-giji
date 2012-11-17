@@ -504,6 +504,8 @@ sub GetConfig {
     # 1:動作停止（アップデート用）
     ENABLED_HALT => 0,
 
+    THEME => "giji",
+
     USERID_NPC     => "master",
     USERID_ADMIN   => "admin",
     ENABLED_VMAKE  => 1,
