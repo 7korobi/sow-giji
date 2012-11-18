@@ -45,7 +45,7 @@ _HTML_
 	if ($modesingle == 0) {
 		print <<"_HTML_";
 <div class="pagenavi form-inline input-prepend" template="navi/page_navi">
-<a ng-show="event.is_news" class="btn" ng-click="ajax_event(event.turn, event.link + 'rowall=on')">ページ表\示</a>
+<a ng-show="event.is_news" class="btn" ng-click="ajax_event(event.turn, event.link + '&rowall=on')">ページ表\示</a>
 <a ng-hide="event.is_news || story.turn != event.turn" class="btn" ng-click="ajax_event(event.turn, event.link, true)">最新の発言</a>
 </div>
 _HTML_
@@ -60,7 +60,7 @@ _HTML_
 		print <<"_HTML_";
 <hr class="invisible_hr"$net>
 <div class="pagenavi form-inline input-prepend" template="navi/page_navi">
-<a ng-show="event.is_news" class="btn" ng-click="ajax_event(event.turn, event.link + 'rowall=on')">ページ表\示</a>
+<a ng-show="event.is_news" class="btn" ng-click="ajax_event(event.turn, event.link + '&rowall=on')">ページ表\示</a>
 <a ng-hide="event.is_news || story.turn != event.turn" class="btn" ng-click="ajax_event(event.turn, event.link, true)">最新の発言</a>
 </div>
 _HTML_

@@ -116,6 +116,7 @@ sub OutHTMLSingleLogPC {
 		($name, $to) = split(' ¨ ', $log->{'chrname'});
 
 	}
+	&SWHtml::ConvertJSON(\$log->{'log'});
 
 	print <<"_HTML_";
 var mes = {
@@ -175,6 +176,7 @@ sub OutHTMLMemoSinglePC {
 	$showid = ''            if (($log->{'mestype'} == $sow->{'MESTYPE_MAKER'}) || ($log->{'mestype'} == $sow->{'MESTYPE_ADMIN'}));
 
 	my $name = $log->{'chrname'};
+	&SWHtml::ConvertJSON(\$log->{'log'});
 
 	print <<"_HTML_";
 var mes = {

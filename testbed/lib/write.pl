@@ -49,9 +49,7 @@ sub ExecuteCmdWrite {
 	}
 
 	# アクションの等幅は隠し機能という事で（ぉ
-	my $monospace = 0;
-	$monospace = 1 if ($query->{'monospace'} eq 'monospace');
-	$monospace = 2 if ($query->{'monospace'} eq 'report');
+	my $monospace = 0 + $query->{'monospace'};
 
 	my $expression = 0;
 	$expression = $query->{'expression'} if (defined($query->{'expression'}));

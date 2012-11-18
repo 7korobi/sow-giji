@@ -11,7 +11,7 @@ sub CheckValidityMakeVilSummary {
 
 	require "$sow->{'cfg'}->{'DIR_LIB'}/vld_text.pl";
 	$sow->{'debug'}->raise($sow->{'APLOG_NOTICE'}, "ログインして下さい。", "no login.$errfrom") if ($sow->{'user'}->logined() <= 0);
-	$sow->{'debug'}->raise($sow->{'APLOG_CAUTION'}, "村の作成はできません。", "cannot vmake.$errfrom") if ($sow->{'cfg'}->{'ENABLED_VMAKE'} == 0);
+	$sow->{'debug'}->raise($sow->{'APLOG_CAUTION'}, "村の作成はできません。", "cannot vmake.$errfrom") if (($sow->{'cfg'}->{'ENABLED_VMAKE'} == 0) && ('editvil' ne $query->{'cmd'}));
 
 	&SWValidityText::CheckValidityText($sow, $errfrom, $query->{'vname'}, 'VNAME', 'vname', '村の名前', 1);
 }
@@ -170,7 +170,7 @@ sub CheckValidityMakeVil {
 		# 「死んだら負け」特有のチェック
 		$sow->{'debug'}->raise($sow->{'APLOG_NOTICE'}, '据え膳は勝利できません。', "DISH can't win. $errfrom") if (0 < $dishes );
 	}
-	
+
 	if ( $ismillerhollow ){
 		# ミラーズホロー特有のチェック
 		$sow->{'debug'}->raise($sow->{'APLOG_NOTICE'}, 'ダミーキャラ以外に、村人は最低 1 人入れてください。', "no villagers. $errfrom") if ($roletable->[$sow->{'ROLEID_VILLAGER'}] < 1);
@@ -180,7 +180,7 @@ sub CheckValidityMakeVil {
 		# 陪審員制度特有のチェック
 		$sow->{'debug'}->raise($sow->{'APLOG_NOTICE'}, '最低 1 人、陪審員を入れてください。', "no Juror. $errfrom") if (0 == $mobs );
 	}
-	
+
 
 	return;
 }
