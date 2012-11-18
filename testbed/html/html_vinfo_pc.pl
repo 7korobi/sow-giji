@@ -38,8 +38,6 @@ sub OutHTMLVilInfo {
 	my $logfile = SWBoa->new($sow, $vil, $vid, 0);
 	$logfile->close();
 
-    &SWHtmlPC::OutHTMLChangeCSS($sow);
-
 	print <<"_HTML_";
 <h2>СЇВћПоХс</h2>
 _HTML_

@@ -37,8 +37,6 @@ sub OutHTMLVlogPC {
 	my $linkrss = " <a href=\"$link$amp". "cmd=rss\">RSS</a>";
 	$linkrss = '' if ($cfg->{'ENABLED_RSS'} == 0);
 
-    &SWHtmlPC::OutHTMLChangeCSS($sow);
-
 	print <<"_HTML_";
 <h2>{{story.vid}} {{title}} $linkrss</h2>
 <h3>{{event.name}}</h3>
