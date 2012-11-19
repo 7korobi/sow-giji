@@ -168,6 +168,15 @@ sub OutHTMLFooterPC {
 
   print <<"_HTML_";
 ($cput CPUs)<br$net>
+<p>win.top : {{win.top | json}}</p>
+<p>win.left : {{win.left | json}}</p>
+<p>win.width : {{win.width | json}}</p>
+<p>win.height : {{win.height | json}}</p>
+<p>win.accel : {{win.accel | json}}</p>
+<p>win.gravity : {{win.gravity | json}}</p>
+<p>win.rotate : {{win.rotate | json}}</p>
+<p>head.browser : {{head.browser | json}}</p>
+<p>head.csstransitions : {{head.csstransitions | json}}</p>
 </div>
 </body>
 </html>
