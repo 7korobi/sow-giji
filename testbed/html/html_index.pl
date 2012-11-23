@@ -43,13 +43,14 @@ sub OutHTMLIndex {
 
 	my $net = $sow->{'html'}->{'net'}; # Null End Tag
 
-	# ä«óùêlÇ©ÇÁÇÃÇ®ímÇÁÇπ
-	if (-e $urlinfo) {
-		require $urlinfo;
-		&SWAdminInfo::OutHTMLAdminInfo($sow);
-	}
-
+	print <<"_HTML_";
+<div class="login" template="navi/headline"></div>
+<script>
+  \$(function(){\$('.finished_log').hide()});
+</script>
+_HTML_
     &SWHtmlPC::OutHTMLChangeCSS($sow);
+
 	print <<"_HTML_";
 <h2 style="font-size: xx-large;">$cfg->{'NAME_HOME'}</h2>
 _HTML_

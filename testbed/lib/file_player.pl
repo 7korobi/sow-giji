@@ -1886,6 +1886,7 @@ sub gon_potof {
 	$live = 'victim' if(('executed' ne $live)and('suddendead' ne $live)and('live' ne $live)and('mob' ne $live));
 	print <<"_HTML_";
 var pl = {
+    "pno":     $pl->{'pno'},
 	"csid":    "$pl->{'csid'}",
 	"face_id": "$pl->{'cid'}",
 	"deathday": $pl->{'deathday'},

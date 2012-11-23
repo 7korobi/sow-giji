@@ -143,7 +143,7 @@ _HTML_
 Å°<a href=\"sow.cgi?cmd=rule&css=$css#mind\">êSç\\Ç¶</a>
 </p>
 </div>
-<div class="mes_maker">
+<div class="mes_admin">
 <dl>
 <dt>$sow->{'textrs'}->{'CAPTION'}
 <dd>$sow->{'textrs'}->{'HELP'}
@@ -169,12 +169,13 @@ _HTML_
 <dt>îpë∫ä˙å¿<dd>{{lax_time(story.timer.scraplimitdt)}}
 </dl>
 </div>
-<div class="mes_maker">
+<div class="mes_admin">
 <ul>
 <li>$sow->{'basictrs'}->{'STARTTYPE'}->{$vil->{'starttype'}}
 <li ng-repeat="option_help in story.option_helps">{{option_help}}</li>
 </ul>
 </div>
+<div class="mes_maker" template="navi/potofs"></div>
 _HTML_
 
 	if (($vil->{'turn'} > 0) && ($vil->isepilogue() == 0)) {
