@@ -8,7 +8,12 @@ sub OutHTMLVilInfo {
 	my $cfg = $sow->{'cfg'};
 	my $query = $sow->{'query'};
 
+	require "$sow->{'cfg'}->{'DIR_LIB'}/log.pl";
+	require "$sow->{'cfg'}->{'DIR_LIB'}/file_vil.pl";
+	require "$sow->{'cfg'}->{'DIR_LIB'}/file_log.pl";
 	require "$sow->{'cfg'}->{'DIR_HTML'}/html.pl";
+	require "$sow->{'cfg'}->{'DIR_HTML'}/html_sayfilter.pl";
+	require "$sow->{'cfg'}->{'DIR_HTML'}/html_formpl_pc.pl";
 
 	$sow->{'html'} = SWHtml->new($sow); # HTMLモードの初期化
 	my $net = $sow->{'html'}->{'net'}; # Null End Tag
@@ -24,15 +29,12 @@ sub OutHTMLVilInfo {
 	&SWHtmlPC::OutHTMLLogin($sow); # ログインボタン表示
     &SWHtmlPC::OutHTMLChangeCSS($sow);
 
-	require "$sow->{'cfg'}->{'DIR_LIB'}/file_vil.pl";
 	# 村データの読み込み
 	my $vil = SWFileVil->new($sow, $query->{'vid'});
 	$vil->readvil();
 	$vil->closevil();
 	my $totalcommit = &SWBase::GetTotalCommitID($sow, $vil);
 
-	require "$sow->{'cfg'}->{'DIR_LIB'}/log.pl";
-	require "$sow->{'cfg'}->{'DIR_LIB'}/file_log.pl";
 	my $vid = $vil->{'turn'};
 	$vid = $vil->{'epilogue'} if ($vid > $vil->{'epilogue'});
 	my $logfile = SWBoa->new($sow, $vil, $vid, 0);
@@ -40,6 +42,7 @@ sub OutHTMLVilInfo {
 
 	print <<"_HTML_";
 <h2>村の情報</h2>
+<div id="messages">
 _HTML_
 	&OutHTMLVilInfoInner($sow,$vil);
 
@@ -47,17 +50,28 @@ _HTML_
 	$sow->{'html'}->outcontentfooter();
 
 	# 発言フィルタ
-	require "$sow->{'cfg'}->{'DIR_HTML'}/html_sayfilter.pl";
 	&SWHtmlSayFilter::OutHTMLHeader   ($sow, $vil);
 	&SWHtmlSayFilter::OutHTMLSayFilter($sow, $vil) if ($modesingle == 0);
 	&SWHtmlSayFilter::OutHTMLTools    ($sow, $vil);
 	&SWHtmlSayFilter::OutHTMLFooter   ($sow, $vil);
 	print <<"_HTML_";
+</div>
 <script>
-window.gon = {};
+window.gon = ({}).merge(OPTION.gon);
+gon.form.uri = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}";
 _HTML_
 	$vil->gon_story();
 	$vil->gon_potofs();
+	# 村建て人フォーム／管理人フォーム表示
+	if ($sow->{'user'}->logined() > 0) {
+		if ($vil->{'makeruid'} eq $sow->{'uid'}) {
+			&SWHtmlPlayerFormPC::OutHTMLUpdateSessionButtonPC($sow, $vil);
+		}
+		if ($sow->{'uid'} eq $sow->{'cfg'}->{'USERID_ADMIN'}) {
+			&SWHtmlPlayerFormPC::OutHTMLUpdateSessionButtonPC($sow, $vil);
+			&SWHtmlPlayerFormPC::OutHTMLScrapVilButtonPC($sow, $vil) if ($vil->{'turn'} < $vil->{'epilogue'});
+		}
+	}
 	print <<"_HTML_";
 </script>
 _HTML_
@@ -207,6 +221,7 @@ _HTML_
 		$showbtn = 1 if ($sow->{'uid'} eq $sow->{'cfg'}->{'USERID_ADMIN'});
 		if ($showbtn){
 			print <<"_HTML_";
+<div template="navi/forms"></div>
 <div class="formpl_gm">
   <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$sow->{'cfg'}->{'METHOD_FORM'}">
   <p class="commitbutton">

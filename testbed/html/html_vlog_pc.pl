@@ -78,17 +78,8 @@ _HTML_
 	&SWHtmlSayFilter::OutHTMLFooter   ($sow, $vil);
 	print <<"_HTML_";
 <script>
-window.gon = {
-	form: ({}).merge(OPTION.form).merge({
-		uri: "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}",
-		side: [],
-		links: [],
-		texts: [],
-		secrets: [],
-		commands: {},
-	}),
-	cautions: [],
-};
+window.gon = ({}).merge(OPTION.gon);
+gon.form.uri = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}";
 _HTML_
 	# アナウンス／入力・参加フォーム表示
 	if (($modesingle == 0) && ($sow->{'turn'} == $vil->{'turn'}) && ($logrows->{'end'} > 0)) {

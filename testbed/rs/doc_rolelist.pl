@@ -322,14 +322,10 @@ _HTML_
 	require "$cfg->{'DIR_HTML'}/html_formpl_pc.pl";
 	foreach $pl (@pllist){
 		print <<"_HTML_";
-gon.form = ({}).merge(OPTION.form).merge({
+
+gon.form = ({}).merge(OPTION.gon.form).merge({
 		title: "$pl->{'title'}",
 		uri: "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}",
-		side: [],
-		links: [],
-		texts: [],
-		secrets: [],
-		commands: {},
 });
 _HTML_
 

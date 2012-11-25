@@ -111,7 +111,7 @@ sub SWBasicTextRS {
 		SAYTEXT         => \%saytext,
 		ORDER_STARTTYPE => \@starttypeorder,
 		STARTTYPE       => \%starttypetext,
-		BUTTONLABEL_PC  => '_BUTTON_ / XV',
+		BUTTONLABEL_PC  => '_BUTTON_',
 		BUTTONLABEL_MB  => '_BUTTON_',
 		MOB             => \%mob,
 		GAME            => \%game,

@@ -31,7 +31,8 @@ sub OutHTMLMakeVil {
 
 	print <<"_HTML_";
 <script>
-window.gon = {};
+window.gon = ({}).merge(OPTION.gon);
+gon.form.uri = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}";
 _HTML_
 	$vil->gon_story(true);
 	$vil->gon_event(true);

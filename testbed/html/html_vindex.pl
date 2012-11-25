@@ -24,7 +24,7 @@ sub OutHTMLVIndex {
 <table border="1" class="vindex" summary="‘º‚Ìˆê——">
 <thead>
   <tr>
-    <th scope="col"><code ng-click="stories_is_small = ! stories_is_small"><i class="icon-resize-full"></i><i class="icon-resize-small"></i></code></th>
+    <th scope="col"><code ng-click="stories_is_small = ! stories_is_small"><i class="icon-resize-small" ng-show="stories_is_small"></i><i class="icon-resize-full" ng-hide="stories_is_small"></i></code></th>
 _HTML_
 
 	if ($vmode eq 'oldlog') {

@@ -473,7 +473,7 @@ _HTML_
 
 	print <<"_HTML_";
 <script>
-window.gon = {};
+window.gon = ({}).merge(OPTION.gon);
 _HTML_
 	$vil->gon_story(true);
 	$vil->gon_event(true);
