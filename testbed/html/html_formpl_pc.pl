@@ -159,7 +159,7 @@ text_form = {
 {val:"-1",          mestype:"$mestype", name:"$ssaycnttext ($sow->{'textrs'}->{'CAPTION_SAY_PC'})"},
 {val:"$curpl->{'pno'}", mestype:"TSAY", name:"$tsaycnttext ($sow->{'textrs'}->{'CAPTION_TSAY_PC'})"},
 _HTML_
-	if ((1 == $cfg->{'ENABLED_AIMING'})
+	if ((1 == $vil->{'aiming'})
       ||($sow->{'uid'} eq $cfg->{'USERID_ADMIN'})
       ||($sow->{'uid'} eq $cfg->{'USERID_NPC'})){
 		# “à˜b‚Ì‘ÎÛŽÒ

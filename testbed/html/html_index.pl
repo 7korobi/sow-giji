@@ -94,7 +94,7 @@ _HTML_
 
 	my $link_state_page  = $cfg->{'URL_CONFIG'};
 	my $enabled_bitty    = ($cfg->{'ENABLED_BITTY'}            )?('ひらがなのみ'):('会話内容のみ');
-	my $enabled_aiming    = ($cfg->{'ENABLED_AIMING'}          )?('あり'):('なし');
+	my $enabled_aiming    = ($cfg->{'ENABLED_AIMING'} eq 1     )?('作成できる'):('作成できない');
 	my $enabled_undead     = ($cfg->{'ENABLED_UNDEAD'} eq 1    )?('作成できる'):('作成できない');
 	my $enabled_ambidexter  = ($cfg->{'ENABLED_AMBIDEXTER'}    )?('裏切りの陣営'):('人狼陣営');
 	my $enabled_permit_dead  = ($cfg->{'ENABLED_PERMIT_DEAD'}  )?('見える'):('見えない');
@@ -102,7 +102,7 @@ _HTML_
 	print <<"_HTML_";
 <p class="paragraph">
 この州の設定は、廃村期限$cfg->{'TIMEOUT_SCRAP'}日、
-内緒話$enabled_aiming、
+内緒話の村を$enabled_aiming、
 狂人は$enabled_ambidexter、
 幽界トーク村を$enabled_undead、
 エピローグで勝敗が$enabled_winner_label、

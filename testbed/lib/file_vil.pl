@@ -123,6 +123,7 @@ sub createdummyvil {
 	$self->{'seqevent'}     = 0;
 	$self->{'entrust'}      = 0;
 	$self->{'showid'}       = 0;
+	$self->{'aiming'}       = 0;
 	$self->{'undead'}       = 0;
 	$self->{'extend'}       = 2;
 	$self->{'emulated'}     = 1;
@@ -827,7 +828,14 @@ sub gon_story {
 	my $cmdlog = 0;
 	$cmdlog = 1 if (($query->{'cmd'} eq '') || ($query->{'cmd'} eq 'memo') || ($query->{'cmd'} eq 'hist'));
 
-	my $turn = 0 + $vil->{'turn'};
+	my $turn = $vil->{'turn'} + 0;
+	my $aiming       = $vil->{'aiming'      } + 0;
+	my $entrust      = $vil->{'entrust'     } + 0;
+	my $randomtarget = $vil->{'randomtarget'} + 0;
+	my $noselrole    = $vil->{'noselrole'   } + 0;
+	my $seqevent     = $vil->{'seqevent'    } + 0;
+	my $showid       = $vil->{'showid'      } + 0;
+	my $undead       = $vil->{'undead'      } + 0;
 
 	print <<"_HTML_";
 gon.story = {
@@ -882,12 +890,13 @@ gon.story = {
 		$vil->{'vplcntstart'}
 	]
 };
-if(1 == $vil->{'showid'      }){ gon.story.options.push("show-id");       }
-if(1 == $vil->{'undead'      }){ gon.story.options.push("undead-talk");   }
-if(1 == $vil->{'entrust'     }){ gon.story.options.push("entrust");       }
-if(1 == $vil->{'seqevent'    }){ gon.story.options.push("seq-event");     }
-if(1 == $vil->{'randomtarget'}){ gon.story.options.push("random-target"); }
-if(1 != $vil->{'noselrole'   }){ gon.story.options.push("select-role");   }
+if(1 == $aiming      ){ gon.story.options.push("aiming-talk");   }
+if(1 == $entrust     ){ gon.story.options.push("entrust");       }
+if(1 == $randomtarget){ gon.story.options.push("random-target"); }
+if(1 != $noselrole   ){ gon.story.options.push("select-role");   }
+if(1 == $seqevent    ){ gon.story.options.push("seq-event");     }
+if(1 == $showid      ){ gon.story.options.push("show-id");       }
+if(1 == $undead      ){ gon.story.options.push("undead-talk");   }
 _HTML_
 	if ($secret) {
 		print <<"_HTML_";
@@ -1042,6 +1051,7 @@ sub GetVilDataLabel {
 		'starttype',
 		'randomtarget',
 		'showid',
+		'aiming',
 		'undead',
 		'extend',
 		'entrust',

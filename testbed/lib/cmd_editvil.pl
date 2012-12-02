@@ -69,6 +69,8 @@ sub SetDataCmdEditVil {
 		$vil->{'randomtarget'} = 1 if (($sow->{'cfg'}->{'ENABLED_RANDOMTARGET'} > 0) && ($query->{'randomtarget'} ne ''));
 		$vil->{'showid'}       = 0;
 		$vil->{'showid'}       = 1 if ($query->{'showid'} ne '');
+		$vil->{'aiming'}       = 0;
+		$vil->{'aiming'}       = 1 if ($query->{'aiming'} ne '');
 		$vil->{'undead'}       = 0;
 		$vil->{'undead'}       = 1 if ($query->{'undead'} ne '');
 		$vil->{'noselrole'}    = 0;

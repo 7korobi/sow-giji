@@ -58,6 +58,7 @@ sub InitConst {
 		trsid        => 1, # 文字列リソースセット
 		randomtarget => 1, # ランダム対象
 		noselrole    => 1, # 役職希望無視
+		aiming       => 1, # 内緒話
 		seqevent     => 1, # 事件整頓
 		entrust      => 1, # 委任可能
 		undead       => 1, # 幽界トーク

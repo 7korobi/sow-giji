@@ -327,6 +327,14 @@ _HTML_
 _HTML_
 			}
 
+			if ($cfg->{'ENABLED_AIMING'} == 1){
+				print <<"_HTML_";
+<dt><label for="aiming">内緒話</label>
+<dd><input id="aiming" name="aiming" type="checkbox" ng-checked="story.options.some('aiming-talk')">
+  ふたりだけの内緒話をすることができる
+_HTML_
+			}
+
 			# 役職希望無視
 			print <<"_HTML_";
 <dt><label for="game">ゲームルール</label>
