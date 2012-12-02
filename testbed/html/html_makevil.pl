@@ -8,6 +8,10 @@ sub OutHTMLMakeVil {
 	my $cfg = $sow->{'cfg'};
 	my $query = $sow->{'query'};
 
+	require "$sow->{'cfg'}->{'DIR_LIB'}/file_vil.pl";
+	require "$sow->{'cfg'}->{'DIR_HTML'}/html_vinfo_pc.pl";
+	require "$sow->{'cfg'}->{'DIR_HTML'}/html_formpl_pc.pl";
+
 	my $vmode = '作成';
 	my $infotext = 'を作成';
 	if ($sow->{'query'}->{'cmd'} eq 'editvil') {
@@ -34,8 +38,19 @@ sub OutHTMLMakeVil {
 window.gon = ({}).merge(OPTION.gon);
 gon.form.uri = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}";
 _HTML_
-	$vil->gon_story(true);
-	$vil->gon_event(true);
+	$vil->gon_story();
+	$vil->gon_event();
+	$vil->gon_potofs();
+	# 村建て人フォーム／管理人フォーム表示
+	if ($sow->{'user'}->logined() > 0) {
+		if ($vil->{'makeruid'} eq $sow->{'uid'}) {
+			&SWHtmlPlayerFormPC::OutHTMLUpdateSessionButtonPC($sow, $vil);
+		}
+		if ($sow->{'uid'} eq $sow->{'cfg'}->{'USERID_ADMIN'}) {
+			&SWHtmlPlayerFormPC::OutHTMLUpdateSessionButtonPC($sow, $vil);
+			&SWHtmlPlayerFormPC::OutHTMLScrapVilButtonPC($sow, $vil) if ($vil->{'turn'} < $vil->{'epilogue'});
+		}
+	}
 	print <<"_HTML_";
 </script>
 <h2>$vmode完了</h2>
@@ -44,13 +59,11 @@ _HTML_
 
 _HTML_
 
-	require "$sow->{'cfg'}->{'DIR_LIB'}/file_vil.pl";
 	# 村データの読み込み
 	my $vil = SWFileVil->new($sow, $query->{'vid'});
 	$vil->readvil();
 	$vil->closevil();
 
-	require "$sow->{'cfg'}->{'DIR_HTML'}/html_vinfo_pc.pl";
 	&SWHtmlVilInfo::OutHTMLVilInfoInner($sow,$vil);
 
 	&SWHtmlPC::OutHTMLReturnPC($sow); # トップページへ戻る

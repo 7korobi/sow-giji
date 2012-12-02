@@ -41,6 +41,7 @@ sub OutHTMLVilInfo {
 	$logfile->close();
 
 	print <<"_HTML_";
+<div class="toppage">
 <h2>村の情報</h2>
 <div id="messages">
 _HTML_
@@ -208,13 +209,11 @@ _HTML_
 <br>$nextcommitdt
 </dl>
 </div>
+</div>
 _HTML_
 	}
 
 	# 村建て人フォーム／管理人フォーム表示
-	my $reqvals = &SWBase::GetRequestValues($sow);
-	my $hidden = &SWBase::GetHiddenValues($sow, $reqvals, '    ');
-
 	if ($sow->{'user'}->logined() > 0) {
 		my $showbtn = 0;
 		$showbtn = 1 if ($sow->{'uid'} eq $vil->{'makeruid'});
@@ -222,40 +221,6 @@ _HTML_
 		if ($showbtn){
 			print <<"_HTML_";
 <div template="navi/forms"></div>
-<div class="formpl_gm">
-  <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$sow->{'cfg'}->{'METHOD_FORM'}">
-  <p class="commitbutton">
-    <input type="hidden" name="cmd" value="makerpr"$net>$hidden
-    <select id="maker" name="target">
-_HTML_
-			# 村建て権移譲
-			$targetlist = $vil->getallpllist();
-			foreach (@$targetlist) {
-				next if (($_->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'}));
-				my $chrname = $_->getlongchrname();
-				my $pno     = $_->{'pno'};
-				print "<option value=\"$pno\">$chrname$sow->{'html'}->{'option'}\n";
-			}
-			print "</select>";
-			print <<"_HTML_";
-    <input type="submit" class="btn" value="この人に村を任せる！"$net><br$net>
-  </p>
-  </form>
-_HTML_
-		}
-		my $showturn = 0;
-		$showturn = 1 if ($vil->{'turn'} == 0);
-		$showturn = 1 if ($vil->isepilogue() );
-
-		if ($showbtn and $showturn) {
-			print <<"_HTML_";
-  <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$sow->{'cfg'}->{'METHOD_FORM'}">
-  <p class="commitbutton">
-    <input type="hidden" name="cmd" value="editvilform"$net>$hidden
-    <input type="submit" class="btn" value="村を編集しよう！"$net>
-  </p>
-  </form>
-</div>
 _HTML_
 		}
 	}

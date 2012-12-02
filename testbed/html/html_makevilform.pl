@@ -37,6 +37,7 @@ sub OutHTMLMakeVilForm {
     &SWHtmlPC::OutHTMLChangeCSS($sow);
 
 	print <<"_HTML_";
+<div class="toppage">
 <h2>‘º‚Ì$vmode</h2>
 _HTML_
 
@@ -455,6 +456,7 @@ _HTML_
 </div>
 </div>
 </form>
+</div>
 
 _HTML_
 
