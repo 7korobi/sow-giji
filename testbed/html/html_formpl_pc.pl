@@ -88,6 +88,7 @@ sub OutHTMLSayPC {
 
     my $mestype = "SAY";
     $mestype = "GSAY" if('live' ne $curpl->{'live'});
+    $mestype = "VSAY" if('mob'  eq $curpl->{'live'});
 
     # 発言/独り言/内緒話
 	my ($saycnt,$cost,$unit, $max_unit,$max_line,$max_size) = $vil->getsayptcosts();
@@ -239,6 +240,7 @@ sub OutHTMLActionFormPC {
 
     my $mestype = "SAY";
     $mestype = "GSAY" if('live' ne $curpl->{'live'});
+    $mestype = "VSAY" if('mob'  eq $curpl->{'live'});
 
 	# アクション入力欄とアクションボタン
 	my ($saycnt,$costaction,$unitaction, $max_unit,$max_line,$max_size) = $vil->getactptcosts();

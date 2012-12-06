@@ -78,7 +78,7 @@ _HTML_
 	&SWHtmlSayFilter::OutHTMLFooter   ($sow, $vil);
 	print <<"_HTML_";
 <script>
-window.gon = ({}).merge(OPTION.gon);
+window.gon = OPTION.gon.clone(true);
 gon.form.uri = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}";
 _HTML_
 	# アナウンス／入力・参加フォーム表示

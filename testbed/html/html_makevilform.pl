@@ -483,7 +483,7 @@ _HTML_
 
 	print <<"_HTML_";
 <script>
-window.gon = ({}).merge(OPTION.gon);
+window.gon = OPTION.gon.clone(true);
 _HTML_
 	$vil->gon_story(true);
 	$vil->gon_event(true);

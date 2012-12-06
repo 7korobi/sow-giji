@@ -96,9 +96,7 @@ sub SetDataCmdWriteMemo {
 	$debug->raise($sow->{'APLOG_NOTICE'}, 'メモを貼っていません。', "memo not found.$errfrom") if (($checknosay == 0) && ($newmemo->{'log'} eq ''));
 
 	# メモデータファイルへの書き込み
-	my $monospace = 0;
-	$monospace = 1 if ($query->{'monospace'} eq 'monospace');
-	$monospace = 2 if ($query->{'monospace'} eq 'report');
+	my $monospace = 0 + $query->{'monospace'};
 
 	if ($checknosay == 0) {
 		$mes = '';

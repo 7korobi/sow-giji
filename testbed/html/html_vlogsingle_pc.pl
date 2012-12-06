@@ -112,6 +112,11 @@ sub OutHTMLSingleLogPC {
 
 	my $to   = "";
 	my $name = $log->{'chrname'};
+
+	my $style = "";
+	$style = "mono" if (1 eq $log->{'monospace'});
+	$style = "head" if (2 eq $log->{'monospace'});
+
 	if ($log->{'mestype'} == $sow->{'MESTYPE_AIM'}) {
 		($name, $to) = split(' ¨ ', $log->{'chrname'});
 
@@ -126,7 +131,7 @@ var mes = {
 	"face_id":  "$log->{'cid'}",
 	"mesicon":  SOW_RECORD.CABALA.mestypeicons[$log->{'mestype'}],
 	"mestype":  SOW_RECORD.CABALA.mestypes[$log->{'mestype'}],
-	"style":    SOW_RECORD.CABALA.monospace[$log->{'monospace'}],
+	"style":    "$style",
 	"name":  "$name",
 	"to":    "$to",
 	"log":   "$log->{'log'}",
@@ -175,6 +180,10 @@ sub OutHTMLMemoSinglePC {
 	$showid = $log->{'uid'} if  ($vil->{'epilogue'} <= $sow->{'turn'});
 	$showid = ''            if (($log->{'mestype'} == $sow->{'MESTYPE_MAKER'}) || ($log->{'mestype'} == $sow->{'MESTYPE_ADMIN'}));
 
+	my $style = "";
+	$style = "mono" if (1 eq $log->{'monospace'});
+	$style = "head" if (2 eq $log->{'monospace'});
+
 	my $name = $log->{'chrname'};
 	&SWHtml::ConvertJSON(\$log->{'log'});
 
@@ -186,7 +195,7 @@ var mes = {
 	"face_id":  "$log->{'cid'}",
 	"mesicon":  SOW_RECORD.CABALA.mestypeicons[$log->{'mestype'}],
 	"mestype":  SOW_RECORD.CABALA.mestypes[$log->{'mestype'}],
-	"style":    SOW_RECORD.CABALA.monospace[$log->{'monospace'}],
+	"style":    "$style",
 	"name":  "$name",
 	"to":    "$to",
 	"log":   "$log->{'log'}",
