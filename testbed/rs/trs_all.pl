@@ -624,7 +624,7 @@ sub GetTextRS {
 		ANNOUNCE_SETTARGET  => '<b>_NAME_</b>は<b>_TARGET_</b>を<b>_ABILITY_</b>の対象に選びました。',
 
 		# ボタンのラベル
-		BUTTONLABEL_PC  => '_BUTTON_ / 更新',
+		BUTTONLABEL_PC  => '_BUTTON_',
 		BUTTONLABEL_MB  => '_BUTTON_',
 		CAPTION_SAY_PC  => '発言',
 		CAPTION_SAY_MB  => '発言',

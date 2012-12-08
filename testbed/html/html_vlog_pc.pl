@@ -92,18 +92,10 @@ _HTML_
 	# 村ログ表示
 	require "$cfg->{'DIR_HTML'}/html_vlogsingle_pc.pl";
 
+	my $is_news = 0 + (0 < $maxrow);
+    my $last = "<i class='icon-refresh' href_eval='refresh_event()'></i> ";
 	if (($sow->{'turn'} == $vil->{'turn'}) && ($vil->{'epilogue'} < $vil->{'turn'})) {
-		print <<"_HTML_"
-var mes = {
-	"subid":  "I",
-	"logid":  "IX00000",
-	"mestype":  "CAUTION",
-	"style":    "head",
-	"log":   "終了しました。",
-	"date":  new Date
-};
-gon.event.messages.push(mes);
-_HTML_
+		$last .= "終了しました。";
 	} else {
 		my %anchor = (
 			logfile => $logfile,
@@ -133,27 +125,28 @@ _HTML_
 			&SWHtmlVlogSinglePC::OutHTMLMemoSinglePC($sow, $vil, $memofile, $_, \%anchor);
 		}
 	} else {
-		print <<"_HTML_";
+		$last .= "メモはありません。";
+	}
+	print <<"_HTML_";
+gon.event.is_news    = (0 != $is_news);
 var mes = {
 	"subid":  "I",
 	"logid":  "IX00000",
 	"mestype":  "CAUTION",
 	"style":    "head",
-	"log":   "メモはありません。",
+	"log":   "$last",
 	"date":  new Date
 };
-_HTML_
-		print <<"_HTML_";
 gon.event.messages.push(mes);
-_HTML_
-	}
-
-
-	# 全表示リンク
-	my $is_news = 0 + (0 < $maxrow);
-
-	print <<"_HTML_";
-gon.event.is_news    = (0 != $is_news);
+var mes = {
+	"subid":  "I",
+	"logid":  "IM00000",
+	"mestype":  "CAUTION",
+	"style":    "head",
+	"log":   "$last",
+	"date":  new Date
+};
+gon.event.messages.push(mes);
 </script>
 _HTML_
 
