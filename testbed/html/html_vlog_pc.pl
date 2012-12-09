@@ -127,9 +127,12 @@ _HTML_
 	} else {
 		$last .= "メモはありません。";
 	}
+
 	print <<"_HTML_";
 gon.event.is_news    = (0 != $is_news);
 var mes = {
+	"csid": "_none_",
+	"face_id": "_none_",
 	"subid":  "I",
 	"logid":  "IX00000",
 	"mestype":  "CAUTION",
@@ -139,6 +142,8 @@ var mes = {
 };
 gon.event.messages.push(mes);
 var mes = {
+	"csid": "_none_",
+	"face_id": "_none_",
 	"subid":  "I",
 	"logid":  "IM00000",
 	"mestype":  "CAUTION",
@@ -237,7 +242,7 @@ _HTML_
 			if ($vil->checkentried() >= 0){
 				# 発言欄の表示
 				require "$cfg->{'DIR_HTML'}/html_formpl_pc.pl";
-				&SWHtmlPlayerFormPC::OutHTMLPlayerFormPC($sow, $vil);
+				&SWHtmlPlayerFormPC::OutHTMLPlayerFormPC($sow, $vil, $memofile);
 			} else {
 				# 村建て人／管理人発言フォームの表示
 				&OutHTMLVilMakerInFormPlPC($sow, $vil);

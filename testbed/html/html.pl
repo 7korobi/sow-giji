@@ -150,8 +150,6 @@ sub ConvertJSON {
 	my ($text) = @_;
 
 	$$text =~ s/\x22/\\\x22/ig;
-#	$$text =~ s/&gt;/>/ig;
-#	$$text =~ s/&lt;/</ig;
 	return $text;
 }
 

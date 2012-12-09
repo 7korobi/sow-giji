@@ -114,8 +114,7 @@ sub OutHTMLSayPC {
 	if ($memofile){
 		my $memo = $memofile->getnewmemo($curpl);
 		$mes = $memo->{'log'};
-		$mes = &SWLog::ReplaceAnchorHTMLRSS($sow, $vil, $mes, $anchor);
-		$mes =~ s/<br( \/)?>/\\n/ig;
+		$mes = &SWLog::ReplaceAnchorHTMLText($sow, $vil, $mes, $anchor);
 		&SWHtml::ConvertJSON(\$mes);
 	}
 

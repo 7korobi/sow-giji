@@ -306,6 +306,19 @@ sub ReplaceAnchorHTMLRSS {
 }
 
 #----------------------------------------
+# 内部データ形式のアンカーをテキストに整形（メモ欄向け）
+#----------------------------------------
+sub ReplaceAnchorHTMLText {
+	my ($sow, $vil, $mes, $anchor) = @_;
+	$mes = &SWLog::ReplaceAnchorHTMLRSS($sow, $vil, $mes, $anchor);
+	$mes =~ s/<br( \/)?>/\\n/ig;
+	$mes =~ s/&gt;/>/ig;
+	$mes =~ s/&lt;/</ig;
+	return $mes;
+}
+
+
+#----------------------------------------
 # 正規表現での誤認識を防ぐため記号を変換
 #----------------------------------------
 sub BackQuoteAnchorMark {
