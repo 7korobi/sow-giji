@@ -167,7 +167,7 @@ _HTML_
 		foreach (@$pllist) {
 			next if (0 == $curpl->isAim($_));
 
-			my $targetname = $_->getshortchrname();
+			my $targetname = $_->getlongchrname();
 			print <<"_HTML_";
 {val:"$_->{'pno'}", mestype:"AIM", name:"$asaycnttext $targetname‚Æ“à˜b"},
 _HTML_
@@ -267,9 +267,10 @@ _HTML_
 	foreach (@$pllist) {
 		next if (0 == $curpl->isAction($_));
 
-		my $targetname = $_->getchrname();
+		my $targetshortname = $_->getshortchrname();
+		my $targetlongname  = $_->getlongchrname();
 		print <<"_HTML_";
-{val:"$_->{'pno'}", name:"$targetname"},
+{val:"$_->{'pno'}", name:"$targetshortname", longname:"$targetlongname"},
 _HTML_
 	}
 	print <<"_HTML_";

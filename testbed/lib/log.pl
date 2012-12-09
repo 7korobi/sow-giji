@@ -363,6 +363,46 @@ sub do_random_role {
 	return $rolename->[$roleno];
 }
 
+sub do_random_plrole {
+	my ($sow,$vil,$list) = @_;
+
+	require "$sow->{'cfg'}->{'DIR_LIB'}/setrole.pl";
+	my ( $rolematrix, $giftmatrix, $eventmatrix ) = &SWSetRole::GetSetRoleTable($sow, $vil, $vil->{'roletable'}, $vil->{'vplcnt'});
+	my @name_ids;
+	my $names = $sow->{'textrs'}->{$list};
+
+    if ('ROLENAME' eq $list){
+		for ($i = 1; $i < @$names; $i++) {
+			$size = $rolematrix->[$i];
+			for ($j = 0; $j < $size; $j++) {
+				push(@name_ids, $i);
+			}
+		}
+	}
+
+    if ('GIFTNAME' eq $list){
+		for ($i = 2; $i < @$names; $i++) {
+			$size = $giftmatrix->[$i];
+			for ($j = 0; $j < $size; $j++) {
+				push(@name_ids, $i);
+			}
+		}
+	}
+
+    if ('EVENTNAME' eq $list){
+		for ($i = 1; $i < @$names; $i++) {
+			$size = $eventmatrix->[$i];
+			for ($j = 0; $j < $size; $j++) {
+				push(@name_ids, $i);
+			}
+		}
+	}
+
+	my $name_id = @name_ids[int(rand(scalar(@name_ids)))];
+	$name_id = 0 if ('' eq $names->[$name_id]);
+	return $names->[$name_id];
+}
+
 sub do_random_who {
 	my ($vil) = @_;
 
@@ -371,6 +411,15 @@ sub do_random_who {
 
 	$who = int(rand(scalar(@$livepllist)));
 	return $livepllist->[$who]->getchrname();
+}
+
+sub do_random_plwho {
+	my ($vil) = @_;
+
+	my $pllist = $vil->getallpllist();
+
+	$who = int(rand(scalar(@$pllist)));
+	return $pllist->[$who]->getchrname();
 }
 
 sub do_random_mikuji {
@@ -404,12 +453,22 @@ sub CvtRandomText {
 
 	# who
 	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_LIVES'}\]\]/{my $a = &do_random_who($vil);my $b = &trim_random_cap($&);"<rand $a,$b>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_PL_WHO'}\]\]/{my $a = &do_random_plwho($vil);my $b = &trim_random_cap($&);"<rand $a,$b>"}/eg;
 
 	# omikuji
 	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_MIKUJI'}\]\]/{my $a = &do_random_mikuji($cfg);my $b = &trim_random_cap($&);"<rand $a,$b>"}/eg;
 
 	# role
 	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_ROLE'}\]\]/{my $a = &do_random_role($sow,'ROLENAME');my $b = &trim_random_cap($&);"<rand $a,$b>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_PL_ROLE'}\]\]/{my $a = &do_random_plrole($sow,$vil,'ROLENAME');my $b = &trim_random_cap($&);"<rand $a,$b>"}/eg;
+
+    # gift
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_GIFT'}\]\]/{my $a = &do_random_role($sow,'GIFTNAME');my $b = &trim_random_cap($&);"<rand $a,$b>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_PL_GIFT'}\]\]/{my $a = &do_random_plrole($sow,$vil,'GIFTNAME');my $b = &trim_random_cap($&);"<rand $a,$b>"}/eg;
+
+    # event
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_EVENT'}\]\]/{my $a = &do_random_role($sow,'EVENTNAME');my $b = &trim_random_cap($&);"<rand $a,$b>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_PL_EVENT'}\]\]/{my $a = &do_random_plrole($sow,$vil,'EVENTNAME');my $b = &trim_random_cap($&);"<rand $a,$b>"}/eg;
 
 	return $mes;
 }
