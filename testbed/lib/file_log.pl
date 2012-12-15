@@ -74,9 +74,11 @@ sub read {
 	my $data = $self->{'logfile'}->{'file'}->read($pos);
 	if( 7 <  $logpermit  ){
 		my $sow = $self->{'sow'};
-		$data->{'mestype'} = $sow->{'MESTYPE_INFOSP'};
 		$data->{'chrname'} = '？';
+		$data->{'csid'} = '';
 		$data->{'cid'} = '';
+		$data->{'mestype'} = $sow->{'MESTYPE_INFOSP'};
+		$data->{'subid'} = 'I';
 	}
 	if( 9 == $logpermit  ){
 # のぞきみ系内容マスク

@@ -91,9 +91,24 @@ _HTML_
 
 	# 村ログ表示
 	require "$cfg->{'DIR_HTML'}/html_vlogsingle_pc.pl";
-
-	my $is_news = 0 + (0 < $maxrow);
     my $last = "<i class='icon-refresh' href_eval='refresh_event()'></i> ";
+	my $is_news = 0 + (0 < $maxrow);
+
+	if (@$memos > 0) {
+		my %memokeys;
+		my %anchor = (
+			logfile => $logfile,
+			logkeys => \%memokeys,
+			rowover => 1,
+			reqvals => $reqvals,
+		);
+		foreach (@$memos) {
+			&SWHtmlVlogSinglePC::OutHTMLMemoSinglePC($sow, $vil, $memofile, $_, \%anchor);
+		}
+	} else {
+		$last .= "メモはありません。";
+	}
+
 	if (($sow->{'turn'} == $vil->{'turn'}) && ($vil->{'epilogue'} < $vil->{'turn'})) {
 		$last .= "終了しました。";
 	} else {
@@ -113,28 +128,13 @@ _HTML_
 		}
 	}
 
-	if (@$memos > 0) {
-		my %memokeys;
-		my %anchor = (
-			logfile => $logfile,
-			logkeys => \%memokeys,
-			rowover => 1,
-			reqvals => $reqvals,
-		);
-		foreach (@$memos) {
-			&SWHtmlVlogSinglePC::OutHTMLMemoSinglePC($sow, $vil, $memofile, $_, \%anchor);
-		}
-	} else {
-		$last .= "メモはありません。";
-	}
-
 	print <<"_HTML_";
 gon.event.is_news    = (0 != $is_news);
 var mes = {
 	"csid": "_none_",
 	"face_id": "_none_",
 	"subid":  "I",
-	"logid":  "IX00000",
+	"logid":  "IX99999",
 	"mestype":  "CAUTION",
 	"style":    "head",
 	"log":   "$last",

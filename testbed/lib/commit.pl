@@ -510,14 +510,12 @@ sub Equipment{
 	&SetRandomTarget($sow, $vil, $logfile, 'role','ABI_ROLE');
 	&SetRandomTarget($sow, $vil, $logfile, 'gift','ABI_GIFT');
 
-	my $pllist = $vil->getpllist();
+	my $pllist = $vil->getactivepllist();
 	foreach $plsingle (@$pllist) {
-		next if ( $plsingle->{'live'} ne 'live' ); # 死者は準備しない。
-		my $chrname  = $plsingle->getchrname();
-		if    ($plsingle->isdo('role1')){
+		if ($plsingle->isdo('role1')){
 			# 誰かのところへ。
 			my $targetpl = $vil->getplbypno($plsingle->{'role1'});
-			my $targetname = $targetpl->getchrname();
+
 			# 魔女の投薬
 			# 使う薬の種類は、操作時に誰を対象に選んでいるか、で決まる。この時点の生死を保存する。
 			# （ただし、突然死は投薬時にキャンセルする。）
@@ -2015,7 +2013,7 @@ sub Witch{
 }
 
 sub WitchHeal{
-	my ($sow, $vil, $deadpl, $plsingle, $logfile, $score) = @_;
+	my ($sow, $vil, $plsingle, $deadpl, $logfile, $score) = @_;
 
 	# 蘇生薬を使う
 	if ($plsingle->issensible()){
@@ -2030,7 +2028,7 @@ sub WitchHeal{
 	my $scorehead = $sow->{'textrs'}->{'STATUS_LIVE'}->{'live'};
 	$score->addresult($scorehead, $targetname );
 
-	&heal($sow, $vil, $targetpl, $logfile, $score);
+	&heal($sow, $vil, $deadpl, $logfile, $score);
 }
 
 

@@ -1932,6 +1932,8 @@ _HTML_
 		my $is_pixi = $pl->ispixi();
 		my $is_sensible = $pl->issensible();
 		my $is_committer = $pl->iscommitter();
+		my $role = 0 + $pl->{'role'};
+		my $gift = 0 + $pl->{'gift'};
 		print <<"_HTML_";
 pl.win = {
 	visible: "$win_visible",
@@ -1940,8 +1942,8 @@ pl.win = {
 
 pl.live = "$pl->{'live'}";
 pl.role = [
-	SOW_RECORD.CABALA.roles[$pl->{'role'}],
-	SOW_RECORD.CABALA.gifts[$pl->{'gift'}]
+	SOW_RECORD.CABALA.roles[$role],
+	SOW_RECORD.CABALA.gifts[$gift]
 ].compact();
 pl.rolestate = $pl->{'rolestate'};
 pl.select = SOW_RECORD.CABALA.roles[$selrole];
