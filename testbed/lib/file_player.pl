@@ -522,7 +522,8 @@ sub gettargetlist {
 			next if ($livepl->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'});
 			next if ($livepl->{'pno'} eq $self->{'pno'});
 		} elsif ($cmd eq 'role'){
-			if ($self->{'role'} == $sow->{'ROLEID_WITCH' }) {
+			if (($self->{'role'} == $sow->{'ROLEID_WITCH' })
+			  ||($self->{'role'} == $sow->{'ROLEID_WALPURGIS' })) {
 				next if ( $self->isDisableState('MASKSTATE_ABI_ROLE') );
 				next if (($self->isDisableState('MASKSTATE_ABI_LIVE') )&&($livepl->{'live'} ne 'live'));
 				next if (($self->isDisableState('MASKSTATE_ABI_KILL') )&&($livepl->{'live'} eq 'live'));

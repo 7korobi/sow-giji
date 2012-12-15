@@ -115,10 +115,10 @@ _HTML_
 
 	# 発言欄textarea要素の出力
 	my $mes = '';
-	$mes = $query->{'mes'} if (($query->{'wolf'}     ne 'on') 
-	                        && ($query->{'sympathy'} ne 'on') 
-	                        && ($query->{'pixi'}     ne 'on') 
-	                        && ($query->{'muppet'}   ne 'on') 
+	$mes = $query->{'mes'} if (($query->{'wolf'}     ne 'on')
+	                        && ($query->{'sympathy'} ne 'on')
+	                        && ($query->{'pixi'}     ne 'on')
+	                        && ($query->{'muppet'}   ne 'on')
 	                        && ($query->{'maker'}    ne 'on')
 	                        && ($query->{'admin'}    ne 'on'));
 	$mes =~ s/<br( \/)?>/\n/ig;
@@ -140,7 +140,7 @@ _HTML_
 <option value="$curpl->{'pno'}"$draft_tsay>$tsaycnttext ($sow->{'textrs'}->{'CAPTION_TSAY_PC'})
 _HTML_
 
-	
+
 	if ((1 == $cfg->{'ENABLED_AIMING'})
       ||($sow->{'uid'} eq $cfg->{'USERID_ADMIN'})
       ||($sow->{'uid'} eq $cfg->{'USERID_NPC'})){
@@ -308,7 +308,7 @@ _HTML_
 $mes<br$net>
 
 _HTML_
-	} elsif (($vil->isepilogue() == 0) && ($curpl->{'live'} ne 'live')) {
+	} elsif ($curpl->ispowerlessgrave($vil) ) {
 		# 能力欄表示（墓下）
 		my $mes = $role->{'explain'};
 		&SWHtml::ConvertNET($sow, \$mes);

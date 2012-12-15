@@ -141,17 +141,6 @@ var mes = {
 	"date":  new Date
 };
 gon.event.messages.push(mes);
-var mes = {
-	"csid": "_none_",
-	"face_id": "_none_",
-	"subid":  "I",
-	"logid":  "IM00000",
-	"mestype":  "CAUTION",
-	"style":    "head",
-	"log":   "$last",
-	"date":  new Date
-};
-gon.event.messages.push(mes);
 </script>
 _HTML_
 
