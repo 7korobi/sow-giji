@@ -53,8 +53,8 @@ sub read {
 	if( 7 <  $logpermit  ){
 		my $sow = $self->{'sow'};
 		$data->{'chrname'} = 'H';
-		$data->{'csid'} = '';
-		$data->{'cid'} = '';
+		$data->{'csid'} = '-';
+		$data->{'cid'} = '-';
 	}
 	$data->{'log'} = '' if ($data->{'log'} eq $self->{'sow'}->{'DATATEXT_NONE'});
 	if( 9 == $logpermit  ){

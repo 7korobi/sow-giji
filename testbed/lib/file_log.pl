@@ -75,8 +75,8 @@ sub read {
 	if( 7 <  $logpermit  ){
 		my $sow = $self->{'sow'};
 		$data->{'chrname'} = 'H';
-		$data->{'csid'} = '';
-		$data->{'cid'} = '';
+		$data->{'csid'} = '-';
+		$data->{'cid'} = '-';
 		$data->{'mestype'} = $sow->{'MESTYPE_INFOSP'};
 		$data->{'subid'} = 'I';
 	}
