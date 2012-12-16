@@ -519,7 +519,7 @@ sub GetConfig {
 		BASEDIR_CGIERR => "http://localhost/testbed//",
 		BASEDIR_CGI    => ".",
 		BASEDIR_DAT    => "./data",
-		BASEDIR_DOC    => "http://giji.check.jp",
+		BASEDIR_DOC    => "http://localhost",
 
 		ENABLED_DELETED      => 0, # íœ”­Œ¾‚ð•\Ž¦‚·‚é‚©‚Ç‚¤‚©
 		ENABLED_WINNER_LABEL => 0, # 1:Ÿ—˜ŽÒ•\Ž¦‚ð‚·‚éB

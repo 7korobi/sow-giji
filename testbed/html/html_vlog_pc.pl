@@ -137,7 +137,7 @@ var mes = {
 	"logid":  "IX99999",
 	"mestype":  "CAUTION",
 	"style":    "head",
-	"log":   "$last",
+	"log":   "$last" + ((new Date).format(Date.ISO8601_DATE + '({dow})  {TT}{hh}Žž{mm}•ª', 'ja')),
 	"date":  new Date
 };
 gon.event.messages.push(mes);
