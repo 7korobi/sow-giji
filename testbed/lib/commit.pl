@@ -2017,16 +2017,17 @@ sub WitchHeal{
 
 	# ‘h¶–ò‚ðŽg‚¤
 	if ($plsingle->issensible()){
+		my $deadname = $deadpl->getchrname();
 		my $result = $plsingle->getText('EXECUTELIVEWITCH');
-		$result =~ s/_TARGET_/$targetname/g;
+		$result =~ s/_TARGET_/$deadname/g;
 		$logfile->writeinfo($plsingle->{'uid'}, $sow->{'MESTYPE_INFOSP'}, $result);
 		$result = $vil->getText('RESULT_LIVE');
-		$result =~ s/_TARGET_/$targetname/g;
+		$result =~ s/_TARGET_/$deadname/g;
 		$plsingle->addhistory($result);
 	}
 
 	my $scorehead = $sow->{'textrs'}->{'STATUS_LIVE'}->{'live'};
-	$score->addresult($scorehead, $targetname );
+	$score->addresult($scorehead, $deadname );
 
 	&heal($sow, $vil, $deadpl, $logfile, $score);
 }
