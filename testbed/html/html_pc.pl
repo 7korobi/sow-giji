@@ -69,7 +69,7 @@ _HTML_
   if (defined($sow->{'html'}->{'file_js'})) {
     my $file_js = $sow->{'html'}->{'file_js'};
     foreach (@$file_js) {
-      print "  <script type=\"text/javascript\" src=\"$cfg->{'DIR_JS'}/$_\"></script>\n";
+      print "  <script type=\"text/javascript\" src=\"$cfg->{'DIR_JS'}/$_\" charset=\"UTF-8\"></script>\n";
     }
   }
 

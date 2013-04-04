@@ -470,7 +470,7 @@ _HTML_
 <div id="tab" ng-cloak="ng-cloak">
 
 <div class="sayfilter" id="sayfilter">
-<h4 class="sayfilter_heading" ng-show="! navi.show.blank">РЁТи</h4>
+<h4 class="sayfilter_heading" ng-hide="navi.hide">РЁТи</h4>
 <div class="insayfilter" ng-show="navi.show.link"><div class="paragraph">
 </div>
 </div>

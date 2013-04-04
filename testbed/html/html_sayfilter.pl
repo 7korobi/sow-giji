@@ -106,9 +106,11 @@ sub OutHTMLHeader {
 <div id="tab" ng-cloak="ng-cloak">
 
 <div class="sayfilter" id="sayfilter">
-<h4 class="sayfilter_heading" ng-show="! navi.show.blank">{{story.name}}</h4>
-
-<div class="insayfilter" ng-show="navi.show.link"><div class="paragraph">
+<h4 class="sayfilter_heading" id="navi_head" ng-hide="navi.hide">{{story.name}}</h4>
+_HTML_
+  OutHTMLTurnLink($sow, $vil);
+  print <<"_HTML_";
+<div class="insayfilter" navi="page" name="場面"><div class="paragraph">
 <h4 class="sayfilter_caption_enable" ng-show="page">他の場面へ</h4>
 <div class="sayfilter_content" ng-show="page">
 <nav ng-show="event.is_news"><a class="btn" ng-click="ajax_event(event.turn, event.link + '&rowall=on')">ページ表\示</a></nav>
@@ -116,8 +118,9 @@ sub OutHTMLHeader {
 <nav template="navi/page_filter"></nav>
 <br />
 </div>
+</div>
+</div>
 _HTML_
-  OutHTMLTurnLink($sow, $vil);
   return;
 }
 
@@ -128,10 +131,12 @@ sub OutHTMLTurnLink {
   my $cfg = $sow->{'cfg'};
 
   print <<"_HTML_";
+<div class="insayfilter" navi="link" name="移動"><div class="paragraph">
 <h4 class="sayfilter_caption_enable">他の章へ</h4>
-
 <div class="sayfilter_content" template="navi/events"></div>
-</div></div>
+<br />
+</div>
+</div>
 _HTML_
 	return;
 }
@@ -141,9 +146,14 @@ sub OutHTMLFooter {
 	print <<"_HTML_";
 </div>
 
-<div id="buttons"><nav><div ng-repeat="o in navi.select">
+<div id="buttons"><nav>
+<div ng-repeat="o in navi.select">
 <a class="btn" ng-class="o.class" ng-click="navi.move(o.val)">{{o.name}}</a>
-</div></nav></div>
+</div>
+<div>
+<a class="btn" ng-click="navi.blank()">×</a>
+</div>
+</nav></div>
 
 </div>
 _HTML_
@@ -153,7 +163,7 @@ _HTML_
 sub OutHTMLSayFilter {
 	my ($sow, $vil) = @_;
 	print <<"_HTML_";
-<div class="insayfilter" ng-show="navi.show.info"><div class="paragraph" ng-show="potofs">
+<div class="insayfilter" navi="info" name="名簿"><div class="paragraph" ng-show="potofs">
 <div class="sayfilter_content" template="navi/potofs"></div>
 </div></div>
 _HTML_
@@ -165,7 +175,7 @@ sub OutHTMLTools {
   my $totalcommit = &SWBase::GetTotalCommitID($sow, $vil);
 
 	print <<"_HTML_";
-<div class="insayfilter" ng-show="navi.show.calc"><div class="paragraph">
+<div class="insayfilter" navi="calc" name="状況"><div class="paragraph">
 <h4 class="sayfilter_caption_enable">村の進行状況</h4>
 <div class="sayfilter_content">
 <ul>
