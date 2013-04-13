@@ -850,7 +850,7 @@ sub gon_story {
 	my $totalcommit = -1;
 	my $totalcommit = -1;
 	my $totalcommitannounce = "";
-	my $rating_announce = $sow->{'cfg'}->{'RATING'}->{$rating}->{'CAPTION'};
+	my $rating_announce = $sow->{'cfg'}->{'RATING'}->{$vil->{'rating'}}->{'CAPTION'};
 	my $gamename_announce = $sow->{'basictrs'}->{'GAME'}->{$vil->{'game'}}->{'CAPTION'};
 	my $gamehelp_announce = $sow->{'basictrs'}->{'GAME'}->{$vil->{'game'}}->{'HELP'};
 	my $trsname_announce = $sow->{'textrs'}->{'CAPTION'};

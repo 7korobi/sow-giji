@@ -145,11 +145,10 @@ _HTML_
 		$reqvals->{'cmd'} = '';
 		$reqvals->{'vid'} = $_->{'vid'};
 		my $link = &SWBase::GetLinkValues($sow, $reqvals);
-		$link = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?".$link."#newsay";
+		$link = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?".$link;
 
 		$reqvals->{'cmd'} = 'vinfo';
-		my $linkvinfo = &SWBase::GetLinkValues($sow, $reqvals);
-		$linkvinfo = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?".$linkvinfo;
+		my $linkvinfo = $link . "#mode=info_open_player";
 
 		$reqvals->{'cmd'} = 'howto';
 		$reqvals->{'trsid'} = $vil->{'trsid'};

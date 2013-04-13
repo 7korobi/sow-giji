@@ -239,9 +239,8 @@ sub ReplaceAnchorHTMLMb {
 	my ($sow, $vil, $mes, $anchor) = @_;
 	my $cfg = $sow->{'cfg'};
 	my $reqvals = &SWBase::GetRequestValues($sow);
-	my $redirect = 'http://utage.sytes.net/wolf/redirect.cgi?';
 
-	$mes =~ s/s?https?:\/\/([^\/<>\s]+)[-_.!~*'()a-zA-Z0-9;\/?:\@&=+\$,%#]+/ <a href=\"$redirect$&\">$1...<\/a>/g;
+	$mes =~ s/s?https?:\/\/([^\/<>\s]+)[-_.!~*'()a-zA-Z0-9;\/?:\@&=+\$,%#]+/ <a href=\"$&\">$1...<\/a>/g;
 
 	while ($mes =~ /<mw ([a-zA-Z]+\d+),([^,]*),([^>]+)>/) {
 		my $anchortext = $&;
@@ -268,6 +267,15 @@ sub ReplaceAnchorHTMLMb {
 
 		$mes =~ s/$anchortext/ <a href=\"$link\">&gt;&gt;$linktext<\/a>/;
 #		$mes =~ s/$anchortext/ &gt;&gt;$linktext/;
+	}
+	while ($mes =~ /<rand ([^,]+),([^>]+)>/) {
+		my $randtext = $&;
+		my $result = $1;
+
+		# ê≥ãKï\åªÇ≈ÇÃåÎîFéØÇñhÇÆ
+		&BackQuoteAnchorMark(\$randtext);
+
+		$mes =~ s/$randtext/ $result/;
 	}
 
 	return $mes;

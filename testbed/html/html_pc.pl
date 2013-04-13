@@ -187,95 +187,39 @@ sub OutHTMLLogin {
   my $urlsow = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}";
   my $reqvals = &SWBase::GetRequestValues($sow);
   my $hidden = &SWBase::GetHiddenValues($sow, $reqvals, '  ');
-  if ($sow->{'user'}->logined() <= 0) {
-    # 未ログイン
-    my $disabled = '';
-    $disabled = " $sow->{'html'}->{'disabled'}" if (($query->{'prof'} ne '') || ($query->{'cmd'} eq 'editprofform') || ($query->{'cmd'} eq 'editprof'));
-    if ($cfg->{'ENABLED_TYPEKEY'} <= 0) {
-      # 通常のログインフォーム
-      print <<"_HTML_";
-<form action="$urlsow" method="$sow->{'cfg'}->{'METHOD_FORM'}" class="form-inline">
-<p>
-  <input type="hidden" name="cmd" value="login"$net>
-  <input type="hidden" name="cmdfrom" value="$query->{'cmd'}"$net>$hidden
-  <label>user id: <input class="input-small" type="text" size="10" name="uid" value="$sow->{'uid'}"$net></label>
-  <label>password: <input class="input-small" type="password" size="10" name="pwd" value=""$net></label>
-  <input type="submit" value="ログイン"$disabled$net>
-</p>
-</form>
+
+  print <<"_HTML_";
+<div template="sow/login" ng-show="form.login"></div>
 <hr class="invisible_hr"$net>
-
 _HTML_
-    } else {
-      # TypeKeyログインフォーム
-      $reqvals->{'cmd'} = 'login';
-      my $linkvalue = &SWBase::GetLinkValues($sow, $reqvals);
-      print <<"_HTML_";
-<form action="https://www.typekey.com/t/typekey/login" method="$sow->{'cfg'}->{'METHOD_FORM'}" class="form-inline">
-<p>
-  <input type="hidden" name="t" value="$sow->{'cfg'}->{'TOKEN_TYPEKEY'}"$net>
-  <input type="hidden" name="need_email" value="0"$net>
-  <input type="hidden" name="_return" value="$sow->{'cfg'}->{'URL_SW'}/$sow->{'cfg'}->{'FILE_SOW'}?$linkvalue"$net>
-  <input type="hidden" name="v" value="1.1"$net>
-  <input type="submit" value="ログイン"$disabled$net>
-  (<a href="http://www.sixapart.jp/typekey/">TypeKey</a>)
-</p>
-</form>
-<hr class="invisible_hr"$net>
+}
 
+sub OutHTMLGonInit {
+  my $sow = $_[0];
+  my $cfg = $sow->{'cfg'};
+  my $uid = $sow->{'uid'};
+  my $path = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}";
+  my $cmdfrom = $query->{'cmd'};
+  my $logined = $sow->{'user'}->logined() + 0;
+  my $expired = $sow->{'time'} + $cfg->{'TIMEOUT_COOKIE'};
+  my $is_admin = ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'}) + 0;
+  my $admin_uri = $path."?cmd=admin" if ($is_admin);
+
+  print <<"_HTML_";
+<script>
+\$(function(){\$('.finished_log').hide()});
+window.gon = OPTION.gon.clone(true);
+gon.form.login = {
+  "admin_uri": "$admin_uri",
+  "is_admin": $is_admin,
+  "logined": (1 == $logined),
+  "cmdfrom": "$cmdfrom",
+  "expired": Date.create(1000 * $expired),
+  "uidtext": "$uid".replace(" ","&nbsp;"),
+  "uid": "$uid"
+}
+gon.form.uri = "$path";
 _HTML_
-    }
-  } else {
-    # ログイン済み
-    my %link = (
-      'user' => $sow  ->{'uid'},
-      'css'  => $query->{'css'},
-    );
-    my $urluser = $cfg->{'URL_USER'}.'?'.&SWBase::GetLinkValues($sow, \%link);
-    my $uidtext = $sow->{'uid'};
-    $uidtext =~ s/ /&nbsp\;/g;
-
-    my $disabled = '';
-    $disabled = " $sow->{'html'}->{'disabled'}" if (($query->{'cmd'} eq 'entrypr') || ($query->{'cmd'} eq 'writepr') || ($query->{'prof'} ne '') || ($query->{'cmd'} eq 'editprofform') || ($query->{'cmd'} eq 'editprof'));
-
-    $reqvals->{'prof'} = '';
-    $reqvals->{'cmd'} = 'admin';
-    $link = &SWBase::GetLinkValues($sow, $reqvals);
-    my $linkadmin = '';
-    $linkadmin = "\n  [<a href=\"$urlsow?$link\">管理画面</a>] / " if ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'});
-
-    if ($sow->{'cfg'}->{'ENABLED_TYPEKEY'} <= 0) {
-      # 通常のログアウトフォーム
-      print <<"_HTML_";
-<form action="$urlsow" method="$sow->{'cfg'}->{'METHOD_FORM'}" class="form-inline">
-<p>
-  <input type="hidden" name="cmd" value="logout"$net>
-  <input type="hidden" name="cmdfrom" value="$query->{'cmd'}"$net>$hidden$linkadmin
-  <span class="mes_date">ログイン情報は$sow->{'cookie_expires'}まで有効です。</span>
-  <input type="submit" value="$uidtext がログアウト"$disabled$net>
-</p>
-</form>
-<hr class="invisible_hr"$net>
-
-_HTML_
-    } else {
-      # TypeKeyログアウトフォーム
-      $reqvals->{'cmd'} = 'logout';
-      my $linkvalue = &SWBase::GetLinkValues($sow, $reqvals);
-      print <<"_HTML_";
-<form action="https://www.typekey.com/t/typekey/logout" method="$sow->{'cfg'}->{'METHOD_FORM'}" class="form-inline">
-<p>
-  <input type="hidden" name="_return" value="$sow->{'cfg'}->{'URL_SW'}/$sow->{'cfg'}->{'FILE_SOW'}?$linkvalue"$net>$linkadmin
-  user id: $uidtext
-  <input type="submit" value="ログアウト"$disabled$net>
-  (<a href="http://www.sixapart.jp/typekey/">TypeKey</a>)
-</p>
-</form>
-<hr class="invisible_hr"$net>
-
-_HTML_
-    }
-  }
 }
 
 #----------------------------------------

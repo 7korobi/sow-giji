@@ -41,23 +41,17 @@ sub OutHTMLVilInfo {
 	$logfile->close();
 
 	print <<"_HTML_";
-<div class="toppage">
-<h2>村の情報</h2>
-<div template="navi/messages" id="messages">
+<h2>{{story.vid}} {{story.name}} $linkrss</h2>
+<h3>{{subtitle}}</h3>
+<div template="navi/messages" id="messages"></div>
 <div id="tab" template="sow/navi"></div>
-</div>
 _HTML_
 	&OutHTMLVilInfoInner($sow,$vil);
 
 	&SWHtmlPC::OutHTMLReturnPC($sow); # トップページへ戻る
 	$sow->{'html'}->outcontentfooter();
 
-	print <<"_HTML_";
-<script>
-window.gon = OPTION.gon.clone(true);
-gon.form.uri = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}";
-_HTML_
-
+	&SWHtmlPC::OutHTMLGonInit($sow); # ログイン欄の出力
 	$vil->gon_story();
 	$vil->gon_event();
 	$vil->gon_potofs();
@@ -75,7 +69,7 @@ _HTML_
 	print <<"_HTML_";
 var mes = {
 	"template": "sow/village_info",
-	"logid": "AX99999"
+	"logid": "vilinfo00001"
 };
 gon.event.messages.push(mes);
 </script>

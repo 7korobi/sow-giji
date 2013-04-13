@@ -33,11 +33,7 @@ sub OutHTMLMakeVil {
 	my $linkvalue = &SWBase::GetLinkValues($sow, $reqvals);
 	my $urlsow = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}";
 
-	print <<"_HTML_";
-<script>
-window.gon = OPTION.gon.clone(true);
-gon.form.uri = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}";
-_HTML_
+	&SWHtmlPC::OutHTMLGonInit($sow); # ƒƒOƒCƒ“—“‚Ìo—Í
 	$vil->gon_story();
 	$vil->gon_event();
 	$vil->gon_potofs();

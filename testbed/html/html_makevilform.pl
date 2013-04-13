@@ -479,10 +479,7 @@ _HTML_
 _HTML_
 	$sow->{'html'}->outfooter(); # HTMLフッタの出力
 
-	print <<"_HTML_";
-<script>
-window.gon = OPTION.gon.clone(true);
-_HTML_
+	&SWHtmlPC::OutHTMLGonInit($sow); # ログイン欄の出力
 	$vil->gon_story(true);
 	$vil->gon_event(true);
 	print <<"_HTML_";

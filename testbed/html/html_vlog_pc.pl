@@ -38,8 +38,8 @@ sub OutHTMLVlogPC {
 	$linkrss = '' if ($cfg->{'ENABLED_RSS'} == 0);
 
 	print <<"_HTML_";
-<h2>{{story.vid}} {{title}} $linkrss</h2>
-<h3>{{event.name}}</h3>
+<h2>{{story.vid}} {{story.name}} $linkrss</h2>
+<h3>{{subtitle}}</h3>
 _HTML_
 
 	if ($modesingle == 0) {
@@ -70,21 +70,13 @@ _HTML_
 _HTML_
 	}
 
+	&SWHtmlSayFilter::OutHTMLHeader   ($sow, $vil);
+
 	# トップページへ戻る
 	&SWHtmlPC::OutHTMLReturnPC($sow) if ($modesingle == 0);
-
-	# 発言フィルタ
 	$sow->{'html'}->outcontentfooter();
 
-	&SWHtmlSayFilter::OutHTMLHeader   ($sow, $vil);
-	&SWHtmlSayFilter::OutHTMLSayFilter($sow, $vil) if ($modesingle == 0);
-	&SWHtmlSayFilter::OutHTMLTools    ($sow, $vil);
-	&SWHtmlSayFilter::OutHTMLFooter   ($sow, $vil);
-	print <<"_HTML_";
-<script>
-window.gon = OPTION.gon.clone(true);
-gon.form.uri = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}";
-_HTML_
+	&SWHtmlPC::OutHTMLGonInit($sow); # ログイン欄の出力
 	# アナウンス／入力・参加フォーム表示
 	if (($modesingle == 0) && ($sow->{'turn'} == $vil->{'turn'}) && ($logrows->{'end'} > 0)) {
 		&OutHTMLVlogFormArea($sow, $vil, $memofile)
@@ -92,6 +84,14 @@ _HTML_
 	$vil->gon_story();
 	$vil->gon_event();
 	$vil->gon_potofs();
+
+	print <<"_HTML_";
+var mes = {
+	"template": "sow/village_info",
+	"logid": "vilinfo00000"
+};
+gon.event.messages.push(mes);
+_HTML_
 
 	# 村ログ表示
 	require "$cfg->{'DIR_HTML'}/html_vlogsingle_pc.pl";
@@ -144,25 +144,6 @@ var mes = {
 	"log":   "$last" + ((new Date).format(Date.ISO8601_DATE + '({dow})  {TT}{hh}時{mm}分', 'ja')),
 	"date":  new Date
 };
-gon.event.messages.push(mes);
-var mes = {
-	"template": "sow/village_info",
-	"csidcaptions": "$csidcaptions",
-	"logid": "AX99999"
-};
-(function(){
-var a = [];
-_HTML_
-	$list = $nrule->{'name'};
-	for( $i=0, $no=1; $i<@$list; $i++ ){
-		next if ( '' eq $list->[$i] );
-		my $name = $nrule->{'name'}->[$i];
-		print "a.push(\"$no.".$name."\");";
-		$no++;
-	}
-	print <<"_HTML_";
-mes.nrules = a;
-})();
 gon.event.messages.push(mes);
 </script>
 _HTML_

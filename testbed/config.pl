@@ -509,7 +509,7 @@ sub GetConfig {
 		USERID_NPC     => "master",
 		USERID_ADMIN   => "admin",
 		ENABLED_VMAKE  => 1,
-		URL_SW         => "http://localhost/testbed/",
+		URL_SW         => "http://localhost/testbed",
 		NAME_HOME      => "l˜T‹cŽ– ŽI‚Ì–¡‘XŽÏ",
 		RULE           => "BRAID",
 		MAX_VILLAGES   => 2,
