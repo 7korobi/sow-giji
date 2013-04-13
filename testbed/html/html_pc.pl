@@ -46,7 +46,8 @@ _HTML_
   # スタイルシートの出力
   my $css = "cinema800";
   my $css = $cookie->{'theme'} . $cookie->{'width'} if ( $cookie->{"theme"} && $cookie->{"width"} );
-  print "  <link id=\"giji_css\" href=\"$sow->{'cfg'}->{'DIR_CSS'}/$css.css\" rel=\"stylesheet\" type=\"text/css\">\n";
+  print "  <link id=\"giji_css\"      href=\"$sow->{'cfg'}->{'DIR_CSS'}/$css.css\" rel=\"stylesheet\" type=\"text/css\">\n";
+  print "  <link id=\"giji_css_font\" href=\"$sow->{'cfg'}->{'DIR_CSS'}/font/normal.css\" rel=\"stylesheet\" type=\"text/css\">\n";
 
   # RSSの出力
   if (($sow->{'html'}->{'rss'} ne '') && ($cfg->{'ENABLED_RSS'} > 0)) {

@@ -221,6 +221,8 @@ _HTML_
                 print "\n\n<TR> ";
                 $d = 0;
             }
+            next if ($sow->{'ROLEID_TANGLE'}    == $i && $sow->{'cfg'}->{'ENABLED_TEST_ROLE'} != 1);
+            next if ($sow->{'ROLEID_WALPURGIS'} == $i && $sow->{'cfg'}->{'ENABLED_TEST_ROLE'} != 1);
 			next if ( '' eq $sow->{'textrs'}->{'ROLESHORTNAME'}->[$i] );
             $d++;
 			print <<"_HTML_";
@@ -298,9 +300,15 @@ _HTML_
 <fieldset>
 <legend>Šg’£İ’è</legend>
 <dl class="dl-horizontal">
+_HTML_
+			if ($sow->{'cfg'}->{'ENABLED_SEQ_EVENT'} > 0) {
+				print <<"_HTML_";
 <dt><label for="seqevent">–Œ³‡</label>
 <dd><input id="seqevent" name="seqevent" type="checkbox" ng-checked="story.options.some('seq-event')">
   –Œ‚ª‡˜‚Ç‚¨‚è‚É”­¶‚·‚é
+_HTML_
+			}
+			print <<"_HTML_";
 <dt><label for="entrust">ˆÏ”C“Š•[</label>
 <dd><input id="entrust" name="entrust" type="checkbox" ng-checked="story.options.some('entrust')">
   ˆÏ”C“Š•[‚ğ‚·‚é
@@ -467,18 +475,8 @@ _HTML_
 
 	require "$cfg->{'DIR_HTML'}/html_sayfilter.pl";
 	print <<"_HTML_";
-<div id="tab" ng-cloak="ng-cloak">
-
-<div class="sayfilter" id="sayfilter">
-<h4 class="sayfilter_heading" ng-hide="navi.hide">İ’è</h4>
-<div class="insayfilter" ng-show="navi.show.link"><div class="paragraph">
-</div>
-</div>
+<div id="tab" template="sow/navi_edit"></div>
 _HTML_
-#	&SWHtmlSayFilter::OutHTMLHeader   ($sow, $vil);
-	&SWHtmlSayFilter::OutHTMLSayFilter($sow, $vil) if ($modesingle == 0);
-	&SWHtmlSayFilter::OutHTMLTools    ($sow, $vil);
-	&SWHtmlSayFilter::OutHTMLFooter   ($sow, $vil);
 	$sow->{'html'}->outfooter(); # HTMLƒtƒbƒ^‚Ìo—Í
 
 	print <<"_HTML_";

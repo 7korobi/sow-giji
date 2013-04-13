@@ -131,11 +131,11 @@ text_form = {
 	max: {
 		unit: "$max_unit",
 		line: $max_line,
-		size: $max_size,
+		size: $max_size
 	},
 	mestype: "$mestype",
 	csid_cid: "$img",
-	longname: "$longchrname",
+	longname: "$longchrname"
 }
 gon.form.texts.push(text_form);
 
@@ -150,15 +150,19 @@ text_form = {
 	max: {
 		unit: "$max_unit",
 		line: $max_line,
-		size: $max_size,
+		size: $max_size
 	},
 	csid_cid: "$img",
 	longname: "$longchrname",
-	target: "-1",
-	targets: [
-{val:"-1",          mestype:"$mestype", name:"$ssaycnttext ($sow->{'textrs'}->{'CAPTION_SAY_PC'})"},
-{val:"$curpl->{'pno'}", mestype:"TSAY", name:"$tsaycnttext ($sow->{'textrs'}->{'CAPTION_TSAY_PC'})"},
+	target: "-1"
+};
+(function(){
+var a = [];
+var b = [];
+a.push({val:"-1",          mestype:"$mestype", name:"$ssaycnttext ($sow->{'textrs'}->{'CAPTION_SAY_PC'})"});
+a.push({val:"$curpl->{'pno'}", mestype:"TSAY", name:"$tsaycnttext ($sow->{'textrs'}->{'CAPTION_TSAY_PC'})"});
 _HTML_
+
 	if ((1 == $vil->{'aiming'})
       ||($sow->{'uid'} eq $cfg->{'USERID_ADMIN'})
       ||($sow->{'uid'} eq $cfg->{'USERID_NPC'})){
@@ -168,19 +172,14 @@ _HTML_
 			next if (0 == $curpl->isAim($_));
 
 			my $targetname = $_->getlongchrname();
-			print <<"_HTML_";
-{val:"$_->{'pno'}", mestype:"AIM", name:"$asaycnttext $targetnameと内緒話"},
-_HTML_
+			print "a.push({val:\"$_->{'pno'}\", mestype:\"AIM\", name:\"$asaycnttext $targetnameと内緒話\"});"
 		}
 	}
-	print <<"_HTML_";
-	],
-	roles: [
-_HTML_
+
 	# 希望する能力の表示
 	if ( $vil->{'turn'} < 1){
 		if ($isplok) {
-			print "{val:\"-1\", name:\"$sow->{'textrs'}->{'RANDOMROLE'}\"},\n";
+			print "b.push({val:\"-1\", name:\"$sow->{'textrs'}->{'RANDOMROLE'}\"});\n";
 			my $rolename = $sow->{'textrs'}->{'ROLENAME'};
 			my ( $rolematrix, $giftmatrix ) = &SWSetRole::GetSetRoleTable($sow, $vil, $vil->{'roletable'}, $vil->{'vplcnt'});
 
@@ -188,17 +187,19 @@ _HTML_
 			foreach ($i = 0; $i < @{$sow->{'ROLEID'}}; $i++) {
 				my $output = $rolematrix->[$i];
 				$output = 1 if ($i == 0); # おまかせは必ず表示
-				print "{val:\"$i\", name:\"$rolename->[$i]\"},\n" if ($output > 0);
+				print "b.push({val:\"$i\", name:\"$rolename->[$i]\"});\n" if ($output > 0);
 			}
 		}
 		if ($ismobok){
 			my $mob = $sow->{'basictrs'}->{'MOB'}->{$vil->{'mob'}}->{'CAPTION'};
-			print "{val:\"$sow->{'ROLEID_MOB'}\", name:\"$mobで見物\"},\n";
+			print "b.push({val:\"$sow->{'ROLEID_MOB'}\", name:\"$mobで見物\"});\n";
 		}
 	}
+
 	print <<"_HTML_";
-	],
-};
+text_form.targets = a;
+text_form.roles   = b;
+})();
 gon.form.texts.push(text_form);
 _HTML_
 
@@ -249,19 +250,24 @@ sub OutHTMLActionFormPC {
 text_form = {
 	cmd: "action",
 	jst: "action",
+	action: "-99",
+	target: "-1",
 	text: "",
 	title: "アクション",
 	count: "$actcnttext",
 	max: {
 		unit: "$max_unit",
 		line: $max_line,
-		size: $max_size,
+		size: $max_size
 	},
 	mestype: "$mestype",
-	shortname: "$chrname",
-	target: "-1",
-	targets: [
-{val:"-1", name:"（選択しない）"},
+	shortname: "$chrname"
+};
+(function(){
+var a = [];
+var b = [];
+a.push({val:"-1", name:"（選択しない）"});
+b.push({val:"-99", name:"（↓自由に入力）"});
 _HTML_
 	# アクションの対象者
 	foreach (@$pllist) {
@@ -270,21 +276,15 @@ _HTML_
 		my $targetshortname = $_->getshortchrname();
 		my $targetlongname  = $_->getlongchrname();
 		print <<"_HTML_";
-{val:"$_->{'pno'}", name:"$targetshortname", longname:"$targetlongname"},
+a.push({val:"$_->{'pno'}", name:"$targetshortname", longname:"$targetlongname"});
 _HTML_
 	}
-	print <<"_HTML_";
-	],
-	action: "-99",
-	actions: [
-{val:"-99", name:"（↓自由に入力）"},
-_HTML_
 	# 組み込み済みアクション
 	my $actions = $sow->{'textrs'}->{'ACTIONS'};
 	my $i;
 	for ($i = 0; $i < @$actions; $i++) {
 		print <<"_HTML_";
-{val:"$i", name:"$actions->[$i]"},
+b.push({val:"$i", name:"$actions->[$i]"});
 _HTML_
 	}
 	if ($curpl->{'live'} eq 'live'){
@@ -292,13 +292,13 @@ _HTML_
 		my $actions_up = $sow->{'textrs'}->{'ACTIONS_CLEARANCE_UP'};
 		if( $actions_up ){
 			print <<"_HTML_";
-{val:"-4", name:"$actions_up"},
+b.push({val:"-4", name:"$actions_up"});
 _HTML_
 		}
 		my $actions_down = $sow->{'textrs'}->{'ACTIONS_CLEARANCE_DOWN'};
 		if( $actions_down ){
 			print <<"_HTML_";
-{val:"-5", name:"$actions_down"},
+b.push({val:"-5", name:"$actions_down"});
 _HTML_
 		}
 
@@ -310,14 +310,14 @@ _HTML_
 			$zapcount =~ s/_POINT_/$curpl->{'zapcount'}/g;
 			$actions_zap =~ s/_COUNT_/$zapcount/g;
 			print <<"_HTML_";
-{val:"-3", name:"$actions_zap"},
+b.push({val:"-3", name:"$actions_zap"});
 _HTML_
 		}
 
 		# しおり
 		my $actions_bookmark = $sow->{'textrs'}->{'ACTIONS_BOOKMARK'};
 		print <<"_HTML_";
-{val:"-2", name:"$actions_bookmark"},
+b.push({val:"-2", name:"$actions_bookmark"});
 _HTML_
 
 		# 促し
@@ -327,20 +327,20 @@ _HTML_
 			$restaddpt =~ s/_POINT_/$curpl->{'actaddpt'}/g;
 			$actions_addpt =~ s/_REST_/$restaddpt/g;
 			print <<"_HTML_";
-{val:"-1", name:"$actions_addpt"},
+b.push({val:"-1", name:"$actions_addpt"});
 _HTML_
 		}
 	} else {
 		# しおり
 		my $actions_bookmark = $sow->{'textrs'}->{'ACTIONS_BOOKMARK'};
 		print <<"_HTML_";
-{val:"-2", name:"$actions_bookmark"},
+b.push({val:"-2", name:"$actions_bookmark"});
 _HTML_
 	}
-
 	print <<"_HTML_";
-	],
-};
+text_form.targets = a;
+text_form.actions = b;
+})();
 gon.form.texts.push(text_form);
 _HTML_
 	return;
@@ -416,7 +416,7 @@ text_form = {
 	votes: [],
 	mestype: "TSAY",
 	longname: "$longname",
-	csid_cid: "$img",
+	csid_cid: "$img"
 };
 gon.form.texts.push(text_form);
 _HTML_
@@ -437,7 +437,7 @@ text_form = {
 	votes: [],
 	mestype: "TSAY",
 	longname: "$longname",
-	csid_cid: "$img",
+	csid_cid: "$img"
 };
 gon.form.texts.push(text_form);
 _HTML_
@@ -530,7 +530,7 @@ text_form = {
 	max: {
 		unit: "$max_unit",
 		line: $max_line,
-		size: $max_size,
+		size: $max_size
 	},
 	votes: [],
 	style: "",
@@ -538,7 +538,7 @@ text_form = {
 	switch: "$sayswitch",
 	mestype: SOW.switch["$sayswitch"].mestype,
 	csid_cid: "$img",
-	longname: "$longname",
+	longname: "$longname"
 };
 gon.form.texts.push(text_form);
 _HTML_
@@ -578,14 +578,14 @@ text_form = {
 	max: {
 		unit: "$max_unit",
 		line: $max_line,
-		size: $max_size,
+		size: $max_size
 	},
 	votes: [],
 	switch: "$writemode",
 	mestype: "SAY",
 	longname: "$longname",
-	csid_cid: "$keys[0]/$writemode",
-}
+	csid_cid: "$keys[0]/$writemode"
+};
 gon.form.texts.push(text_form);
 
 text_form = {
@@ -599,14 +599,14 @@ text_form = {
 	max: {
 		unit: "$max_unit",
 		line: $max_line,
-		size: $max_size,
+		size: $max_size
 	},
 	votes: [],
 	target: "-1",
 	switch: "$writemode",
 	mestype: "SAY",
 	longname: "$longname",
-	csid_cid: "$keys[0]/$writemode",
+	csid_cid: "$keys[0]/$writemode"
 };
 gon.form.texts.push(text_form);
 _HTML_
@@ -624,10 +624,10 @@ sub OutHTMLCommitFormPC {
 	my $reqvals = &SWBase::GetRequestValues($sow);
 	my $hidden = &SWBase::GetHiddenValues($sow, $reqvals, '    ');
 
-	my $disabled = '';
+	my $disabled = 0;
 	my $nosay = '';
 	if (($sow->{'curpl'}->{'saidcount'} == 0)&&($vil->{'event'} != $sow->{'EVENTID_NIGHTMARE'})) {
-		$disabled = " $sow->{'html'}->{'disabled'}";
+		$disabled = 1;
 		$nosay = "<br><br>最低一発言して確定しないと、時間を進める事ができません。";
 	}
 
@@ -635,14 +635,15 @@ sub OutHTMLCommitFormPC {
 command = {
 	cmd: "commit",
 	jst: "commit",
+	disabled: (1 == $disabled),
 	title: "変更",
 	caption: "全員が「時間を進める」を選ぶと前倒しで更新されます。$nosay",
 	commit: "$sow->{'curpl'}->{'commit'}",
 	commits: [
 {val:"0", name:"時間を進めない"},
-{val:"1", name:"時間を進める"},
-	],
-}
+{val:"1", name:"時間を進める"}
+	]
+};
 gon.form.commands[command.cmd] = command;
 _HTML_
 	return;
@@ -687,23 +688,25 @@ vote = {
 	jst: "$jst",
 	title: "$votelabel",
 	target1: "$target1",
-	target2: "$target2",
-	targets: [
+	target2: "$target2"
+};
+(function(){
+var a = [];
 _HTML_
 	if (($cmd eq 'vote')&&( $curpl->{$cmd.'1'} == $curpl->{'pno'})){
 		my $pno      = $curpl->{'pno'};
 		my $chrname  = $curpl->getlongchrname();
-		print "{val:\"$pno\", name:\"自分へ投票\"},\n";
+		print "a.push({val:\"$pno\", name:\"自分へ投票\"});\n";
 	}
 
 	# 対象の表示
 	$targetlist = $curpl->gettargetlistwithrandom($cmd);
 	foreach (@$targetlist) {
-		print "{val:\"$_->{'pno'}\", name:\"$_->{'chrname'}\"},\n";
+		print "a.push({val:\"$_->{'pno'}\", name:\"$_->{'chrname'}\"});\n";
 	}
 	print <<"_HTML_";
-	],
-};
+vote.targets = a;
+})();
 text_form.votes.push(vote);
 _HTML_
 	return;
@@ -737,8 +740,10 @@ sub OutHTMLUpdateSessionButtonPC {
 command = {
 	cmd: "maker",
 	jst: "target",
-	title: "この人に村を任せる！",
-	targets: [
+	title: "この人に村を任せる！"
+};
+(function(){
+var a = [];
 _HTML_
 		# 村建て権移譲
 		$targetlist = $vil->getallpllist();
@@ -746,15 +751,15 @@ _HTML_
 			next if (($_->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'}));
 			my $chrname = $_->getlongchrname();
 			my $pno     = $_->{'pno'};
-			print "{val:\"$pno\", name:\"$chrname\"},\n";
+			print "a.push({val:\"$pno\", name:\"$chrname\"});\n";
 		}
 		print <<"_HTML_";
-	],
-};
+command.targets = a;
+})();
 gon.form.commands[command.cmd] = command;
 _HTML_
 
-	my $disabled = '';
+	my $disabled = 0;
 	if ($button{'cmd'} eq 'start') {
 		my $upddatetime = sprintf('%02d:%02d',$vil->{'updhour'},$vil->{'updminite'});
 
@@ -762,8 +767,10 @@ _HTML_
 command = {
 	cmd: "kick",
 	jst: "target",
-	title: "退去いただこう、かな…",
-	targets: [
+	title: "退去いただこう、かな…"
+};
+(function(){
+var a = [];
 _HTML_
 		# キック機能
 		$targetlist = $vil->getallpllist();
@@ -771,22 +778,22 @@ _HTML_
 			next if (($_->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'}));
 			my $chrname = $_->getlongchrname();
 			my $pno     = $_->{'pno'};
-			print "{val:\"$pno\", name:\"$chrname\"},\n";
+			print "a.push({val:\"$pno\", name:\"$chrname\"});\n";
 		}
 		print <<"_HTML_";
-	],
-};
+command.targets = a;
+})();
 gon.form.commands[command.cmd] = command;
 command = {
 	cmd: "editvilform",
 	jst: "button",
-	title: "村を編集しよう！",
+	title: "村を編集しよう！"
 };
 gon.form.commands[command.cmd] = command;
 command = {
 	cmd: "muster",
 	jst: "button",
-	title: "点呼しよう！($upddatetimeまで)",
+	title: "点呼しよう！($upddatetimeまで)"
 };
 gon.form.commands[command.cmd] = command;
 _HTML_
@@ -796,7 +803,7 @@ _HTML_
 command = {
 	cmd: "editvilform",
 	jst: "button",
-	title: "村を編集しよう！",
+	title: "村を編集しよう！"
 };
 gon.form.commands[command.cmd] = command;
 _HTML_
@@ -807,13 +814,13 @@ _HTML_
 command = {
 	cmd: "update",
 	jst: "button",
-	title: "更新しちゃおう！",
+	title: "更新しちゃおう！"
 };
 gon.form.commands[command.cmd] = command;
 _HTML_
 		} else {
 			# 村立て人の延長機能利用は制限あり
-			$disabled = ' disabled' if ($vil->{'extend'} == 0);
+			$disabled = 1 if ($vil->{'extend'} == 0);
 		}
 	}
 
@@ -821,7 +828,8 @@ _HTML_
 command = {
 	cmd: "$button{'cmd'}",
 	jst: "button",
-	title: "$button{'label'}",
+	disabled: (1 == $disabled),
+	title: "$button{'label'}"
 };
 gon.form.commands[command.cmd] = command;
 _HTML_
@@ -837,8 +845,8 @@ sub OutHTMLScrapVilButtonPC {
 command = {
 	cmd: "scrapvil",
 	jst: "button",
-	title: "廃村する",
-}
+	title: "廃村する"
+};
 gon.form.commands[command.cmd] = command;
 _HTML_
 	return;
@@ -854,7 +862,7 @@ sub OutHTMLExitButtonPC {
 command = {
 	cmd: "exit",
 	jst: "button",
-	title: "村を出る",
+	title: "村を出る"
 };
 gon.form.commands[command.cmd] = command;
 _HTML_

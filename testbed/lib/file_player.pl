@@ -1937,7 +1937,7 @@ _HTML_
 		print <<"_HTML_";
 pl.win = {
 	visible: "$win_visible",
-	result:  "$win_result",
+	result:  "$win_result"
 };
 
 pl.live = "$pl->{'live'}";

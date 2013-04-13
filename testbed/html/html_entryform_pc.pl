@@ -43,8 +43,6 @@ gon.potof || (gon.potof = {
     sow_auth_id: "$sow->{'uid'}",
 });
 text_form = {
-
-
 	cmd: "entry",
 	jst: "entry",
 	text: "",
@@ -52,14 +50,18 @@ text_form = {
 	count: "",
 	title: "この村に参加",
 	caption: "",
+	mestype: "SAY",
+	longname: "",
 	max: {
 		unit: "$max_unit",
 		line: $max_line,
-		size: $max_size,
-	},
-	mestype: "SAY",
-	longname: "",
-	csid_cids: [
+		size: $max_size
+	}
+};
+
+(function(){
+var a = [];
+var b = [];
 _HTML_
 	# 希望する配役の表示
 	my $csid_val;
@@ -69,16 +71,12 @@ _HTML_
 		foreach (@$chrorder) {
 			next if (defined($csid_cid{"$csid_val/$_"})); # 参加済みのキャラは除外
 			my $chrname = $sow->{'charsets'}->getchrname($csid_val, $_);
-			print "{val:\"$csid_val/$_\", name:\"$chrname\"},\n";
+			print "a.push({val:\"$csid_val/$_\", name:\"$chrname\"});\n";
 		}
 	}
-	print <<"_HTML_";
-	],
-	roles: [
-_HTML_
 	# 希望する能力の表示
 	if ($isplok) {
-		print "{val:-1, name:\"$sow->{'textrs'}->{'RANDOMROLE'}\"},\n";
+		print "b.push({val:-1, name:\"$sow->{'textrs'}->{'RANDOMROLE'}\"});\n";
 		my $rolename = $sow->{'textrs'}->{'ROLENAME'};
 		my ( $rolematrix, $giftmatrix ) = &SWSetRole::GetSetRoleTable($sow, $vil, $vil->{'roletable'}, $vil->{'vplcnt'});
 
@@ -86,18 +84,20 @@ _HTML_
 		foreach ($i = 0; $i < @{$sow->{'ROLEID'}}; $i++) {
 			my $output = $rolematrix->[$i];
 			$output = 1 if ($i == 0); # おまかせは必ず表示
-			print "{val:$i, name:\"$rolename->[$i]\"},\n" if ($output > 0);
+			print "b.push({val:$i, name:\"$rolename->[$i]\"});\n" if ($output > 0);
 		}
 	}
 	if ($ismobok){
 		my $mob = $sow->{'basictrs'}->{'MOB'}->{$vil->{'mob'}}->{'CAPTION'};
-		print "{val:$sow->{'ROLEID_MOB'}, name:\"$mobで見物\"},\n";
+		print "b.push({val:$sow->{'ROLEID_MOB'}, name:\"$mobで見物\"});\n";
 	}
 	print <<"_HTML_";
-	],
-};
-text_form.csid_cid = text_form.csid_cids[0].val
-text_form.role     = text_form.roles[0].val
+text_form.csid_cids = a;
+text_form.roles     = b;
+})();
+
+text_form.csid_cid = text_form.csid_cids[0].val;
+text_form.role     = text_form.roles[0].val;
 gon.form.texts.push(text_form);
 _HTML_
 

@@ -145,6 +145,25 @@ var mes = {
 	"date":  new Date
 };
 gon.event.messages.push(mes);
+var mes = {
+	"template": "sow/village_info",
+	"csidcaptions": "$csidcaptions",
+	"logid": "AX99999"
+};
+(function(){
+var a = [];
+_HTML_
+	$list = $nrule->{'name'};
+	for( $i=0, $no=1; $i<@$list; $i++ ){
+		next if ( '' eq $list->[$i] );
+		my $name = $nrule->{'name'}->[$i];
+		print "a.push(\"$no.".$name."\");";
+		$no++;
+	}
+	print <<"_HTML_";
+mes.nrules = a;
+})();
+gon.event.messages.push(mes);
 </script>
 _HTML_
 

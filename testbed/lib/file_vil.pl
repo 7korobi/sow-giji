@@ -576,8 +576,8 @@ sub getptcosts {
 	my $cost   = $saycnt->{$cost_key};
 	my $unit   = $sow->{'basictrs'}->{'SAYTEXT'}->{$cost}->{$unit_key};
 	my $max_unit = $saycnt->{'COST_SAY'};
-    my $max_line = $saycnt->{'MAX_MESLINE'};
-    my $max_size = $saycnt->{'MAX_MESCNT'};
+    my $max_line = 0 + $saycnt->{'MAX_MESLINE'};
+    my $max_size = 0 + $saycnt->{'MAX_MESCNT'};
 	$cost = 'none'  if ($vil->isfreecost());
 	return ($saycnt,$cost,$unit, $max_unit,$max_line,$max_size);
 }
@@ -828,6 +828,17 @@ sub gon_story {
 	my $cmdlog = 0;
 	$cmdlog = 1 if (($query->{'cmd'} eq '') || ($query->{'cmd'} eq 'memo') || ($query->{'cmd'} eq 'hist'));
 
+	my @csidlist = split('/', "$vil->{'csid'}/");
+	chomp(@csidlist);
+	my $csidcaptions;
+	foreach (@csidlist) {
+		$sow->{'charsets'}->loadchrrs($_);
+		$csidcaptions .= "$sow->{'charsets'}->{'csid'}->{$_}->{'CAPTION'} ";
+	}
+
+	require "$cfg->{'DIR_RS'}/doc_rule.pl";
+	my $doc = SWDocRule->new($sow);
+	my $nrule = $doc->{'n_rule'};
 	my $turn = $vil->{'turn'} + 0;
 	my $aiming       = $vil->{'aiming'      } + 0;
 	my $entrust      = $vil->{'entrust'     } + 0;
@@ -836,6 +847,22 @@ sub gon_story {
 	my $seqevent     = $vil->{'seqevent'    } + 0;
 	my $showid       = $vil->{'showid'      } + 0;
 	my $undead       = $vil->{'undead'      } + 0;
+	my $totalcommit = -1;
+	my $totalcommit = -1;
+	my $totalcommitannounce = "";
+	my $rating_announce = $sow->{'cfg'}->{'RATING'}->{$rating}->{'CAPTION'};
+	my $gamename_announce = $sow->{'basictrs'}->{'GAME'}->{$vil->{'game'}}->{'CAPTION'};
+	my $gamehelp_announce = $sow->{'basictrs'}->{'GAME'}->{$vil->{'game'}}->{'HELP'};
+	my $trsname_announce = $sow->{'textrs'}->{'CAPTION'};
+	my $trshelp_announce = $sow->{'textrs'}->{'HELP'};
+	my $starttype_announce = $sow->{'basictrs'}->{'STARTTYPE'}->{$vil->{'starttype'}};
+
+	if (($vil->{'turn'} > 0) && ($vil->isepilogue() == 0)) {
+		# コミット状況
+		my $textrs = $sow->{'textrs'};
+		$totalcommit = &SWBase::GetTotalCommitID($sow, $vil) + 0;
+		$totalcommitannounce = $textrs->{'ANNOUNCE_TOTALCOMMIT'}->[$totalcommit];
+	}
 
 	print <<"_HTML_";
 gon.story = {
@@ -851,18 +878,30 @@ gon.story = {
 	"order": $vstatus,
 	"is_finish":    (0 != $isepilogue),
 	"is_epilogue":  (0 != $isepilogue),
+	"is_prologue":  (0 == $turn),
 	"is_scrap":     (0 != $isscrap),
+	"is_totalcommit": (3 == $totalcommit),
 
 	"options": [],
 
 	"entry": {
-		"limit":   "$vil->{'entrylimit'}",
+		"limit":   "$vil->{'entrylimit'}"
 	},
 
 	"card":{
 		"discard": "$vil->{'rolediscard'}".split('/').map(function(n) { return(SOW_RECORD.CABALA.gifts[n]) }).compact(),
 		"event":   "$vil->{'eventcard'}".split('/').map(function(n) { return(SOW_RECORD.CABALA.events[n]) }).compact(),
 		"config":  "$config".split('/')
+	},
+	"announce":{
+		"game_name": "$gamename_announce",
+		"game_help": "$gamehelp_announce",
+		"trs_name": "$trsname_announce",
+		"trs_help": "$trshelp_announce",
+		"csids": "$csidcaptions",
+		"starttype": "$starttype_announce",
+		"totalcommit": "$totalcommitannounce",
+		"rating": "$rating_announce"
 	},
 	"timer":{
 		"extend":   $vil->{'extend'},
@@ -878,7 +917,7 @@ gon.story = {
 		"start": "$vil->{'starttype'}",
 		"vote":  "$vil->{'votetype'}",
 		"mob":   "$vil->{'mob'}",
-		"game":  "$vil->{'game'}",
+		"game":  "$vil->{'game'}"
 	},
 	"upd":{
 		"interval": $vil->{'updinterval'},
@@ -897,6 +936,19 @@ if(1 != $noselrole   ){ gon.story.options.push("select-role");   }
 if(1 == $seqevent    ){ gon.story.options.push("seq-event");     }
 if(1 == $showid      ){ gon.story.options.push("show-id");       }
 if(1 == $undead      ){ gon.story.options.push("undead-talk");   }
+(function(){
+var a = [];
+_HTML_
+	$list = $nrule->{'name'};
+	for( $i=0, $no=1; $i<@$list; $i++ ){
+		next if ( '' eq $list->[$i] );
+		my $name = $nrule->{'name'}->[$i];
+		print "a.push(\"$no.".$name."\");";
+		$no++;
+	}
+	print <<"_HTML_";
+gon.story.announce.nrules = a;
+})();
 _HTML_
 	if ($secret) {
 		print <<"_HTML_";

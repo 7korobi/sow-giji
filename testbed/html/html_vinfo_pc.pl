@@ -43,25 +43,23 @@ sub OutHTMLVilInfo {
 	print <<"_HTML_";
 <div class="toppage">
 <h2>村の情報</h2>
-<div id="messages">
+<div template="navi/messages" id="messages">
+<div id="tab" template="sow/navi"></div>
+</div>
 _HTML_
 	&OutHTMLVilInfoInner($sow,$vil);
 
 	&SWHtmlPC::OutHTMLReturnPC($sow); # トップページへ戻る
 	$sow->{'html'}->outcontentfooter();
 
-	# 発言フィルタ
-	&SWHtmlSayFilter::OutHTMLHeader   ($sow, $vil);
-	&SWHtmlSayFilter::OutHTMLSayFilter($sow, $vil) if ($modesingle == 0);
-	&SWHtmlSayFilter::OutHTMLTools    ($sow, $vil);
-	&SWHtmlSayFilter::OutHTMLFooter   ($sow, $vil);
 	print <<"_HTML_";
-</div>
 <script>
 window.gon = OPTION.gon.clone(true);
 gon.form.uri = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}";
 _HTML_
+
 	$vil->gon_story();
+	$vil->gon_event();
 	$vil->gon_potofs();
 	# 村建て人フォーム／管理人フォーム表示
 	if ($sow->{'user'}->logined() > 0) {
@@ -73,7 +71,13 @@ _HTML_
 			&SWHtmlPlayerFormPC::OutHTMLScrapVilButtonPC($sow, $vil) if ($vil->{'turn'} < $vil->{'epilogue'});
 		}
 	}
+
 	print <<"_HTML_";
+var mes = {
+	"template": "sow/village_info",
+	"logid": "AX99999"
+};
+gon.event.messages.push(mes);
 </script>
 _HTML_
 
@@ -84,135 +88,6 @@ _HTML_
 
 sub OutHTMLVilInfoInner {
 	my ($sow,$vil) = @_;
-	my $cfg = $sow->{'cfg'};
-	my $query = $sow->{'query'};
-	my $i;
-
-	my $docid = "css=$query->{'css'}&trsid=$vil->{'trsid'}&game=$vil->{'game'}";
-
-	# リソースの読み込み
-	&SWBase::LoadVilRS($sow, $vil);
-
-
-	my $reqvals = &SWBase::GetRequestValues($sow);
-	$reqvals->{'vid'} = $query->{'vid'};
-	my $linkvalue = &SWBase::GetLinkValues($sow, $reqvals);
-	my $urlsow = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}";
-
-	my $vplcntstart = '';
-	$vplcntstart = $vil->{'vplcntstart'} if ($vil->{'vplcntstart'} > 0);
-
-
-	my $pllist = $vil->getpllist();
-	my $lastcnt = $vil->{'vplcnt'} - @$pllist;
-	if (($vil->{'turn'} == 0) && ($lastcnt > 0)) {
-		print <<"_HTML_";
-<p class="caution">
-あと $lastcnt 人参加できます。
-</p>
-<hr class="invisible_hr"$net>
-
-_HTML_
-	}
-
-
-	my $rating = 'default';
-	$rating = $vil->{'rating'} if ($vil->{'rating'} ne '');
-
-	&SWHtml::ConvertNET($sow, \$vil->{'vcomment'});
-
-	require "$cfg->{'DIR_RS'}/doc_rule.pl";
-	my $doc = SWDocRule->new($sow);
-	my $css = $query->{'css'};
-	my $nrule = $doc->{'n_rule'};
-	my $saycnttype = $sow->{'cfg'}->{'COUNTS_SAY'}->{$vil->{'saycnttype'}};
-
-	my $ncomment = "■<a href=\"sow.cgi?cmd=rule&css=$css#rule\">国のルール</a>";
-	$list = $nrule->{'name'};
-	for( $i=0; $i<@$list; $i++ ){
-		next if ( '' eq $list->[$i] );
-		my $name = $nrule->{'name'}->[$i];
-		$ncomment .= "<br$net>".($i+1).".$name";
-	}
-
-	my @csidlist = split('/', "$vil->{'csid'}/");
-	chomp(@csidlist);
-	my $csidcaptions;
-	foreach (@csidlist) {
-		$sow->{'charsets'}->loadchrrs($_);
-		$csidcaptions .= "$sow->{'charsets'}->{'csid'}->{$_}->{'CAPTION'} ";
-	}
-
-	print <<"_HTML_";
-<div class="mes_maker">
-<dl class="dl-horizontal">
-<dt>村の名前<dd>{{story.name}}
-<dt>こだわり
-<dd><img name=cd_img src="$cfg->{'DIR_IMG'}/icon/cd_{{story.rating}}.png">
-    $sow->{'cfg'}->{'RATING'}->{$rating}->{'CAPTION'}
-</dl>
-
-<p class="text head" ng-bind-html-unsafe="story.comment"></p>
-<p>$ncomment</p>
-<p>
-■<a href=\"sow.cgi?cmd=rule&css=$css#mind\">心構\え</a>
-</p>
-</div>
-<div class="mes_admin">
-<dl>
-<dt>$sow->{'textrs'}->{'CAPTION'}
-<dd>$sow->{'textrs'}->{'HELP'}
-</dl>
-
-<dl>
-<dt>$sow->{'basictrs'}->{'GAME'}->{$vil->{'game'}}->{'CAPTION'}
-<dd>$sow->{'basictrs'}->{'GAME'}->{$vil->{'game'}}->{'HELP'}
-</dl>
-
-<dl class="dl-horizontal">
-<dt>登場人物<dd>$csidcaptions
-<dt>更新時間<dd>{{story.upd.time_text}}
-<dt>更新間隔<dd>{{story.upd.interval_text}}{{story.type.recovery}}
-<dt>発言制限<dd>{{story.type.saycnt.CAPTION}}<br>{{story.type.saycnt.HELP}}
-<dt>役職配分<dd>{{story.type.roletable_text}}
-<br>{{story.card.config_names}}
-<dt>定員<dd>{{event.player.limit}}人 （ダミーキャラを含む）
-<dt>人数<dd>{{potofs.length}}人 （ダミーキャラを含む）
-<dt ng-show="story.is_wbbs">最低人数<dd ng-show="story.is_wbbs">{{event.player.start}}人 （ダミーキャラを含む）
-<dt>投票方法<dd>{{story.type.vote_text.CAPTION}}
-<dt>見物人<dd>{{story.type.mob_text.CAPTION}}に {{event.player.mob}}人まで （{{story.type.mob_text.HELP}}）
-<dt>廃村期限<dd>{{lax_time(story.timer.scraplimitdt)}}
-</dl>
-</div>
-<div class="mes_admin">
-<ul>
-<li>$sow->{'basictrs'}->{'STARTTYPE'}->{$vil->{'starttype'}}
-<li ng-repeat="option_help in story.option_helps">{{option_help}}</li>
-</ul>
-</div>
-<div class="mes_maker" template="navi/potofs"></div>
-_HTML_
-
-	if (($vil->{'turn'} > 0) && ($vil->isepilogue() == 0)) {
-		# コミット状況
-		my $textrs = $sow->{'textrs'};
-		my $totalcommit = &SWBase::GetTotalCommitID($sow, $vil);
-		my $nextcommitdt = '';
-		if ($totalcommit == 3) {
-			$nextcommitdt = $sow->{'dt'}->cvtdt($vil->{'nextcommitdt'});
-			$nextcommitdt = '（' . $nextcommitdt . '更新予定）';
-		}
-		print <<"_HTML_";
-<div class="paragraph">
-<dl class="dl-horizontal">
-<dt>コミット状況<dd>$textrs->{'ANNOUNCE_TOTALCOMMIT'}->[$totalcommit]
-<br>$nextcommitdt
-</dl>
-</div>
-</div>
-_HTML_
-	}
-
 	# 村建て人フォーム／管理人フォーム表示
 	if ($sow->{'user'}->logined() > 0) {
 		my $showbtn = 0;
