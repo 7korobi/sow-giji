@@ -1932,8 +1932,17 @@ _HTML_
 		my $is_pixi = $pl->ispixi();
 		my $is_sensible = $pl->issensible();
 		my $is_committer = $pl->iscommitter();
+
 		my $role = 0 + $pl->{'role'};
+
+		# in progress secret
+		if( $vil->isepilogue() == 0 ){
+			$role = $sow->{'ROLEID_VILLAGER'} if ($pl->{'role'} == $sow->{'ROLEID_RIGHTWOLF'});
+			$role = 0   if (($is_sensible == 0)||($pl->{'role'} == 0));
+		}
+
 		my $gift = 0 + $pl->{'gift'};
+
 		print <<"_HTML_";
 pl.win = {
 	visible: "$win_visible",

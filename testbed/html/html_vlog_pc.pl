@@ -95,7 +95,7 @@ _HTML_
 
 	# ‘ºƒƒO•\Ž¦
 	require "$cfg->{'DIR_HTML'}/html_vlogsingle_pc.pl";
-    my $last = "<i class='icon-refresh' href_eval='refresh_event()'></i> ";
+    my $last = "";
 	my $is_news = 0 + (0 < $maxrow);
 
 	if (@$memos > 0) {
@@ -135,12 +135,8 @@ _HTML_
 	print <<"_HTML_";
 gon.event.is_news    = (0 != $is_news);
 var mes = {
-	"csid": "_none_",
-	"face_id": "_none_",
-	"subid":  "I",
+	"template": "sow/log_last",
 	"logid":  "IX99999",
-	"mestype":  "CAUTION",
-	"style":    "head",
 	"log":   "$last" + ((new Date).format(Date.ISO8601_DATE + '({dow})  {TT}{hh}Žž{mm}•ª', 'ja')),
 	"date":  new Date
 };
