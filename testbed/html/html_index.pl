@@ -119,9 +119,8 @@ _HTML_
 	my $enabled_winner_label  = ($cfg->{'ENABLED_WINNER_LABEL'})?('見える'):('見えない');
 
 	print <<"_HTML_";
-<div class="paragraph">
-<dl>
-<dt class="mark">この州の設定</dt>
+<dl class="accordion">
+<dt>この州の設定</dt>
 <dd>
 この州では、廃村期限$cfg->{'TIMEOUT_SCRAP'}日、
 内緒話の村を$enabled_aiming、
@@ -132,8 +131,21 @@ _HTML_
 少女や降霊者に聞こえるのは$enabled_bitty。
 日食で見えるのは会話内容のみ。<br>
 [<a href="$link_state_page">くわしい特徴</a>]
+
+<dt> 対応ブラウザ
+<dd>
+<p>これらのブラウザで動作確認済みです。</p>
+<ul>
+<li>Internet Explorer : 9 以降 
+<br>（スクロールだけ重い、という症状が出るようです）
+<li>Firefox : 20.0 以降
+<li>Chrome : 26.0 以降
+<li>Safari : 6.0.3 以降
+<li>iOS : 5.1.1 以降
+<li>Android : 2.2.1 以降
+</ul>
+
 </dl>
-</div>
 
 <hr class="invisible_hr"$net>
 
@@ -163,9 +175,6 @@ _HTML_
 </dl>
 
 <dl class="accordion">
-_HTML_
-	if ($sow->{'cfg'}->{'ENABLED_VMAKE'} > 0) {
-		print <<"_HTML_";
 <dt> 村建てツール
 <dd>
 
@@ -176,7 +185,9 @@ _HTML_
 <li>参考：<a href="http://crazy-crazy.sakura.ne.jp/giji/?(List)SayCnt">発言pt量</a>の一覧<br>
 <li>$caution_vmake
 </ul>
-
+_HTML_
+	if ($sow->{'cfg'}->{'ENABLED_VMAKE'} > 0) {
+		print <<"_HTML_";
 <p>
 <a href="sow.cgi?cmd=trsdiff">基本設定</a>を選んで「村の作成」を押すと、新しくゲームを作成できる。
 </p>
