@@ -137,7 +137,7 @@ gon.event.is_news    = (0 != $is_news);
 var mes = {
 	"template": "sow/log_last",
 	"logid":  "IX99999",
-	"log":   "$last" + ((new Date).format(Date.ISO8601_DATE + '({dow})  {TT}{hh}Žž{mm}•ª', 'ja')),
+	"log":   "$last<br />" + ((new Date).format(Date.ISO8601_DATE + '({dow})  {TT}{hh}Žž{mm}•ª', 'ja')),
 	"date":  new Date
 };
 gon.event.messages.push(mes);

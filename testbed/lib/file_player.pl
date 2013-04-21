@@ -1932,6 +1932,8 @@ _HTML_
 		my $is_pixi = $pl->ispixi();
 		my $is_sensible = $pl->issensible();
 		my $is_committer = $pl->iscommitter();
+		my $history = $pl->{'history'};
+		&SWHtml::ConvertJSON(\$history);
 
 		my $role = 0 + $pl->{'role'};
 
@@ -1957,7 +1959,7 @@ pl.role = [
 pl.rolestate = $pl->{'rolestate'};
 pl.select = SOW_RECORD.CABALA.roles[$selrole];
 
-pl.history = "$pl->{'history'}";
+pl.history = "$history";
 pl.sheep = "$pl->{'sheep'}";
 pl.overhear = [];
 
