@@ -22,6 +22,8 @@ sub CheckValidityMakeVil {
 	my $debug = $sow->{'debug'};
 	my $errfrom = "[uid=$sow->{'uid'}, cmd=$query->{'cmd'}]";
 
+	my $saycnt = $sow->{'cfg'}->{'COUNTS_SAY'}->{$query->{'saycnttype'}};
+
 	&CheckValidityMakeVilSummary($sow);
 
 	$query->{'vcomment'} = '' if ($query->{'vcomment'} eq $sow->{'basictrs'}->{'NONE_TEXT'});
@@ -46,7 +48,7 @@ sub CheckValidityMakeVil {
 		$sow->{'debug'}->raise($sow->{'APLOG_NOTICE'}, '最低人数は定員以下の人数で入力して下さい。', "too many vplcntstart.$errfrom") if ($query->{'vplcntstart'} > $query->{'vplcnt'});
 	}
 
-	$sow->{'debug'}->raise($sow->{'APLOG_CAUTION'}, '発言制限が未選択です。', "no saycnttype.$errfrom") if ($query->{'saycnttype'} eq ''); # 通常起きない
+	$sow->{'debug'}->raise($sow->{'APLOG_CAUTION'}, '発言制限が未選択です。', "no saycnttype.$errfrom") if (! defined $saycnt); # 通常起きない
 	$sow->{'debug'}->raise($sow->{'APLOG_CAUTION'}, '非対応の参加制限を選択しています。', "invalid entrylimit.$errfrom") if (($query->{'entrylimit'} ne 'free') && ($query->{'entrylimit'} ne 'password')); # 通常起きない
 	&SWValidityText::CheckValidityText($sow, $errfrom, $query->{'entrypwd'}, 'PASSWD', 'entrypwd', '参加パスワード', 1) if ($query->{'entrylimit'} eq 'password');
 

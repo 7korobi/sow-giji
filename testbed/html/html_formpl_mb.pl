@@ -141,7 +141,7 @@ _HTML_
 _HTML_
 
 
-	if ((1 == $cfg->{'ENABLED_AIMING'})
+	if ((1 == $vil->{'aiming'})
       ||($sow->{'uid'} eq $cfg->{'USERID_ADMIN'})
       ||($sow->{'uid'} eq $cfg->{'USERID_NPC'})){
 		# “à˜b‚Ì‘ÎÛŽÒ

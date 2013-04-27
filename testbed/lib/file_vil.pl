@@ -866,6 +866,7 @@ sub gon_story {
 
 	print <<"_HTML_";
 gon.story = {
+	"folder": "$cfg->{'RULE'}",
 	"vid": $vil->{'vid'},
     "turn":   $turn,
 

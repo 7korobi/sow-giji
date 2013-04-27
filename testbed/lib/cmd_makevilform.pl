@@ -22,7 +22,8 @@ sub CmdMakeVilForm {
 	$vil->{'updminite'} = 0;
 	$vil->{'updinterval'} = 1;
 	$vil->{'rating'} = 'default';
-	$vil->{'saycnttype'} = $sow->{'cfg'}->{'CSIDLIST'}->[0];
+	$vil->{'csid'} = $sow->{'cfg'}->{'CSIDLIST'}->[0];
+	$vil->{'saycnttype'} = $sow->{'cfg'}->{'COUNTS_SAY'}->{'ORDER'}->[0];
 	$vil->{'votetype'} = $sow->{'cfg'}->{'DEFAULT_VOTETYPE'};
 	$vil->{'randomtarget'} = 0;
 	$vil->{'showid'} = 0;

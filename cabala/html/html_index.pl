@@ -70,7 +70,6 @@ _HTML_
 	my $linkrule    = &SWBase::GetLinkValues($sow, $reqvals);
 
 	my $linkmake     = $urlwiki.'(Knowledge)Manual';
-    my $linkroledeal = 'http://utage.sytes.net/WebRecord/dat_role_deals/'.$cfg->{'RULE'}.'/web';
 	my $linkscedure  = 'http://jsfun525.gamedb.info/wiki/?%B4%EB%B2%E8%C2%BC%CD%BD%C4%EA%C9%BD';
 	my $linkoperate = '(Knowledge)Operation';
 	my $linkspec    = '(What)Other';
@@ -134,7 +133,7 @@ _HTML_
 <dd>これから始まる村の予\定が並んでいる。ロールプレイヤー必見かも。
 </dl>
 <dl class="paragraph">
-<dt><strong><a href="http://utage.sytes.net/wolf/redirect.cgi?LOBBY_VMAKE">村建て相談所</a></strong>
+<dt><strong><a href="http://crazy-crazy.sakura.ne.jp/giji_lobby/lobby/sow.cgi?vid=11&game=MISTERY&trsid=all#mode=memo_all_open_last_player&width=480&font=normal&navi=link">村建て相談所</a></strong>
 <dd>遊びたい村の相談をする場所。迷ったら飛び込むといい。
 </dl>
 
@@ -213,8 +212,18 @@ _HTML_
 ◆参考：<a href="$urlsow?$linkrolematrix">役職配分一覧</a>｜<a href="$linkroledeal">編成実績</a>｜<a href="$linkscedure">企画村予\定表\</a>（wiki：stinさん管理）<br>
 <a href="sow.cgi?cmd=trsdiff">基本設定</a>を選んで「村の作成」を押すと、新しくゲームを作成できる。
 </p>
-<p class="paragraph">
-<form action="$urlsow" method="get" >
+<script>
+go_make = function(){
+  return(0 < \$("#yes_i_read_it:checked").length);
+}
+</script>
+<dl class="paragraph">
+<dt> 便利な<a href="$linkscedure">企画村予\定表\</a>はもう見た？建てた村に人が集まりそうかどうか、\予\想できるかもしれないよ。
+<dd> <input type="checkbox" id="yes_i_read_it"> 見たよ！今から、村を立てるよ！
+</dl>
+
+<div class="paragraph">
+<form action="$urlsow" method="get" id="make_vil_form" onsubmit="return go_make()">
 <input type="hidden" name="cmd" value="makevilform">
 <input type="hidden" name="css" value="$sow->{'query'}->{'css'}">
 <select id="trsid" name="trsid">
@@ -232,7 +241,7 @@ _HTML_
 </select>
 $linkvmake$caution_vmake<br$net>
 </form>
-</p>
+</div>
 
 _HTML_
 		$sow->{'trsid'} = $defaulttrsid;

@@ -139,9 +139,10 @@ _HTML_
 <li>Internet Explorer : 9 以降 
 <br>（スクロールだけ重い、という症状が出るようです）
 <li>Firefox : 20.0 以降
-<li>Chrome : 26.0 以降
+<li>Opera 12.15 以降
 <li>Safari : 6.0.3 以降
 <li>iOS : 5.1.1 以降
+<li>Chrome : 26.0 以降
 <li>Android : 2.2.1 以降
 </ul>
 
@@ -320,7 +321,7 @@ _HTML_
 <dt> プログラム
 <dd>
 <ul>
-<li><a href="https://github.com/7korobi/sow-giji">最新版　人狼議事サイトプログラム</a>
+<li><a href="https://github.com/7korobi/sow-giji/tree/master/testbed">最新版　人狼議事サイトプログラム</a>
 <li><a href="https://github.com/7korobi/giji_rails">過去ログ閲覧サイトプログラム</a>
 <li>ライセンスは<a href="$license">修正済みBSDライセンス</a>となっています。永遠にバグ取り中。
 </ul>
