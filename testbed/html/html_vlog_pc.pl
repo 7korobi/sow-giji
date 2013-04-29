@@ -40,35 +40,12 @@ sub OutHTMLVlogPC {
 	print <<"_HTML_";
 <h2>{{story.vid}} {{story.name}} $linkrss</h2>
 <h3>{{subtitle}}</h3>
-_HTML_
-
-	if ($modesingle == 0) {
-		print <<"_HTML_";
-<div class="pagenavi form-inline input-prepend" template="navi/page_navi">
-<label class="radio inline">
-<a ng-show="event.is_news" class="btn" ng-click="ajax_event(event.turn, event.link + '&rowall=on')">ページ表\示</a>
-<a ng-hide="event.is_news || story.turn != event.turn" class="btn" ng-click="ajax_event(event.turn, event.link, true)">最新の発言</a>
-</label>
-</div>
-_HTML_
-	}
-
-	print <<"_HTML_";
+<div class="pagenavi form-inline input-prepend" template="navi/page_navi"></div>
 <div template="navi/messages" id="messages"></div>
 <div template="navi/forms"></div>
-_HTML_
-
-	if ($modesingle == 0) {
-		print <<"_HTML_";
 <hr class="invisible_hr"$net>
-<div class="pagenavi form-inline input-prepend" template="navi/page_navi">
-<label class="radio inline">
-<a ng-show="event.is_news" class="btn" ng-click="ajax_event(event.turn, event.link + '&rowall=on')">ページ表\示</a>
-<a ng-hide="event.is_news || story.turn != event.turn" class="btn" ng-click="ajax_event(event.turn, event.link, true)">最新の発言</a>
-</label>
-</div>
+<div class="pagenavi form-inline input-prepend" template="navi/page_navi"></div>
 _HTML_
-	}
 
 	&SWHtmlSayFilter::OutHTMLHeader   ($sow, $vil);
 

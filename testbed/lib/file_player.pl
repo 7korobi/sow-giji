@@ -1965,13 +1965,13 @@ pl.overhear = [];
 
 pl.love = "$love";
 
-pl.is_voter = (0 != $is_voter);
-pl.is_human = (0 != $is_human);
-pl.is_enemy = (0 != $is_enemy);
-pl.is_wolf = (0 != $is_wolf);
-pl.is_pixi = (0 != $is_pixi);
-pl.is_sensible = (0 != $is_sensible);
-pl.is_committer = (0 != $is_committer);
+pl.is_voter = (0 !== $is_voter);
+pl.is_human = (0 !== $is_human);
+pl.is_enemy = (0 !== $is_enemy);
+pl.is_wolf = (0 !== $is_wolf);
+pl.is_pixi = (0 !== $is_pixi);
+pl.is_sensible = (0 !== $is_sensible);
+pl.is_committer = (0 !== $is_committer);
 pl.say = {
 	"say":   $say,
 	"tsay":  $tsay,

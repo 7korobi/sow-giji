@@ -40,7 +40,7 @@ _HTML_
 
 	print <<"_HTML_";
 gon.potof || (gon.potof = {
-    sow_auth_id: "$sow->{'uid'}",
+    sow_auth_id: "$sow->{'uid'}"
 });
 text_form = {
 	cmd: "entry",

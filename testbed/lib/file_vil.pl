@@ -759,8 +759,8 @@ _HTML_
 
 		if ($yourself) {
 			print <<"_HTML_";
-gon.potofs.push(pl);;
-gon.potof = pl
+gon.potofs.push(pl);
+gon.potof = pl;
 _HTML_
 		} else {
 			print <<"_HTML_";
@@ -877,11 +877,11 @@ gon.story = {
 	"csid":    "$vil->{'csid'}",
 
 	"order": $vstatus,
-	"is_finish":    (0 != $isepilogue),
-	"is_epilogue":  (0 != $isepilogue),
-	"is_prologue":  (0 == $turn),
-	"is_scrap":     (0 != $isscrap),
-	"is_totalcommit": (3 == $totalcommit),
+	"is_finish":    (0 !== $isepilogue),
+	"is_epilogue":  (0 !== $isepilogue),
+	"is_prologue":  (0 === $turn),
+	"is_scrap":     (0 !== $isscrap),
+	"is_totalcommit": (3 === $totalcommit),
 
 	"options": [],
 
@@ -930,13 +930,13 @@ gon.story = {
 		$vil->{'vplcntstart'}
 	]
 };
-if(1 == $aiming      ){ gon.story.options.push("aiming-talk");   }
-if(1 == $entrust     ){ gon.story.options.push("entrust");       }
-if(1 == $randomtarget){ gon.story.options.push("random-target"); }
-if(1 != $noselrole   ){ gon.story.options.push("select-role");   }
-if(1 == $seqevent    ){ gon.story.options.push("seq-event");     }
-if(1 == $showid      ){ gon.story.options.push("show-id");       }
-if(1 == $undead      ){ gon.story.options.push("undead-talk");   }
+if(1 === $aiming      ){ gon.story.options.push("aiming-talk");   }
+if(1 === $entrust     ){ gon.story.options.push("entrust");       }
+if(1 === $randomtarget){ gon.story.options.push("random-target"); }
+if(1 !== $noselrole   ){ gon.story.options.push("select-role");   }
+if(1 === $seqevent    ){ gon.story.options.push("seq-event");     }
+if(1 === $showid      ){ gon.story.options.push("show-id");       }
+if(1 === $undead      ){ gon.story.options.push("undead-talk");   }
 (function(){
 var a = [];
 _HTML_
@@ -958,7 +958,7 @@ gon.story.entry.password = "$vil->{'entrypwd'}";
 _HTML_
 	}
 	print <<"_HTML_";
-gon.events = []
+gon.events = [];
 _HTML_
 
 	my $i;
@@ -983,10 +983,10 @@ _HTML_
 		my $link_to = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linkturns$postturn";
 		print <<"_HTML_";
 var event = {
-	"turn": $i,
+	"is_news": (1 === $is_news),
 	"name": "$turnname",
 	"link": "$link_to".unescapeHTML(),
-	"is_news": (1 == $is_news),
+	"turn": $i
 }
 gon.events.push(event);
 _HTML_
@@ -1023,15 +1023,15 @@ gon.event = {
 	"event":  SOW_RECORD.CABALA.events[$vil->{'event'}],
 	"riot":      $vil->{'riot'},
 	"scapegoat": $vil->{'scapegoat'},
-    "is_seance": (0 != $isseance),
-    "is_public": (0 != $ispublic),
-    "is_eclipse": (0 != $iseclipse),
-    "is_freecost": (0 != $isfreecost),
-    "is_startable": (0 != $isstartable),
+    "is_seance": (0 !== $isseance),
+    "is_public": (0 !== $ispublic),
+    "is_eclipse": (0 !== $iseclipse),
+    "is_freecost": (0 !== $isfreecost),
+    "is_startable": (0 !== $isstartable),
 	"cost":{
-		"say":  "$sayptcosts",
-		"act":  "$actptcosts",
 		"memo": "$memoptcosts",
+		"act":  "$actptcosts",
+		"say":  "$sayptcosts"
 	},
 	"player":{
 		"start": $vil->{'vplcntstart'},
