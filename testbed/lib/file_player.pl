@@ -1924,6 +1924,10 @@ _HTML_
 
 		my $win_visible = $pl->win_visible();
 		my $win_result  = $pl->winresult();
+		my $bonds = $pl->{'bonds'};
+		my $pseudobonds = $pl->{'pseudobonds'};
+		$bonds =~ s/\//,/g;
+		$pseudobonds =~ s/\//,/g;
 
 		my $is_voter = $pl->isvoter();
 		my $is_human = $pl->ishuman();
@@ -1964,6 +1968,8 @@ pl.sheep = "$pl->{'sheep'}";
 pl.overhear = [];
 
 pl.love = "$love";
+pl.bonds = [$bonds];
+pl.pseudobonds = [$pseudobonds];
 
 pl.is_voter = (0 !== $is_voter);
 pl.is_human = (0 !== $is_human);
