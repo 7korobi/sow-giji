@@ -1869,7 +1869,8 @@ sub gon_potof {
 	my $sow = $vil->{'sow'};
 	my $cfg = $sow->{'cfg'};
 
-	my $secret = $vil->isepilogue();
+	my $is_epi = $vil->isepilogue();
+	my $secret = $is_epi;
 	$secret = 1 if ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'});
 	$secret = 1 if ($pl->{'uid'} eq $sow->{'uid'});
 
@@ -1884,7 +1885,21 @@ sub gon_potof {
 	my $gsay  = 0 + $pl->{'gsay'};
 	my $say_act = 0 + $pl->{'say_act'};
 	my $live = $pl->{'live'};
-	$live = 'victim' if(('executed' ne $live)and('suddendead' ne $live)and('live' ne $live)and('mob' ne $live));
+
+	my $viewall = 0;
+	if($is_epi){
+		$viewall = 1;
+	} else {
+		$live = 'victim' if(('executed' ne $live)and('suddendead' ne $live)and('live' ne $live)and('mob' ne $live));
+
+		my $live_from = 'live';
+		$live_from = $sow->{'curpl'}->{'live'} if (defined($sow->{'curpl'}->{'live'}));
+		$viewall = $vil->ispublic($pl);
+		$viewall = 1 if ($live_from ne 'live');
+		# “úI
+		$viewall = 0 if ($vil->iseclipse($vil->{'turn'}));
+	}
+
 	print <<"_HTML_";
 var pl = {
     "pno":     $pl->{'pno'},
@@ -1904,16 +1919,23 @@ var pl = {
 	"bonds": [],
 	"pseudobonds": [],
 
-	"point":{
-		"actaddpt":  $actaddpt,
-		"saidcount": $pl->{'saidcount'},
-		"saidpoint": $pl->{'saidpoint'}
-	},
+	"point":{},
 	"say":{
 		"say": $say
 	}
 };
 _HTML_
+
+	if ($secret || 1 == $viewall){
+		print <<"_HTML_";
+pl.point = {
+	"actaddpt":  $actaddpt,
+	"saidcount": $pl->{'saidcount'},
+	"saidpoint": $pl->{'saidpoint'}
+};
+_HTML_
+	}
+
 	if ($secret || 1 == $vil->{'showid'} ){
 		print <<"_HTML_";
 pl.sow_auth_id = "$pl->{'uid'}";
