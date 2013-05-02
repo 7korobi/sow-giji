@@ -73,7 +73,7 @@ _HTML_
 	# ‘ºƒƒO•\Ž¦
 	require "$cfg->{'DIR_HTML'}/html_vlogsingle_pc.pl";
     my $last = "";
-	my $is_news = 0 + (0 < $maxrow);
+	my $has_all_messages = 0 + ($maxrow < 1);
 
 	if (@$memos > 0) {
 		my %memokeys;
@@ -110,7 +110,7 @@ _HTML_
 	}
 
 	print <<"_HTML_";
-gon.event.is_news    = (0 != $is_news);
+gon.event.has_all_messages = (0 != $has_all_messages);
 var mes = {
 	"template": "sow/log_last",
 	"logid":  "IX99999",
