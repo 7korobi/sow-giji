@@ -212,7 +212,6 @@ window.gon = OPTION.gon.clone(true);
 gon.form.login = {
   "admin_uri": "$admin_uri",
   "is_admin": $is_admin,
-  "logined": (1 == $logined),
   "cmdfrom": "$cmdfrom",
   "expired": Date.create(1000 * $expired),
   "uidtext": "$uid".replace(" ","&nbsp;"),

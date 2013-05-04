@@ -17,7 +17,7 @@ sub OutHTMLEntryFormPC {
 	my $ismobok   = $vil->{'cntmob'} - @$mobs  ;
 
 	# 発言欄textarea要素の出力
-	my ($saycnt,$cost,$unit, $max_unit,$max_line,$max_size) = $vil->getsayptcosts();
+	my ($saycnt,$cost,$unit,$max_line,$max_size) = $vil->getsayptcosts();
 
 	print <<"_HTML_" unless ($isplok);
 gon.cautions.push("既に定員に達しています。");
@@ -53,7 +53,7 @@ text_form = {
 	mestype: "SAY",
 	longname: "",
 	max: {
-		unit: "$max_unit",
+		unit: "$cost",
 		line: $max_line,
 		size: $max_size
 	}

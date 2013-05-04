@@ -81,7 +81,6 @@ sub outheader {
 
 	# クッキーの出力
 	my $expirescookie = $sow->{'dt'}->getcookiedt($sow->{'time'} + $sow->{'cfg'}->{'TIMEOUT_COOKIE'});
-	$sow->{'cookie_expires'} =  $sow->{'dt'}->cvtdt($sow->{'time'} + $sow->{'cfg'}->{'TIMEOUT_COOKIE'});
 	my $setcookie = $sow->{'setcookie'}; # 保留
 	my @keys = keys(%$setcookie);
 	foreach (@keys) {

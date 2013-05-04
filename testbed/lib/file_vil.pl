@@ -572,29 +572,45 @@ sub getptcosts {
 	my $unit_key = shift;
 	my $sow = $vil->{'sow'};
 	my $cfg = $sow->{'cfg'};
+
 	my $saycnt = $cfg->{'COUNTS_SAY'}->{$vil->{'saycnttype'}};
 	my $cost   = $saycnt->{$cost_key};
 	my $unit   = $sow->{'basictrs'}->{'SAYTEXT'}->{$cost}->{$unit_key};
-	my $max_unit = $saycnt->{'COST_SAY'};
-    my $max_line = 0 + $saycnt->{'MAX_MESLINE'};
-    my $max_size = 0 + $saycnt->{'MAX_MESCNT'};
 	$cost = 'none'  if ($vil->isfreecost());
-	return ($saycnt,$cost,$unit, $max_unit,$max_line,$max_size);
+	return ($saycnt,$cost,$unit);
 }
 
 sub getsayptcosts {
 	my $vil = shift;
-	return $vil->getptcosts('COST_SAY','UNIT_SAY');
+	my ($saycnt,$max_unit,$unit) = $vil->getptcosts('COST_SAY','UNIT_SAY');
+
+    my $max_line = 0 + $saycnt->{'MAX_MESLINE'};
+    my $max_size = 0 + $saycnt->{'MAX_MESCNT'};
+	return ($saycnt,$max_unit,$unit, $max_line,$max_size);
 }
 
 sub getactptcosts {
 	my $vil = shift;
-	return $vil->getptcosts('COST_ACT','UNIT_ACTION');
+	my $sow = $vil->{'sow'};
+	my $cfg = $sow->{'cfg'};
+
+	my ($saycnt,$max_unit,$unit) = $vil->getptcosts('COST_ACT','UNIT_ACTION');
+
+	my $max_line = 1;
+    my $max_size = 0 + $cfg->{'MAXSIZE_ACTION'};
+	return ($saycnt,$max_unit,$unit, $max_line,$max_size);
 }
 
 sub getmemoptcosts {
 	my $vil = shift;
-	return $vil->getptcosts('COST_MEMO','UNIT_ACTION');
+	my $sow = $vil->{'sow'};
+	my $cfg = $sow->{'cfg'};
+
+	my ($saycnt,$max_unit,$unit) = $vil->getptcosts('COST_MEMO','UNIT_ACTION');
+
+    my $max_line = 0 + $cfg->{'MAXSIZE_MEMOLINE'};
+    my $max_size = 0 + $cfg->{'MAXSIZE_MEMOCNT'};
+	return ($saycnt,$max_unit,$unit, $max_line,$max_size);
 }
 
 #----------------------------------------
@@ -970,14 +986,12 @@ _HTML_
 		$turnname = "エピローグ" if ($i == $vil->{'epilogue'});
 
 		my $is_news = 0;
-		my $postturn = "";
+		my $postturn = $amp."turn=$i".$amp."rowall=on";
 	    if ($i == $vil->{'turn'}){
 	      $is_news  = 1;
 	      $turnname .= " (最新)";
-	      $postturn = $amp."turn=$i";
 	    } else {
 	      $is_news  = 0;
-	      $postturn = $amp."turn=$i".$amp."rowall=on";
 	    }
 
 		my $link_to = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linkturns$postturn";
@@ -1007,16 +1021,12 @@ sub gon_event {
 	my $iseclipse = $vil->iseclipse();
 	my $isfreecost = $vil->isfreecost();
 	my $isstartable = $vil->isstartable();
-
-	my $sayptcosts  = $vil->getsayptcosts();
-	my $actptcosts  = $vil->getactptcosts();
-	my $memoptcosts = $vil->getmemoptcosts();
-
 	my $committablepl = $vil->getcommittablepl();
 	my $votablepl    = $vil->getvotablepl();
 	my $turn = 0 + $sow->{'turn'};
 
 	print <<"_HTML_";
+gon.form.turn = $turn;
 gon.event = {
     "turn":   $turn,
     "winner": SOW_RECORD.CABALA.winners[$vil->{'winner'}],
@@ -1028,11 +1038,6 @@ gon.event = {
     "is_eclipse": (0 !== $iseclipse),
     "is_freecost": (0 !== $isfreecost),
     "is_startable": (0 !== $isstartable),
-	"cost":{
-		"memo": "$memoptcosts",
-		"act":  "$actptcosts",
-		"say":  "$sayptcosts"
-	},
 	"player":{
 		"start": $vil->{'vplcntstart'},
 		"limit": $vil->{'vplcnt'},

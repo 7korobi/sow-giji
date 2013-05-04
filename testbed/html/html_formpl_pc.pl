@@ -91,7 +91,7 @@ sub OutHTMLSayPC {
     $mestype = "VSAY" if('mob'  eq $curpl->{'live'});
 
     # 発言/独り言/内緒話
-	my ($saycnt,$cost,$unit, $max_unit,$max_line,$max_size) = $vil->getsayptcosts();
+	my ($saycnt,$cost,$unit,$max_line,$max_size) = $vil->getsayptcosts();
 	my $tsaycnttext = "あと".$curpl->{'tsay'}.$unit                                if ($cost ne 'none');
 	my $ssaycnttext = "あと".&SWBase::GetSayCountText($sow, $vil, $sow->{'curpl'}) if ($cost ne 'none');
 	my $asaycnttext = $ssaycnttext;
@@ -102,13 +102,13 @@ sub OutHTMLSayPC {
 	$title =~ s/_BUTTON_/$caption_say/g;
 
     # メモ関連
-	my ($saycnt,$cost,$unitaction, $max_unit,$max_line,$max_size) = $vil->getmemoptcosts();
+	my ($saycnt,$costmemo,$unitmemo,$max_line_memo,$max_size_memo) = $vil->getmemoptcosts();
 	my $memocost = '無制限に貼り付けられ';
 	my $memocnttext;
 	$memocost    = '使うとアクション回数を消費し' if( $cost eq 'count' );
 	$memocost    = '使うと発言を20pt消費し'       if( $cost eq 'point' );
-	$memocnttext = "あと".$curpl->{'say_act'}.$unitaction                       if( $cost eq 'count' );
-	$memocnttext = "あと".&SWBase::GetSayCountText($sow, $vil, $sow->{'curpl'}) if( $cost eq 'point' );
+	$memocnttext = "あと".$curpl->{'say_act'}.$unitmemo                         if( $costmemo eq 'count' );
+	$memocnttext = "あと".&SWBase::GetSayCountText($sow, $vil, $sow->{'curpl'}) if( $costmemo eq 'point' );
 
 	my $mes = "";
 	if ($memofile){
@@ -129,9 +129,9 @@ text_form = {
 	count: "$memocnttext",
 	caption: "※メモを$memocostます。",
 	max: {
-		unit: "$max_unit",
-		line: $max_line,
-		size: $max_size
+		unit: "$costmemo",
+		line: $max_line_memo,
+		size: $max_size_memo
 	},
 	mestype: "$mestype",
 	csid_cid: "$img",
@@ -148,7 +148,7 @@ text_form = {
 	title: "$title",
 	caption: "",
 	max: {
-		unit: "$max_unit",
+		unit: "$cost",
 		line: $max_line,
 		size: $max_size
 	},
@@ -243,8 +243,8 @@ sub OutHTMLActionFormPC {
     $mestype = "VSAY" if('mob'  eq $curpl->{'live'});
 
 	# アクション入力欄とアクションボタン
-	my ($saycnt,$costaction,$unitaction, $max_unit,$max_line,$max_size) = $vil->getactptcosts();
-	my $actcnttext = "あと".$curpl->{'say_act'}.$unitaction  if ($costaction ne 'none');
+	my ($saycnt,$cost,$unit,$max_line,$max_size) = $vil->getactptcosts();
+	my $actcnttext = "あと".$curpl->{'say_act'}.$unit  if ($cost ne 'none');
 
 	print <<"_HTML_";
 text_form = {
@@ -256,7 +256,7 @@ text_form = {
 	title: "アクション",
 	count: "$actcnttext",
 	max: {
-		unit: "$max_unit",
+		unit: "$cost",
 		line: $max_line,
 		size: $max_size
 	},
@@ -514,7 +514,7 @@ sub  OutHTMLSayTextAreaExtPC {
 	# &OutHTMLExpressionFormPC($sow, $vil);
 
 	# 発言欄textarea要素の出力
-	my ($saycnt,$cost,$unit, $max_unit,$max_line,$max_size) = $vil->getsayptcosts();
+	my ($saycnt,$cost,$unit,$max_line,$max_size) = $vil->getsayptcosts();
 	my $title = $sow->{'textrs'}->{'BUTTONLABEL_PC'};
 	$title =~ s/_BUTTON_/$label/g;
 	my $count = " あと$curpl->{$countid}$unit" if ($cost ne 'none');
@@ -528,7 +528,7 @@ text_form = {
 	count: "$count",
 	caption: "",
 	max: {
-		unit: "$max_unit",
+		unit: "$cost",
 		line: $max_line,
 		size: $max_size
 	},
@@ -561,10 +561,13 @@ sub OutHTMLVilMakerPC {
 	my $longname = $sow->{'charsets'}->getchrname($keys[0], $writemode);
 
 	# 発言欄textarea要素の出力
-	my ($saycnt,$cost,$unit, $max_unit,$max_line,$max_size) = $vil->getsayptcosts();
+	my ($saycnt,$cost,$unit,$max_line,$max_size) = $vil->getsayptcosts();
 	my $caption_say = $sow->{'textrs'}->{'CAPTION_SAY_PC'};
 	my $title = $sow->{'textrs'}->{'BUTTONLABEL_PC'};
 	$title =~ s/_BUTTON_/$caption_say/g;
+
+    # メモ関連
+	my ($saycnt,$costmemo,$unitmemo,$max_line_memo,$max_size_memo) = $vil->getmemoptcosts();
 
 	print <<"_HTML_";
 text_form = {
@@ -576,9 +579,9 @@ text_form = {
 	count: "",
 	caption: "",
 	max: {
-		unit: "$max_unit",
-		line: $max_line,
-		size: $max_size
+		unit: "$costmemo",
+		line: $max_line_memo,
+		size: $max_size_memo
 	},
 	votes: [],
 	switch: "$writemode",

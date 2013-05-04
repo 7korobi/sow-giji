@@ -1869,6 +1869,9 @@ sub gon_potof {
 	my $sow = $vil->{'sow'};
 	my $cfg = $sow->{'cfg'};
 
+    # ”­Œ¾/“Æ‚èŒ¾/“à˜b
+	my ($saycnt,$cost,$unit,$max_line,$max_size) = $vil->getsayptcosts();
+
 	my $is_epi = $vil->isepilogue();
 	my $secret = $is_epi;
 	$secret = 1 if ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'});
@@ -1885,6 +1888,7 @@ sub gon_potof {
 	my $gsay  = 0 + $pl->{'gsay'};
 	my $say_act = 0 + $pl->{'say_act'};
 	my $live = $pl->{'live'};
+	my $turn = 0 + $sow->{'turn'};
 
 	my $viewall = 0;
 	if($is_epi){
@@ -1902,6 +1906,7 @@ sub gon_potof {
 
 	print <<"_HTML_";
 var pl = {
+	"turn":    $turn,
     "pno":     $pl->{'pno'},
 	"csid":    "$pl->{'csid'}",
 	"face_id": "$pl->{'cid'}",
@@ -1927,13 +1932,22 @@ var pl = {
 _HTML_
 
 	if ($secret || 1 == $viewall){
-		print <<"_HTML_";
+		if ($cost eq 'count'){
+			print <<"_HTML_";
+pl.point = {
+	"actaddpt":  $actaddpt,
+	"saidcount": $pl->{'saidcount'}
+};
+_HTML_
+		} else {
+			print <<"_HTML_";
 pl.point = {
 	"actaddpt":  $actaddpt,
 	"saidcount": $pl->{'saidcount'},
 	"saidpoint": $pl->{'saidpoint'}
 };
 _HTML_
+		}
 	}
 
 	if ($secret || 1 == $vil->{'showid'} ){
