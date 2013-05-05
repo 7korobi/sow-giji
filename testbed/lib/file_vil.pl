@@ -834,6 +834,7 @@ sub gon_story {
 
 	my $reqvals = &SWBase::GetRequestValues($sow);
 	$reqvals->{'turn'} = '';
+	$reqvals->{'ua'}   = '';
 	my $linkturns = &SWBase::GetLinkValues($sow, $reqvals);
 
 	$reqvals->{'rowall'} = '';
@@ -981,23 +982,24 @@ _HTML_
 	for ($i = 0; $i <= $vil->{'turn'}; $i++) {
     	next if ($i > $vil->{'epilogue'});
 
+        my $is_news = 0;
 		my $turnname = "$i日目";
 		$turnname = "プロローグ" if ($i == 0);
 		$turnname = "エピローグ" if ($i == $vil->{'epilogue'});
 
-		my $is_news = 0;
-		my $postturn = $amp."turn=$i".$amp."rowall=on";
+		my $postturn = $amp."rowall=on".$amp."turn=$i";
 	    if ($i == $vil->{'turn'}){
-	      $is_news  = 1;
-	      $turnname .= " (最新)";
+    		$is_news = 1;
+			$turnname .= " (最新)";
 	    } else {
-	      $is_news  = 0;
+    		$is_news = 0;
+
 	    }
 
 		my $link_to = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linkturns$postturn";
 		print <<"_HTML_";
 var event = {
-	"is_news": (1 === $is_news),
+	"is_news": (1 == $is_news),
 	"name": "$turnname",
 	"link": "$link_to".unescapeHTML(),
 	"turn": $i

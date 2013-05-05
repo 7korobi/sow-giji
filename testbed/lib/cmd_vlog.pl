@@ -133,6 +133,22 @@ sub OutHTMLCmdVLog {
 		&SWHtmlVlogMb::OutHTMLVlogMb($sow, $vil, $logfile, $maxrow, $logs, $logkeys, $rows);
 
 		$logfile->close();
+	} elsif ($ua eq 'javascript') {
+		# ƒƒO‚ÌŽæ“¾
+		my $logfile  = SWBoa->new($sow, $vil, $turn, 0);
+		my $memofile = SWSnake->new($sow, $vil, $turn, 0);
+		my ($logs, $logkeys, $logrows, $memos, $memokeys, $memorows);
+		if (($sow->{'turn'} != $vil->{'turn'}) || ($vil->{'epilogue'} >= $vil->{'turn'})) {
+			($logs,  $logkeys,  $logrows)  = $logfile->getvlogs($maxrow);
+			($memos, $memokeys, $memorows) = $memofile->getmemo($maxrow);
+		}
+		$sow->{'lock'}->gunlock();
+
+		require "$cfg->{'DIR_HTML'}/html_vlog_js.pl";
+		&SWHtmlVlogJS::OutHTMLVlogJS($sow, $vil, $maxrow, $logfile, $logs, $logkeys, $logrows, $memofile, $memos, $memokeys, $memorows);
+
+		$logfile->close();
+		$memofile->close();
 	} else {
 		# ƒƒO‚ÌŽæ“¾
 		my $logfile  = SWBoa->new($sow, $vil, $turn, 0);

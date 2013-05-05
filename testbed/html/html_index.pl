@@ -50,7 +50,6 @@ _HTML_
 
 	&SWHtmlPC::OutHTMLGonInit($sow); # ƒƒOƒCƒ“—“‚Ìo—Í
 	print <<"_HTML_";
-\$(function(){\$('.finished_log').hide()});
 </script>
 <h2 style="font-size: xx-large;">$cfg->{'NAME_HOME'}</h2>
 _HTML_

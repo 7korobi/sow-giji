@@ -114,8 +114,8 @@ sub OutHTMLSayPC {
 	if ($memofile){
 		my $memo = $memofile->getnewmemo($curpl);
 		$mes = $memo->{'log'};
+		&SWHtml::ConvertJSONbyUser(\$mes);
 		$mes = &SWLog::ReplaceAnchorHTMLText($sow, $vil, $mes, $anchor);
-		&SWHtml::ConvertJSON(\$mes);
 	}
 
 	print <<"_HTML_";
@@ -600,7 +600,7 @@ text_form = {
 	count: "",
 	caption: "",
 	max: {
-		unit: "$max_unit",
+		unit: "$cost",
 		line: $max_line,
 		size: $max_size
 	},

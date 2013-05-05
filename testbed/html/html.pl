@@ -78,6 +78,9 @@ sub initua {
 		require "$dirhtml/html_pc.pl";
 		require "$dirhtml/dtd_xhtml.pl";
 		$self->{'dtd'} = SWXHtml11->new($self);
+	} elsif ($ua eq 'javascript') {
+		require "$dirhtml/dtd_javascript.pl";
+		$self->{'dtd'} = SWjavascript->new($self);
 	} else {
 		# HTML4.01 Transitional DTD
 		$sow->{'ua'} = 'html401';
@@ -146,10 +149,20 @@ sub ConvertNET {
 #----------------------------------------
 # JSONèàóù
 #----------------------------------------
+sub ConvertJSONbyUser {
+	my ($text) = @_;
+
+	$$text =~ s/\x5c/\\\x5c/ig;
+	$$text =~ s/\x22/\\\x22/ig;
+	$$text =~ s/\x27/\\\x27/ig;
+	return $text;
+}
+
 sub ConvertJSON {
 	my ($text) = @_;
 
 	$$text =~ s/\x22/\\\x22/ig;
+	$$text =~ s/\x27/\\\x27/ig;
 	return $text;
 }
 

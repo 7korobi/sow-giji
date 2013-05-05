@@ -125,7 +125,7 @@ sub CheckUA {
 	}
 
 	# uaˆø””FŽ¯
-	my @ualist = ('ihtml', 'hdml', 'au', 'voda', 'vodax', 'xhtml', 'html401', 'rss');
+	my @ualist = ('ihtml', 'hdml', 'au', 'voda', 'vodax', 'xhtml', 'html401', 'javascript', 'rss');
 	foreach (@ualist) {
 		$ua = $_ if ($sow->{'query'}->{'ua'} eq $_);
 	}
@@ -140,6 +140,7 @@ sub CheckUA {
 	$outmode = 'mb' if ($ua eq 'vodax');
 	$outmode = 'mb' if ($ua eq 'voda');
 	$outmode = 'rss' if ($ua eq 'rss');
+	$outmode = 'javascript' if ($ua eq 'javascript');
 
 	return ($ua, $outmode);
 }
@@ -496,6 +497,7 @@ sub ExtractChrRef {
 	$$text =~ s/&lt\;/</g;
 	$$text =~ s/&gt\;/>/g;
 	$$text =~ s/&quot\;/\"/g;
+	$$text =~ s/&apos\;/\'/g;
 	$$text =~ s/&amp\;/&/g;
 }
 
@@ -513,6 +515,7 @@ sub EscapeChrRef {
 	$$text =~ s/</&lt\;/g;
 	$$text =~ s/>/&gt\;/g;
 	$$text =~ s/\"/&quot\;/g;
+	$$text =~ s/\'/&apos\;/g;
 }
 
 #----------------------------------------

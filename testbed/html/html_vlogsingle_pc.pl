@@ -121,7 +121,7 @@ sub OutHTMLSingleLogPC {
 		($name, $to) = split(' ¨ ', $log->{'chrname'});
 
 	}
-	&SWHtml::ConvertJSON(\$log->{'log'});
+	&SWHtml::ConvertJSONbyUser(\$log->{'log'});
 
 	print <<"_HTML_";
 var mes = {
@@ -185,7 +185,7 @@ sub OutHTMLMemoSinglePC {
 	$style = "head" if (2 eq $log->{'monospace'});
 
 	my $name = $log->{'chrname'};
-	&SWHtml::ConvertJSON(\$log->{'log'});
+	&SWHtml::ConvertJSONbyUser(\$log->{'log'});
 
 	print <<"_HTML_";
 var mes = {

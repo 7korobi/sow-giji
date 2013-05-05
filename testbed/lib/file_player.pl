@@ -1482,7 +1482,7 @@ sub setvote_to {
 sub setentrust {
 	my($curpl,$sow,$vil) = @_;
 	my $setentrust = 1;
-	$setentrust = 0 if (($vil->{'entrust'} == 1));
+	$setentrust = 0 if (($vil->{'entrust'} != 1));
 	$setentrust = 0 if (($vil->{'mob'} eq 'juror'));
 	$setentrust = 0 if (($vil->{'scapegoat'} > 0));
 	$setentrust = 0 if (($vil->{'event'} == $sow->{'EVENTID_APRIL_FOOL'})&&( 0 < $curpl->getallbondlist() ));
@@ -1873,9 +1873,12 @@ sub gon_potof {
 	my ($saycnt,$cost,$unit,$max_line,$max_size) = $vil->getsayptcosts();
 
 	my $is_epi = $vil->isepilogue();
+	my $blined = $is_epi;
 	my $secret = $is_epi;
-	$secret = 1 if ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'});
-	$secret = 1 if ($pl->{'uid'} eq $sow->{'uid'});
+	my $showpt = $is_epi;
+	$showpt = $secret = $blined = 1 if ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'});
+	$showpt = $secret = 1 if ($pl->{'uid'} eq $sow->{'uid'});
+	my $showid = $vil->{'showid'} || $secret;
 
 	my $longchrname  = $pl->getlongchrname();
 	my $shortchrname = $pl->getshortchrname();
@@ -1890,18 +1893,15 @@ sub gon_potof {
 	my $live = $pl->{'live'};
 	my $turn = 0 + $sow->{'turn'};
 
-	my $viewall = 0;
-	if($is_epi){
-		$viewall = 1;
-	} else {
+	if(!$blined){
 		$live = 'victim' if(('executed' ne $live)and('suddendead' ne $live)and('live' ne $live)and('mob' ne $live));
 
 		my $live_from = 'live';
 		$live_from = $sow->{'curpl'}->{'live'} if (defined($sow->{'curpl'}->{'live'}));
-		$viewall = $vil->ispublic($pl);
-		$viewall = 1 if ($live_from ne 'live');
+		$showpt = $vil->ispublic($pl);
+		$showpt = 1 if ($live_from ne 'live');
 		# “úI
-		$viewall = 0 if ($vil->iseclipse($vil->{'turn'}));
+		$showpt = 0 if ($vil->iseclipse($vil->{'turn'}));
 	}
 
 	print <<"_HTML_";
@@ -1931,7 +1931,7 @@ var pl = {
 };
 _HTML_
 
-	if ($secret || 1 == $viewall){
+	if ($showpt){
 		if ($cost eq 'count'){
 			print <<"_HTML_";
 pl.point = {
@@ -1950,40 +1950,47 @@ _HTML_
 		}
 	}
 
-	if ($secret || 1 == $vil->{'showid'} ){
+	if ($showid ){
 		print <<"_HTML_";
 pl.sow_auth_id = "$pl->{'uid'}";
 _HTML_
 	}
-	if ($secret || $yourself) {
-		my $love  = $pl->getvisiblelovestate();
-
-		my $win_visible = $pl->win_visible();
+	if ($secret) {
+		my $win_visible = "";
 		my $win_result  = $pl->winresult();
-		my $bonds = $pl->{'bonds'};
-		my $pseudobonds = $pl->{'pseudobonds'};
-		$bonds =~ s/\//,/g;
-		$pseudobonds =~ s/\//,/g;
+		my $role = 0 + $pl->{'role'};
+		my $gift = 0 + $pl->{'gift'};
 
+		my $is_wolf = $pl->iswolf();
+		my $is_pixi = $pl->ispixi();
 		my $is_voter = $pl->isvoter();
 		my $is_human = $pl->ishuman();
 		my $is_enemy = $pl->isenemy();
-		my $is_wolf = $pl->iswolf();
-		my $is_pixi = $pl->ispixi();
 		my $is_sensible = $pl->issensible();
 		my $is_committer = $pl->iscommitter();
+
 		my $history = $pl->{'history'};
 		&SWHtml::ConvertJSON(\$history);
 
-		my $role = 0 + $pl->{'role'};
-
-		# in progress secret
-		if( $vil->isepilogue() == 0 ){
+		my $love = "";
+		my $bonds = "";
+		my $pseudolove = "";
+		my $pseudobonds = "";
+		if ($blined){
+			$win_visible = $pl->win_if();
+			$love = $pl->{'love'};
+			$bonds = $pl->{'bonds'};
+			$pseudolove = $pl->{'pseudolove'};
+			$pseudobonds = $pl->{'pseudobonds'};
+		} else {
+			$win_visible = $pl->win_visible();
+			$love = $pl->getvisiblelovestate();
+			$bonds = $pl->{'pseudobonds'}."/".$pl->{'bonds'};
 			$role = $sow->{'ROLEID_VILLAGER'} if ($pl->{'role'} == $sow->{'ROLEID_RIGHTWOLF'});
 			$role = 0   if (($is_sensible == 0)||($pl->{'role'} == 0));
 		}
-
-		my $gift = 0 + $pl->{'gift'};
+		$bonds =~ s/\//,/g;
+		$pseudobonds =~ s/\//,/g;
 
 		print <<"_HTML_";
 pl.win = {
@@ -2005,6 +2012,7 @@ pl.overhear = [];
 
 pl.love = "$love";
 pl.bonds = [$bonds];
+pl.pseudolove = "$pseudolove";
 pl.pseudobonds = [$pseudobonds];
 
 pl.is_voter = (0 !== $is_voter);

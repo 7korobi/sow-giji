@@ -171,6 +171,9 @@ sub OutHTMLFooterPC {
 ($cput CPUs)<br$net>
 </div>
 </body>
+<script>
+\$(function(){\$('.finished_log').hide()});
+</script>
 </html>
 _HTML_
 }
@@ -207,7 +210,6 @@ sub OutHTMLGonInit {
 
   print <<"_HTML_";
 <script>
-\$(function(){\$('.finished_log').hide()});
 window.gon = OPTION.gon.clone(true);
 gon.form.login = {
   "admin_uri": "$admin_uri",
