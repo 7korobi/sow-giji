@@ -104,6 +104,8 @@ _HTML_
 sub OutHTMLSingleLogPC {
 	my ($sow, $vil, $log, $no, $newsay, $anchor, $modesingle) = @_;
 
+	my $logmestype = substr($log->{'logid'}, 0, 1);
+
 	# IDŒöŠJ
 	my $showid = '';
 	$showid = $log->{'uid'} if  ($vil->{'showid'} > 0);
@@ -141,6 +143,11 @@ _HTML_
 	if ($vil->{'showid'}) {
 		print <<"_HTML_"
 mes.sow_auth_id = "$showid";
+_HTML_
+	}
+	if ($logmestype eq 'q') {
+		print <<"_HTML_"
+mes.is_delete = true;
 _HTML_
 	}
 	print <<"_HTML_";

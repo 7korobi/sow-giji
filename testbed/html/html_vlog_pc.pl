@@ -61,19 +61,19 @@ _HTML_
 	$vil->gon_story();
 	$vil->gon_event();
 	$vil->gon_potofs();
+	require "$cfg->{'DIR_HTML'}/html_vlogsingle_pc.pl";
 
+	# 村ログ表示
+    my $last = "";
+	my $has_all_messages = 0 + ($maxrow < 1);
 	print <<"_HTML_";
+gon.event.has_all_messages = (0 != $has_all_messages);
 var mes = {
 	"template": "sow/village_info",
 	"logid": "vilinfo00000"
 };
 gon.event.messages.push(mes);
 _HTML_
-
-	# 村ログ表示
-	require "$cfg->{'DIR_HTML'}/html_vlogsingle_pc.pl";
-    my $last = "";
-	my $has_all_messages = 0 + ($maxrow < 1);
 
 	if (@$memos > 0) {
 		my %memokeys;
@@ -110,7 +110,6 @@ _HTML_
 	}
 
 	print <<"_HTML_";
-gon.event.has_all_messages = (0 != $has_all_messages);
 var mes = {
 	"template": "sow/log_last",
 	"logid":  "IX99999",

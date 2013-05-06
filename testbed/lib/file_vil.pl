@@ -988,7 +988,7 @@ _HTML_
 		$turnname = "エピローグ" if ($i == $vil->{'epilogue'});
 
 		my $linkturn = $amp."rowall=on".$amp."turn=$i";
-		my $newsturn = $amp."turn=$i";
+		my $newsturn = "";
 	    if ($i == $vil->{'turn'}){
     		$is_news = 1;
 			$turnname .= " (最新)";
@@ -1006,7 +1006,7 @@ var event = {
 }
 gon.events.push(event);
 _HTML_
-	    if ($i == $vil->{'turn'}){
+	    if ($is_news){
 			print <<"_HTML_";
 event.news = "$news_to".unescapeHTML();
 _HTML_
