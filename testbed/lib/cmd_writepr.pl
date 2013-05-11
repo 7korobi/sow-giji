@@ -52,9 +52,7 @@ sub OutHTMLCmdWritePreview {
 	my $curpl = &SWBase::GetCurrentPl($sow, $vil);
 	my ($mestype, $saytype, $pttype, $modified, $que, $writepl, $targetpl, $chrname, $cost) = $curpl->GetMesType($sow, $vil);
 
-	my $monospace = 0;
-	$monospace = 1 if ($query->{'monospace'} eq 'monospace');
-	$monospace = 2 if ($query->{'monospace'} eq 'report'); 
+	my $monospace = 0 + $query->{'monospace'};
 
 	my $expression = 0;
 	$expression = $query->{'expression'} if (defined($query->{'expression'}));

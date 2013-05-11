@@ -916,7 +916,7 @@ gon.story = {
 		"game_help": "$gamehelp_announce",
 		"trs_name": "$trsname_announce",
 		"trs_help": "$trshelp_announce",
-		"csids": "$csidcaptions",
+		"csidcaptions": "$csidcaptions",
 		"starttype": "$starttype_announce",
 		"totalcommit": "$totalcommitannounce",
 		"rating": "$rating_announce"

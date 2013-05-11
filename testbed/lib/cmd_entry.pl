@@ -109,11 +109,10 @@ sub SetDataCmdEntry {
 	require "$sow->{'cfg'}->{'DIR_LIB'}/log.pl";
 	my $logfile = SWBoa->new($sow, $vil, $vil->{'turn'}, 0);
 
+	my $monospace = 0 + $query->{'monospace'};
+
 	my $expression = 0;
 	$expression = $query->{'expression'} if (defined($query->{'expression'}));
-	my $monospace = 0;
-	$monospace = 1 if ($query->{'monospace'} eq 'monospace');
-	$monospace = 2 if ($query->{'monospace'} eq 'report'); 
 	my $mes = &SWString::GetTrimString($sow, $vil, $query->{'mes'});
 	my %entry = (
 		pl         => $plsingle,

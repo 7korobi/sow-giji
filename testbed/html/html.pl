@@ -153,6 +153,7 @@ sub ConvertJSONbyUser {
 	my ($text) = @_;
 
 	$$text =~ s/\x5c/\\\x5c/ig;
+	$$text =~ s/([\x81-\x9f\xe0-\xfc]\x5c)\x5c/$1/ig; # shift-jis kanji escape cancel.
 	$$text =~ s/\x22/\\\x22/ig;
 	$$text =~ s/\x27/\\\x27/ig;
 	return $text;
