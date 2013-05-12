@@ -266,11 +266,11 @@ _HTML_
 <div class="paragraph">
 <p>能\力の行使結果はランダムで生成しています。変だなと思ったら、リロードしてみましょう。</p>
 <p><a href="sow.cgi?cmd=roleaspect&$docid#rolerule">役職とルールの細かい点はこちら。</a></p>
-<p>見たい役職は：<select ng-model="search.title" ng-options="f.title as f.title group by f.win for f in forms"></select></p>
+<p>見たい役職は：<select ng-model="search.title" ng-options="f.title as f.title group by f.win for f in roles_form"></select></p>
 </div>
 <hr class="invisible_hr"$net>
 <h2>インターフェイス</h2>
-<div ng-repeat="form in forms | filter:search | limitTo: 1">
+<div ng-repeat="form in roles_form | filter:search | limitTo: 1">
 <h3>{{form.title}}</h3>
 <div template="navi/forms"></div>
 </div>
@@ -279,7 +279,7 @@ window.gon = {};
 gon.form_show = {
 	find: function(o){return true;}
 };
-gon.forms = [];
+gon.roles_form = [];
 _HTML_
 	$vil->gon_potofs();
 
@@ -341,7 +341,7 @@ _HTML_
 
 		&SWHtmlPlayerFormPC::OutHTMLPlayerFormPC($sow, $vil);
 		print <<"_HTML_";
-gon.forms.push(gon.form);
+gon.roles_form.push(gon.form);
 _HTML_
 	}
 	print <<"_HTML_";

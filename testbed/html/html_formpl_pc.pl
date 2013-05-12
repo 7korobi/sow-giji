@@ -673,6 +673,7 @@ sub OutHTMLVotePC {
 
 	# “Š•[^ˆÏ”C‘I‘ð—“
 	my $votelabel = $curpl->getlabel($cmd);
+	my $votechoice = $curpl->getchoice($cmd);
 	my $target_label = $curpl->gettargetlabel($cmd,$vil->{'turn'});
 
     my $jst = "";
@@ -689,7 +690,7 @@ sub OutHTMLVotePC {
 vote = {
 	cmd: "$cmd",
 	jst: "$jst",
-	title: "$votelabel",
+	title: "$votechoice $votelabel",
 	target1: "$target1",
 	target2: "$target2"
 };

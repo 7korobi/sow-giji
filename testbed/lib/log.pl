@@ -265,7 +265,7 @@ sub ReplaceAnchorHTMLMb {
 		# ³‹K•\Œ»‚Å‚ÌŒë”F¯‚ğ–h‚®
 		&BackQuoteAnchorMark(\$anchortext);
 
-		$mes =~ s/$anchortext/ <a href=\"$link\">&gt;&gt;$linktext<\/a>/;
+		$mes =~ s/$anchortext/<a href=\"$link\">&gt;&gt;$linktext<\/a>/;
 #		$mes =~ s/$anchortext/ &gt;&gt;$linktext/;
 	}
 	while ($mes =~ /<rand ([^,]+),([^>]+)>/) {
@@ -275,7 +275,7 @@ sub ReplaceAnchorHTMLMb {
 		# ³‹K•\Œ»‚Å‚ÌŒë”F¯‚ğ–h‚®
 		&BackQuoteAnchorMark(\$randtext);
 
-		$mes =~ s/$randtext/ $result/;
+		$mes =~ s/$randtext/$result/;
 	}
 
 	return $mes;
@@ -297,7 +297,7 @@ sub ReplaceAnchorHTMLRSS {
 		# ³‹K•\Œ»‚Å‚ÌŒë”F¯‚ğ–h‚®
 		&BackQuoteAnchorMark(\$anchortext);
 
-		$mes =~ s/$anchortext/ &gt;&gt;$linktext/;
+		$mes =~ s/$anchortext/&gt;&gt;$linktext/;
 	}
 	while ($mes =~ /<rand ([^,]+),([^>]+)>/) {
 		my $randtext = $&;
@@ -306,7 +306,7 @@ sub ReplaceAnchorHTMLRSS {
 		# ³‹K•\Œ»‚Å‚ÌŒë”F¯‚ğ–h‚®
 		&BackQuoteAnchorMark(\$randtext);
 
-		$mes =~ s/$randtext/ $valtext/;
+		$mes =~ s/$randtext/$valtext/;
 	}
 	$mes =~ s/<(\/)?strong>//g;
 

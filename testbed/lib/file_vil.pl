@@ -1002,6 +1002,7 @@ var event = {
 	"is_news": (1 == $is_news),
 	"name": "$turnname",
 	"link": "$link_to".unescapeHTML(),
+	"news": null,
 	"turn": $i
 }
 gon.events.push(event);

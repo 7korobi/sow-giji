@@ -706,29 +706,53 @@ sub getsaybuttonlabel {
 	return $buttonlabel;
 }
 
-sub getlabel {
+sub getchoice {
 	my ($self, $cmd) = @_;
 	my $sow = $self->{'sow'};
 	my $vil = $self->{'vil'};
 
     my $choice = '';
 	if      ( $cmd eq 'entrust'){
-		$choice = "* " if( 0 != $curpl->{'entrust'});
-		return $choice.$sow->{'textrs'}->{'VOTELABELS'}->[1]
+		$choice = "* " if( 0 != $self->{'entrust'});
+		return $choice;
 
 	} elsif ( $cmd eq 'vote' ){
-		$choice = "* " if( 0 == $curpl->{'entrust'});
-		return $choice.$sow->{'textrs'}->{'VOTELABELS'}->[0]
+		$choice = "* " if( 0 == $self->{'entrust'});
+		return $choice;
 	} elsif ( $cmd eq 'role' ){
 		if ( $self->issensible() ){
 			$choice = "* ";
-			return $choice.$sow->{'textrs'}->{'ABI_ROLE'}->[$self->{'role'}] ;
+			return $choice ;
 		} else {
-			return $choice.$sow->{'textrs'}->{'ABI_ROLE'}->[0] ;
+			return $choice ;
 		}
 	} elsif ( $cmd eq 'gift' ){
 		$choice = "* ";
-		return $choice.$sow->{'textrs'}->{'ABI_GIFT'}->[$self->{'gift'}];
+		return $choice ;
+	} else {
+		return "";
+	}
+	return $votelabel;
+}
+
+sub getlabel {
+	my ($self, $cmd) = @_;
+	my $sow = $self->{'sow'};
+	my $vil = $self->{'vil'};
+
+	if      ( $cmd eq 'entrust'){
+		return $sow->{'textrs'}->{'VOTELABELS'}->[1] ;
+
+	} elsif ( $cmd eq 'vote' ){
+		return $sow->{'textrs'}->{'VOTELABELS'}->[0] ;
+	} elsif ( $cmd eq 'role' ){
+		if ( $self->issensible() ){
+			return $sow->{'textrs'}->{'ABI_ROLE'}->[$self->{'role'}] ;
+		} else {
+			return $sow->{'textrs'}->{'ABI_ROLE'}->[0] ;
+		}
+	} elsif ( $cmd eq 'gift' ){
+		return $sow->{'textrs'}->{'ABI_GIFT'}->[$self->{'gift'}];
 	} else {
 		return "";
 	}
@@ -1465,6 +1489,10 @@ sub isAction {
 #----------------------------------------
 sub queryentrust {
 	my($curpl,$sow,$vil,$query) = @_;
+    if('javascript' eq $sow->{'ua'}){
+		$query->{'entrust'} = 'on' if ('entrust' eq $query->{'cmd'});
+		$query->{'entrust'} = ''   if (   'vote' eq $query->{'cmd'});
+    }
 	if(     $curpl->setentrust($sow,$vil) == 0 ){
 		$query->{'entrust'} = '' ;
 	}elsif( $curpl->setvote_to($sow,$vil) == 0 ){
@@ -1911,6 +1939,7 @@ var pl = {
 	"csid":    "$pl->{'csid'}",
 	"face_id": "$pl->{'cid'}",
 	"deathday": $pl->{'deathday'},
+	"is_delete": true,
 
 	"name":    "$shortchrname",
 	"jobname": "$pl->{'jobname'}",

@@ -185,8 +185,17 @@ sub OutHTMLErrorPC {
 	my ($self, $mes1, $mes2, $mes3, $mes4) = @_;
 	my $sow = $self->{'sow'};
 	my $cfg = $sow->{'cfg'};
+	my $cmd = $sow->{'query'}->{'cmd'};
 
 	print <<"_HTML_";
+<script>
+var errors = [];
+errors.push("$mes1");
+errors.push("$mes2");
+gon.errors = {
+	"$cmd": errors
+};
+</script>
 <div class="paragraph">
 <p>$mes1</p>
 <p>$mes2</p>
