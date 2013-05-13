@@ -1489,10 +1489,6 @@ sub isAction {
 #----------------------------------------
 sub queryentrust {
 	my($curpl,$sow,$vil,$query) = @_;
-    if('javascript' eq $sow->{'ua'}){
-		$query->{'entrust'} = 'on' if ('entrust' eq $query->{'cmd'});
-		$query->{'entrust'} = ''   if (   'vote' eq $query->{'cmd'});
-    }
 	if(     $curpl->setentrust($sow,$vil) == 0 ){
 		$query->{'entrust'} = '' ;
 	}elsif( $curpl->setvote_to($sow,$vil) == 0 ){

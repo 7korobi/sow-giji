@@ -45,6 +45,9 @@ sub SetDataCmdVote {
 	# 投票／能力対象設定
 	my $cmd   = $query->{'cmd'};
 	my $curpl = $sow->{'curpl'};
+	if('mb' eq $sow->{'ua'}){
+		$cmd = 'entrust' if ($query->{'entrust'} = 'on');
+	}
 
 	# 村ログ関連基本入力値チェック
 	require "$sow->{'cfg'}->{'DIR_LIB'}/vld_vil.pl";
