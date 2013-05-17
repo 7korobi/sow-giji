@@ -1527,14 +1527,14 @@ sub Regret{
 		$score->addresult($scorehead,$deadchrname );
 
 		# Že˜T‚ÌŽ€‘ÌB•œQI
-		if ($plsingle->iscanrole($sow->{'ROLEID_CHILDWOLF'}) ){
+		if ($plsingle->iscanrole_or_dead($sow->{'ROLEID_CHILDWOLF'}) ){
 			$vil->{'grudge'} = $vil->{'turn'};
 			my $result = $plsingle->getText('EXECUTECHILDWOLF');
 			$logfile->writeinfo($plsingle->{'uid'}, $sow->{'MESTYPE_INFOWOLF'}, $result);
 		}
 
 		# ø“®ŽÒ‚ÌŽ€‘ÌB–\“®I
-		if ($plsingle->iscanrole($sow->{'ROLEID_FAN'}) ){
+		if ($plsingle->iscanrole_or_dead($sow->{'ROLEID_FAN'}) ){
 			$vil->{'riot'} = $vil->{'turn'};
 			my $result = $plsingle->getText('EXECUTEFAN');
 			$logfile->writeinfo('', $sow->{'MESTYPE_INFONOM'}, $result);
@@ -1597,7 +1597,7 @@ sub cycle {
 	}
 
 	# Ü‹à‰Ò‚¬
-	if ( $deadpl->iscanrole($sow->{'ROLEID_HUNTER'}) ){
+	if ( $deadpl->iscanrole_or_dead($sow->{'ROLEID_HUNTER'}) ){
 		return if ( $deadpl->{'role1'} < 0); # ‚¨‚Ü‚©‚¹‚ÍœŠO
 		# u“––é“à–³”\v‚ÉÝ’è‚µAÜ‹à‰Ò‚¬‚Ì”\—Í‚ª“ñd”­“®‚µ‚È‚¢‚æ‚¤‚ÉB
 		$deadpl->{'tmp_rolestate'} = $sow->{'ROLESTATE_ABI_NONE'};
@@ -1621,8 +1621,8 @@ sub revenge {
 	my $chrname = $deadpl->getchrname();
 	# ’·˜V‚ðŽEŠQ‚·‚é‚ÆAŽEŠQŽÒ‚Í”\—Í‚ðŽ¸‚¤B
 	# •al‚ðŽEŠQ‚·‚é‚ÆAŽEŠQŽÒ‚Í”\—Í‚ðŽ¸‚¤B
-	if (($deadpl->iscanrole($sow->{'ROLEID_ELDER'})  )
-	  ||($deadpl->iscanrole($sow->{'ROLEID_INVALID'}))  ) {
+	if (($deadpl->iscanrole_or_dead($sow->{'ROLEID_ELDER'})  )
+	  ||($deadpl->iscanrole_or_dead($sow->{'ROLEID_INVALID'}))  ) {
 		&toCurse($sow,$vil,$killer,$logfile);
 		my $scorehead = $vil->getTextByID('ROLENAME',$deadpl->{'role'});
 		$score->addresult($scorehead, $chrname );
@@ -1635,7 +1635,7 @@ sub revenge {
 
 	# Ž€–S‚µ‚½‰…—ì‚ÍA’N‚©‚ð‘h¶‚µA‚»‚Ì”\—Í‚ð‹¤—L‚·‚éB
 	# ‚±‚ê‚É‚æ‚Á‚Ä‰‚ß‚ÄŸ—˜ðŒ‚ð“¾‚éB
-	if (($deadpl->iscanrole($sow->{'ROLEID_TANGLE'}))){
+	if (($deadpl->iscanrole_or_dead($sow->{'ROLEID_TANGLE'}))){
 		my $targetpl = $vil->getplbypno($deadpl->{'role1'});
 
 		&WitchHeal($sow, $vil, $deadpl, $targetpl, $logfile, $score);

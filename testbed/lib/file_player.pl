@@ -720,12 +720,8 @@ sub getchoice {
 		$choice = "* " if( 0 == $self->{'entrust'});
 		return $choice;
 	} elsif ( $cmd eq 'role' ){
-		if ( $self->issensible() ){
-			$choice = "* ";
-			return $choice ;
-		} else {
-			return $choice ;
-		}
+		$choice = "* ";
+		return $choice ;
 	} elsif ( $cmd eq 'gift' ){
 		$choice = "* ";
 		return $choice ;
@@ -1079,10 +1075,11 @@ sub isactive {
 	return $isok;
 }
 
-sub iscanrole {
+sub iscanrole_or_dead {
 	my ($self,$roleid) = @_;
-	my $isok = $self->isactive();
-	$isok = 0 if ( $self->{'role'} != $roleid  );
+	my $sow = $self->{'sow'};
+
+	my $isok = ($self->{'role'} == $roleid);
 	$isok = 0 if ( $self->isDisableState('MASKSTATE_HURT') && ($roleid == $sow->{'ROLEID_ELDER'})    );
 	$isok = 0 if ( $self->isDisableState('MASKSTATE_HURT') && ($roleid == $sow->{'ROLEID_WEREDOG'})  );
 	$isok = 0 if ( $self->isDisableState('MASKSTATE_ZOMBIE') );
@@ -1090,12 +1087,27 @@ sub iscanrole {
 	return $isok;
 }
 
+sub iscanrole {
+	my ($self,$roleid) = @_;
+	my $isok = $self->isactive();
+	$isok = 0 if ( 0 == $self->iscanrole_or_dead($roleid));
+	return $isok;
+}
+
+sub iscangift_or_dead {
+	my ($self,$giftid) = @_;
+	my $sow = $self->{'sow'};
+
+	my $isok = ($self->{'gift'} == $giftid);
+	$isok = 0 if ( $self->isDisableState('MASKSTATE_ZOMBIE') );
+	$isok = 0 if ( $self->isDisableState('MASKSTATE_ABI_GIFT') );
+	return $isok;
+}
+
 sub iscangift {
 	my ($self,$giftid) = @_;
 	my $isok = 1;
-	$isok = 0 if ( $self->{'gift'} != $giftid  );
-	$isok = 0 if ( $self->isDisableState('MASKSTATE_ZOMBIE') );
-	$isok = 0 if ( $self->isDisableState('MASKSTATE_ABI_GIFT') );
+	$isok = 0 if ( 0 == $self->iscangift_or_dead($giftid));
 	return $isok;
 }
 
@@ -1989,6 +2001,8 @@ _HTML_
 		my $is_wolf = $pl->iswolf();
 		my $is_pixi = $pl->ispixi();
 		my $is_voter = $pl->isvoter();
+		my $is_canrole = $pl->iscanrole($pl->{'role'});
+		my $is_cangift = $pl->iscangift($pl->{'gift'});
 		my $is_human = $pl->ishuman();
 		my $is_enemy = $pl->isenemy();
 		my $is_sensible = $pl->issensible();
@@ -2018,6 +2032,9 @@ _HTML_
 		$pseudobonds =~ s/\//,/g;
 
 		print <<"_HTML_";
+pl.is_canrole = (0 !== $is_canrole);
+pl.is_cangift = (0 !== $is_cangift);
+
 pl.win = {
 	visible: "$win_visible",
 	result:  "$win_result"
