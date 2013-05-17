@@ -103,17 +103,22 @@ _HTML_
 #----------------------------------------
 sub OutHTMLSingleLogPC {
 	my ($sow, $vil, $log, $no, $newsay, $anchor, $modesingle) = @_;
-
+	my $cfg = $sow->{'cfg'};
+	
 	my $logmestype = substr($log->{'logid'}, 0, 1);
-
-	# ID公開
-	my $showid = '';
-	$showid = $log->{'uid'} if  ($vil->{'showid'} > 0);
-	$showid = $log->{'uid'} if  ($vil->{'epilogue'} <= $sow->{'turn'});
-	$showid = ''            if (($log->{'mestype'} == $sow->{'MESTYPE_MAKER'}) || ($log->{'mestype'} == $sow->{'MESTYPE_ADMIN'}));
 
 	my $to   = "";
 	my $name = $log->{'chrname'};
+
+	my $secret = $vil->isepilogue();
+	$secret = 1 if ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'});
+	my $is_showid = $vil->{'showid'} || $secret;
+
+	# ID公開
+	my $showid = '';
+	$showid = $log->{'uid'} if  ($is_showid);
+	$showid = $log->{'uid'} if  ($vil->{'epilogue'} <= $sow->{'turn'});
+	$showid = ''            if (($log->{'mestype'} == $sow->{'MESTYPE_MAKER'}) || ($log->{'mestype'} == $sow->{'MESTYPE_ADMIN'}));
 
 	my $style = "";
 	$style = "mono" if (1 eq $log->{'monospace'});
@@ -140,7 +145,7 @@ var mes = {
 	"date":  Date.create(1000 * $log->{'date'})
 };
 _HTML_
-	if ($vil->{'showid'}) {
+	if ($is_showid) {
 		print <<"_HTML_"
 mes.sow_auth_id = "$showid";
 _HTML_
@@ -181,6 +186,10 @@ sub OutHTMLMemoSinglePC {
 		$log->{'log'} = '（メモをはがした）' ;
 	}
 
+	my $secret = $vil->isepilogue();
+	$secret = 1 if ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'});
+	my $is_showid = $vil->{'showid'} || $secret;
+
 	# ID公開
 	my $showid = '';
 	$showid = $log->{'uid'} if  ($vil->{'showid'} > 0);
@@ -209,7 +218,7 @@ var mes = {
 	"date":  Date.create(1000 * $log->{'date'})
 };
 _HTML_
-	if ($vil->{'showid'}) {
+	if ($is_showid) {
 		print <<"_HTML_"
 mes.sow_auth_id = "$showid";
 _HTML_
