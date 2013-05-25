@@ -49,7 +49,7 @@ _HTML_
     $alternate = '' if ($_ eq $cssid);
     print "  <link rel=\"" . $alternate . "stylesheet\" type=\"text/css\" href=\"$cfg->{'DIR_CSS'}/$css->{$_}->{'FILE'}\" title=\"$css->{$_}->{'TITLE'}\"$net>\n";
   }
-  print "  <link id=\"giji_css_font\" href=\"$cfg->{'DIR_CSS'}/font/small.css\" rel=\"stylesheet\" type=\"text/css\">";
+  print "  <link id=\"giji_css_font\" href=\"$cfg->{'DIR_CSS'}/font/legacy.css\" rel=\"stylesheet\" type=\"text/css\">";
   # RSS‚Ìo—Í
   if (($sow->{'html'}->{'rss'} ne '') && ($cfg->{'ENABLED_RSS'} > 0)) {
     print "  <link rel=\"Alternate\" type=\"application/rss+xml\" title=\"RSS\" href=\"$sow->{'html'}->{'rss'}\"$net>\n";
