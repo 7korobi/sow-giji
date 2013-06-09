@@ -999,6 +999,7 @@ _HTML_
 		my $news_to = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linkturns$newsturn";
 		print <<"_HTML_";
 var event = {
+	"is_progress": (1 == $is_news),
 	"is_news": (1 == $is_news),
 	"name": "$turnname",
 	"link": "$link_to".unescapeHTML(),

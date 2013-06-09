@@ -192,8 +192,10 @@ sub OutHTMLErrorPC {
 var errors = [];
 errors.push("$mes1");
 errors.push("$mes2");
-gon.errors = {
-	"$cmd": errors
+gon = {
+	"errors": {
+		"$cmd": errors
+	}
 };
 </script>
 <div class="paragraph">

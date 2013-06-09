@@ -118,49 +118,93 @@ _HTML_
 	my $enabled_winner_label  = ($cfg->{'ENABLED_WINNER_LABEL'})?('見える'):('見えない');
 
 	print <<"_HTML_";
+<script>
+gon.browsers = [
+{ mesicon:'【人】',
+  name:'店番 ソ\フィア',
+  log:'これらのブラウザで動作確認済みです。\\
+<br><ul>\\
+<li>Internet Explorer : 9 以降\\
+<li>Firefox : 20.0 以降\\
+<li>Opera 12.15 以降\\
+<li>Safari : 6.0.3 以降\\
+<li>iOS : 5.1.1 以降\\
+<li>Chrome : 26.0 以降\\
+<li>Android : 2.2.1 以降\\
+</ul>',
+date: new Date(1370662886000),template:"message/say",style:"head",mestype:"SAY",csid:"all",face_id:"c67"}
+];
+gon.browsers = [
+{ mesicon:'【人】',
+  name:'店番 ソ\フィア',
+  log:'これらのブラウザで動作確認済みです。\\
+<br><ul>\\
+<li>Internet Explorer : 9 以降\\
+<li>Firefox : 20.0 以降\\
+<li>Opera 12.15 以降\\
+<li>Safari : 6.0.3 以降\\
+<li>iOS : 5.1.1 以降\\
+<li>Chrome : 26.0 以降\\
+<li>Android : 2.2.1 以降\\
+</ul>',
+date: new Date(1370662886000),template:"message/say",style:"head",mestype:"SAY",csid:"all",face_id:"c67"}
+];
+gon.welcome=[
+{ mesicon:'',
+  name:'雑貨屋 ティモシー',
+  log:'他の人狼クローンを遊んだ事のあるきみは、まず <a class="mark" href="$urlwiki$linkspec">他の人狼ゲームとの違い</a>を読もう。多くのことがここに書かれている。<br>\\
+<br>\\
+どんな遊び場かわかった？そうしたら、すぐ下に村がある。',
+date: new Date(1370662886000),template:"message/say",mestype:"SAY",csid:"all",face_id:"c07"},
+];
+gon.setting = [
+{ mesicon:'【赤】',
+  name:'新聞配達 モリス', to:'？',
+  log:'<a class="mark" href="$link_state_page">くわしい特徴</a>はこうだ。わかるか？…またな。<br>\\
+<ul>\\
+<li>廃村期限$cfg->{'TIMEOUT_SCRAP'}日\\
+<li>内緒話の村を$enabled_aiming\\
+<li>狂人は$enabled_ambidexter\\
+<li>幽界トーク村を$enabled_undead\\
+<li>エピローグで勝敗が$enabled_winner_label\\
+<li>死んだあと仲間の囁きが$enabled_permit_dead\\
+<li>少女や降霊者に聞こえるのは$enabled_bitty\\
+<li>日食で見えるのは会話内容のみ\\
+</ul>',
+date: new Date(1370662886000),template:"message/aim",mestype:"WSAY",csid:"all",face_id:"c95"},
+{ name:'新聞配達 モリス',
+  log:'人目を避けて去っていった…。',
+date: new Date(1370662886000),template:"message/action",mestype:"WSAY"}
+];
+</script>
 <dl class="accordion">
+<dt> &#x232B;
+
 <dt>この州の設定</dt>
-<dd>
-この州では、廃村期限$cfg->{'TIMEOUT_SCRAP'}日、
-内緒話の村を$enabled_aiming、
-狂人は$enabled_ambidexter、
-幽界トーク村を$enabled_undead、
-エピローグで勝敗が$enabled_winner_label、
-死んだあと仲間の囁きが$enabled_permit_dead。
-少女や降霊者に聞こえるのは$enabled_bitty。
-日食で見えるのは会話内容のみ。<br>
-[<a href="$link_state_page">くわしい特徴</a>]
+<dd class="plain">
+<div class="message_filter" ng-repeat="message in setting" log="message"></div>
 
 <dt> 対応ブラウザ
-<dd>
-<p>これらのブラウザで動作確認済みです。</p>
-<ul>
-<li>Internet Explorer : 9 以降 
-<br>（スクロールだけ重い、という症状が出るようです）
-<li>Firefox : 20.0 以降
-<li>Opera 12.15 以降
-<li>Safari : 6.0.3 以降
-<li>iOS : 5.1.1 以降
-<li>Chrome : 26.0 以降
-<li>Android : 2.2.1 以降
-</ul>
+<dd class="plain">
+<div class="message_filter" ng-repeat="message in browsers" log="message"></div>
 
 </dl>
 
-<hr class="invisible_hr"$net>
-
-<h2><a name="welcome">$cfg->{'NAME_SW'}へようこそ</a></h2>
+<h3>ようこそ！</h3>
 <div class="paragraph">
 <ol type="1">
-<li><a href="$urlsow?cmd=about">$cfg->{'NAME_SW'}とは？</a>
-<li><a href="$urlsow?$linkvalue">遊び方</a>、<a href="$urlwiki$linkoperate">操作方法</a>、<a href="$urlsow?$linkrule">ルールと心構\え</a>をよく読もう。
-<li><a href="http://crazy-crazy.sakura.ne.jp/giji/"><img src="$urlimg/banner/guide.png"></a>
-<br>人狼ゲームの基本的な知識、人狼議事独自システムの説明は、公式まとめサイトで知ろう。
-<li>他の人狼クローンを遊んだ事のあるきみは、まず<a href="$urlwiki$linkspec">他の人狼ゲームとの違い</a>を読もう。多くのことがここに書かれている。
-<li>他、細かい調整について知りたいときは、<a href="http://crazy-crazy.sakura.ne.jp/giji/">仕様変更</a>を参考にしよう。
-<li>なにをする遊び場かわかった？そうしたら、すぐ下に村がある。
+<li><a href="http://crazy-crazy.sakura.ne.jp/giji/"><img src="$urlimg/banner/guide.png"></a><br>
+人狼ゲームの基本的な知識、人狼議事独自システムの説明は、公式まとめサイトで知ろう。
+<li><a class="mark" href="$urlsow?cmd=about">$cfg->{'NAME_SW'}とは？</a>
+<li><a class="mark" href="$urlsow?$linkvalue">遊び方</a>、
+    <a class="mark" href="$urlwiki$linkoperate">操作方法</a>、
+    <a class="mark" href="$urlsow?$linkrule">ルールと心構\え</a>
+    をよく読もう。
+<li><a class="mark" href="http://crazy-crazy.sakura.ne.jp/giji/">仕様変更</a>から、他の細かい調整のことも読める。
 </ol>
 </div>
+
+<div class="message_filter" ng-repeat="message in welcome" log="message"></div>
 
 <hr class="invisible_hr"$net>
 
@@ -175,6 +219,7 @@ _HTML_
 </dl>
 
 <dl class="accordion">
+<dt> &#x232B;
 <dt> 村建てツール
 <dd>
 
@@ -213,8 +258,8 @@ _HTML_
 	}
 	print <<"_HTML_";
 <dt> 参加者ツール
-<dd>
-
+<dd class="plain">
+<div class="paragraph">
 <p class="mark">ゲーム内での文章</p>
 ゲーム内で現れる文章の一覧を見ることができます。参考にどうぞ。
 <form action="$urlsow" method="get" >
@@ -241,19 +286,38 @@ _HTML_
 <hr class="invisible_hr"$net>
 
 <p class="mark">キャラクター画像一覧</p>
-<ul>
+</div>
+<div style="font-size:80%; line-height:120%;" class="chrlist" template="navi/chr_list"></div>
+<script>
+gon.chrs = [];
 _HTML_
 	my $csidlist = $cfg->{'CSIDLIST'};
 	foreach (@$csidlist) {
 		next if (index($_, '/') >= 0);
+
+		$sow->{'charsets'}->loadchrrs($_);
+		my $charset = $sow->{'charsets'}->{'csid'}->{$_};
+		my $csidname = $sow->{'charsets'}->{'csid'}->{$_}->{'CAPTION'};
+		$csidname =~ s/ /<br>/g;
+		$csidname =~ s/（/<br>/g;
+		$csidname =~ s/・セット「/<br>/g;
+		$csidname =~ s/）//g;
+		$csidname =~ s/」//g;
+
 		$reqvals->{'cmd'}  = 'chrlist';
 		$reqvals->{'csid'} = $_;
-		$sow->{'charsets'}->loadchrrs($_);
 		$linkvalue = &SWBase::GetLinkValues($sow, $reqvals);
-		print "<li><a href=\"$urlsow?$linkvalue\">$sow->{'charsets'}->{'csid'}->{$_}->{'CAPTION'}</a></li>\n";
+		my $csidimg = $charset->{'DIR'}. "/" . $charset->{'NPCID'} . "$expression$charset->{'EXT'}";
+		my $csidtext = "<a href=\"$urlsow?$linkvalue\">$csidname</a>";
+		print <<"_HTML_";
+gon.chrs.push({
+	"img": '$csidimg',
+ 	"text": '$csidtext'
+});
+_HTML_
 	}
 	print <<"_HTML_";
-</ul>
+</script>
 </dl>
 _HTML_
 	$sow->{'trsid'} = $defaulttrsid;
@@ -317,6 +381,7 @@ _HTML_
 <h2>技術情報</h2>
 
 <dl class="accordion">
+<dt> &#x232B;
 <dt> プログラム
 <dd>
 <ul>

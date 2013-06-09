@@ -666,7 +666,7 @@ sub GetConfig {
 		CID_MAKER   => 'maker', # 村建て人用の便宜上のキャラID
 		CID_ADMIN   => 'admin', # 管理人用の便宜上のキャラID
 
-		FILE_WRITE     => "sow". int(rand(10)) .".cgi",
+		FILE_WRITE     => "sow.cgi",
 		FILE_SOW       => "sow.cgi",
 		FILE_VIL       => "vil.cgi",
 		FILE_LOG       => "log.cgi",
