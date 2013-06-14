@@ -110,11 +110,15 @@ _HTML_
 	}
 
 	print <<"_HTML_";
+var log =  "$last<br />" + ((new Date).format(Date.ISO8601_DATE + '({dow})  {TT}{hh}Žž{mm}•ª', 'ja'));
 var mes = {
 	"template": "sow/log_last",
 	"logid":  "IX99999",
-	"log":   "$last<br />" + ((new Date).format(Date.ISO8601_DATE + '({dow})  {TT}{hh}Žž{mm}•ª', 'ja')),
-	"date":  new Date
+	"plain": {
+		"text": log
+	},
+	"log": log,
+	"updated_at": new Date
 };
 gon.event.messages.push(mes);
 </script>

@@ -305,7 +305,7 @@ sub EventGM {
 
 	# Ÿ‚Ì–Œ”­¶I
 	my $event_do;
-	if ($vil->{'seq_event'} > 0) {
+	if ($vil->{'seqevent'} > 0) {
 		$event_do = 1;
 	} else {
 		$event_do = int(rand(@events));

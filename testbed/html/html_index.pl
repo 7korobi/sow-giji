@@ -122,7 +122,7 @@ _HTML_
 gon.browsers = [
 { mesicon:'【人】',
   name:'店番 ソ\フィア',
-  log:'これらのブラウザで動作確認済みです。\\
+  text:'これらのブラウザで動作確認済みです。\\
 <br><ul>\\
 <li>Internet Explorer : 9 以降\\
 <li>Firefox : 20.0 以降\\
@@ -132,35 +132,20 @@ gon.browsers = [
 <li>Chrome : 26.0 以降\\
 <li>Android : 2.2.1 以降\\
 </ul>',
-date: new Date(1370662886000),template:"message/say",style:"head",mestype:"SAY",csid:"all",face_id:"c67"}
-];
-gon.browsers = [
-{ mesicon:'【人】',
-  name:'店番 ソ\フィア',
-  log:'これらのブラウザで動作確認済みです。\\
-<br><ul>\\
-<li>Internet Explorer : 9 以降\\
-<li>Firefox : 20.0 以降\\
-<li>Opera 12.15 以降\\
-<li>Safari : 6.0.3 以降\\
-<li>iOS : 5.1.1 以降\\
-<li>Chrome : 26.0 以降\\
-<li>Android : 2.2.1 以降\\
-</ul>',
-date: new Date(1370662886000),template:"message/say",style:"head",mestype:"SAY",csid:"all",face_id:"c67"}
+updated_at: new Date(1370662886000),template:"message/say",style:"head",mestype:"SAY",csid:"all",face_id:"c67"}
 ];
 gon.welcome=[
 { mesicon:'',
   name:'雑貨屋 ティモシー',
-  log:'他の人狼クローンを遊んだ事のあるきみは、まず <a class="mark" href="$urlwiki$linkspec">他の人狼ゲームとの違い</a>を読もう。多くのことがここに書かれている。<br>\\
+  text:'他の人狼クローンを遊んだ事のあるきみは、まず <a class="mark" href="$urlwiki$linkspec">他の人狼ゲームとの違い</a>を読もう。多くのことがここに書かれている。<br>\\
 <br>\\
 どんな遊び場かわかった？そうしたら、すぐ下に村がある。',
-date: new Date(1370662886000),template:"message/say",mestype:"SAY",csid:"all",face_id:"c07"},
+updated_at: new Date(1370662886000),template:"message/say",mestype:"SAY",csid:"all",face_id:"c07"},
 ];
 gon.setting = [
 { mesicon:'【赤】',
   name:'新聞配達 モリス', to:'？',
-  log:'<a class="mark" href="$link_state_page">くわしい特徴</a>はこうだ。わかるか？…またな。<br>\\
+  text:'<a class="mark" href="$link_state_page">くわしい特徴</a>はこうだ。わかるか？…またな。<br>\\
 <ul>\\
 <li>廃村期限$cfg->{'TIMEOUT_SCRAP'}日\\
 <li>内緒話の村を$enabled_aiming\\
@@ -171,14 +156,14 @@ gon.setting = [
 <li>少女や降霊者に聞こえるのは$enabled_bitty\\
 <li>日食で見えるのは会話内容のみ\\
 </ul>',
-date: new Date(1370662886000),template:"message/aim",mestype:"WSAY",csid:"all",face_id:"c95"},
+updated_at: new Date(1370662886000),template:"message/aim",mestype:"WSAY",csid:"all",face_id:"c95"},
 { name:'新聞配達 モリス',
-  log:'人目を避けて去っていった…。',
-date: new Date(1370662886000),template:"message/action",mestype:"WSAY"}
+  text:'人目を避けて去っていった…。',
+updated_at: new Date(1370662886000),template:"message/action",mestype:"WSAY"}
 ];
 </script>
 <dl class="accordion">
-<dt> &#x232B;
+<dt> <span class="mark"> &#x2718; </span>
 
 <dt>この州の設定</dt>
 <dd class="plain">
@@ -219,7 +204,7 @@ date: new Date(1370662886000),template:"message/action",mestype:"WSAY"}
 </dl>
 
 <dl class="accordion">
-<dt> &#x232B;
+<dt> <span class="mark"> &#x2718; </span>
 <dt> 村建てツール
 <dd>
 
@@ -381,7 +366,7 @@ _HTML_
 <h2>技術情報</h2>
 
 <dl class="accordion">
-<dt> &#x232B;
+<dt> <span class="mark"> &#x2718; </span>
 <dt> プログラム
 <dd>
 <ul>

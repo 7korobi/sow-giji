@@ -131,18 +131,24 @@ sub OutHTMLSingleLogPC {
 	&SWHtml::ConvertJSONbyUser(\$log->{'log'});
 
 	print <<"_HTML_";
+var mes_log = "$log->{'log'}";
 var mes = {
-	"subid":  "$log->{'logsubid'}",
-	"logid":  "$log->{'logid'}",
-	"csid":     "$log->{'csid'}",
-	"face_id":  "$log->{'cid'}",
-	"mesicon":  SOW_RECORD.CABALA.mestypeicons[$log->{'mestype'}],
-	"mestype":  SOW_RECORD.CABALA.mestypes[$log->{'mestype'}],
-	"style":    "$style",
-	"name":  "$name",
-	"to":    "$to",
-	"log":   "$log->{'log'}",
-	"date":  Date.create(1000 * $log->{'date'})
+	"subid": "$log->{'logsubid'}",
+	"logid": "$log->{'logid'}",
+	"csid": "$log->{'csid'}",
+	"face_id": "$log->{'cid'}",
+	"style": "$style",
+	"name": "$name",
+	"to": "$to",
+	"plain": {
+		"updated_at": $log->{'date'},
+		"type": $log->{'mestype'},
+		"text": mes_log
+	},
+	"mesicon": SOW_RECORD.CABALA.mestypeicons[$log->{'mestype'}],
+	"mestype": SOW_RECORD.CABALA.mestypes[$log->{'mestype'}],
+	"date": Date.create(1000 * $log->{'date'}),
+	"log": mes_log
 };
 _HTML_
 	if ($is_showid) {
@@ -204,18 +210,24 @@ sub OutHTMLMemoSinglePC {
 	&SWHtml::ConvertJSONbyUser(\$log->{'log'});
 
 	print <<"_HTML_";
+var mes_log = "$log->{'log'}";
 var mes = {
-	"subid":  "M",
-	"logid":  "MM$log->{'logid'}",
-	"csid":     "$log->{'csid'}",
-	"face_id":  "$log->{'cid'}",
-	"mesicon":  SOW_RECORD.CABALA.mestypeicons[$log->{'mestype'}],
-	"mestype":  SOW_RECORD.CABALA.mestypes[$log->{'mestype'}],
-	"style":    "$style",
-	"name":  "$name",
-	"to":    "$to",
-	"log":   "$log->{'log'}",
-	"date":  Date.create(1000 * $log->{'date'})
+	"subid": "M",
+	"logid": "MM$log->{'logid'}",
+	"csid": "$log->{'csid'}",
+	"face_id": "$log->{'cid'}",
+	"style": "$style",
+	"name": "$name",
+	"to": "$to",
+	"plain": {
+		"updated_at": $log->{'date'},
+		"type": $log->{'mestype'},
+		"text": mes_log
+	},
+	"mesicon": SOW_RECORD.CABALA.mestypeicons[$log->{'mestype'}],
+	"mestype": SOW_RECORD.CABALA.mestypes[$log->{'mestype'}],
+	"date": Date.create(1000 * $log->{'date'}),
+	"log": mes_log
 };
 _HTML_
 	if ($is_showid) {
