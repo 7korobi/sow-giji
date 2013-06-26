@@ -22,14 +22,18 @@ sub GetConfig {
 		'ririnra_c51',
 		'ririnra_c20',
 		'ririnra_c32',
+		'all',
+		'mad',
+		'time',
+		'ger',
 		'animal',
 		'school',
 		'changed',
 		'changed_m05',
-		'wa',
-		'wa_w23',
 		'SF',
 		'SF_sf10',
+		'wa',
+		'wa_w23',
 	);
 
 	# •¶Žš—ñƒŠƒ\[ƒXƒZƒbƒgID
@@ -322,12 +326,12 @@ sub GetConfig {
 	);
 
 	# ‰{——§ŒÀ•\Ž¦
-	my %ratingnormal = (
+	my %cd_default = (
 		FILE    => 'cd_default.png',
 		CAPTION => '‚Æ‚­‚É‚È‚µ',
 		ALT     => '‰‰',
-		WIDTH   => 0,
-		HEIGHT  => 0,
+		WIDTH   => 20,
+		HEIGHT  => 16,
 	);
 
 	my %cd_love = (
@@ -340,7 +344,7 @@ sub GetConfig {
 
 	my %cd_sexy = (
 		FILE    => 'cd_sexy.png',
-		CAPTION => '[«] «•\Œ»‚ ‚è',
+		CAPTION => '[«] «•\\Œ»‚ ‚è',
 		ALT     => '«',
 		WIDTH   => 20,
 		HEIGHT  => 16,
@@ -350,30 +354,30 @@ sub GetConfig {
 		FILE    => 'cd_sexylove.png',
 		CAPTION => '[«ˆ¤] ‘ål‚Ì—öˆ¤',
 		ALT     => '«ˆ¤',
-		WIDTH   => 40,
-		HEIGHT  => 16,
-	);
-
-	my %cd_sexyviolence = (
-		FILE    => 'cd_sexyviolence.png',
-		CAPTION => '[«–\] ‚¦‚ë‚®‚ë',
-		ALT     => '«–\ ',
-		WIDTH   => 40,
+		WIDTH   => 20,
 		HEIGHT  => 16,
 	);
 
 	my %cd_violence = (
 		FILE    => 'cd_violence.png',
-		CAPTION => '[–\] –\—ÍAƒOƒ',
-		ALT     => '–\ ',
+		CAPTION => '[–\\] –\\—ÍAƒOƒ',
+		ALT     => '–\\',
+		WIDTH   => 20,
+		HEIGHT  => 16,
+	);
+
+	my %cd_sexyviolence = (
+		FILE    => 'cd_sexyviolence.png',
+		CAPTION => '[«–\\] ‚¦‚ë‚®‚ë',
+		ALT     => '«–\\',
 		WIDTH   => 20,
 		HEIGHT  => 16,
 	);
 
 	my %cd_teller = (
 		FILE    => 'cd_teller.png',
-		CAPTION => '[‹°] ‹°•|‚ðø‚é',
-		ALT     => '‹°',
+		CAPTION => '[•|] ‹°•|‚ðø‚é',
+		ALT     => '•|',
 		WIDTH   => 20,
 		HEIGHT  => 16,
 	);
@@ -404,7 +408,7 @@ sub GetConfig {
 
 	my %cd_drug = (
 		FILE    => 'cd_drug.png',
-		CAPTION => '[–ò] –ò•¨•\Œ»‚ ‚è',
+		CAPTION => '[–ò] –ò•¨•\\Œ»‚ ‚è',
 		ALT     => '–ò',
 		WIDTH   => 20,
 		HEIGHT  => 16,
@@ -412,7 +416,7 @@ sub GetConfig {
 
 	my %cd_word = (
 		FILE    => 'cd_word.png',
-		CAPTION => '[Œ¾] ŽE”°A–\Œ¾‚ ‚è',
+		CAPTION => '[Œ¾] ŽE”°A–\\Œ¾‚ ‚è',
 		ALT     => 'Œ¾',
 		WIDTH   => 20,
 		HEIGHT  => 16,
@@ -450,14 +454,6 @@ sub GetConfig {
 		HEIGHT  => 16,
 	);
 
-	my %cd_alert = (
-		FILE    => 'cd_alert.png',
-		CAPTION => '—v’ˆÓI',
-		ALT     => 'I',
-		WIDTH   => 20,
-		HEIGHT  => 16,
-	);
-
 	my %cd_biohazard = (
 		FILE    => 'cd_biohazard.png',
 		CAPTION => '[Šë] –³’ƒ‚Ô‚èã“™',
@@ -466,38 +462,39 @@ sub GetConfig {
 		HEIGHT  => 16,
 	);
 
-	my @rating_order = ('default', 'love', 'sexy', 'sexylove', 'violence', 'sexyviolence', 'teller','drunk','gamble','crime','drug','word', 'fireplace', 'appare','ukkari', 'child', 'biohazard');
+
+
+	my @rating_order = ("default", "love", "sexy", "sexylove", "violence", "sexyviolence", "teller", "drunk", "gamble", "crime", "drug", "word", "fireplace", "appare", "ukkari", "child", "biohazard");
 	my %rating = (
 		ORDER     => \@rating_order,
-		default   => \%ratingnormal,
-		love      => \%cd_love,
-		sexy      => \%cd_sexy,
-		sexylove  => \%cd_sexylove,
-		violence  => \%cd_violence,
+		default => \%cd_default,
+		love => \%cd_love,
+		sexy => \%cd_sexy,
+		sexylove => \%cd_sexylove,
+		violence => \%cd_violence,
 		sexyviolence => \%cd_sexyviolence,
-		teller    => \%cd_teller,
-		drunk     => \%cd_drunk,
-		gamble    => \%cd_gamble,
-		crime     => \%cd_crime,
-		drug      => \%cd_drug,
-		word      => \%cd_word,
+		teller => \%cd_teller,
+		drunk => \%cd_drunk,
+		gamble => \%cd_gamble,
+		crime => \%cd_crime,
+		drug => \%cd_drug,
+		word => \%cd_word,
 		fireplace => \%cd_fireplace,
-		appare    => \%cd_appare,
-		ukkari    => \%cd_ukkari,
-		child     => \%cd_child,
-		alert     => \%cd_alert,
+		appare => \%cd_appare,
+		ukkari => \%cd_ukkari,
+		child => \%cd_child,
 		biohazard => \%cd_biohazard,
 	);
 
 	my @file_js = (
-		'data.js',
+		'../assets/data.js',
 		'../assets/base.js',
-		'sow.js',
+		'../assets/sow.js',
 	);
 	my @file_js_vil = (
-		'data.js',
+		'../assets/data.js',
 		'../assets/base.js',
-		'sow.js',
+		'../assets/sow.js',
 	);
 
 	my %cfg = (
@@ -509,23 +506,23 @@ sub GetConfig {
 		USERID_NPC     => "master",
 		USERID_ADMIN   => "admin",
 		ENABLED_VMAKE  => 1,
-		URL_SW         => "http://localhost/testbed",
+		URL_SW         => "http://soy-bean.sakura.ne.jp/soy-bean",
 		NAME_HOME      => "l˜T‹cŽ– ŽI‚Ì–¡‘XŽÏ",
 		RULE           => "BRAID",
 		MAX_VILLAGES   => 2,
 		TIMEOUT_SCRAP  => 5,
 		TIMEOUT_ENTRY  => 2,
 		TOPPAGE_INFO   => "./_info.pl",
-		BASEDIR_CGIERR => "http://localhost/testbed//",
+		BASEDIR_CGIERR => "http://soy-bean.sakura.ne.jp/soy-bean//",
 		BASEDIR_CGI    => ".",
 		BASEDIR_DAT    => "./data",
-		BASEDIR_DOC    => "http://localhost",
+		BASEDIR_DOC    => "http://giji.load.jp",
 
 		ENABLED_DELETED      => 0, # íœ”­Œ¾‚ð•\Ž¦‚·‚é‚©‚Ç‚¤‚©
 		ENABLED_WINNER_LABEL => 0, # 1:Ÿ—˜ŽÒ•\Ž¦‚ð‚·‚éB
 		ENABLED_MAX_ESAY     => 0, # ƒGƒsƒ[ƒO‚ð”­Œ¾§ŒÀ‘ÎÛ‚É 0:‚µ‚È‚¢A1:‚·‚é
 		ENABLED_RANDOMTARGET => 1, # 1:“Š•[E”\—Íæ‚Éuƒ‰ƒ“ƒ_ƒ€v‚ðŠÜ‚ß‚é
-		ENABLED_SUDDENDEATH  => 0, # 1:“Ë‘RŽ€‚ ‚è
+		ENABLED_SUDDENDEATH  => 1, # 1:“Ë‘RŽ€‚ ‚è
 		ENABLED_BITTY        => 0, # ­—‚âŒð—ìŽÒ‚Ì‚Ì‚¼‚«‚Ý‚ª‚Ð‚ç‚ª‚È‚Ì‚ÝB
 		ENABLED_PERMIT_DEAD  => 1, # •æ‰º‚Ìl˜T/‹¤–ÂŽÒ/ƒRƒEƒ‚ƒŠlŠÔ‚ªš‘‚«‚ðŒ©‚ç‚ê‚é‚©‚Ç‚¤‚©
 		ENABLED_UNDEAD       => 1, # 1:—HŠEƒg[ƒN‘º‚ðÝ’è‰Â”\
@@ -554,7 +551,7 @@ sub GetConfig {
 
 		# ƒtƒ@ƒCƒ‹ƒƒbƒN‹@”\
 		ENABLED_GLOCK => 1, # 0: none, 1: flock, 2: rename
-		TIMEOUT_GLOCK => 5 * 60, # rename•ûŽ®‚ÌŽž‚ÌŽžŠÔØ‚ê
+		TIMEOUT_GLOCK => 1 * 60, # rename•ûŽ®‚ÌŽž‚ÌŽžŠÔØ‚ê
 
 		# •W€‚Ìƒoƒi[‰æ‘œ
 		FILE_TOPBANNER   => 'banner/mwtitle.jpg',
