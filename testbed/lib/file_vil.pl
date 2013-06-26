@@ -982,7 +982,7 @@ _HTML_
 	for ($i = 0; $i <= $vil->{'turn'}; $i++) {
     	next if ($i > $vil->{'epilogue'});
 
-        my $is_news = 0;
+        my $is_progress = 0;
 		my $turnname = "$i日目";
 		$turnname = "プロローグ" if ($i == 0);
 		$turnname = "エピローグ" if ($i == $vil->{'epilogue'});
@@ -990,17 +990,16 @@ _HTML_
 		my $linkturn = $amp."rowall=on".$amp."turn=$i";
 		my $newsturn = "";
 	    if ($i == $vil->{'turn'}){
-    		$is_news = 1;
+    		$is_progress = 1;
 			$turnname .= " (最新)";
 	    } else {
-    		$is_news = 0;
+    		$is_progress = 0;
 	    }
 		my $link_to = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linkturns$linkturn";
 		my $news_to = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linkturns$newsturn";
 		print <<"_HTML_";
 var event = {
-	"is_progress": (1 == $is_news),
-	"is_news": (1 == $is_news),
+	"is_progress": (1 == $is_progress),
 	"name": "$turnname",
 	"link": "$link_to".unescapeHTML(),
 	"news": null,
@@ -1008,7 +1007,7 @@ var event = {
 }
 gon.events.push(event);
 _HTML_
-	    if ($is_news){
+	    if ($is_progress){
 			print <<"_HTML_";
 event.news = "$news_to".unescapeHTML();
 _HTML_

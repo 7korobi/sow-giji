@@ -454,29 +454,29 @@ sub CvtRandomText {
 	return $mes if ($cfg->{'ENABLED_RANDOMTEXT'} == 0);
 
 	# xDn
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_DICE'}\]\]/{my $a = &do_random_dice($1,1,$2);my $b = &trim_random_cap($&);"<rand $a,$b = (1..$2)x$1>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_DICE'}\]\]/{my $a = &do_random_dice($1,1,$2);"<rand $a,$& = (1..$2)x$1>"}/eg;
 
 	# fortune
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_FORTUNE'}\]\]/{my $a = &do_random_dice(1,0,100);my $b = &trim_random_cap($&);"<rand $a,$b = (0..100)>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_FORTUNE'}\]\]/{my $a = &do_random_dice(1,0,100);"<rand $a,$& = (0..100)>"}/eg;
 
 	# who
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_LIVES'}\]\]/{my $a = &do_random_who($vil);my $b = &trim_random_cap($&);"<rand $a,$b>"}/eg;
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_PL_WHO'}\]\]/{my $a = &do_random_plwho($vil);my $b = &trim_random_cap($&);"<rand $a,$b>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_LIVES'}\]\]/{my $a = &do_random_who($vil);"<rand $a,$&>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_PL_WHO'}\]\]/{my $a = &do_random_plwho($vil);"<rand $a,$&>"}/eg;
 
 	# omikuji
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_MIKUJI'}\]\]/{my $a = &do_random_mikuji($cfg);my $b = &trim_random_cap($&);"<rand $a,$b>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_MIKUJI'}\]\]/{my $a = &do_random_mikuji($cfg);"<rand $a,$&>"}/eg;
 
 	# role
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_ROLE'}\]\]/{my $a = &do_random_role($sow,'ROLENAME');my $b = &trim_random_cap($&);"<rand $a,$b>"}/eg;
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_PL_ROLE'}\]\]/{my $a = &do_random_plrole($sow,$vil,'ROLENAME');my $b = &trim_random_cap($&);"<rand $a,$b>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_ROLE'}\]\]/{my $a = &do_random_role($sow,'ROLENAME');"<rand $a,$&>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_PL_ROLE'}\]\]/{my $a = &do_random_plrole($sow,$vil,'ROLENAME');"<rand $a,$&>"}/eg;
 
     # gift
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_GIFT'}\]\]/{my $a = &do_random_role($sow,'GIFTNAME');my $b = &trim_random_cap($&);"<rand $a,$b>"}/eg;
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_PL_GIFT'}\]\]/{my $a = &do_random_plrole($sow,$vil,'GIFTNAME');my $b = &trim_random_cap($&);"<rand $a,$b>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_GIFT'}\]\]/{my $a = &do_random_role($sow,'GIFTNAME');"<rand $a,$&>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_PL_GIFT'}\]\]/{my $a = &do_random_plrole($sow,$vil,'GIFTNAME');"<rand $a,$&>"}/eg;
 
     # event
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_EVENT'}\]\]/{my $a = &do_random_role($sow,'EVENTNAME');my $b = &trim_random_cap($&);"<rand $a,$b>"}/eg;
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_PL_EVENT'}\]\]/{my $a = &do_random_plrole($sow,$vil,'EVENTNAME');my $b = &trim_random_cap($&);"<rand $a,$b>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_EVENT'}\]\]/{my $a = &do_random_role($sow,'EVENTNAME');"<rand $a,$&>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_PL_EVENT'}\]\]/{my $a = &do_random_plrole($sow,$vil,'EVENTNAME');"<rand $a,$&>"}/eg;
 
 	return $mes;
 }

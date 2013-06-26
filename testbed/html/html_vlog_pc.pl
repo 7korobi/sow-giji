@@ -67,6 +67,7 @@ _HTML_
     my $last = "";
 	my $has_all_messages = 0 + ($maxrow < 1);
 	print <<"_HTML_";
+gon.event.is_news = (0 == $has_all_messages);
 gon.event.has_all_messages = (0 != $has_all_messages);
 var mes = {
 	"template": "sow/village_info",
