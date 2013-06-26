@@ -506,17 +506,17 @@ sub GetConfig {
 		USERID_NPC     => "master",
 		USERID_ADMIN   => "admin",
 		ENABLED_VMAKE  => 1,
-		URL_SW         => "http://soy-bean.sakura.ne.jp/soy-bean",
+		URL_SW         => "http://localhost/testbed",
 		NAME_HOME      => "人狼議事 鯖の味噌煮",
 		RULE           => "BRAID",
 		MAX_VILLAGES   => 2,
 		TIMEOUT_SCRAP  => 5,
 		TIMEOUT_ENTRY  => 2,
 		TOPPAGE_INFO   => "./_info.pl",
-		BASEDIR_CGIERR => "http://soy-bean.sakura.ne.jp/soy-bean//",
+		BASEDIR_CGIERR => "http://localhost/testbed//",
 		BASEDIR_CGI    => ".",
 		BASEDIR_DAT    => "./data",
-		BASEDIR_DOC    => "http://giji.load.jp",
+		BASEDIR_DOC    => "http://localhost",
 
 		ENABLED_DELETED      => 0, # 削除発言を表示するかどうか
 		ENABLED_WINNER_LABEL => 0, # 1:勝利者表示をする。
