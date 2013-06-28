@@ -36,7 +36,11 @@ sub OutHTMLMakeVilForm {
 	&SWHtmlPC::OutHTMLLogin($sow); # ログインボタン
     &SWHtmlPC::OutHTMLChangeCSS($sow);
 
+	&SWHtmlPC::OutHTMLGonInit($sow); # ログイン欄の出力
+	$vil->gon_story(true);
+	$vil->gon_event(true);
 	print <<"_HTML_";
+</script>
 <div class="toppage">
 <h2>村の$vmode</h2>
 _HTML_
@@ -119,152 +123,83 @@ _HTML_
 
 	if ( $fullmanage ) {
 		print <<"_HTML_";
-<fieldset>
-<legend>基本設定</legend>
-<input type="hidden" name="trsid" value="$vil->{'trsid'}">
-<dl>
-<dt>$sow->{'textrs'}->{'CAPTION'}
-<dd>$sow->{'textrs'}->{'HELP'}
-</dl>
-<dl class="dl-horizontal">
-<dt><label for="vplcnt">定員</label>
-<dd><input id="vplcnt" class="input-mini" type="text" name="vplcnt" ng-model="event.player.limit" size="5">人
-<dt><label for="vplcntstart" >最低人数</label>
-<dd><input id="vplcntstart" class="input-mini" type="text" name="vplcntstart" ng-model="event.player.start" size="5">人  ※開始方法が人狼BBS型の時のみ
-<dt><label for="updhour">更新時間</label>
-<dd><select id="updhour" name="hour" class="input-small" ng-model="story.upd.hour">
-</dl>
-_HTML_
+<div template="sow/form/configs">
+<script>
+e = [];
+f = [];
+g = [];
+i = [];
 
+a = [];
+b = [];
+c = [];
+d = {};
+
+_HTML_
+		my $order_roletable = $sow->{'ORDER_ROLETABLE'};
 		my $i;
 		for ($i = 0; $i < 24; $i++) {
 			my $hour = sprintf('%02d時', $i);
-			print "<option value=\"$i\">$hour</option>\n";
+			print "e.push({val:$i,name:'$hour'});";
 		}
-
-		print <<"_HTML_";
-</select>
-<select id="updminite" name="minite" class="input-small" ng-model="story.upd.minute">
-_HTML_
 
 		for ($i = 0; $i < 60; $i += 30) {
 			my $min = sprintf('%02d分', $i);
-			print "<option value=\"$i\">$min</option>\n";
+			print "f.push({val:$i,name:'$min'});";
 		}
-
-		print <<"_HTML_";
-</select>に更新
-
-<dt><label for="updinterval">更新間隔</label>
-<dd><select id="updinterval" name="updinterval" class="input-large" ng-model="story.upd.interval">
-_HTML_
 
 		for ($i = 1; $i <= 3; $i++) {
 			my $interval = sprintf('%02d時間', $i * 24);
-			print "<option value=\"$i\">$interval</option>\n";
+			print "g.push({val:$i,name:'$interval'});";
 		}
-
-		print <<"_HTML_";
-</select>ごとに更新
-
-<dt><label for="votetype">投票方法</label>
-<dd><select id="votetype" name="votetype" ng-model="story.type.vote">
-<option value="anonymity">無記名投票</option>
-<option value="sign">記名投票</option>
-</select>
-
-<dt><label for="roletable">役職配分</label>
-<dd><select id="roletable" name="roletable" ng-model="story.type.roletable">
-_HTML_
-
-		my $order_roletable = $sow->{'ORDER_ROLETABLE'};
 		foreach (@$order_roletable) {
 			my $caption  = $sow->{'textrs'}->{'CAPTION_ROLETABLE'}->{$_};
 			next if (!defined($caption));
-			print "      <option value=\"$_\">$caption</option>\n";
+			print "i.push({val:'$_',name:'$caption'});";
 		}
 
-		print <<"_HTML_";
-</select>
-</fieldset>
-
-<fieldset ng-show="story.type.roletable == 'custom'">
-<legend>役職配分自由設定</legend>
-<TABLE class="multicolumn_role"><TBODY>
-_HTML_
-
-		my $hr = '<hr>';
-		my $imgwidth = $charset->{'IMGBODYW'} + 2;
-		my $tdwidth = 4;
 		my $roleid  = $sow->{'ROLEID'};
 		my $giftid  = $sow->{'GIFTID'};
 		my $eventid = $sow->{'EVENTID'};
 		for ($i=0,$d=0; $i <= @$roleid; $i++) {
-			if    ($i == $sow->{'SIDEST_HUMANSIDE'} ){
-				print "\n\n<TR><TD colspan=$tdwidth><h3>人間</h3><TR>\n ";
-                $d = 0;
-			}elsif($i == $sow->{'SIDEST_ENEMY'} ){
-				my $enemy = "人狼側";
-				$enemy    = "破滅側" if( 1 == $cfg->{'ENABLED_AMBIDEXTER'} );
-				print "\n\n<TR><TD colspan=$tdwidth><h3>$enemyの人間</h3><TR>\n ";
-                $d = 0;
-			}elsif($i == $sow->{'SIDEST_WOLFSIDE'} ){
-				print "\n\n<TR><TD colspan=$tdwidth><h3>人狼</h3><TR>\n ";
-                $d = 0;
-			}elsif($i == $sow->{'SIDEST_PIXISIDE'} ){
-				print "\n\n<TR><TD colspan=$tdwidth><h3>妖精</h3><TR>\n ";
-                $d = 0;
-			}elsif($i == $sow->{'SIDEST_OTHER'} ){
-				print "\n\n<TR><TD colspan=$tdwidth><h3>それ以外</h3><TR>\n ";
-                $d = 0;
-            }elsif($d >= $tdwidth){
-                print "\n\n<TR> ";
-                $d = 0;
-            }
             next if ($sow->{'ROLEID_TANGLE'}    == $i && $sow->{'cfg'}->{'ENABLED_TEST_ROLE'} != 1);
             next if ($sow->{'ROLEID_WALPURGIS'} == $i && $sow->{'cfg'}->{'ENABLED_TEST_ROLE'} != 1);
 			next if ( '' eq $sow->{'textrs'}->{'ROLESHORTNAME'}->[$i] );
-            $d++;
-			print <<"_HTML_";
-<TD nowrap align=right class="input-append input-prepend">
-<label for="cnt$roleid->[$i]" class="add-on">$sow->{'textrs'}->{'ROLENAME'}->[$i]</label>
-<input  id="cnt$roleid->[$i]" type="text" name="cnt$roleid->[$i]" class="input-tiny" size="2" value="$vil->{"cnt$roleid->[$i]"}"$net><span class="add-on">人</span>
-_HTML_
+			print "a.push('" . $roleid->[$i] . "');";
+			print "d." . $roleid->[$i] . " = " . $vil->{"cnt$roleid->[$i]"} . ";";
 		}
 		for ($i=$sow->{'SIDEST_DEAL'}; $i <= @$giftid; $i++) {
-			if    ($i == $sow->{'SIDEST_DEAL'} ){
-				print "\n\n<TR><TD colspan=$tdwidth><h3>恩恵</h3><TR>\n ";
-                $d = 0;
-            }elsif($d >= $tdwidth){
-                print "\n\n<TR> ";
-                $d = 0;
-            }
 			next if ( '' eq $sow->{'textrs'}->{'GIFTSHORTNAME'}->[$i] );
-            $d++;
-			print <<"_HTML_";
-<TD nowrap align=right class="input-append input-prepend">
-<label for="cnt$giftid->[$i]" class="add-on">$sow->{'textrs'}->{'GIFTNAME'}->[$i]</label>
-<input  id="cnt$giftid->[$i]" type="text" name="cnt$giftid->[$i]" class="input-tiny" size="2" value="$vil->{"cnt$giftid->[$i]"}"$net><span class="add-on">人</span>
-_HTML_
+			print "b.push('" . $giftid->[$i] . "');";
+			print "d." . $giftid->[$i] . " = " . $vil->{"cnt$giftid->[$i]"} . ";";
 		}
-		print <<"_HTML_";
-</TABLE>
-</fieldset>
-<fieldset style="text-align:center;">
-<h3>事件</h3>
-
-<input type="text" id="eventcard" name="eventcard" ng-init="tokenInput('#eventcard', 'events', story.card.event)">
-_HTML_
-
 		for ($i=1,$d=0; $i <= @$eventid; $i++) {
 			next if ( '' eq $sow->{'textrs'}->{'EVENTNAME'}->[$i] );
-			print <<"_HTML_";
-<span class="btn" onclick="tokenInput['#eventcard'].eventAdd('$eventid->[$i]')">$sow->{'textrs'}->{'EVENTNAME'}->[$i]</span>
-_HTML_
+			print "c.push('" . $eventid->[$i] . "');";
 		}
-
 		print <<"_HTML_";
-</fieldset>
+
+gon.config = {
+	roles: a,
+	gifts: b,
+	events: c,
+	counts: d,
+	roletables: i,
+	votetypes: [
+		{val:"anonymity",name:"無記名投票"},
+		{val:"sign",name:"記名投票"}
+	],
+	intervals: g,
+	minutes: f,
+	hours: e,
+	trs: {
+		caption:"$sow->{'textrs'}->{'CAPTION'}",
+		help:"$sow->{'textrs'}->{'HELP'}"
+	},
+	trsid: "$vil->{'trsid'}"
+};
+</script>
+</div>
 _HTML_
 
 
@@ -478,13 +413,6 @@ _HTML_
 <div id="tab" template="sow/navi_edit"></div>
 _HTML_
 	$sow->{'html'}->outfooter(); # HTMLフッタの出力
-
-	&SWHtmlPC::OutHTMLGonInit($sow); # ログイン欄の出力
-	$vil->gon_story(true);
-	$vil->gon_event(true);
-	print <<"_HTML_";
-</script>
-_HTML_
 	$sow->{'http'}->outfooter();
 
 	return;
