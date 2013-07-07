@@ -213,6 +213,7 @@ sub OutHTMLGonInit {
 <script>
 window.gon = OPTION.gon.clone(true);
 gon.form.login = {
+  "cmd": "login",
   "admin_uri": "$admin_uri",
   "is_admin": $is_admin,
   "cmdfrom": "$cmdfrom",
