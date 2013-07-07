@@ -1021,14 +1021,16 @@ sub gon_event {
 	my $sow = $vil->{'sow'};
 	my $cfg = $sow->{'cfg'};
 
-	my $secret = $vil->isepilogue();
-	$secret = 1 if ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'});
-
 	my $isseance = $vil->isseance();
 	my $ispublic = $vil->ispublic();
 	my $iseclipse = $vil->iseclipse();
 	my $isfreecost = $vil->isfreecost();
+	my $isepilogue = $vil->isepilogue();
 	my $isstartable = $vil->isstartable();
+
+	my $secret = $isepilogue;
+	$secret = 1 if ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'});
+
 	my $committablepl = $vil->getcommittablepl();
 	my $votablepl    = $vil->getvotablepl();
 	my $turn = 0 + $sow->{'turn'};
@@ -1045,6 +1047,7 @@ gon.event = {
     "is_public": (0 !== $ispublic),
     "is_eclipse": (0 !== $iseclipse),
     "is_freecost": (0 !== $isfreecost),
+    "is_epilogue": (0 !== $isepilogue),
     "is_startable": (0 !== $isstartable),
 	"player":{
 		"start": $vil->{'vplcntstart'},
