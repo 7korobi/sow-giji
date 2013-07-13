@@ -189,12 +189,13 @@ sub OutHTMLErrorPC {
 
 	print <<"_HTML_";
 <script>
-var errors = [];
-errors.push("$mes1");
-errors.push("$mes2");
-gon = {
+var e = [];
+e.push("$mes1");
+e.push("$mes2");
+
+window.gon = {
 	"errors": {
-		"$cmd": errors
+		"$cmd": e
 	}
 };
 </script>

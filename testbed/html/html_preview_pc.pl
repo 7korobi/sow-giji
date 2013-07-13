@@ -33,7 +33,7 @@ sub OutHTMLPreviewPC {
 
     print <<"_HTML_";
 <script>
-gon = {
+window.gon = {
 	event: {
 		is_news: false,
 		messages: []
