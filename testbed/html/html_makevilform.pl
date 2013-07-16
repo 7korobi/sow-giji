@@ -365,7 +365,7 @@ _HTML_
 		print <<"_HTML_";
 </select>
 <dt><label for="mob">å©ï®êl</label>
-<dd class="input-append input-prepend"><select id="mob" name="mob" class="input-small" ng-model="story.type.mob">
+<dd><select id="mob" name="mob" class="input-small" ng-model="story.type.mob">
 _HTML_
 		my $mob = $sow->{'basictrs'}->{'MOB'};
 		foreach (@{$mob->{'ORDER'}}) {
