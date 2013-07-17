@@ -155,6 +155,7 @@ sub CheckValidityMakeVil {
 	$isdeadlose     = 1 if ('LIVE_TABULA'       eq $query->{'game'});
 	$isdeadlose     = 1 if ('LIVE_MILLERHOLLOW' eq $query->{'game'});
 	$isdeadlose     = 1 if ('TROUBLE'           eq $query->{'game'});
+	$isdeadlose     = 1 if ('SECRET'            eq $query->{'game'});
 	if ( $istabula ){
 		# タブラの人狼特有のチェック
 		if ($wolves *2 + 1 >= ($vplcnt - $pixies )) {

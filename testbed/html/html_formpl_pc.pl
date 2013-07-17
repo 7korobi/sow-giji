@@ -355,6 +355,11 @@ sub OutHTMLRolePC {
 	my $net = $sow->{'html'}->{'net'};
 	my $curpl = $sow->{'curpl'};
 
+	my $active = 0;
+	my $rolemes = '';
+	my $giftmes = '';
+	my $winmes = '';
+
 	my $longname    = $curpl->getlongchrname();
 	my $win_visible = $curpl->win_visible();
 		print <<"_HTML_";
@@ -365,6 +370,8 @@ _HTML_
 	my $img = $curpl->{'csid'}."/".$curpl->{'cid'};
 
 	if (($curpl->{'role'} == -1) || ($curpl->{'role'} == $sow->{'ROLEID_MOB'})) {
+		$active = 1 if ($vil->{'mob'} eq 'gamemaster');
+
 		# 能力希望表示
 		my $mes = $curpl->rolemessage( $role->{'explain'} );
 		&SWHtml::ConvertJSON(\$mes);
@@ -379,26 +386,30 @@ _HTML_
 gon.form.secrets.push("$mes");
 _HTML_
 	} else {
+		$active = 1;
+
 		# 能力欄表示
 		my $charset = $sow->{'charsets'}->{'csid'}->{$curpl->{'csid'}};
 
 		# 能力者説明の表示
-		my $rolemes = $curpl->rolemessage( $role->{'explain_role'}->[$role->{'role'}] );
+		$rolemes = $curpl->rolemessage( $role->{'explain_role'}->[$role->{'role'}] );
 		&SWHtml::ConvertJSON(\$rolemes);
 
 		# アイテム説明の表示
-		my $giftmes = $curpl->rolemessage( $role->{'explain_gift'}->[$role->{'gift'}] );
+		$giftmes = $curpl->rolemessage( $role->{'explain_gift'}->[$role->{'gift'}] );
 		&SWHtml::ConvertJSON(\$giftmes);
 
-		# 能力結果履歴
-		my $history = $curpl->{'history'};
-		&SWHtml::ConvertJSON(\$history);
-
-		my $winmes = '';
+		# 勝利条件解説
 		if ($vil->isepilogue() == 0){
 			$winmes = $curpl->winmessage();
 			&SWHtml::ConvertJSON(\$winmes);
 		}
+	}
+
+	if ($active){
+		# 能力結果履歴
+		my $history = $curpl->{'history'};
+		&SWHtml::ConvertJSON(\$history);
 
 		# 囁き/共鳴/念話
 		my $sayswitch = "";

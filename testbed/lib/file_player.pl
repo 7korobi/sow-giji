@@ -579,6 +579,7 @@ sub gettargetlist {
 			next if (($turn == 1) && ($livepl->{'uid'} ne $sow->{'cfg'}->{'USERID_NPC'})); # １日目の襲撃対象はダミーキャラのみ
 			my $knight = 0;
 			$knight = 1	if ($vil->{'game'} eq 'TROUBLE');
+			$knight = 1	if ($vil->{'game'} eq 'SECRET');
 			$knight = 1 if (($cmd eq 'role')&&($self->{'role'} == $sow->{'ROLEID_HEADLESS'}));
 			if (0 == $knight){
 				next if ( $livepl->{'role'} == $sow->{'ROLEID_MIMICRY'}); # 擬狼妖精は除外
@@ -801,6 +802,8 @@ sub setfriends {
 	my $sense_sympathy = $vil->getrolepllist($sow->{'ROLEID_SYMPATHY'});
 	my $sense_bat      = $vil->getrolepllist($sow->{'ROLEID_BAT'});
 	my $sense_fanatic  = $vil->getrolepllist($sow->{'ROLEID_FANATIC'});
+	my $sense_mob      = $vil->getmobpllist();
+
 	# 共有者処理
 	if( $self->{'role'} == $sow->{'ROLEID_FM'} ){
 		$self->result_friend('RESULT_MEMBER', $sense_fm);
@@ -811,16 +814,17 @@ sub setfriends {
 		$self->result_friend('RESULT_MEMBER', $sense_fm);
 		$self->result_friend('RESULT_MEMBER', $sense_sympathy);
 	}
-	# 蝙蝠処理
-#	if( $self->iscursed('role')+$self->iscursed('gift') ){
-#		$self->result_friend('RESULT_BAT', $sense_bat);
-#	}
 
 	# 狂信者処理
 	if( ( $self->iskiller('role')+$self->iskiller('gift') )
 	  ||( $self->{'role'} == $sow->{'ROLEID_RIGHTWOLF'}   )
 	  ||( $self->{'role'} == $sow->{'ROLEID_MIMICRY'}     ) ){
 		$self->result_friend('RESULT_FANATIC', $sense_fanatic);
+	}
+
+	# 黒幕にむけて、全員が気配を発する。
+	if($vil->{'mob'} eq 'gamemaster'){
+		$self->result_friend('RESULT_SECRET', $sense_mob);
 	}
 }
 
@@ -829,15 +833,20 @@ sub result_friend {
 	my $sow = $self->{'sow'};
 	my $textrs = $sow->{'textrs'};
 	my $rolename = $textrs->{'ROLENAME'};
+	my $giftname = $textrs->{'GIFTNAME'};
 
 	my $chrrole = $rolename->[$self->{'role'}];
+	my $chrrolegift = $chrrole;
+	$chrrolegift .= "、" . $giftname->[$self->{'gift'}] if ($self->{'gift'} >= $sow->{'SIDEST_DEAL'});
+
 	my $sense;
 	foreach $sense (@$senses) {
 		next if ($self->{'uid'} eq $sense->{'uid'});
 		next if ( $self->isDisableState('MASKSTATE_ABI_ROLE') );
 		# センサー持ちはすべて役職なので、これでいい。
 		my $result  = $self->getText($basetext);
-		$result =~ s/_RESULT_/$chrrole/g;
+		$result =~ s/_ROLE_/$chrrole/g;
+		$result =~ s/_ROLEGIFT_/$chrrolegift/g;
 		$sense->{'history'} .= "$result<br>";
 	}
 }
@@ -911,6 +920,7 @@ sub winresult {
 	my $isdeadlose = 0;
 	$isdeadlose = 1 if ('LIVE_TABULA'       eq $vil->{'game'});
 	$isdeadlose = 1 if ('LIVE_MILLERHOLLOW' eq $vil->{'game'});
+	$isdeadlose = 1 if ('SECRET'            eq $vil->{'game'});
 	$isdeadlose = 1 if (('TROUBLE'          eq $vil->{'game'})&&($win_if eq 'WIN_HUMAN'));
 	$isdeadlose = 1 if (($win_if eq 'WIN_LONEWOLF'));
 	$isdeadlose = 1 if (($win_if eq 'WIN_PIXI'    ));
@@ -1130,6 +1140,7 @@ sub rolesayswitch {
 	$sayswitch = '' if ($self->{'role'} < 1);
 	return $sayswitch if ($listen);
 	# しゃべる場合の条件
+	$sayswitch = '' if (($sayswitch eq 'wolf')&&($vil->{'game'} eq 'SECRET'));
 	$sayswitch = '' if (($sayswitch eq 'wolf')&&($vil->{'game'} eq 'TROUBLE'));
 	$sayswitch = '' if  ( $self->isDisableState('MASKSTATE_ABI_ROLE') );
 	return $sayswitch;
@@ -1142,6 +1153,7 @@ sub giftsayswitch {
 	$sayswitch = '' if ($self->{'gift'} < 1);
 	return $sayswitch if ($listen);
 	# しゃべる場合の条件
+	$sayswitch = '' if (($sayswitch eq 'wolf')&&($vil->{'game'} eq 'SECRET'));
 	$sayswitch = '' if (($sayswitch eq 'wolf')&&($vil->{'game'} eq 'TROUBLE'));
 	$sayswitch = '' if  ( $self->isDisableState('MASKSTATE_ABI_GIFT') );
 	return $sayswitch;
@@ -1448,11 +1460,14 @@ sub isAim {
 	my $that_is_dead = !($that_is_live);
 	if  ($cfg->{'ENABLED_MOB_AIMING'}){
 		# 見物人内緒話ONなら
+		# 　黒幕見物人は見物人扱い。死者扱い。生者扱い。
 		# 　舞台見物人は見物人扱い。死者扱い。生者扱い。
 		# 　裏方見物人は見物人扱い。死者扱い。
 		# 　客席、陪審は見物人扱い。
 		$this_is_live = 1 if ($this_is_mob && ($vil->{'mob'} eq 'alive'));
 		$that_is_live = 1 if ($that_is_mob && ($vil->{'mob'} eq 'alive'));
+		$this_is_live = 1 if ($this_is_mob && ($vil->{'mob'} eq 'gamemaster'));
+		$that_is_live = 1 if ($that_is_mob && ($vil->{'mob'} eq 'gamemaster'));
 		$this_is_dead = 0 if ($this_is_mob && ($vil->{'mob'} eq 'juror'));
 		$this_is_dead = 0 if ($this_is_mob && ($vil->{'mob'} eq 'visiter'));
 		$that_is_dead = 0 if ($that_is_mob && ($vil->{'mob'} eq 'juror'));
@@ -1856,6 +1871,8 @@ sub isLogPermition {
 		$logpermit = 1 if (                                    ($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})); # 見物人
 		$logpermit = 1 if (($vil->{'mob'} eq 'grave')       && ($log->{'mestype'} == $sow->{'MESTYPE_GSAY'})); # 見物人から墓下が見えるのは、
 		$logpermit = 1 if (($vil->{'mob'} eq 'alive')       && ($log->{'mestype'} == $sow->{'MESTYPE_GSAY'})); # 舞台、裏方、のとき。
+		$logpermit = 1 if (($vil->{'mob'} eq 'gamemaster')  && ($log->{'mestype'} == $sow->{'MESTYPE_INFOWOLF'})); # 黒幕
+		$logpermit = 1 if (($vil->{'mob'} eq 'gamemaster')  && ($log->{'mestype'} == $sow->{'MESTYPE_INFOSP'}));   # 黒幕
 	} elsif (($self->{'live'} ne 'live')) {
 		$logpermit = 1 if (                                    ($log->{'mestype'} == $sow->{'MESTYPE_GSAY'})); # うめき
 		$logpermit = 1 if (($vil->{'mob'} eq 'grave')       && ($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})); # 墓下から見物人見えるのは、裏方のとき。

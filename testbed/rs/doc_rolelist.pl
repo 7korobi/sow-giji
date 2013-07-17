@@ -67,7 +67,7 @@ _HTML_
 	$vil->{'trsid'} = $sow->{'query'}->{'trsid'};
 	$vil->{'game'}  = $sow->{'query'}->{'game'};
 	$vil->{'saycnttype'} = 'infinity';
-	$vil->{'mob'} = 'alive';
+	$vil->{'mob'} = 'gamemaster';
 	$vil->{'turn'} = 1;
 	$vil->{'winner'} = 0;
 	$vil->{'randomtarget'} = 1;
@@ -266,7 +266,7 @@ _HTML_
 <div class="paragraph">
 <p>能\力の行使結果はランダムで生成しています。変だなと思ったら、リロードしてみましょう。</p>
 <p><a href="sow.cgi?cmd=roleaspect&$docid#rolerule">役職とルールの細かい点はこちら。</a></p>
-<p>見たい役職は：<select ng-model="search.title" ng-options="f.title as f.title group by f.win for f in roles_form"></select></p>
+<p>見たい役職は：<select ng-model="search.title" ng-options="f.title as f.title group by name.group(f.win.substring(4)) for f in roles_form"></select></p>
 </div>
 <hr class="invisible_hr"$net>
 <h2>インターフェイス</h2>
@@ -321,6 +321,8 @@ _HTML_
 	}
 	require "$cfg->{'DIR_HTML'}/html_formpl_pc.pl";
 	foreach $pl (@pllist){
+		$vil->addpl($pl);   # 村へ追加
+		$pl->setsaycount(); # 発言数初期化
 		print <<"_HTML_";
 
 gon.form = OPTION.gon.form.clone(true).merge({

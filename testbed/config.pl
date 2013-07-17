@@ -43,14 +43,18 @@ sub GetConfig {
 		'regend',
 		'heavy',
 		'complexx',
+		'secret',
 	);
 
 	# Ì—p‚·‚éƒQ[ƒ€ƒ‹[ƒ‹
 	my @gamelist = (
 		'TABULA',
+		'LIVE_TABULA',
 		'MILLERHOLLOW',
+		'LIVE_MILLERHOLLOW',
 		'TROUBLE',
 		'MISTERY',
+		'SECRET',
 	);
 
 	my @saycnt_order = (

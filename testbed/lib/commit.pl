@@ -108,6 +108,7 @@ sub WinnerCheckGM {
 	$win_wolf = 1 if (($vil->{'game'} eq 'LIVE_TABULA')      &&($humen <= $wolves));
 	$win_wolf = 1 if (($vil->{'game'} eq 'TROUBLE')          &&($humen <= $wolves));
 	$win_wolf = 1 if (($vil->{'game'} eq 'VOV')              &&($humen <= $wolves));
+	$win_wolf = 1 if (($vil->{'game'} eq 'SECRET')           &&($humen <= $wolves));
 	$win_wolf = 1 if (($vil->{'game'} eq 'MISTERY')          &&(0 == $villager));
 	$win_wolf = 1 if (($vil->{'game'} eq 'MILLERHOLLOW')     &&(0 == $villager));
 	$win_wolf = 1 if (($vil->{'game'} eq 'LIVE_MILLERHOLLOW')&&(0 == $villager));
@@ -1208,7 +1209,7 @@ sub SelectKill {
 
 		# 無記名投票風に投票結果集計
 		next if ($votes[$i] == 0);
-		next if ($vil->{'game'} ne 'TROUBLE');
+		next if (($vil->{'game'} ne 'TROUBLE')&&($vil->{'game'} ne 'SECRET'));
 		my $targetpl = $vil->getplbypno($i);
 		my $votetext = $targetpl->getTextByID('ANNOUNCE_SELECTKILL',1);
 		$votetext =~ s/_COUNT_/$votes[$i]/g;
@@ -1257,7 +1258,7 @@ sub SelectKill {
 			if (!defined($murderpl->{'uid'})) {
 				# 襲撃者が未定義（ありえないはず）
 				$sow->{'debug'}->writeaplog($sow->{'APLOG_WARNING'}, "murderpl is undef.");
-			} elsif ($vil->{'game'} eq 'TROUBLE'){
+			} elsif (($vil->{'game'} eq 'TROUBLE')||($vil->{'game'} eq 'SECRET')){
 				# 無記名投票風に投票結果表示
 				my $votetext = $targetpl->getTextByID('ANNOUNCE_SELECTKILL',2);
 				# 投票結果の出力
@@ -2317,27 +2318,29 @@ sub StartSession {
 	$logfile->writeinfo('', $sow->{'MESTYPE_INFONOM'}, $announce_first );
 
 	# 役職割り当てアナウンス
-	my $rolename = $textrs->{'ROLENAME'};
-	my $giftname = $textrs->{'GIFTNAME'};
-	my $i;
+	if($vil->{'mob'} ne 'gamemaster'){
+		my $rolename = $textrs->{'ROLENAME'};
+		my $giftname = $textrs->{'GIFTNAME'};
+		my $i;
 
-	my @rolelist;
-	my @giftlist;
-	my $ar = $textrs->{'ANNOUNCE_ROLE'};
-	for ($i = 0; $i < @{$sow->{'ROLEID'}}; $i++) {
-		my $roleplcnt = $rolematrix->[$i];
-		$roleplcnt++ if ($i == $sow->{'ROLEID_VILLAGER'}); # ダミーキャラの分１増やす
-		push (@rolelist, "$rolename->[$i]$ar->[1]$roleplcnt$ar->[2]") if ($roleplcnt > 0);
+		my @rolelist;
+		my @giftlist;
+		my $ar = $textrs->{'ANNOUNCE_ROLE'};
+		for ($i = 0; $i < @{$sow->{'ROLEID'}}; $i++) {
+			my $roleplcnt = $rolematrix->[$i];
+			$roleplcnt++ if ($i == $sow->{'ROLEID_VILLAGER'}); # ダミーキャラの分１増やす
+			push (@rolelist, "$rolename->[$i]$ar->[1]$roleplcnt$ar->[2]") if ($roleplcnt > 0);
+		}
+		for ($i = 2; $i < @{$sow->{'GIFTID'}}; $i++) {
+			my $giftplcnt = $giftmatrix->[$i];
+			push (@rolelist, "$giftname->[$i]$ar->[1]$giftplcnt$ar->[2]") if ($giftplcnt > 0);
+		}
+		my $rolelist = join($ar->[3], @rolelist);
+		my $giftlist = join($ar->[3], @giftlist);
+		my $roleinfo = $ar->[0];
+		$roleinfo =~ s/_ROLE_/$rolelist/;
+		$logfile->writeinfo('', $sow->{'MESTYPE_INFONOM'}, $roleinfo);
 	}
-	for ($i = 2; $i < @{$sow->{'GIFTID'}}; $i++) {
-		my $giftplcnt = $giftmatrix->[$i];
-		push (@rolelist, "$giftname->[$i]$ar->[1]$giftplcnt$ar->[2]") if ($giftplcnt > 0);
-	}
-	my $rolelist = join($ar->[3], @rolelist);
-	my $giftlist = join($ar->[3], @giftlist);
-	my $roleinfo = $ar->[0];
-	$roleinfo =~ s/_ROLE_/$rolelist/;
-	$logfile->writeinfo('', $sow->{'MESTYPE_INFONOM'}, $roleinfo);
 
 	# ダミーキャラ発言
 	$plsingle = $vil->getpl($sow->{'cfg'}->{'USERID_NPC'});

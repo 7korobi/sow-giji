@@ -468,6 +468,15 @@ sub getactivepllist {
 	return \@pllist;
 }
 
+sub getmobpllist{
+	my $self = shift;
+	my @pllist;
+	foreach (@{$self->{'pllist'}}) {
+		push(@pllist, $_) if ($_->{'live'} eq 'mob');
+	}
+	return \@pllist;
+}
+
 #----------------------------------------
 # アクセスしているプレイヤーが参加済みかどうかを得る
 #----------------------------------------
@@ -794,38 +803,48 @@ sub gon_story {
 
 	my $secret = $vil->isepilogue();
 	$secret = 1 if ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'});
+	my $maker = ($sow->{'uid'} eq $vil->{'makeruid'});
 
-	my $config;
-	my $roleid = $sow->{'ROLEID'};
-	my $giftid = $sow->{'GIFTID'};
-	my $eventid = $sow->{'EVENTID'};
-	my @config_list;
-	push(@config_list, 'villager');
+    my $roletable = 'secret';
+	my $config = '';
+	my $eventcard = '';
+	my $rolediscard = '';
 
-	require "$sow->{'cfg'}->{'DIR_LIB'}/setrole.pl";
-	my ( $rolematrix, $giftmatrix, $eventmatrix ) = &SWSetRole::GetSetRoleTable($sow, $vil, $vil->{'roletable'}, $vil->{'vplcnt'});
+	if ($secret||$maker||($vil->{'mob'} ne 'gamemaster')) {
+		my $roleid = $sow->{'ROLEID'};
+		my $giftid = $sow->{'GIFTID'};
+		my $eventid = $sow->{'EVENTID'};
+		my @config_list;
+		push(@config_list, 'villager');
 
-	for ($i = 1; $i < @$roleid; $i++) {
-		$size = $rolematrix->[$i];
-		for ($j = 0; $j < $size; $j++) {
-			push(@config_list, $roleid->[$i]);
+		require "$sow->{'cfg'}->{'DIR_LIB'}/setrole.pl";
+		my ( $rolematrix, $giftmatrix, $eventmatrix ) = &SWSetRole::GetSetRoleTable($sow, $vil, $vil->{'roletable'}, $vil->{'vplcnt'});
+
+		for ($i = 1; $i < @$roleid; $i++) {
+			$size = $rolematrix->[$i];
+			for ($j = 0; $j < $size; $j++) {
+				push(@config_list, $roleid->[$i]);
+			}
 		}
-	}
 
-	for ($i = 2; $i < @$giftid; $i++) {
-		$size = $giftmatrix->[$i];
-		for ($j = 0; $j < $size; $j++) {
-			push(@config_list, $giftid->[$i]);
+		for ($i = 2; $i < @$giftid; $i++) {
+			$size = $giftmatrix->[$i];
+			for ($j = 0; $j < $size; $j++) {
+				push(@config_list, $giftid->[$i]);
+			}
 		}
-	}
 
-	for ($i = 1; $i < @$eventid; $i++) {
-		$size = $eventmatrix->[$i];
-		for ($j = 0; $j < $size; $j++) {
-			push(@config_list, $eventid->[$i]);
+		for ($i = 1; $i < @$eventid; $i++) {
+			$size = $eventmatrix->[$i];
+			for ($j = 0; $j < $size; $j++) {
+				push(@config_list, $eventid->[$i]);
+			}
 		}
-	}
-	$config = join('/', @config_list);
+		$roletable = $vil->{'roletable'};
+		$config = join('/', @config_list);
+		$eventcard = $vil->{'eventcard'};
+		$rolediscard = $vil->{'rolediscard'};
+	} 
 
 	my $vstatus = $vil->getvstatus();
 
@@ -907,8 +926,8 @@ gon.story = {
 	},
 
 	"card":{
-		"discard": "$vil->{'rolediscard'}".split('/').map(function(n) { return(SOW_RECORD.CABALA.gifts[n]) }).compact(),
-		"event":   "$vil->{'eventcard'}".split('/').map(function(n) { return(SOW_RECORD.CABALA.events[n]) }).compact(),
+		"discard": "$rolediscard".split('/').map(function(n) { return(SOW_RECORD.CABALA.gifts[n]) }).compact(),
+		"event":   "$eventcard".split('/').map(function(n) { return(SOW_RECORD.CABALA.events[n]) }).compact(),
 		"config":  "$config".split('/')
 	},
 	"announce":{
@@ -930,7 +949,7 @@ gon.story = {
 		"scraplimitdt": Date.create(1000 * $vil->{'scraplimitdt'})
 	},
 	"type":{
-		"roletable": "$vil->{'roletable'}",
+		"roletable": "$roletable",
 		"say":   "$vil->{'saycnttype'}",
 		"start": "$vil->{'starttype'}",
 		"vote":  "$vil->{'votetype'}",
