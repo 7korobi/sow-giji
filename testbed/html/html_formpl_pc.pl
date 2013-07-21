@@ -728,12 +728,13 @@ _HTML_
 }
 
 #----------------------------------------
-# キック/編集/延長/村開始/更新ボタンHTML出力
+# 黒幕/キック/編集/延長/村開始/更新ボタンHTML出力
 #----------------------------------------
 sub OutHTMLUpdateSessionButtonPC {
 	my ($sow, $vil) = @_;
 	my $cfg = $sow->{'cfg'};
 	my $net = $sow->{'html'}->{'net'};
+	my $cursor = $sow->{'curpl'};
 
 	my %button;
 	if ($vil->{'turn'} == 0) {
@@ -748,29 +749,43 @@ sub OutHTMLUpdateSessionButtonPC {
 		);
 	}
 
+	print <<"_HTML_";
+var command;
+var a = [];
+_HTML_
+	$targetlist = $vil->getallpllist();
+	foreach (@$targetlist) {
+		next if (($_->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'}));
+		my $chrname = $_->getlongchrname();
+		my $pno     = $_->{'pno'};
+		print "a.push({val:\"$pno\", name:\"$chrname\"});\n";
+	}
+
+
 	my $reqvals = &SWBase::GetRequestValues($sow);
 	my $hidden = &SWBase::GetHiddenValues($sow, $reqvals, '    ');
+
+	if (($vil->{'mob'} eq 'gamemaster')&&($cursor->{'live'} eq 'mob')){
+		print <<"_HTML_";
+command = {
+	cmd: "rolestate",
+	jst: "target",
+	rolestate: 'VOTE_TARGET',
+	calcstate: 'disable',
+	targets: a,
+	title: "投票から保護する。"
+};
+gon.form.commands[command.cmd] = command;
+_HTML_
+	}
 
 	print <<"_HTML_";
 command = {
 	cmd: "maker",
 	jst: "target",
+	targets: a,
 	title: "この人に村を任せる！"
 };
-(function(){
-var a = [];
-_HTML_
-		# 村建て権移譲
-		$targetlist = $vil->getallpllist();
-		foreach (@$targetlist) {
-			next if (($_->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'}));
-			my $chrname = $_->getlongchrname();
-			my $pno     = $_->{'pno'};
-			print "a.push({val:\"$pno\", name:\"$chrname\"});\n";
-		}
-		print <<"_HTML_";
-command.targets = a;
-})();
 gon.form.commands[command.cmd] = command;
 _HTML_
 
@@ -782,22 +797,9 @@ _HTML_
 command = {
 	cmd: "kick",
 	jst: "target",
+	targets: a,
 	title: "退去いただこう、かな…"
 };
-(function(){
-var a = [];
-_HTML_
-		# キック機能
-		$targetlist = $vil->getallpllist();
-		foreach (@$targetlist) {
-			next if (($_->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'}));
-			my $chrname = $_->getlongchrname();
-			my $pno     = $_->{'pno'};
-			print "a.push({val:\"$pno\", name:\"$chrname\"});\n";
-		}
-		print <<"_HTML_";
-command.targets = a;
-})();
 gon.form.commands[command.cmd] = command;
 command = {
 	cmd: "editvilform",

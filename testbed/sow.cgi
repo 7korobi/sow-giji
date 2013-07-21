@@ -115,9 +115,6 @@ sub TaskBranch {
 		# ユーザー情報編集
 		require "$dirlib/cmd_editprof.pl";
 		&SWCmdEditProfile::CmdEditProfile($sow);
-	} elsif ($cmd eq 'facevote') {
-		require "$dirlib/cmd_facevote.pl";
-		&SWCmdFaceVote::CmdFaceVote($sow);
 	} elsif ($sow->{'query'}->{'prof'} ne '') {
 		# ユーザー情報表示
 		require "$dirlib/cmd_profile.pl";
@@ -190,6 +187,10 @@ sub TaskBranch {
 		# 村を点呼します。
 		require "$dirlib/cmd_muster.pl";
 		&SWCmdMuster::CmdMuster($sow);
+	} elsif ($cmd eq 'rolestate') {
+		# 状態変更
+		require "$dirlib/cmd_rolestate.pl";
+		&SWCmdRoleState::CmdRoleState($sow);
 	} elsif ($cmd eq 'writepr') {
 		# 発言プレビュー表示
 		require "$dirlib/cmd_writepr.pl";

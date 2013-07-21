@@ -220,6 +220,27 @@ _HTML_
 	}
 
 
+	# “Š•[‚Ì‘ÎÛ‚É‚È‚¢
+	if (defined($sow->{'textrs'}->{'STATE_BIND'})) {
+		my $mobpl = SWPlayer->new($sow);
+		$mobpl->createpl('a97');
+		$mobpl->{'pno'}       = 97;
+		$mobpl->{'csid'}      = $vil->{'csid'};
+		$mobpl->{'cid'}       = $order->[-4];
+		$mobpl->{'selrole'}   = $sow->{'ROLEID_WOLF'};
+		$mobpl->{'gift'}      = 1;
+		$mobpl->{'role'}      = $sow->{'ROLEID_WOLF'};
+		$mobpl->{'rolestate'} = $sow->{'ROLESTATE_VOTE_TARGET'};
+		$mobpl->{'live'}      = 'live' ;
+		$mobpl->{'deathday'}  =  -1;
+		$mobpl->{'actaddpt'}  = 0;
+		$mobpl->{'title'}     = '“Š•[‚³‚ê‚È‚¢ó‘Ô';
+
+		$no++;
+		push( @plstack1, $mobpl );
+		push( @pllist, $mobpl );
+	}
+
 	# ”\—Í‚ðŽ¸‚¤
 	if (defined($sow->{'textrs'}->{'STATE_BIND'})) {
 		my $mobpl = SWPlayer->new($sow);

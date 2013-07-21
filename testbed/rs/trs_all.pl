@@ -523,15 +523,16 @@ sub GetTextRS {
 		NPCENTRYMES => 0,
 
 		# 公開アナウンス
+		MASKSTATE_VOTE_TARGET => '<b>_NAME_</b>は、投票の対象ではなくなった。',
 		ANNOUNCE_EXTENSION  => '定員に達しなかったため、村の更新日時が24時間延長されました。',
-		ENTRYMES            => '<b>_NAME_</b>が参加しました。',
-		EXITMES             => '<b>_NAME_</b>がいたような気がしたが、気のせいだったようだ……(<b>_NAME_</b>は村を出ました)',
-		SUDDENDEATH         => '<b>_NAME_</b>は突然死した。',
-		SUICIDEBONDS        => '<b>_NAME_</b>は絆に引きずられるように<b>_TARGET_</b>の後を追った。',
-		SUICIDELOVERS       => '<b>_NAME_</b>は哀しみに暮れて<b>_TARGET_</b>の後を追った。',
 		ANNOUNCE_RANDOMVOTE => '(ランダム投票)',
 		ANNOUNCE_VICTORY    => '<b>_VICTORY_</b>です！<br>',
 		ANNOUNCE_EPILOGUE   => '<b>_AVICTORY_</b>全てのログとユーザー名を公開します。<b>_DATE_</b>まで自由に書き込めますので、今回の感想などをどうぞ。',
+		SUICIDEBONDS        => '<b>_NAME_</b>は絆に引きずられるように<b>_TARGET_</b>の後を追った。',
+		SUICIDELOVERS       => '<b>_NAME_</b>は哀しみに暮れて<b>_TARGET_</b>の後を追った。',
+		ENTRYMES            => '<b>_NAME_</b>が参加しました。',
+		EXITMES             => '<b>_NAME_</b>がいたような気がしたが、気のせいだったようだ……(<b>_NAME_</b>は村を出ました)',
+		SUDDENDEATH         => '<b>_NAME_</b>は突然死した。',
 
 		RANDOMENTRUST => '(ランダム委任)',
 

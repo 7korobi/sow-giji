@@ -76,15 +76,20 @@ _HTML_
 	}
 	# 希望する能力の表示
 	if ($isplok) {
-		print "b.push({val:-1, name:\"$sow->{'textrs'}->{'RANDOMROLE'}\"});\n";
 		my $rolename = $sow->{'textrs'}->{'ROLENAME'};
-		my ( $rolematrix, $giftmatrix ) = &SWSetRole::GetSetRoleTable($sow, $vil, $vil->{'roletable'}, $vil->{'vplcnt'});
+		if ($vil->{'mob'} eq 'gamemaster'){
+			print "b.push({val:0, name:\"$rolename->[0]\"});\n";
+		} else {
+			print "b.push({val:-1, name:\"$sow->{'textrs'}->{'RANDOMROLE'}\"});\n";
 
-		my $i;
-		foreach ($i = 0; $i < @{$sow->{'ROLEID'}}; $i++) {
-			my $output = $rolematrix->[$i];
-			$output = 1 if ($i == 0); # おまかせは必ず表示
-			print "b.push({val:$i, name:\"$rolename->[$i]\"});\n" if ($output > 0);
+			my ( $rolematrix, $giftmatrix ) = &SWSetRole::GetSetRoleTable($sow, $vil, $vil->{'roletable'}, $vil->{'vplcnt'});
+
+			my $i;
+			foreach ($i = 0; $i < @{$sow->{'ROLEID'}}; $i++) {
+				my $output = $rolematrix->[$i];
+				$output = 1 if ($i == 0); # おまかせは必ず表示
+				print "b.push({val:$i, name:\"$rolename->[$i]\"});\n" if ($output > 0);
+			}
 		}
 	}
 	if ($ismobok){

@@ -568,6 +568,7 @@ sub gettargetlist {
                    &&($livepl->{'pno'} != $vil->{'scapegoat'})
                    &&($self->{'pno'}   != $vil->{'scapegoat'})
                    );
+			next if ( $livepl->isDisableState('MASKSTATE_VOTE_TARGET') );
 			next if ( $livepl->{'live'} ne 'live');
 			next if ( $livepl->{'uid'}  eq $self->{'uid'});
 			# ˆÏ”C‚ÌŽž‚ÍŽ©•ª‚ª‘I‚×‚½‚ç¢‚éB‚Æ‚©‚ ‚é‚Ì‚ÅB
