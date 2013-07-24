@@ -38,6 +38,7 @@ sub InitConst {
 
 		rolestate    => 1, # 状態設定
 		calcstate    => 1, # 状態設定
+		live         => 1, # 状態設定
 		status       => 1, # 廃村復活機能
 		vname        => 1, # 村の名前
 		vcomment     => 2, # 村の説明
@@ -966,28 +967,29 @@ sub InitConst {
 		COUNT_EVENT      => scalar(@eventid),
 		ORDER_ROLETABLE  => \@order_roletable,
 
-		ROLESTATE_DEFAULT     =>  0b0_1111_111_11111,  # 通常
-		ROLESTATE_ABI_LIVE    =>  0b0_1111_111_11110,  # 使う 蘇生薬
-		ROLESTATE_ABI_KILL    =>  0b0_1111_111_11101,  # 使う 毒薬
-		ROLESTATE_ABI_NOROLE  =>  0b0_1111_111_11100,  # 能力を使い果たした
-		ROLESTATE_ABI_NOGIFT  =>  0b0_1111_111_11011,  # 恩恵を使い果たした
-		ROLESTATE_CURSED      =>  0b0_1111_111_11000,  # 呪われた状態（能力、恩恵がない）
-		ROLESTATE_ABI_NONE    =>  0b0_1111_111_10000,  # 能力、恩恵、投票を使い果たした（賞金稼ぎが死ぬ前、一時的に発生）
-		MASKSTATE_ABI_LIVE    =>  0b0_0000_000_00001,  # 枠 蘇生薬
-		MASKSTATE_ABI_KILL    =>  0b0_0000_000_00010,  # 枠 毒薬
-		MASKSTATE_ABI_ROLE    =>  0b0_0000_000_00011,  # 枠 能力
-		MASKSTATE_ABI_GIFT    =>  0b0_0000_000_00100,  # 枠 恩恵
-		MASKSTATE_ABILITY     =>  0b0_0000_000_00111,  # 枠 能力全体（投票無効は、単に予約枠）
+		# use 32bit fields.
+		ROLESTATE_DEFAULT     =>  0b1111111111111111_1111_111_11111,  # 通常
+		ROLESTATE_ABI_LIVE    =>  0b1111111111111111_1111_111_11110,  # 使う 蘇生薬
+		ROLESTATE_ABI_KILL    =>  0b1111111111111111_1111_111_11101,  # 使う 毒薬
+		ROLESTATE_ABI_NOROLE  =>  0b1111111111111111_1111_111_11100,  # 能力を使い果たした
+		ROLESTATE_ABI_NOGIFT  =>  0b1111111111111111_1111_111_11011,  # 恩恵を使い果たした
+		ROLESTATE_CURSED      =>  0b1111111111111111_1111_111_11000,  # 呪われた状態（能力、恩恵がない）
+		ROLESTATE_ABI_NONE    =>  0b1111111111111111_1111_111_10000,  # 能力、恩恵、投票を使い果たした（賞金稼ぎが死ぬ前、一時的に発生）
+		MASKSTATE_ABI_LIVE    =>  0b0000000000000000_0000_000_00001,  # 枠 蘇生薬
+		MASKSTATE_ABI_KILL    =>  0b0000000000000000_0000_000_00010,  # 枠 毒薬
+		MASKSTATE_ABI_ROLE    =>  0b0000000000000000_0000_000_00011,  # 枠 能力
+		MASKSTATE_ABI_GIFT    =>  0b0000000000000000_0000_000_00100,  # 枠 恩恵
+		MASKSTATE_ABILITY     =>  0b0000000000000000_0000_000_00111,  # 枠 能力全体（投票無効は、単に予約枠）
 
-		ROLESTATE_HURT        =>  0b0_1111_110_11111,  # 手負いになる
-		ROLESTATE_ZOMBIE      =>  0b0_1111_101_11000,  # 感染する（能力、恩恵がない）
-		MASKSTATE_HURT        =>  0b0_0000_001_00000,  # 枠 襲撃負傷
-		MASKSTATE_ZOMBIE      =>  0b0_0000_010_00000,  # 枠 感染
-		MASKSTATE_HEAL        =>  0b0_0000_001_00000,  # 枠 死亡＆蘇生時の回復
-		MASKSTATE_MEDIC       =>  0b0_0000_010_00000,  # 枠 医者による回復
+		ROLESTATE_HURT        =>  0b1111111111111111_1111_110_11111,  # 手負いになる
+		ROLESTATE_ZOMBIE      =>  0b1111111111111111_1111_101_11000,  # 感染する（能力、恩恵がない）
+		MASKSTATE_HURT        =>  0b0000000000000000_0000_001_00000,  # 枠 襲撃負傷
+		MASKSTATE_ZOMBIE      =>  0b0000000000000000_0000_010_00000,  # 枠 感染
+		MASKSTATE_HEAL        =>  0b0000000000000000_0000_001_00000,  # 枠 死亡＆蘇生時の回復
+		MASKSTATE_MEDIC       =>  0b0000000000000000_0000_010_00000,  # 枠 医者による回復
 
-		ROLESTATE_VOTE_TARGET =>  0b0_1011_111_11111,  # 投票の対象外
-		MASKSTATE_VOTE_TARGET =>  0b0_0100_000_00000,  # 投票の対象外
+		ROLESTATE_VOTE_TARGET =>  0b1111111111111111_1011_111_11111,  # 投票の対象外
+		MASKSTATE_VOTE_TARGET =>  0b0000000000000000_0100_000_00000,  # 投票の対象外
 
 #		生き死にに関わる回復
 #		負傷：回復する。人犬の負傷者などを考慮すると、村人よりか弱くなるため役職コンセプトを外れる。

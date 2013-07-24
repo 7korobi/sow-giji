@@ -523,7 +523,8 @@ sub GetTextRS {
 		NPCENTRYMES => 0,
 
 		# 公開アナウンス
-		MASKSTATE_VOTE_TARGET => '<b>_NAME_</b>は、投票の対象ではなくなった。',
+		ROLESTATE_VOTE_TARGET => '<b>_NAME_</b>は、投票の対象ではなくなった。',
+		MASKSTATE_VOTE_TARGET => '<b>_NAME_</b>は、投票の対象となった。',
 		ANNOUNCE_EXTENSION  => '定員に達しなかったため、村の更新日時が24時間延長されました。',
 		ANNOUNCE_RANDOMVOTE => '(ランダム投票)',
 		ANNOUNCE_VICTORY    => '<b>_VICTORY_</b>です！<br>',
@@ -532,7 +533,9 @@ sub GetTextRS {
 		SUICIDELOVERS       => '<b>_NAME_</b>は哀しみに暮れて<b>_TARGET_</b>の後を追った。',
 		ENTRYMES            => '<b>_NAME_</b>が参加しました。',
 		EXITMES             => '<b>_NAME_</b>がいたような気がしたが、気のせいだったようだ……(<b>_NAME_</b>は村を出ました)',
-		SUDDENDEATH         => '<b>_NAME_</b>は突然死した。',
+		LIVE        => '<b>_NAME_</b>は生き返った。',
+		DROOP       => '<b>_NAME_</b>は死んだ。',
+		SUDDENDEATH => '<b>_NAME_</b>は突然死した。',
 
 		RANDOMENTRUST => '(ランダム委任)',
 

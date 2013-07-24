@@ -736,6 +736,9 @@ sub OutHTMLUpdateSessionButtonPC {
 	my $net = $sow->{'html'}->{'net'};
 	my $cursor = $sow->{'curpl'};
 
+	my $admin = ($sow->{'uid'} eq $sow->{'cfg'}->{'USERID_ADMIN'});
+	my $gamemaster = ($vil->{'mob'} eq 'gamemaster')&&($cursor->{'live'} eq 'mob');
+
 	my %button;
 	if ($vil->{'turn'} == 0) {
 		%button = (
@@ -765,17 +768,44 @@ _HTML_
 	my $reqvals = &SWBase::GetRequestValues($sow);
 	my $hidden = &SWBase::GetHiddenValues($sow, $reqvals, '    ');
 
-	if (($vil->{'mob'} eq 'gamemaster')&&($cursor->{'live'} eq 'mob')){
+	if ($gamemaster || $admin){
 		print <<"_HTML_";
 command = {
-	cmd: "rolestate",
+	cmd: "gamemaster",
+	jst: "target",
+	live: "droop",
+	targets: a,
+	title: "死ぬ。"
+};
+gon.form.commands.gm_droop = command;
+command = {
+	cmd: "gamemaster",
+	jst: "target",
+	live: "live",
+	rolestate: 'HEAL',
+	calcstate: 'enable',
+	targets: a,
+	title: "生きる。"
+};
+gon.form.commands.gm_live = command;
+command = {
+	cmd: "gamemaster",
 	jst: "target",
 	rolestate: 'VOTE_TARGET',
 	calcstate: 'disable',
 	targets: a,
 	title: "投票から保護する。"
 };
-gon.form.commands[command.cmd] = command;
+gon.form.commands.gm_disable_vote = command;
+command = {
+	cmd: "gamemaster",
+	jst: "target",
+	rolestate: 'VOTE_TARGET',
+	calcstate: 'enable',
+	targets: a,
+	title: "投票を認可する。"
+};
+gon.form.commands.gm_enable_vote = command;
 _HTML_
 	}
 
@@ -826,7 +856,7 @@ gon.form.commands[command.cmd] = command;
 _HTML_
 		}
 
-		if ($sow->{'uid'} eq $sow->{'cfg'}->{'USERID_ADMIN'}) {
+		if ($admin) {
 			print <<"_HTML_";
 command = {
 	cmd: "update",

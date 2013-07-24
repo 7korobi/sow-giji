@@ -1,15 +1,15 @@
-package SWCmdRoleState;
+package SWCmdGameMaster;
 
 #----------------------------------------
 # 点呼処理
 #----------------------------------------
-sub CmdRoleState {
+sub CmdGameMaster {
 	my $sow = $_[0];
 	my $query = $sow->{'query'};
 	my $cfg   = $sow->{'cfg'};
 
 	# データ処理
-	my $vil = &SetDataCmdRoleState($sow,$query->{'vid'},$query->{'target'},$query->{'rolestate'},$query->{'calcstate'});
+	my $vil = &SetDataCmdGameMaster($sow,$query->{'vid'},$query->{'target'});
 
 	# HTTP/HTML出力
 	if ($sow->{'outmode'} eq 'mb') {
@@ -30,11 +30,12 @@ sub CmdRoleState {
 #----------------------------------------
 # データ処理
 #----------------------------------------
-sub SetDataCmdRoleState {
-	my ($sow, $vid, $target_pno, $rolestate, $calcstate) = @_;
+sub SetDataCmdGameMaster {
+	my ($sow, $vid, $target_pno) = @_;
 	my $query  = $sow->{'query'};
 	my $debug = $sow->{'debug'};
 	my $errfrom = "[uid=$sow->{'uid'}, cmd=$query->{'cmd'}]";
+
 
 	# 村データの読み込み
 	require "$sow->{'cfg'}->{'DIR_LIB'}/file_vil.pl";
@@ -48,7 +49,13 @@ sub SetDataCmdRoleState {
 	# リソースの読み込み
 	&SWBase::LoadVilRS($sow, $vil);
 
-	$sow->{'debug'}->raise($sow->{'APLOG_NOTICE'}, "黒幕でなくてはいけません。", "no permition.$errfrom") unless (($vil->{'mob'} eq 'gamemaster')&&($cursor->{'live'} eq 'mob'));	
+	my $admin      = ($sow->{'uid'} eq $sow->{'cfg'}->{'USERID_ADMIN'});
+	my $gamemaster = ($vil->{'mob'} eq 'gamemaster')&&($cursor->{'live'} eq 'mob');
+
+	$sow->{'debug'}->raise($sow->{'APLOG_NOTICE'}, "管理人権限か、黒幕の権限が必要です。", "no permition.$errfrom") unless ($gamemaster || $admin);
+
+	my $rolestate = $query->{'rolestate'};
+	my $calcstate = $query->{'calcstate'};
 	if ($calcstate eq 'enable'){
 		$command = 'MASKSTATE_'.$rolestate;
 		$target->{'rolestate'} |= $sow->{$command};
@@ -57,6 +64,21 @@ sub SetDataCmdRoleState {
 		$command = 'ROLESTATE_'.$rolestate;
 		$target->{'rolestate'} &= $sow->{$command};
 	}
+
+	my $live = $query->{'live'};
+	if ($live){
+		$command = uc($live);
+		$target->{'live'} = $live;
+
+		# 能力行使のリセット
+		$target->{'vote1'} = $sow->{'TARGETID_TRUST'};
+		$target->{'vote2'} = $sow->{'TARGETID_TRUST'};
+		$target->{'role1'} = $sow->{'TARGETID_TRUST'};
+		$target->{'role2'} = $sow->{'TARGETID_TRUST'};
+		$target->{'gift1'} = $sow->{'TARGETID_TRUST'};
+		$target->{'gift2'} = $sow->{'TARGETID_TRUST'};
+	}
+
 	# 村データの書き込み
 	$vil->writevil();
 
@@ -65,7 +87,7 @@ sub SetDataCmdRoleState {
 	require "$sow->{'cfg'}->{'DIR_LIB'}/file_log.pl";
 	my $logfile = SWBoa->new($sow, $vil, $vil->{'turn'}, 0);
 	my $chrname = $target->getlongchrname();
-	my $message = $sow->{'textrs'}->{'MASKSTATE_VOTE_TARGET'};
+	my $message = $sow->{'textrs'}->{$command};
 	$message =~ s/_NAME_/$chrname/g;
 	$logfile->writeinfo('', $sow->{'MESTYPE_INFONOM'}, $message);
 	$logfile->close();

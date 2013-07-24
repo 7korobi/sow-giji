@@ -1676,6 +1676,10 @@ sub heal {
 	$deadpl->{'role2'} = $sow->{'TARGETID_TRUST'};
 	$deadpl->{'gift1'} = $sow->{'TARGETID_TRUST'};
 	$deadpl->{'gift2'} = $sow->{'TARGETID_TRUST'};
+
+	# 突然死メッセージ出力
+	my $mes = $deadpl->getText('LIVE');
+	$logfile->writeinfo('', $sow->{'MESTYPE_INFONOM'}, $mes);
 }
 
 sub CheckKill {

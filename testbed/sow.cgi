@@ -187,10 +187,10 @@ sub TaskBranch {
 		# 村を点呼します。
 		require "$dirlib/cmd_muster.pl";
 		&SWCmdMuster::CmdMuster($sow);
-	} elsif ($cmd eq 'rolestate') {
+	} elsif ($cmd eq 'gamemaster') {
 		# 状態変更
-		require "$dirlib/cmd_rolestate.pl";
-		&SWCmdRoleState::CmdRoleState($sow);
+		require "$dirlib/cmd_gamemaster.pl";
+		&SWCmdGameMaster::CmdGameMaster($sow);
 	} elsif ($cmd eq 'writepr') {
 		# 発言プレビュー表示
 		require "$dirlib/cmd_writepr.pl";

@@ -127,7 +127,7 @@ _HTML_
 			$plsingle->{'selrole'}   = $i;
 			$plsingle->{'gift'}      = 1;
 			$plsingle->{'role'}      = $i;
-			$plsingle->{'rolestate'} = $sow->{'ROLESTATE_DEFAULT'};
+			$plsingle->{'rolestate'} = -1;
 			$plsingle->{'live'}      = 'live' ;
 			$plsingle->{'live'}      = 'executed' if ( $i == $sow->{'ROLEID_WALPURGIS'});
 			$plsingle->{'deathday'}  = -1;
@@ -237,7 +237,8 @@ _HTML_
 		$mobpl->{'title'}     = '投票されない状態';
 
 		$no++;
-		push( @plstack1, $mobpl );
+		push( @plstack1, $mobpl ) if ( 1 == $self->getTurn($mobpl) );
+		push( @plstack2, $mobpl ) if ( 1 <  $self->getTurn($mobpl) );
 		push( @pllist, $mobpl );
 	}
 
@@ -281,6 +282,7 @@ _HTML_
 	$mobpl->{'gift'} = $sow->{'GIFTID_NOT_HAVE'} ;
 	$mobpl->{'live'} = 'mob' ;
 
+	push( @plstack1, $mobpl );
 	push( @pllist, $mobpl );
 
 	print <<"_HTML_";
@@ -302,8 +304,6 @@ gon.form_show = {
 };
 gon.roles_form = [];
 _HTML_
-	$vil->gon_potofs();
-
 	require "$cfg->{'DIR_LIB'}/commit.pl";
 	# ログ・メモデータファイルの作成
 	require "$cfg->{'DIR_LIB'}/log.pl";
@@ -329,21 +329,20 @@ _HTML_
 			last if ( $result > 0 );
 			&SWCommit::EventGM ($sow,$vil,$logfile);
 		}
-		my @plstacknow;
-		@plstacknow = @plstack1 if ( 0 == $limit );
-		if( @plstacknow ){
-			foreach $plsingle ( @plstacknow ){
-				next unless defined( $plsingle );
-				$vil->addpl($plsingle);   # 村へ追加
-				$plsingle->setsaycount(); # 発言数初期化
-			}
-		}
 		&SWCommit::SetInitVoteTarget($sow, $vil, $logfile);
 	}
+	my @plstacknow;
+	@plstacknow = @plstack1;
+	if( @plstacknow ){
+		foreach $plsingle ( @plstacknow ){
+			next unless defined( $plsingle );
+			$vil->addpl($plsingle);   # 村へ追加
+			$plsingle->setsaycount(); # 発言数初期化
+		}
+	}
+
 	require "$cfg->{'DIR_HTML'}/html_formpl_pc.pl";
 	foreach $pl (@pllist){
-		$vil->addpl($pl);   # 村へ追加
-		$pl->setsaycount(); # 発言数初期化
 		print <<"_HTML_";
 
 gon.form = OPTION.gon.form.clone(true).merge({
@@ -367,6 +366,8 @@ _HTML_
 gon.roles_form.push(gon.form);
 _HTML_
 	}
+	$vil->gon_potofs();
+
 	print <<"_HTML_";
 </script>
 _HTML_
