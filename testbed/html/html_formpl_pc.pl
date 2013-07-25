@@ -52,13 +52,12 @@ sub OutHTMLPlayerFormPC {
 
 	# 村建て人フォーム／管理人フォーム表示
 	if ($sow->{'user'}->logined() > 0) {
+		&OutHTMLUpdateSessionButtonPC($sow, $vil);
 		if ($vil->{'makeruid'} eq $sow->{'uid'}) {
 			&OutHTMLVilMakerPC($sow, $vil, 'maker');
-			&OutHTMLUpdateSessionButtonPC($sow, $vil);
 		}
 		if ($sow->{'uid'} eq $sow->{'cfg'}->{'USERID_ADMIN'}) {
 			&OutHTMLVilMakerPC($sow, $vil, 'admin');
-			&OutHTMLUpdateSessionButtonPC($sow, $vil);
 			&OutHTMLScrapVilButtonPC($sow, $vil) if ($vil->{'turn'} < $vil->{'epilogue'});
 		}
 	}
@@ -736,6 +735,7 @@ sub OutHTMLUpdateSessionButtonPC {
 	my $net = $sow->{'html'}->{'net'};
 	my $cursor = $sow->{'curpl'};
 
+	my $maker = ($vil->{'makeruid'} eq $sow->{'uid'});
 	my $admin = ($sow->{'uid'} eq $sow->{'cfg'}->{'USERID_ADMIN'});
 	my $gamemaster = ($vil->{'mob'} eq 'gamemaster')&&($cursor->{'live'} eq 'mob');
 
@@ -809,7 +809,8 @@ gon.form.commands.gm_enable_vote = command;
 _HTML_
 	}
 
-	print <<"_HTML_";
+	if ( $admin || $maker ) {
+		print <<"_HTML_";
 command = {
 	cmd: "maker",
 	jst: "target",
@@ -818,9 +819,9 @@ command = {
 };
 gon.form.commands[command.cmd] = command;
 _HTML_
+	}
 
-	my $disabled = 0;
-	if ($button{'cmd'} eq 'start') {
+	if (($vil->{'turn'} == 0)&&( $maker || $admin )) {
 		my $upddatetime = sprintf('%02d:%02d',$vil->{'updhour'},$vil->{'updminite'});
 
 		print <<"_HTML_";
@@ -844,9 +845,10 @@ command = {
 };
 gon.form.commands[command.cmd] = command;
 _HTML_
-	} else {
-		if ($vil->isepilogue()) {
-			print <<"_HTML_";
+	}
+
+	if ($vil->isepilogue()&&( $maker || $admin )) {
+		print <<"_HTML_";
 command = {
 	cmd: "editvilform",
 	jst: "button",
@@ -854,10 +856,11 @@ command = {
 };
 gon.form.commands[command.cmd] = command;
 _HTML_
-		}
+	}
 
-		if ($admin) {
-			print <<"_HTML_";
+	my $disabled = 0;
+	if ($admin) {
+		print <<"_HTML_";
 command = {
 	cmd: "update",
 	jst: "button",
@@ -865,21 +868,21 @@ command = {
 };
 gon.form.commands[command.cmd] = command;
 _HTML_
-		} else {
-			# 村立て人の延長機能利用は制限あり
-			$disabled = 1 if ($vil->{'extend'} == 0);
-		}
+	} else {
+		# 村立て人の延長機能利用は制限あり
+		$disabled = 1 if ($vil->{'extend'} == 0);
 	}
 
-	print <<"_HTML_";
+	if ($admin || $maker && (! $disabled)) {
+		print <<"_HTML_";
 command = {
 	cmd: "$button{'cmd'}",
 	jst: "button",
-	disabled: (1 == $disabled),
 	title: "$button{'label'}"
 };
 gon.form.commands[command.cmd] = command;
 _HTML_
+	}
 
 	return;
 }

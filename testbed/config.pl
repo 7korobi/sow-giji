@@ -526,7 +526,7 @@ sub GetConfig {
 		ENABLED_WINNER_LABEL => 0, # 1:勝利者表示をする。
 		ENABLED_MAX_ESAY     => 0, # エピローグを発言制限対象に 0:しない、1:する
 		ENABLED_RANDOMTARGET => 1, # 1:投票・能力先に「ランダム」を含める
-		ENABLED_SUDDENDEATH  => 1, # 1:突然死あり
+		ENABLED_SUDDENDEATH  => 0, # 1:突然死あり
 		ENABLED_BITTY        => 0, # 少女や交霊者ののぞきみがひらがなのみ。
 		ENABLED_PERMIT_DEAD  => 1, # 墓下の人狼/共鳴者/コウモリ人間が囁きを見られるかどうか
 		ENABLED_UNDEAD       => 1, # 1:幽界トーク村を設定可能
