@@ -69,6 +69,11 @@ sub SetDataCmdGameMaster {
 	if ($live){
 		$command = uc($live);
 		$target->{'live'} = $live;
+		if('live' ne $live){
+			$target->{'deathday'} = $vil->{'turn'};
+		} else {
+			$target->{'deathday'} = -1;
+		}
 
 		# 能力行使のリセット
 		$target->{'vote1'} = $sow->{'TARGETID_TRUST'};

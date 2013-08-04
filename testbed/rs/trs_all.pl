@@ -523,8 +523,8 @@ sub GetTextRS {
 		NPCENTRYMES => 0,
 
 		# 公開アナウンス
-		ROLESTATE_VOTE_TARGET => '<b>_NAME_</b>は、投票の対象ではなくなった。',
-		MASKSTATE_VOTE_TARGET => '<b>_NAME_</b>は、投票の対象となった。',
+		ROLESTATE_VOTE_TARGET => 'これからは、<b>_NAME_</b>に投票してはいけない。',
+		MASKSTATE_VOTE_TARGET => 'これからは、<b>_NAME_</b>に投票してよい。',
 		ANNOUNCE_EXTENSION  => '定員に達しなかったため、村の更新日時が24時間延長されました。',
 		ANNOUNCE_RANDOMVOTE => '(ランダム投票)',
 		ANNOUNCE_VICTORY    => '<b>_VICTORY_</b>です！<br>',

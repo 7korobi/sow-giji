@@ -459,9 +459,6 @@ sub GetSetRoleTableWBBS_G {
 	# éÎêl
 	$roles->[$sow->{'ROLEID_GUARD'}]++ if ($plcnt >= 11);
 
-	# ã§óLé“
-	$roles->[$sow->{'ROLEID_FM'}] += 2 if ($plcnt >= 16);
-
 	# ë∫êl
 	&GetSetVillager($sow, $plcnt, $roles);
 
