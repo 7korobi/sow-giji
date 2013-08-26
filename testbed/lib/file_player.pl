@@ -1466,11 +1466,14 @@ sub isAim {
 		# 　裏方見物人は見物人扱い。死者扱い。
 		# 　客席、陪審は見物人扱い。
 		$this_is_live = 1 if ($this_is_mob && ($vil->{'mob'} eq 'alive'));
-		$that_is_live = 1 if ($that_is_mob && ($vil->{'mob'} eq 'alive'));
 		$this_is_live = 1 if ($this_is_mob && ($vil->{'mob'} eq 'gamemaster'));
+
+		$that_is_live = 1 if ($that_is_mob && ($vil->{'mob'} eq 'alive'));
 		$that_is_live = 1 if ($that_is_mob && ($vil->{'mob'} eq 'gamemaster'));
+
 		$this_is_dead = 0 if ($this_is_mob && ($vil->{'mob'} eq 'juror'));
 		$this_is_dead = 0 if ($this_is_mob && ($vil->{'mob'} eq 'visiter'));
+
 		$that_is_dead = 0 if ($that_is_mob && ($vil->{'mob'} eq 'juror'));
 		$that_is_dead = 0 if ($that_is_mob && ($vil->{'mob'} eq 'visiter'));
 	} else {
@@ -1716,6 +1719,7 @@ sub GetMesType {
 	} else {
 		if (0 <= $query->{'target'}) {
 						$targetpl = $vil->getplbypno( $query->{'target'} ) ;
+						$targetpl = $writepl if (0 == $writepl->isAim($targetpl));
 		}
 		if      (($query->{'admin'} ne '')) {
 						# 管理人発言

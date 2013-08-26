@@ -130,6 +130,7 @@ sub ReplaceAnchor {
 		} else {
 				# 進行中
 				# 見物人（舞台）
+				$enableanc = 1 if (($mestype == $sow->{'MESTYPE_VSAY'})&&($vil->{'mob'} eq 'gamemaster'));
 				$enableanc = 1 if (($mestype == $sow->{'MESTYPE_VSAY'})&&($vil->{'mob'} eq 'alive'));
 				# 同種の秘密発言同士の会話（独り言は除外している。）
 				$enableanc = 1 if (($mestype == $saymestype)&&($mestype != $sow->{'MESTYPE_TSAY'}));

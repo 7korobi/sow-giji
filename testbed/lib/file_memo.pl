@@ -445,9 +445,13 @@ sub CheckMemoPermition {
 	$logpermit = 1 if (($log->{'mestype'} == $sow->{'MESTYPE_ANONYMOUS'})); # “½–¼”­Œ¾
 	$logpermit = 1 if (($log->{'mestype'} == $sow->{'MESTYPE_SAY'})); # ’Êí”­Œ¾
 	# Œ©•¨l
-	$logpermit = 1 if (($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})&&($vil->{'mob'} eq 'alive'));
-	$logpermit = 1 if (($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})&&($vil->{'mob'} ne 'alive')&&($vil->{'turn'} == 0));
-	$logpermit = 1 if (($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})&&($vil->{'mob'} ne 'alive')&&(defined($query->{'turn'}))&&($query->{'turn'} == 0));
+	if(($vil->{'mob'} eq 'alive')||($vil->{'mob'} eq 'gamemaster')){
+		$logpermit = 1 if  ($log->{'mestype'} == $sow->{'MESTYPE_VSAY'});
+		$logpermit = 1 if  ($log->{'mestype'} == $sow->{'MESTYPE_VSAY'});
+	}else{
+		$logpermit = 1 if (($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})&&($vil->{'turn'} == 0));
+		$logpermit = 1 if (($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})&&(defined($query->{'turn'}))&&($query->{'turn'} == 0));
+	}
 
 	# “úI
 	if ($vil->iseclipse($sow->{'turn'})){

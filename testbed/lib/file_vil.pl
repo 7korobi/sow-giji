@@ -720,6 +720,7 @@ sub ispublic {
 	my $live = 0;
 	if( defined($pl) ){
 		$live = 1 if  ($pl->{'live'} eq 'live');
+		$live = 1 if (($pl->{'live'} eq 'mob') && ($vil->{'mob'} eq 'gamemaster'));
 		$live = 1 if (($pl->{'live'} eq 'mob') && ($vil->{'mob'} eq 'alive'));
 		$live = 1 if (($pl->{'live'} eq 'mob') && ($vil->{'turn'} == 0));
 	}

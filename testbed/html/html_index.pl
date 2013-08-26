@@ -371,6 +371,7 @@ _HTML_
 <dd>
 <ul>
 <li><a href="https://github.com/7korobi/sow-giji/tree/master/testbed">最新版　人狼議事サイトプログラム</a>
+<li><a href="https://github.com/7korobi/sow-giji/releases">ダウンロード ページ</a>
 <li><a href="https://github.com/7korobi/giji_rails">過去ログ閲覧サイトプログラム</a>
 <li>ライセンスは<a href="$license">修正済みBSDライセンス</a>となっています。永遠にバグ取り中。
 </ul>

@@ -522,7 +522,7 @@ sub GetConfig {
 		BASEDIR_DAT    => "./data",
 		BASEDIR_DOC    => "http://localhost",
 
-		ENABLED_DELETED      => 0, # 削除発言を表示するかどうか
+		ENABLED_DELETED      => 1, # 削除発言を表示するかどうか
 		ENABLED_WINNER_LABEL => 0, # 1:勝利者表示をする。
 		ENABLED_MAX_ESAY     => 0, # エピローグを発言制限対象に 0:しない、1:する
 		ENABLED_RANDOMTARGET => 1, # 1:投票・能力先に「ランダム」を含める

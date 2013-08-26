@@ -54,10 +54,6 @@ sub SetDataCmdWriteMemo {
 
 	my $curpl = &SWBase::GetCurrentPl($sow, $vil);
 	my ($mestype, $saytype, $pttype, $modified, $que, $writepl, $targetpl, $chrname, $cost) = $curpl->GetMesType($sow, $vil);
-#	my $enable = 0;
-#	$enable = $vil->ispublic($writepl);
-#	$enable = 0 if ($vil->iseclipse($sow->{'turn'})); # 日蝕
-#	$debug->raise($sow->{'APLOG_NOTICE'}, "メモを使えません。", "you can not use memo.$errfrom") if ($enable == 0); # 通常起きない
 
 	# 残りアクションがゼロの時
 	my  $saypoint = 0;
