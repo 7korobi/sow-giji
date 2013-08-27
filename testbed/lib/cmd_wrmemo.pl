@@ -18,14 +18,7 @@ sub CmdWriteMemo {
 		$sow->{'query'}->{'cmdfrom'} = 'wrmemo';
 		&SWCmdMemo::CmdMemo($sow);
 	} else {
-		my $reqvals = &SWBase::GetRequestValues($sow);
-		$reqvals->{'cmd'}  = '';
-		$reqvals->{'turn'} = '';
-		my $link = &SWBase::GetLinkValues($sow, $reqvals);
-		$link = "$cfg->{'URL_SW'}/$cfg->{'FILE_SOW'}?$link#newsay";
-
-		$sow->{'http'}->{'location'} = "$link";
-		$sow->{'http'}->outheader(); # HTTPƒwƒbƒ_‚Ìo—Í
+		$sow->{'http'}->outheader();
 		$sow->{'http'}->outfooter();
 	}
 }

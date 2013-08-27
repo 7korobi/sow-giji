@@ -24,12 +24,7 @@ sub CmdAction {
 			&SWHtmlPlayerFormMb::OutHTMLPlayerFormMb ($sow, $vil);
 		}
 	} else {
-		my $reqvals = &SWBase::GetRequestValues($sow);
-		my $link = &SWBase::GetLinkValues($sow, $reqvals);
-		$link = "$cfg->{'URL_SW'}/$cfg->{'FILE_SOW'}?$link#newsay";
-
-		$sow->{'http'}->{'location'} = "$link";
-		$sow->{'http'}->outheader(); # HTTPƒwƒbƒ_‚Ìo—Í
+		$sow->{'http'}->outheader();
 		$sow->{'http'}->outfooter();
 	}
 }

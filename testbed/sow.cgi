@@ -207,10 +207,6 @@ sub TaskBranch {
 		# ”­Œ¾
 		require "$dirlib/cmd_write.pl";
 		&SWCmdWrite::CmdWrite($sow);
-	} elsif ($cmd eq 'editmes') {
-		# ”­Œ¾C³
-		require "$dirlib/cmd_editmes.pl";
-		&SWCmdEditMes::CmdEditMes($sow);
 	} elsif ($cmd eq 'cancel') {
 		# ”­Œ¾“P‰ñ
 		require "$dirlib/cmd_cancel.pl";

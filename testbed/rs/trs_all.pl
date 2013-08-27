@@ -50,8 +50,8 @@ sub GetTextRS {
 
 	# 委任投票のお知らせ
 	my @announce_entrust = (
-		'<b>_NAME_</b>は投票を委任しています。_RANDOM_',
-		'<b>_NAME_</b>は投票を委任しようとしましたが、解決不能でした。_RANDOM_',
+		'<b>_NAME_</b>は_TARGET_に、投票を委任しています。_RANDOM_',
+		'<b>_NAME_</b>は_TARGET_に、投票を委任しようとしましたが、解決不能でした。_RANDOM_',
 	);
 
 	# コミット

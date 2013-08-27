@@ -20,12 +20,7 @@ sub CmdEntry {
 		&SWCmdVLog::OutHTMLCmdVLog($sow, $vil);
 		$vil->closevil();
 	} else {
-		my $reqvals = &SWBase::GetRequestValues($sow);
-		my $link = &SWBase::GetLinkValues($sow, $reqvals);
-		$link = "$cfg->{'URL_SW'}/$cfg->{'FILE_SOW'}?$link#newsay";
-
-		$sow->{'http'}->{'location'} = "$link";
-		$sow->{'http'}->outheader(); # HTTPƒwƒbƒ_‚Ìo—Í
+		$sow->{'http'}->outheader();
 		$sow->{'http'}->outfooter();
 	}
 }
@@ -146,12 +141,6 @@ sub SetDataCmdEntry {
 		$vindex->closevindex();
 	}
 	$vil->closevil();
-
-	my $reqvals = &SWBase::GetRequestValues($sow);
-	my $link = &SWBase::GetLinkValues($sow, $reqvals);
-	$link = "$cfg->{'URL_SW'}/$cfg->{'FILE_SOW'}?$link#newsay";
-
-	$sow->{'http'}->{'location'} = "$link";
 	return;
 }
 

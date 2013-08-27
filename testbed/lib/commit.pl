@@ -633,7 +633,7 @@ sub Execution {
 			my $targetname = $srcpl->getchrname();
 			for ($i = 0; $i < @entrusts; $i++) {
 				#	ˆÏ”Cæ‚ðŽQÆ‚µ‚ÄA“Š•[‚Ö•ÏXB
-				$entrusts[$i]->{$vote} = $srcpl->{'entrust1'};
+				$entrusts[$i]->{$vote} = $srcpl->{$vote};
 				$entrusts[$i]->{$entrust} = 0;
 
 				my $randomvote = 0;

@@ -92,10 +92,6 @@ sub OutHTMLCmdEntryPreview {
 		$preview{'cmdfrom'} = 'enformmb';
 		require "$sow->{'cfg'}->{'DIR_HTML'}/html_preview_mb.pl";
 		&SWHtmlPreviewMb::OutHTMLPreviewMb($sow, $vil, \%log, \%preview);
-	} else {
-		require "$sow->{'cfg'}->{'DIR_HTML'}/html_preview_pc.pl";
-		require "$sow->{'cfg'}->{'DIR_HTML'}/html_vlog_pc.pl";
-		&SWHtmlPreviewPC::OutHTMLPreviewPC($sow, $vil, \%log, \%preview);
 	}
 }
 
