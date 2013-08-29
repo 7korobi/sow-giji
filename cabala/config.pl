@@ -200,7 +200,20 @@ sub GetConfig {
   my @copyrights = (
     'あっぱれ、うっかりアイコン by 小由流',
     '人狼議事キャラセット by りりんら',
-    '管理 <a href="mailto:7korobi@gmail.com">ななころび</a> Sol・la',
+    '管理<code> sol・la</code><code><a href="mailto:7korobi@gmail.com">ななころび</a></code>',
+    '<code style="display:inline-block;">下記の場所以外では、人狼議事内キャラチップ<br>の利用を許諾しておりません。ご了承ください。</code>',
+    '<code style="text-align: left; display: inline-block;">議事総合トップ',
+    '人狼議事lobby',
+    '人狼議事morphe',
+    '人狼議事cafe',
+    '人狼議事perjury',
+    '人狼議事xebec',
+    '人狼議事crazy',
+    '',
+    'SoyBean',
+    'Sangria',
+    '@7korobi',
+    '</code>',
   );
 
   my %css_star480 = (
@@ -547,17 +560,17 @@ sub GetConfig {
     USERID_NPC     => "master",
     USERID_ADMIN   => "admin",
     ENABLED_VMAKE  => 1,
-    URL_SW         => "http://utage.sytes.net/cabala",
+    URL_SW         => "http://localhost/cabala",
     NAME_HOME      => "人狼議事 陰謀の苑",
     RULE           => "CABALA",
     MAX_VILLAGES   => 0,
     TIMEOUT_SCRAP  => 10,
     TIMEOUT_ENTRY  => 3,
     TOPPAGE_INFO   => "../sow/_info.pl",
-    BASEDIR_CGIERR => "http://utage.sytes.net//cabala",
+    BASEDIR_CGIERR => "http://localhost//cabala",
     BASEDIR_CGI    => ".",
     BASEDIR_DAT    => "./data",
-    BASEDIR_DOC    => "/WebRecord",
+    BASEDIR_DOC    => "http://localhost",
 
     ENABLED_DELETED      => 1, # 削除発言を表示するかどうか
     ENABLED_WINNER_LABEL => 1, # 1:勝利者表示をする。
@@ -735,11 +748,11 @@ sub GetConfig {
     &SWLocalConfig::GetLocalBaseDirConfig(\%cfg);
   }
 
-  $cfg{'DIR_LIB'}        = "../cabala/lib";
-  $cfg{'DIR_HTML'}       = "../cabala/html";
-  $cfg{'DIR_RS'}         = "../cabala/rs";
-  $cfg{'DIR_VIL'}        = "../cafe/data/vil";
-  $cfg{'DIR_USER'}       = "../sow/data/user";
+  $cfg{'DIR_LIB'}        = "./lib";
+  $cfg{'DIR_HTML'}       = "./html";
+  $cfg{'DIR_RS'}         = "./rs";
+  $cfg{'DIR_VIL'}        = "./data/vil";
+  $cfg{'DIR_USER'}       = "./data/user";
   $cfg{'DIR_IMG'}        = "$cfg{'BASEDIR_DOC'}/images";
   $cfg{'DIR_CSS'}        = "$cfg{'BASEDIR_DOC'}/stylesheets";
   $cfg{'DIR_JS'}         = "$cfg{'BASEDIR_DOC'}/javascripts";

@@ -169,7 +169,7 @@ sub OutHTMLFooterPC {
   my $net = $sow->{'html'}->{'net'};
 
   print <<"_HTML_";
-($cput CPUs)<br$net>
+($cput CPUs)
 </div>
 </body>
 <script>

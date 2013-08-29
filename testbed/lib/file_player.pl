@@ -1875,7 +1875,8 @@ sub isLogPermition {
 	if      (($self->{'live'} eq 'mob')) {
 		$logpermit = 1 if (                                    ($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})); # 見物人
 		$logpermit = 1 if (($vil->{'mob'} eq 'grave')       && ($log->{'mestype'} == $sow->{'MESTYPE_GSAY'})); # 見物人から墓下が見えるのは、
-		$logpermit = 1 if (($vil->{'mob'} eq 'alive')       && ($log->{'mestype'} == $sow->{'MESTYPE_GSAY'})); # 舞台、裏方、のとき。
+		$logpermit = 1 if (($vil->{'mob'} eq 'alive')       && ($log->{'mestype'} == $sow->{'MESTYPE_GSAY'})); # 舞台、裏方、黒幕のとき。
+		$logpermit = 1 if (($vil->{'mob'} eq 'gamemaster')  && ($log->{'mestype'} == $sow->{'MESTYPE_GSAY'})); # 
 		$logpermit = 1 if (($vil->{'mob'} eq 'gamemaster')  && ($log->{'mestype'} == $sow->{'MESTYPE_INFOWOLF'})); # 黒幕
 		$logpermit = 1 if (($vil->{'mob'} eq 'gamemaster')  && ($log->{'mestype'} == $sow->{'MESTYPE_INFOSP'}));   # 黒幕
 	} elsif (($self->{'live'} ne 'live')) {
