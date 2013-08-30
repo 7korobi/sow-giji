@@ -99,21 +99,16 @@ sub SetDataCmdVote {
 
 		# ‘‚«ž‚Ý•¶‚Ì¶¬
 		my $textrs = $sow->{'textrs'};
-		my $mes;
-		if ($query->{'cmd'} eq 'vote') {
-			if ($query->{'entrust'} eq '') {
-				$mes = $textrs->{'ANNOUNCE_SETVOTE'};
-			} else {
-				$mes = $textrs->{'ANNOUNCE_SETENTRUST'};
-			}
-		} else {
-			$mes = $textrs->{'ANNOUNCE_SETTARGET'};
-		}
-
-		my $curplchrname = $curpl->getlongchrname();
+		my $format = 'ANNOUNCE_SETTARGET';
+		$format    = 'ANNOUNCE_SETVOTE'     if($cmd eq 'vote');
+		$format    = 'ANNOUNCE_SETENTRUST'  if($cmd eq 'entrust');
+		my $mes = $textrs->{$format};
 		$mes =~ s/_ABILITY_/$textrs->{'ABI_ROLE'}->[$curpl->{'role'}]/g if ($cmd eq 'role');
 		$mes =~ s/_ABILITY_/$textrs->{'ABI_GIFT'}->[$curpl->{'gift'}]/g if ($cmd eq 'gift');
+
+		my $curplchrname = $curpl->getlongchrname();
 		$mes =~ s/_NAME_/$curplchrname/g;
+
 		my $targetpl = $vil->getplbypno($curpl->{$cmd.'1'});
 		my $targetname;
 		if ($curpl->{$cmd.'1'} >= 0) {

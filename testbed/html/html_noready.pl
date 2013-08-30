@@ -23,8 +23,11 @@ sub OutHTMLNoReady {
     &SWHtmlPC::OutHTMLChangeCSS($sow);
 
 	my $net = $sow->{'html'}->{'net'}; # Null End Tag
+	&SWHtmlPC::OutHTMLGonInit($sow);
 
 	print <<"_HTML_";
+</script>
+<h2 style="font-size: xx-large;">$cfg->{'NAME_HOME'}</h2>
 <h2>$noregistname‚ª‚Ü‚¾“o˜^‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ</h2>
 <p class="paragraph">
 $noregistid‚ª–¢“o˜^‚Å‚·B<br$net>

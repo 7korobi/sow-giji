@@ -1930,11 +1930,11 @@ sub SeerEffect {
 		&dead($sow, $vil, $plsingle, $targetpl, 'cursed', $logfile, $score);
 	}
 	# ôl
-	if ($targetpl->iscanrole($sow->{'ROLEID_CURSE'})) {
+	if ($targetpl->iscanrole_or_dead($sow->{'ROLEID_CURSE'})) {
 		&dead($sow, $vil, $targetpl, $plsingle, 'cursed', $logfile, $score);
 	}
 	# ô˜T
-	if ($targetpl->iscanrole($sow->{'ROLEID_CURSEWOLF'})) {
+	if ($targetpl->iscanrole_or_dead($sow->{'ROLEID_CURSEWOLF'})) {
 		&dead($sow, $vil, $targetpl, $plsingle, 'cursed', $logfile, $score);
 	}
 	# ˜TŒŒ‘°
@@ -2046,9 +2046,9 @@ sub GetResultSeerEncount {
 	$result = $result_hit if  ($targetpl->iskiller('role')); # l˜T¨—Í
 	$result = $result_hit if  ($targetpl->iskiller('gift')); # l˜T¨—Í
 	$result = $result_hit if  ($targetpl->isDisableState('MASKSTATE_ZOMBIE')); # ƒ]ƒ“ƒr‚É‚³‚ê‚Ü‚µ‚½B
-	$result = $result_hit if  ($targetpl->{'role'} == $sow->{'ROLEID_LONEWOLF'}  );
-	$result = $result_hit if  ($targetpl->{'role'} == $sow->{'ROLEID_RIGHTWOLF'} );
-	$result = ""          if  ($targetpl->iscanrole(  $sow->{'ROLEID_WHITEWOLF'}));
+	$result = $result_hit if  ($targetpl->{'role'}    ==    $sow->{'ROLEID_LONEWOLF'}  );
+	$result = $result_hit if  ($targetpl->{'role'}    ==    $sow->{'ROLEID_RIGHTWOLF'} );
+	$result = ""          if  ($targetpl->iscanrole_or_dead($sow->{'ROLEID_WHITEWOLF'}));
 	foreach $plsingle (@$jammed){
 		$result =  "" if ($plsingle == $targetpl);
 	}
@@ -2081,9 +2081,9 @@ sub GetResultDoctorEncount {
 sub GetResultAuraEncount {
 	my ($sow, $vil, $score, $targetpl, $jammed) = @_;
 	my $result = $vil->getText('RESULT_ENCOUNT');
-	$result = "" if ($targetpl->{'role'} == $sow->{'ROLEID_VILLAGER'} );
-	$result = "" if ($targetpl->{'role'} == $sow->{'ROLEID_WOLF'}     );
-	$result = "" if ($targetpl->iscanrole( $sow->{'ROLEID_WHITEWOLF'}));
+	$result = "" if ($targetpl->{'role'}    ==    $sow->{'ROLEID_VILLAGER'} );
+	$result = "" if ($targetpl->{'role'}    ==    $sow->{'ROLEID_WOLF'}     );
+	$result = "" if ($targetpl->iscanrole_or_dead($sow->{'ROLEID_WHITEWOLF'}));
 	$result = "" if ($targetpl->isDisableState('MASKSTATE_ZOMBIE')); # ƒ]ƒ“ƒr‚É‚³‚ê‚Ü‚µ‚½B
 	foreach $plsingle (@$jammed){
 		$result = "" if ($plsingle == $targetpl);
@@ -2104,9 +2104,9 @@ sub GetResultSeer {
 	$result = 2 if  ($targetpl->iskiller('role')); # l˜T¨—Í
 	$result = 2 if  ($targetpl->iskiller('gift')); # l˜T¨—Í
 	$result = 2 if  ($targetpl->isDisableState('MASKSTATE_ZOMBIE')); # ƒ]ƒ“ƒr‚É‚³‚ê‚Ü‚µ‚½B
-	$result = 2 if  ($targetpl->{'role'} == $sow->{'ROLEID_LONEWOLF'}  );
-	$result = 2 if  ($targetpl->{'role'} == $sow->{'ROLEID_RIGHTWOLF'} );
-	$result = 1 if  ($targetpl->iscanrole(  $sow->{'ROLEID_WHITEWOLF'}));
+	$result = 2 if  ($targetpl->{'role'}    ==    $sow->{'ROLEID_LONEWOLF'}  );
+	$result = 2 if  ($targetpl->{'role'}    ==    $sow->{'ROLEID_RIGHTWOLF'} );
+	$result = 1 if  ($targetpl->iscanrole_or_dead($sow->{'ROLEID_WHITEWOLF'}));
 	foreach $plsingle (@$jammed){
 		$result = 8 if ($plsingle == $targetpl);
 	}
@@ -2142,9 +2142,9 @@ sub GetResultDoctor {
 sub GetResultAura {
 	my ($sow, $vil, $score, $targetpl, $jammed) = @_;
 	my $result = 4;
-	$result = 3 if ($targetpl->{'role'} == $sow->{'ROLEID_VILLAGER'} );
-	$result = 3 if ($targetpl->{'role'} == $sow->{'ROLEID_WOLF'}     );
-	$result = 3 if ($targetpl->iscanrole( $sow->{'ROLEID_WHITEWOLF'}));
+	$result = 3 if ($targetpl->{'role'}    ==    $sow->{'ROLEID_VILLAGER'} );
+	$result = 3 if ($targetpl->{'role'}    ==    $sow->{'ROLEID_WOLF'}     );
+	$result = 3 if ($targetpl->iscanrole_or_dead($sow->{'ROLEID_WHITEWOLF'}));
 	$result = 3 if ($targetpl->isDisableState('MASKSTATE_ZOMBIE')); # ƒ]ƒ“ƒr‚É‚³‚ê‚Ü‚µ‚½B
 	foreach $plsingle (@$jammed){
 		$result = 8 if ($plsingle == $targetpl);
