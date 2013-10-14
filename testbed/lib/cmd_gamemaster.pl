@@ -45,6 +45,7 @@ sub SetDataCmdGameMaster {
 	my $cursor = $sow->{'curpl'};
 	my $target = $vil->getplbypno($target_pno);
 	my $command = '';
+	my $mestype = 'MESTYPE_INFONOM';
 
 	# リソースの読み込み
 	&SWBase::LoadVilRS($sow, $vil);
@@ -70,19 +71,37 @@ sub SetDataCmdGameMaster {
 		$command = uc($live);
 		$target->{'live'} = $live;
 		if('live' ne $live){
-			$target->{'deathday'} = $vil->{'turn'};
+			$target->{'deathday'} = $vil->{'turn'} + 1;
 		} else {
 			$target->{'deathday'} = -1;
 		}
-
-		# 能力行使のリセット
-		$target->{'vote1'} = $sow->{'TARGETID_TRUST'};
-		$target->{'vote2'} = $sow->{'TARGETID_TRUST'};
-		$target->{'role1'} = $sow->{'TARGETID_TRUST'};
-		$target->{'role2'} = $sow->{'TARGETID_TRUST'};
-		$target->{'gift1'} = $sow->{'TARGETID_TRUST'};
-		$target->{'gift2'} = $sow->{'TARGETID_TRUST'};
 	}
+
+	my $role = $query->{'role'};
+	if ($role){
+		$command = 'CHANGE_ROLE';
+		$target->{'role'} = $role;
+		$mestype = 'MESTYPE_INFOSP';
+		if ($target->isDisableState('MASKSTATE_HURT')){
+			$target->{'live'} = 'victim';
+			$target->{'deathday'} = $vil->{'turn'} + 1;
+		}
+	}
+
+	my $gift = $query->{'gift'};
+	if ($gift){
+		$command = 'CHANGE_GIFT';
+		$target->{'gift'} = $gift;
+		$mestype = 'MESTYPE_INFOSP';
+	}
+
+	# 能力行使のリセット
+	$target->{'vote1'} = $sow->{'TARGETID_TRUST'};
+	$target->{'vote2'} = $sow->{'TARGETID_TRUST'};
+	$target->{'role1'} = $sow->{'TARGETID_TRUST'};
+	$target->{'role2'} = $sow->{'TARGETID_TRUST'};
+	$target->{'gift1'} = $sow->{'TARGETID_TRUST'};
+	$target->{'gift2'} = $sow->{'TARGETID_TRUST'};
 
 	# 村データの書き込み
 	$vil->writevil();
@@ -94,7 +113,7 @@ sub SetDataCmdGameMaster {
 	my $chrname = $target->getlongchrname();
 	my $message = $sow->{'textrs'}->{$command};
 	$message =~ s/_NAME_/$chrname/g;
-	$logfile->writeinfo('', $sow->{'MESTYPE_INFONOM'}, $message);
+	$logfile->writeinfo($target->{'uid'}, $sow->{$mestype}, $message);
 	$logfile->close();
 
 	$vil->closevil();

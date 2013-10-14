@@ -536,6 +536,8 @@ sub GetTextRS {
 		LIVE        => '<b>_NAME_</b>は生き返った。',
 		DROOP       => '<b>_NAME_</b>は死んだ。',
 		SUDDENDEATH => '<b>_NAME_</b>は突然死した。',
+		CHANGE_ROLE => '<b>_NAME_</b>は能力が変わったようだ。',
+		CHANGE_GIFT => '<b>_NAME_</b>は恩恵が変わったようだ。',
 
 		RANDOMENTRUST => '(ランダム委任)',
 

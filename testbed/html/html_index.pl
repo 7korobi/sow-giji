@@ -208,20 +208,38 @@ updated_at: new Date(1370662886000),template:"message/action",mestype:"WSAY"}
 <dt> 村建てツール
 <dd>
 
-まず<a href="$urlsow?$linkrule#make">村建て人の心構\え</a>、<a href="$linkmake">村建てマニュアル</a>を読んでから村を建てよう。<br>
+<p>
+まず<a href="$urlsow?$linkrule#make">村建て人の心構\え</a>、<a href="$linkmake">村建てマニュアル</a>を読んでから村を建てよう。
+</p>
 
 <ul>
 <li>参考：<a href="$urlsow?$linkrolematrix">役職配分一覧</a>
 <li>参考：<a href="http://crazy-crazy.sakura.ne.jp/giji/?(List)SayCnt">発言pt量</a>の一覧<br>
 <li>$caution_vmake
 </ul>
+
 _HTML_
-	if ($sow->{'cfg'}->{'ENABLED_VMAKE'} > 0) {
-		print <<"_HTML_";
+	if (( $sow->{'cfg'}->{'ENABLED_VMAKE'} > 0 )&&( $sow->{'user'}->logined() > 0 )) {
+		if ('CIEL' eq $cfg->{'RULE'}){
+			my $linkscedure  = 'http://jsfun525.gamedb.info/wiki/?%B4%EB%B2%E8%C2%BC%CD%BD%C4%EA%C9%BD';
+			print <<"_HTML_";
 <p>
+便利な<a href="$linkscedure">企画村予\定表\</a>はもう見た？建てた村に人が集まりそうかどうか、\予\想できるかもしれないよ。<br>
+</p>
+<ul>
+<li><input type="checkbox" ng-model="yes_i_read_it"> 見たよ！今から、村を立てるよ！
+</ul>
+<p ng-show="yes_i_read_it">
+_HTML_
+		} else {
+			print <<"_HTML_";
+<p ng-show="yes_i_read_it" ng-init="yes_i_read_it = true">
+_HTML_
+}
+		print <<"_HTML_";
 <a href="sow.cgi?cmd=trsdiff">基本設定</a>を選んで「村の作成」を押すと、新しくゲームを作成できる。
 </p>
-<form action="$urlsow" method="get">
+<form action="$urlsow" method="get" ng-show="yes_i_read_it">
 <input type="hidden" name="cmd" value="makevilform">
 <input type="hidden" name="css" value="$sow->{'query'}->{'css'}">
 <select id="trsid" name="trsid">
