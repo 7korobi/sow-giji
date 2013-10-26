@@ -907,7 +907,7 @@ gon.story = {
 	"vid": $vil->{'vid'},
     "turn":   $turn,
 
-	"link":    "$linkvinfo".unescapeHTML(),
+	"link": _.unescape("$linkvinfo"),
 	"name":    "$vil->{'vname'}",
 	"rating":  "$vil->{'rating'}",
 	"comment": "$vil->{'vcomment'}",
@@ -927,8 +927,8 @@ gon.story = {
 	},
 
 	"card":{
-		"discard": "$rolediscard".split('/').map(function(n) { return(SOW_RECORD.CABALA.gifts[n]) }).compact(),
-		"event":   "$eventcard".split('/').map(function(n) { return(SOW_RECORD.CABALA.events[n]) }).compact(),
+		"discard": _.compact(_.map("$rolediscard".split('/'), function(n) { return(SOW_RECORD.CABALA.gifts[n]) })),
+		"event":   _.compact(_.map("$eventcard".split('/'),  function(n) { return(SOW_RECORD.CABALA.events[n]) })),
 		"config":  "$config".split('/')
 	},
 	"announce":{
@@ -943,11 +943,11 @@ gon.story = {
 	},
 	"timer":{
 		"extend":   $vil->{'extend'},
-		"updateddt":    Date.create(1000 * $vil->{'updateddt'}),
-		"nextupdatedt": Date.create(1000 * $vil->{'nextupdatedt'}),
-		"nextchargedt": Date.create(1000 * $vil->{'nextchargedt'}),
-		"nextcommitdt": Date.create(1000 * $vil->{'nextcommitdt'}),
-		"scraplimitdt": Date.create(1000 * $vil->{'scraplimitdt'})
+		"updateddt":    new Date(1000 * $vil->{'updateddt'}),
+		"nextupdatedt": new Date(1000 * $vil->{'nextupdatedt'}),
+		"nextchargedt": new Date(1000 * $vil->{'nextchargedt'}),
+		"nextcommitdt": new Date(1000 * $vil->{'nextcommitdt'}),
+		"scraplimitdt": new Date(1000 * $vil->{'scraplimitdt'})
 	},
 	"type":{
 		"roletable": "$roletable",
@@ -1021,7 +1021,7 @@ _HTML_
 var event = {
 	"is_progress": (1 == $is_progress),
 	"name": "$turnname",
-	"link": "$link_to".unescapeHTML(),
+	"link": _.unescape("$link_to"),
 	"news": null,
 	"turn": $i
 }
@@ -1029,7 +1029,7 @@ gon.events.push(event);
 _HTML_
 	    if ($is_progress){
 			print <<"_HTML_";
-event.news = "$news_to".unescapeHTML();
+event.news = _.unescape("$news_to");
 _HTML_
 		}
 	}
@@ -1077,12 +1077,12 @@ gon.event = {
 		"commitable": $committablepl
 	},
 	"say":{
-		"modifiedsay":   Date.create(1000 * $vil->{'modifiedsay'}),
-		"modifiedwsay":  Date.create(1000 * $vil->{'modifiedwsay'}),
-		"modifiedgsay":  Date.create(1000 * $vil->{'modifiedgsay'}),
-		"modifiedspsay": Date.create(1000 * $vil->{'modifiedspsay'}),
-		"modifiedxsay":  Date.create(1000 * $vil->{'modifiedxsay'}),
-		"modifiedvsay":  Date.create(1000 * $vil->{'modifiedvsay'})
+		"modifiedsay":   new Date(1000 * $vil->{'modifiedsay'}),
+		"modifiedwsay":  new Date(1000 * $vil->{'modifiedwsay'}),
+		"modifiedgsay":  new Date(1000 * $vil->{'modifiedgsay'}),
+		"modifiedspsay": new Date(1000 * $vil->{'modifiedspsay'}),
+		"modifiedxsay":  new Date(1000 * $vil->{'modifiedxsay'}),
+		"modifiedvsay":  new Date(1000 * $vil->{'modifiedvsay'})
 	},
 	"messages": []
 };

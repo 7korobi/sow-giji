@@ -211,13 +211,13 @@ sub OutHTMLGonInit {
 
   print <<"_HTML_";
 <script>
-window.gon = OPTION.gon.clone(true);
+window.gon = \$.extend(true, {}, OPTION.gon);
 gon.form.login = {
   "cmd": "login",
   "admin_uri": "$admin_uri",
   "is_admin": $is_admin,
   "cmdfrom": "$cmdfrom",
-  "expired": Date.create(1000 * $expired),
+  "expired": new Date(1000 * $expired),
   "uidtext": "$uid".replace(" ","&nbsp;"),
   "uid": "$uid"
 }

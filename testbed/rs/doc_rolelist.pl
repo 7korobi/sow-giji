@@ -345,9 +345,9 @@ _HTML_
 	foreach $pl (@pllist){
 		print <<"_HTML_";
 
-gon.form = OPTION.gon.form.clone(true).merge({
+gon.form = \$.extend(true, {}, OPTION.gon.form, {
 		title: "$pl->{'title'}",
-		uri: "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}",
+		uri: "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}"
 });
 _HTML_
 

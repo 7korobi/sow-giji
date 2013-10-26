@@ -2064,10 +2064,10 @@ pl.win = {
 };
 
 pl.live = "$pl->{'live'}";
-pl.role = [
+pl.role = _.compact([
 	SOW_RECORD.CABALA.roles[$role],
 	SOW_RECORD.CABALA.gifts[$gift]
-].compact();
+]);
 pl.rolestate = $pl->{'rolestate'};
 pl.select = SOW_RECORD.CABALA.roles[$selrole];
 
@@ -2096,8 +2096,8 @@ pl.say = {
 	"say_act": $say_act
 };
 pl.timer = {
-	"entrieddt":    Date.create(1000 * $pl->{'entrieddt'}),
-	"limitentrydt": Date.create(1000 * $pl->{'limitentrydt'})
+	"entrieddt":    new Date(1000 * $pl->{'entrieddt'}),
+	"limitentrydt": new Date(1000 * $pl->{'limitentrydt'})
 };
 _HTML_
 	}

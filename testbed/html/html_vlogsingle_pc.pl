@@ -147,7 +147,7 @@ var mes = {
 	},
 	"mesicon": SOW_RECORD.CABALA.mestypeicons[$log->{'mestype'}],
 	"mestype": SOW_RECORD.CABALA.mestypes[$log->{'mestype'}],
-	"date": Date.create(1000 * $log->{'date'}),
+	"date": new Date(1000 * $log->{'date'}),
 	"log": mes_log
 };
 _HTML_
@@ -226,7 +226,7 @@ var mes = {
 	},
 	"mesicon": SOW_RECORD.CABALA.mestypeicons[$log->{'mestype'}],
 	"mestype": SOW_RECORD.CABALA.mestypes[$log->{'mestype'}],
-	"date": Date.create(1000 * $log->{'date'}),
+	"date": new Date(1000 * $log->{'date'}),
 	"log": mes_log
 };
 _HTML_
