@@ -57,15 +57,18 @@ sub OutHTMLDocument {
 	$sow->{'html'}->outcontentheader();
 
 	&SWHtmlPC::OutHTMLLogin($sow); # ログイン欄の出力
+    &SWHtmlPC::OutHTMLChangeCSS($sow);
 
 	$sow->{'query'}->{'trsid'} = $sow->{'cfg'}->{'DEFAULT_TEXTRS'} if ( "" eq $sow->{'query'}->{'trsid'});
+	my $theme = $cfg->{'THEME'};
 	print <<"_HTML_";
+<div class="choice">
 <p class="paragraph">
-<form action="$urlsow" method="get" >
+<form action="$urlsow" method="get" class="form-inline">
 <input type="hidden" name="cmd" value="$sow->{'query'}->{'cmd'}">
 <input type="hidden" name="css" value="$sow->{'query'}->{'css'}">
-<label for="trsid">基本設定：</label>
-<select id="trsid" name="trsid">
+<label for="trsid">基本設定</label>
+<select id="trsid" name="trsid" class="input-small">
 _HTML_
 	my $trsidlist = $sow->{'cfg'}->{'TRSIDLIST'};
 	foreach (@$trsidlist) {
@@ -80,8 +83,8 @@ _HTML_
 
 	print <<"_HTML_";
 </select>
-<label for="game">ゲームルール： </label>
-<select id="game" name="game">
+<label for="game">ゲームルール</label>
+<select id="game" name="game" class="input-small">
 _HTML_
 
 	my $game     = $sow->{'basictrs'}->{'GAME'};
@@ -98,6 +101,7 @@ _HTML_
 <input type="submit" value="編成を見る">
 </form>
 </p>
+</div>
 
 _HTML_
 	$doc->outhtml(); # 本文出力

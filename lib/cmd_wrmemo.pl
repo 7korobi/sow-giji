@@ -18,14 +18,7 @@ sub CmdWriteMemo {
 		$sow->{'query'}->{'cmdfrom'} = 'wrmemo';
 		&SWCmdMemo::CmdMemo($sow);
 	} else {
-		my $reqvals = &SWBase::GetRequestValues($sow);
-		$reqvals->{'cmd'}  = 'memo';
-		$reqvals->{'turn'} = '';
-		my $link = &SWBase::GetLinkValues($sow, $reqvals);
-		$link = "$cfg->{'URL_SW'}/$cfg->{'FILE_SOW'}?$link#newsay";
-
-		$sow->{'http'}->{'location'} = "$link";
-		$sow->{'http'}->outheader(); # HTTPヘッダの出力
+		$sow->{'http'}->outheader();
 		$sow->{'http'}->outfooter();
 	}
 }
@@ -54,10 +47,6 @@ sub SetDataCmdWriteMemo {
 
 	my $curpl = &SWBase::GetCurrentPl($sow, $vil);
 	my ($mestype, $saytype, $pttype, $modified, $que, $writepl, $targetpl, $chrname, $cost) = $curpl->GetMesType($sow, $vil);
-#	my $enable = 0;
-#	$enable = $vil->ispublic($writepl);
-#	$enable = 0 if ($vil->iseclipse($sow->{'turn'})); # 日蝕
-#	$debug->raise($sow->{'APLOG_NOTICE'}, "メモを使えません。", "you can not use memo.$errfrom") if ($enable == 0); # 通常起きない
 
 	# 残りアクションがゼロの時
 	my  $saypoint = 0;
@@ -96,9 +85,7 @@ sub SetDataCmdWriteMemo {
 	$debug->raise($sow->{'APLOG_NOTICE'}, 'メモを貼っていません。', "memo not found.$errfrom") if (($checknosay == 0) && ($newmemo->{'log'} eq ''));
 
 	# メモデータファイルへの書き込み
-	my $monospace = 0;
-	$monospace = 1 if ($query->{'monospace'} eq 'monospace');
-	$monospace = 2 if ($query->{'monospace'} eq 'report'); 
+	my $monospace = 0 + $query->{'monospace'};
 
 	if ($checknosay == 0) {
 		$mes = '';
@@ -109,16 +96,18 @@ sub SetDataCmdWriteMemo {
 		mes     => $mes,
 		mestype => $mestype,
 	);
+
+    my $memoid = sprintf("%05d", $vil->{'cntmemo'});
 	$mes = &SWLog::ReplaceAnchor($sow, $vil, \%say);
 	my %memo = (
-		logid     => sprintf("%05d", $vil->{'cntmemo'}),
+		logid     => $memoid,
 		mestype   => $mestype,
 		uid       => $writepl->{'uid'},
 		cid       => $writepl->{'cid'},
 		csid      => $writepl->{'csid'},
 		chrname   => $chrname,
 		date      => $sow->{'time'},
-		log       => $mes,
+		log       => &SWLog::CvtRandomText($sow, $vil, $mes),
 		monospace => $monospace,
 	);
 	$memofile->add(\%memo);
@@ -129,7 +118,7 @@ sub SetDataCmdWriteMemo {
 	if ($checknosay > 0) {
 		# メモを貼る
 		$query->{'mes'} = 'メモを貼った。';
-		&SWWrite::ExecuteCmdWrite($sow, $vil, $writepl, $memo{'logid'});
+		&SWWrite::ExecuteCmdWrite($sow, $vil, $writepl, $memo{'logid'}, '<mw MM'.$memoid.','.$vil->{'turn'}.',メモ>');
 
 		$debug->writeaplog($sow->{'APLOG_POSTED'}, "WriteMemo. [uid=$sow->{'uid'}, vid=$vil->{'vid'}]");
 	} else {

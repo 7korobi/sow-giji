@@ -87,15 +87,6 @@ sub OutHTMLDialog {
 
 	&SWHtmlPC::OutHTMLLogin($sow) if ($sow->{'outmode'} ne 'mb');
 
-	# “ú•t•ÊƒƒO‚Ö‚ÌƒŠƒ“ƒN
-	if ($sow->{'outmode'} eq 'mb') {
-		print "$sow->{'query'}->{'vid'} $vil->{'vname'}<br$net>\n";
-		&SWHtmlMb::OutHTMLReturnVilMb($sow, $vil, 0);
-		print "<hr$net>\n";
-	} else {
-		&SWHtmlPC::OutHTMLTurnNavi($sow, $vil);
-	}
-
 	my @reqkeys = ('csid_cid', 'role', 'mes', 'think', 'wolf', 'maker', 'admin', 'target');
 	my $reqvals = &SWBase::GetRequestValues($sow, \@reqkeys);
 	my $hidden = &SWBase::GetHiddenValues($sow, $reqvals, '');
@@ -107,7 +98,7 @@ sub OutHTMLDialog {
 
 <p>
 <input type="hidden" name="cmd" value="$dialog{'cmd'}"$net>$hidden
-<input type="submit" value="$dialog{'buttoncaption'}"$net>
+<input type="submit" class="btn" value="$dialog{'buttoncaption'}"$net>
 </p>
 </form>
 _HTML_

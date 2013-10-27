@@ -26,6 +26,7 @@ sub OutHTMLOldLog {
 	$sow->{'html'}->outcontentheader();
 
 	&SWHtmlPC::OutHTMLLogin($sow); # ログイン欄の出力
+    &SWHtmlPC::OutHTMLChangeCSS($sow);
 
 	print <<"_HTML_";
 <h2>終了済みの村の一覧</h2>

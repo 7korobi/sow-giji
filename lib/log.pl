@@ -130,6 +130,7 @@ sub ReplaceAnchor {
 		} else {
 				# 進行中
 				# 見物人（舞台）
+				$enableanc = 1 if (($mestype == $sow->{'MESTYPE_VSAY'})&&($vil->{'mob'} eq 'gamemaster'));
 				$enableanc = 1 if (($mestype == $sow->{'MESTYPE_VSAY'})&&($vil->{'mob'} eq 'alive'));
 				# 同種の秘密発言同士の会話（独り言は除外している。）
 				$enableanc = 1 if (($mestype == $saymestype)&&($mestype != $sow->{'MESTYPE_TSAY'}));
@@ -239,9 +240,8 @@ sub ReplaceAnchorHTMLMb {
 	my ($sow, $vil, $mes, $anchor) = @_;
 	my $cfg = $sow->{'cfg'};
 	my $reqvals = &SWBase::GetRequestValues($sow);
-	my $redirect = 'http://utage.sytes.net/wolf/redirect.cgi?';
 
-	$mes =~ s/s?https?:\/\/([^\/<>\s]+)[-_.!~*'()a-zA-Z0-9;\/?:\@&=+\$,%#]+/ <a href=\"$redirect$&\">$1...<\/a>/g;
+	$mes =~ s/s?https?:\/\/([^\/<>\s]+)[-_.!~*'()a-zA-Z0-9;\/?:\@&=+\$,%#]+/ <a href=\"$&\">$1...<\/a>/g;
 
 	while ($mes =~ /<mw ([a-zA-Z]+\d+),([^,]*),([^>]+)>/) {
 		my $anchortext = $&;
@@ -266,8 +266,17 @@ sub ReplaceAnchorHTMLMb {
 		# 正規表現での誤認識を防ぐ
 		&BackQuoteAnchorMark(\$anchortext);
 
-		$mes =~ s/$anchortext/ <a href=\"$link\">&gt;&gt;$linktext<\/a>/;
+		$mes =~ s/$anchortext/<a href=\"$link\">&gt;&gt;$linktext<\/a>/;
 #		$mes =~ s/$anchortext/ &gt;&gt;$linktext/;
+	}
+	while ($mes =~ /<rand ([^,]+),([^>]+)>/) {
+		my $randtext = $&;
+		my $result = $1;
+
+		# 正規表現での誤認識を防ぐ
+		&BackQuoteAnchorMark(\$randtext);
+
+		$mes =~ s/$randtext/$result/;
 	}
 
 	return $mes;
@@ -289,12 +298,34 @@ sub ReplaceAnchorHTMLRSS {
 		# 正規表現での誤認識を防ぐ
 		&BackQuoteAnchorMark(\$anchortext);
 
-		$mes =~ s/$anchortext/ &gt;&gt;$linktext/;
+		$mes =~ s/$anchortext/&gt;&gt;$linktext/;
+	}
+	while ($mes =~ /<rand ([^,]+),([^>]+)>/) {
+		my $randtext = $&;
+		my $valtext = $1;
+
+		# 正規表現での誤認識を防ぐ
+		&BackQuoteAnchorMark(\$randtext);
+
+		$mes =~ s/$randtext/$valtext/;
 	}
 	$mes =~ s/<(\/)?strong>//g;
 
 	return $mes;
 }
+
+#----------------------------------------
+# 内部データ形式のアンカーをテキストに整形（メモ欄向け）
+#----------------------------------------
+sub ReplaceAnchorHTMLText {
+	my ($sow, $vil, $mes, $anchor) = @_;
+	$mes = &SWLog::ReplaceAnchorHTMLRSS($sow, $vil, $mes, $anchor);
+	$mes =~ s/<br( \/)?>/\\n/ig;
+	$mes =~ s/&gt;/>/ig;
+	$mes =~ s/&lt;/</ig;
+	return $mes;
+}
+
 
 #----------------------------------------
 # 正規表現での誤認識を防ぐため記号を変換
@@ -310,6 +341,10 @@ sub BackQuoteAnchorMark {
 	$$anchortext =~ s/\!/\\\!/g;
 	$$anchortext =~ s/\=/\\\=/g;
 	$$anchortext =~ s/\@/\\\@/g;
+	$$anchortext =~ s/\[/\\[/g;
+	$$anchortext =~ s/\]/\\]/g;
+	$$anchortext =~ s/\(/\\(/g;
+	$$anchortext =~ s/\)/\\)/g;
 
 	return $anchortext;
 }
@@ -337,6 +372,46 @@ sub do_random_role {
 	return $rolename->[$roleno];
 }
 
+sub do_random_plrole {
+	my ($sow,$vil,$list) = @_;
+
+	require "$sow->{'cfg'}->{'DIR_LIB'}/setrole.pl";
+	my ( $rolematrix, $giftmatrix, $eventmatrix ) = &SWSetRole::GetSetRoleTable($sow, $vil, $vil->{'roletable'}, $vil->{'vplcnt'});
+	my @name_ids;
+	my $names = $sow->{'textrs'}->{$list};
+
+    if ('ROLENAME' eq $list){
+		for ($i = 1; $i < @$names; $i++) {
+			$size = $rolematrix->[$i];
+			for ($j = 0; $j < $size; $j++) {
+				push(@name_ids, $i);
+			}
+		}
+	}
+
+    if ('GIFTNAME' eq $list){
+		for ($i = 2; $i < @$names; $i++) {
+			$size = $giftmatrix->[$i];
+			for ($j = 0; $j < $size; $j++) {
+				push(@name_ids, $i);
+			}
+		}
+	}
+
+    if ('EVENTNAME' eq $list){
+		for ($i = 1; $i < @$names; $i++) {
+			$size = $eventmatrix->[$i];
+			for ($j = 0; $j < $size; $j++) {
+				push(@name_ids, $i);
+			}
+		}
+	}
+
+	my $name_id = @name_ids[int(rand(scalar(@name_ids)))];
+	$name_id = 0 if ('' eq $names->[$name_id]);
+	return $names->[$name_id];
+}
+
 sub do_random_who {
 	my ($vil) = @_;
 
@@ -345,6 +420,15 @@ sub do_random_who {
 
 	$who = int(rand(scalar(@$livepllist)));
 	return $livepllist->[$who]->getchrname();
+}
+
+sub do_random_plwho {
+	my ($vil) = @_;
+
+	my $pllist = $vil->getallpllist();
+
+	$who = int(rand(scalar(@$pllist)));
+	return $pllist->[$who]->getchrname();
 }
 
 sub do_random_mikuji {
@@ -357,6 +441,13 @@ sub do_random_mikuji {
 	return $mikuji->[$index];
 }
 
+sub trim_random_cap {
+	my ($src) = @_;
+	$src =~ s/\[//g;
+	$src =~ s/\]//g;
+	return $src;
+}
+
 sub CvtRandomText {
 	my ($sow, $vil, $mes) = @_;
 	my $cfg = $sow->{'cfg'};
@@ -364,28 +455,29 @@ sub CvtRandomText {
 	return $mes if ($cfg->{'ENABLED_RANDOMTEXT'} == 0);
 
 	# xDn
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_DICE'}\]\]/{my $a = &do_random_dice($1,1,$2);"<a title=\"(1..$2)x$1\"><strong>$a<\/strong><\/a>"}/eg;
-
-	# 1d6
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_1D6'}\]\]/ {my $a = &do_random_dice(1,1,6);"<strong>$a<\/strong><sup>(1..6)x1<\/sup>"}/eg;
-
-	# 1d10
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_1D10'}\]\]/{my $a = &do_random_dice(1,1,10);"<strong>$a<\/strong><sup>(1..10)x1<\/sup>"}/eg;
-
-	# 1d20
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_1D20'}\]\]/{my $a = &do_random_dice(1,1,20);"<strong>$a<\/strong><sup>(1..20)x1<\/sup>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_DICE'}\]\]/{my $a = &do_random_dice($1,1,$2);"<rand $a,$& = (1..$2)x$1>"}/eg;
 
 	# fortune
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_FORTUNE'}\]\]/{my $a = &do_random_dice(1,0,100);"<strong>$a<\/strong><sup>(0..100)x1<\/sup>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_FORTUNE'}\]\]/{my $a = &do_random_dice(1,0,100);"<rand $a,$& = (0..100)>"}/eg;
 
 	# who
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_LIVES'}\]\]/{my $a = &do_random_who($vil);"<strong>$a<\/strong><sup>$&<\/sup>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_LIVES'}\]\]/{my $a = &do_random_who($vil);"<rand $a,$&>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_PL_WHO'}\]\]/{my $a = &do_random_plwho($vil);"<rand $a,$&>"}/eg;
 
 	# omikuji
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_MIKUJI'}\]\]/{my $a = &do_random_mikuji($cfg);"<strong>$a<\/strong><sup>$&<\/sup>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_MIKUJI'}\]\]/{my $a = &do_random_mikuji($cfg);"<rand $a,$&>"}/eg;
 
 	# role
-	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_ROLE'}\]\]/{my $a = &do_random_role($sow,'ROLENAME');"<strong>$a<\/strong><sup>$&<\/sup>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_ROLE'}\]\]/{my $a = &do_random_role($sow,'ROLENAME');"<rand $a,$&>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_PL_ROLE'}\]\]/{my $a = &do_random_plrole($sow,$vil,'ROLENAME');"<rand $a,$&>"}/eg;
+
+    # gift
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_GIFT'}\]\]/{my $a = &do_random_role($sow,'GIFTNAME');"<rand $a,$&>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_PL_GIFT'}\]\]/{my $a = &do_random_plrole($sow,$vil,'GIFTNAME');"<rand $a,$&>"}/eg;
+
+    # event
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_EVENT'}\]\]/{my $a = &do_random_role($sow,'EVENTNAME');"<rand $a,$&>"}/eg;
+	$mes =~ s/\[\[$cfg->{'RANDOMTEXT_PL_EVENT'}\]\]/{my $a = &do_random_plrole($sow,$vil,'EVENTNAME');"<rand $a,$&>"}/eg;
 
 	return $mes;
 }

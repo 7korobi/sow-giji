@@ -4,7 +4,7 @@ package SWWrite;
 # 発言書き込み処理
 #----------------------------------------
 sub ExecuteCmdWrite {
-	my ($sow, $vil, $writepl, $memoid) = @_;
+	my ($sow, $vil, $writepl, $memoid, $mes_postfix) = @_;
 	my $query  = $sow->{'query'};
 	require "$sow->{'cfg'}->{'DIR_LIB'}/string.pl";
 
@@ -49,9 +49,7 @@ sub ExecuteCmdWrite {
 	}
 
 	# アクションの等幅は隠し機能という事で（ぉ
-	my $monospace = 0;
-	$monospace = 1 if ($query->{'monospace'} eq 'monospace'); 
-	$monospace = 2 if ($query->{'monospace'} eq 'report'); 
+	my $monospace = 0 + $query->{'monospace'};
 
 	my $expression = 0;
 	$expression = $query->{'expression'} if (defined($query->{'expression'}));
@@ -66,7 +64,7 @@ sub ExecuteCmdWrite {
 		chrname    => $chrname,
 		que        => $que,
 		expression => $expression,
-		mes        => &SWLog::CvtRandomText($sow, $vil, $mes),
+		mes        => &SWLog::CvtRandomText($sow, $vil, $mes) . $mes_postfix,
 		memoid     => $memoid,
 		undef      => 0,
 		monospace  => $monospace,

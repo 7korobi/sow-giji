@@ -102,6 +102,7 @@ sub OutHTMLSayMb {
 
 	# 投票先変更プルダウン
 	&OutHTMLVoteMb($sow, $vil, 'vote');
+	&OutHTMLVoteMb($sow, $vil, 'entrust');
 
 	print <<"_HTML_";
 <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$cfg->{'METHOD_FORM_MB'}">
@@ -115,10 +116,10 @@ _HTML_
 
 	# 発言欄textarea要素の出力
 	my $mes = '';
-	$mes = $query->{'mes'} if (($query->{'wolf'}     ne 'on') 
-	                        && ($query->{'sympathy'} ne 'on') 
-	                        && ($query->{'pixi'}     ne 'on') 
-	                        && ($query->{'muppet'}   ne 'on') 
+	$mes = $query->{'mes'} if (($query->{'wolf'}     ne 'on')
+	                        && ($query->{'sympathy'} ne 'on')
+	                        && ($query->{'pixi'}     ne 'on')
+	                        && ($query->{'muppet'}   ne 'on')
 	                        && ($query->{'maker'}    ne 'on')
 	                        && ($query->{'admin'}    ne 'on'));
 	$mes =~ s/<br( \/)?>/\n/ig;
@@ -140,8 +141,8 @@ _HTML_
 <option value="$curpl->{'pno'}"$draft_tsay>$tsaycnttext ($sow->{'textrs'}->{'CAPTION_TSAY_PC'})
 _HTML_
 
-	
-	if ((1 == $cfg->{'ENABLED_AIMING'})
+
+	if ((1 == $vil->{'aiming'})
       ||($sow->{'uid'} eq $cfg->{'USERID_ADMIN'})
       ||($sow->{'uid'} eq $cfg->{'USERID_NPC'})){
 		# 内緒話の対象者
@@ -308,7 +309,7 @@ _HTML_
 $mes<br$net>
 
 _HTML_
-	} elsif (($vil->isepilogue() == 0) && ($curpl->{'live'} ne 'live')) {
+	} elsif ($curpl->ispowerlessgrave($vil) ) {
 		# 能力欄表示（墓下）
 		my $mes = $role->{'explain'};
 		&SWHtml::ConvertNET($sow, \$mes);
@@ -517,9 +518,10 @@ sub OutHTMLVoteMb {
 	my $net = $sow->{'html'}->{'net'};
 	my $curpl = $sow->{'curpl'};
 	my $option = $sow->{'html'}->{'option'};
-	return if ($cmd eq 'vote' && ! $curpl->isEnableVote($vil->{'turn'}) );
-	return if ($cmd eq 'role' && ! $curpl->isEnableRole($vil->{'turn'}) );
-	return if ($cmd eq 'gift' && ! $curpl->isEnableGift($vil->{'turn'}) );
+	return if ($cmd eq 'entrust' && ! $curpl->isEnableVote($vil->{'turn'}) );
+	return if ($cmd eq 'vote'    && ! $curpl->isEnableVote($vil->{'turn'}) );
+	return if ($cmd eq 'role'    && ! $curpl->isEnableRole($vil->{'turn'}) );
+	return if ($cmd eq 'gift'    && ! $curpl->isEnableGift($vil->{'turn'}) );
 
 	# 属性値の取得
 	my $reqvals = &SWBase::GetRequestValues($sow);
@@ -530,46 +532,14 @@ sub OutHTMLVoteMb {
 <input type="hidden" name="cmd" value="$cmd">$hidden
 _HTML_
 
-	if ($cmd eq 'vote') {
-		my $votelabels = $sow->{'textrs'}->{'VOTELABELS'};
-		my $selected_vote = " $sow->{'html'}->{'selected'}";
-		my $selectstar_vote = ' *';
-		my $selected_entrust = '';
-		my $selectstar_entrust = '';
-		if ($curpl->{'entrust'} > 0) {
-			$selected_vote = '';
-			$selectstar_vote = '';
-			$selected_entrust = " $sow->{'html'}->{'selected'}";
-			$selectstar_entrust = ' *';
-		}
-		my $option = $sow->{'html'}->{'option'};
-		if(     $curpl->setentrust($sow,$vil) == 0 ){
-			print <<"_HTML_";
-<select name="entrust">
-<option value=""$selected_vote>$votelabels->[0]$selectstar_vote$option
-</select>
-_HTML_
-		}elsif( $curpl->setvote_to($sow,$vil) == 0 ){
-			print <<"_HTML_";
-<select name="entrust">
-<option value="on"$selected_entrust>$votelabels->[1]$selectstar_entrust$option
-</select>
-_HTML_
-		}else{
-			print <<"_HTML_";
-<select name="entrust">
-<option value=""$selected_vote>$votelabels->[0]$selectstar_vote$option
-<option value="on"$selected_entrust>$votelabels->[1]$selectstar_entrust$option
-</select>
-_HTML_
-		}
-	} else {
-		my $votelabel = $curpl->getlabel($cmd);
-		print "$votelabel：\n";
-	}
+    my $cmd_is_entrust = "";
+    $cmd_is_entrust = "on" if ("entrust" eq $cmd);
+    my $votestar  = $curpl->getchoice($cmd);
+	my $votelabel = $curpl->getlabel($cmd);
 
 	print <<"_HTML_";
-<input type="submit" value="変更\"><br$net>
+<input type="submit" value="$votestar $votelabel\">
+<input type="hidden" name="entrust" value="$cmd_is_entrust">$hidden
 <select name="target">
 _HTML_
 

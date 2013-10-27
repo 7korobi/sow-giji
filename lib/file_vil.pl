@@ -54,17 +54,36 @@ sub createvil {
 	);
 	$self->{'file'} = $file;
 	$self->closevil();
+	$self->createbasevil();
+	return;
+}
 
-	$self->{'turn'}          = 0;
+#----------------------------------------
+# 村データの作成
+#----------------------------------------
+sub createbasevil {
+	my $self = shift;
+	my $sow = $self->{'sow'};
+
+	$self->{'turn'} = 0;
+	$self->{'vname'} = '';
+	$self->{'vcomment'} = '';
+	$self->{'csid'} = '';
+
+	$self->{'roletable'}     = '';
 	$self->{'rolediscard'}   = '';
 	$self->{'eventcard'}     = '';
+
 	$self->{'eclipse'}       = '';
 	$self->{'seance'}        = '';
 	$self->{'noselrole'}     = 1;
+	$self->{'seqevent'}      = 0;
+	$self->{'entrust'}       = 0;
 	$self->{'updateddt'}     = $sow->{'time'};
 	$self->{'nextupdatedt'}  = $sow->{'time'};
 	$self->{'nextchargedt'}  = $sow->{'time'};
 	$self->{'nextcommitdt'}  = $sow->{'time'};
+	$self->{'scraplimitdt'}  = $sow->{'time'};
 	$self->{'epilogue'}      = 9999;
 	$self->{'winner'}        = 0;
 	$self->{'useless'}       = 0;
@@ -81,11 +100,12 @@ sub createvil {
 	$self->{'riot'}          = -1;
 	$self->{'scapegoat'}     = -1;
 	$self->{'event'}         = 0;
+	$self->{'entrylimit'}    = '';
+	$self->{'entrypwd'}      = '';
 	%{$self->{'pl'}} = ();
 	%{$self->{'plface'}} = ();
 	@{$self->{'pllist'}} = ();
 	%{$sow->{'csidlist'}} = ();
-	$sow->{'turn'} = 0;
 
 	return;
 }
@@ -97,24 +117,16 @@ sub createdummyvil {
 	my $self = shift;
 	my $sow = $self->{'sow'};
 
-	$self->{'turn'}         = 0;
-	$self->{'rolediscard'}  = '';
-	$self->{'updateddt'}    = $sow->{'time'};
-	$self->{'nextupdatedt'} = $sow->{'time'};
-	$self->{'nextchargedt'} = $sow->{'time'};
-	$self->{'nextcommitdt'} = $sow->{'time'};
-	$self->{'epilogue'}     = 9999;
-	$self->{'winner'}       = 0;
+	$self->createbasevil();
 	$self->{'randomtarget'} = 0;
+	$self->{'noselrole'}    = 0;
+	$self->{'seqevent'}     = 0;
+	$self->{'entrust'}      = 0;
 	$self->{'showid'}       = 0;
+	$self->{'aiming'}       = 0;
 	$self->{'undead'}       = 0;
 	$self->{'extend'}       = 2;
 	$self->{'emulated'}     = 1;
-	%{$self->{'pl'}} = ();
-	%{$self->{'plface'}} = ();
-	@{$self->{'pllist'}} = ();
-	%{$sow->{'csidlist'}} = ();
-	$sow->{'turn'} = 0;
 
 	return;
 }
@@ -445,6 +457,26 @@ sub getlivepllist {
 	return \@livepllist;
 }
 
+sub getactivepllist {
+	my $self = shift;
+	my $sow = $self->{'sow'};
+
+	my @pllist;
+	foreach (@{$self->{'pllist'}}) {
+		push(@pllist, $_) if ($_->isactive());
+	}
+	return \@pllist;
+}
+
+sub getmobpllist{
+	my $self = shift;
+	my @pllist;
+	foreach (@{$self->{'pllist'}}) {
+		push(@pllist, $_) if ($_->{'live'} eq 'mob');
+	}
+	return \@pllist;
+}
+
 #----------------------------------------
 # アクセスしているプレイヤーが参加済みかどうかを得る
 #----------------------------------------
@@ -549,27 +581,45 @@ sub getptcosts {
 	my $unit_key = shift;
 	my $sow = $vil->{'sow'};
 	my $cfg = $sow->{'cfg'};
+
 	my $saycnt = $cfg->{'COUNTS_SAY'}->{$vil->{'saycnttype'}};
 	my $cost   = $saycnt->{$cost_key};
 	my $unit   = $sow->{'basictrs'}->{'SAYTEXT'}->{$cost}->{$unit_key};
-	
 	$cost = 'none'  if ($vil->isfreecost());
 	return ($saycnt,$cost,$unit);
 }
 
 sub getsayptcosts {
 	my $vil = shift;
-	return $vil->getptcosts('COST_SAY','UNIT_SAY');
+	my ($saycnt,$max_unit,$unit) = $vil->getptcosts('COST_SAY','UNIT_SAY');
+
+    my $max_line = 0 + $saycnt->{'MAX_MESLINE'};
+    my $max_size = 0 + $saycnt->{'MAX_MESCNT'};
+	return ($saycnt,$max_unit,$unit, $max_line,$max_size);
 }
 
 sub getactptcosts {
 	my $vil = shift;
-	return $vil->getptcosts('COST_ACT','UNIT_ACTION');
+	my $sow = $vil->{'sow'};
+	my $cfg = $sow->{'cfg'};
+
+	my ($saycnt,$max_unit,$unit) = $vil->getptcosts('COST_ACT','UNIT_ACTION');
+
+	my $max_line = 1;
+    my $max_size = 0 + $cfg->{'MAXSIZE_ACTION'};
+	return ($saycnt,$max_unit,$unit, $max_line,$max_size);
 }
 
 sub getmemoptcosts {
 	my $vil = shift;
-	return $vil->getptcosts('COST_MEMO','UNIT_ACTION');
+	my $sow = $vil->{'sow'};
+	my $cfg = $sow->{'cfg'};
+
+	my ($saycnt,$max_unit,$unit) = $vil->getptcosts('COST_MEMO','UNIT_ACTION');
+
+    my $max_line = 0 + $cfg->{'MAXSIZE_MEMOLINE'};
+    my $max_size = 0 + $cfg->{'MAXSIZE_MEMOCNT'};
+	return ($saycnt,$max_unit,$unit, $max_line,$max_size);
 }
 
 #----------------------------------------
@@ -632,7 +682,7 @@ sub getText {
 	my ($self, $key) = @_;
 	my $sow  = $self->{'sow'};
 	my $text = $sow->{'textrs'}->{$key};
-	
+
 	return  $self->Tag2Text($text);
 }
 
@@ -670,6 +720,7 @@ sub ispublic {
 	my $live = 0;
 	if( defined($pl) ){
 		$live = 1 if  ($pl->{'live'} eq 'live');
+		$live = 1 if (($pl->{'live'} eq 'mob') && ($vil->{'mob'} eq 'gamemaster'));
 		$live = 1 if (($pl->{'live'} eq 'mob') && ($vil->{'mob'} eq 'alive'));
 		$live = 1 if (($pl->{'live'} eq 'mob') && ($vil->{'turn'} == 0));
 	}
@@ -718,6 +769,334 @@ sub isstartable {
 	return $result;
 }
 
+
+sub gon_potofs {
+	my ($vil) = @_;
+	my $sow = $vil->{'sow'};
+	my $cfg = $sow->{'cfg'};
+
+	print <<"_HTML_";
+gon.potofs=[];
+_HTML_
+	my $pllist = $vil->getallpllist();
+	foreach $pl (@$pllist) {
+		$pl->gon_potof($vil);
+		my $yourself = ($pl->{'uid'} eq $sow->{'uid'});
+
+		if ($yourself) {
+			print <<"_HTML_";
+gon.potofs.push(pl);
+gon.potof = pl;
+_HTML_
+		} else {
+			print <<"_HTML_";
+gon.potofs.push(pl);
+_HTML_
+		}
+	}
+}
+
+sub gon_story {
+	my ($vil) = @_;
+	my $sow = $vil->{'sow'};
+	my $cfg = $sow->{'cfg'};
+	my $amp = $sow->{'html'}->{'amp'};
+
+	my $secret = $vil->isepilogue();
+	$secret = 1 if ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'});
+	my $maker = ($sow->{'uid'} eq $vil->{'makeruid'});
+
+    my $roletable = 'secret';
+	my $config = '';
+	my $eventcard = '';
+	my $rolediscard = '';
+
+	if ($secret||$maker||($vil->{'mob'} ne 'gamemaster')) {
+		my $roleid = $sow->{'ROLEID'};
+		my $giftid = $sow->{'GIFTID'};
+		my $eventid = $sow->{'EVENTID'};
+		my @config_list;
+		push(@config_list, 'villager');
+
+		require "$sow->{'cfg'}->{'DIR_LIB'}/setrole.pl";
+		my ( $rolematrix, $giftmatrix, $eventmatrix ) = &SWSetRole::GetSetRoleTable($sow, $vil, $vil->{'roletable'}, $vil->{'vplcnt'});
+
+		for ($i = 1; $i < @$roleid; $i++) {
+			$size = $rolematrix->[$i];
+			for ($j = 0; $j < $size; $j++) {
+				push(@config_list, $roleid->[$i]);
+			}
+		}
+
+		for ($i = 2; $i < @$giftid; $i++) {
+			$size = $giftmatrix->[$i];
+			for ($j = 0; $j < $size; $j++) {
+				push(@config_list, $giftid->[$i]);
+			}
+		}
+
+		for ($i = 1; $i < @$eventid; $i++) {
+			$size = $eventmatrix->[$i];
+			for ($j = 0; $j < $size; $j++) {
+				push(@config_list, $eventid->[$i]);
+			}
+		}
+		$roletable = $vil->{'roletable'};
+		$config = join('/', @config_list);
+		$eventcard = $vil->{'eventcard'};
+		$rolediscard = $vil->{'rolediscard'};
+	} 
+
+	my $vstatus = $vil->getvstatus();
+
+	my $isepilogue = $vil->isepilogue();
+	my $isscrap = $vil->isscrap();
+
+	my $reqvals = &SWBase::GetRequestValues($sow);
+	$reqvals->{'turn'} = '';
+	$reqvals->{'ua'}   = '';
+	my $linkturns = &SWBase::GetLinkValues($sow, $reqvals);
+
+	$reqvals->{'rowall'} = '';
+	$reqvals->{'cmd'} = 'vinfo';
+	my $linkvinfo = &SWBase::GetLinkValues($sow, $reqvals);
+	$linkvinfo   = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?" . $linkvinfo;
+
+	my $cmdlog = 0;
+	$cmdlog = 1 if (($query->{'cmd'} eq '') || ($query->{'cmd'} eq 'memo') || ($query->{'cmd'} eq 'hist'));
+
+	my @csidlist = split('/', "$vil->{'csid'}/");
+	chomp(@csidlist);
+	my $csidcaptions;
+	foreach (@csidlist) {
+		$sow->{'charsets'}->loadchrrs($_);
+		$csidcaptions .= "$sow->{'charsets'}->{'csid'}->{$_}->{'CAPTION'} ";
+	}
+
+	require "$cfg->{'DIR_RS'}/doc_rule.pl";
+	my $doc = SWDocRule->new($sow);
+	my $nrule = $doc->{'n_rule'};
+	my $turn = $vil->{'turn'} + 0;
+	my $aiming       = $vil->{'aiming'      } + 0;
+	my $entrust      = $vil->{'entrust'     } + 0;
+	my $randomtarget = $vil->{'randomtarget'} + 0;
+	my $noselrole    = $vil->{'noselrole'   } + 0;
+	my $seqevent     = $vil->{'seqevent'    } + 0;
+	my $showid       = $vil->{'showid'      } + 0;
+	my $undead       = $vil->{'undead'      } + 0;
+	my $totalcommit = -1;
+	my $totalcommit = -1;
+	my $totalcommitannounce = "";
+	my $rating_announce = $sow->{'cfg'}->{'RATING'}->{$vil->{'rating'}}->{'CAPTION'};
+	my $gamename_announce = $sow->{'basictrs'}->{'GAME'}->{$vil->{'game'}}->{'CAPTION'};
+	my $gamehelp_announce = $sow->{'basictrs'}->{'GAME'}->{$vil->{'game'}}->{'HELP'};
+	my $trsname_announce = $sow->{'textrs'}->{'CAPTION'};
+	my $trshelp_announce = $sow->{'textrs'}->{'HELP'};
+	my $starttype_announce = $sow->{'basictrs'}->{'STARTTYPE'}->{$vil->{'starttype'}};
+
+	if (($vil->{'turn'} > 0) && ($vil->isepilogue() == 0)) {
+		# コミット状況
+		my $textrs = $sow->{'textrs'};
+		$totalcommit = &SWBase::GetTotalCommitID($sow, $vil) + 0;
+		$totalcommitannounce = $textrs->{'ANNOUNCE_TOTALCOMMIT'}->[$totalcommit];
+	}
+
+	print <<"_HTML_";
+gon.story = {
+	"folder": "$cfg->{'RULE'}",
+	"vid": $vil->{'vid'},
+    "turn":   $turn,
+
+	"link": _.unescape("$linkvinfo"),
+	"name":    "$vil->{'vname'}",
+	"rating":  "$vil->{'rating'}",
+	"comment": "$vil->{'vcomment'}",
+	"csid":    "$vil->{'csid'}",
+
+	"order": $vstatus,
+	"is_finish":    (0 !== $isepilogue),
+	"is_epilogue":  (0 !== $isepilogue),
+	"is_prologue":  (0 === $turn),
+	"is_scrap":     (0 !== $isscrap),
+	"is_totalcommit": (3 === $totalcommit),
+
+	"options": [],
+
+	"entry": {
+		"limit":   "$vil->{'entrylimit'}"
+	},
+
+	"card":{
+		"discard": _.compact(_.map("$rolediscard".split('/'), function(n) { return(SOW_RECORD.CABALA.gifts[n]) })),
+		"event":   _.compact(_.map("$eventcard".split('/'),  function(n) { return(SOW_RECORD.CABALA.events[n]) })),
+		"config":  "$config".split('/')
+	},
+	"announce":{
+		"game_name": "$gamename_announce",
+		"game_help": "$gamehelp_announce",
+		"trs_name": "$trsname_announce",
+		"trs_help": "$trshelp_announce",
+		"csidcaptions": "$csidcaptions",
+		"starttype": "$starttype_announce",
+		"totalcommit": "$totalcommitannounce",
+		"rating": "$rating_announce"
+	},
+	"timer":{
+		"extend":   $vil->{'extend'},
+		"updateddt":    new Date(1000 * $vil->{'updateddt'}),
+		"nextupdatedt": new Date(1000 * $vil->{'nextupdatedt'}),
+		"nextchargedt": new Date(1000 * $vil->{'nextchargedt'}),
+		"nextcommitdt": new Date(1000 * $vil->{'nextcommitdt'}),
+		"scraplimitdt": new Date(1000 * $vil->{'scraplimitdt'})
+	},
+	"type":{
+		"roletable": "$roletable",
+		"say":   "$vil->{'saycnttype'}",
+		"start": "$vil->{'starttype'}",
+		"vote":  "$vil->{'votetype'}",
+		"mob":   "$vil->{'mob'}",
+		"game":  "$vil->{'game'}"
+	},
+	"upd":{
+		"interval": $vil->{'updinterval'},
+		"hour":     $vil->{'updhour'},
+		"minute":   $vil->{'updminite'}
+	},
+	"vpl":[
+		$vil->{'vplcnt'},
+		$vil->{'vplcntstart'}
+	]
+};
+if(1 === $aiming      ){ gon.story.options.push("aiming-talk");   }
+if(1 === $entrust     ){ gon.story.options.push("entrust");       }
+if(1 === $randomtarget){ gon.story.options.push("random-target"); }
+if(1 !== $noselrole   ){ gon.story.options.push("select-role");   }
+if(1 === $seqevent    ){ gon.story.options.push("seq-event");     }
+if(1 === $showid      ){ gon.story.options.push("show-id");       }
+if(1 === $undead      ){ gon.story.options.push("undead-talk");   }
+(function(){
+var a = [];
+_HTML_
+	$list = $nrule->{'name'};
+	for( $i=0, $no=1; $i<@$list; $i++ ){
+		next if ( '' eq $list->[$i] );
+		my $name = $nrule->{'name'}->[$i];
+		print "a.push(\"$no.".$name."\");";
+		$no++;
+	}
+	print <<"_HTML_";
+gon.story.announce.nrules = a;
+})();
+_HTML_
+	if ($secret) {
+		print <<"_HTML_";
+gon.story.sow_auth_id    = "$vil->{'makeruid'}";
+gon.story.entry.password = "$vil->{'entrypwd'}";
+_HTML_
+	}
+	print <<"_HTML_";
+gon.events = [];
+_HTML_
+
+	my $i;
+	for ($i = 0; $i <= $vil->{'turn'}; $i++) {
+    	next if ($i > $vil->{'epilogue'});
+
+        my $is_progress = 0;
+		my $turnname = "$i日目";
+		$turnname = "プロローグ" if ($i == 0);
+		$turnname = "エピローグ" if ($i == $vil->{'epilogue'});
+
+		my $linkturn = $amp."rowall=on".$amp."turn=$i";
+		my $newsturn = "";
+	    if ($i == $vil->{'turn'}){
+    		$is_progress = 1;
+			$turnname .= " (最新)";
+	    } else {
+    		$is_progress = 0;
+	    }
+		my $link_to = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linkturns$linkturn";
+		my $news_to = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linkturns$newsturn";
+		print <<"_HTML_";
+var event = {
+	"is_progress": (1 == $is_progress),
+	"name": "$turnname",
+	"link": _.unescape("$link_to"),
+	"news": null,
+	"turn": $i
+}
+gon.events.push(event);
+_HTML_
+	    if ($is_progress){
+			print <<"_HTML_";
+event.news = _.unescape("$news_to");
+_HTML_
+		}
+	}
+	return;
+}
+
+sub gon_event {
+	my ($vil) = @_;
+	my $sow = $vil->{'sow'};
+	my $cfg = $sow->{'cfg'};
+
+	my $isseance = $vil->isseance();
+	my $ispublic = $vil->ispublic();
+	my $iseclipse = $vil->iseclipse();
+	my $isfreecost = $vil->isfreecost();
+	my $isepilogue = $vil->isepilogue();
+	my $isstartable = $vil->isstartable();
+
+	my $secret = $isepilogue;
+	$secret = 1 if ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'});
+
+	my $committablepl = $vil->getcommittablepl();
+	my $votablepl    = $vil->getvotablepl();
+	my $turn = 0 + $sow->{'turn'};
+
+	print <<"_HTML_";
+gon.form.turn = $turn;
+gon.event = {
+    "turn":   $turn,
+    "winner": SOW_RECORD.CABALA.winners[$vil->{'winner'}],
+	"event":  SOW_RECORD.CABALA.events[$vil->{'event'}],
+	"riot":      $vil->{'riot'},
+	"scapegoat": $vil->{'scapegoat'},
+    "is_seance": (0 !== $isseance),
+    "is_public": (0 !== $ispublic),
+    "is_eclipse": (0 !== $iseclipse),
+    "is_freecost": (0 !== $isfreecost),
+    "is_epilogue": (0 !== $isepilogue),
+    "is_startable": (0 !== $isstartable),
+	"player":{
+		"start": $vil->{'vplcntstart'},
+		"limit": $vil->{'vplcnt'},
+		"mob":   $vil->{'cntmob'},
+		"votable": $votablepl,
+		"commitable": $committablepl
+	},
+	"say":{
+		"modifiedsay":   new Date(1000 * $vil->{'modifiedsay'}),
+		"modifiedwsay":  new Date(1000 * $vil->{'modifiedwsay'}),
+		"modifiedgsay":  new Date(1000 * $vil->{'modifiedgsay'}),
+		"modifiedspsay": new Date(1000 * $vil->{'modifiedspsay'}),
+		"modifiedxsay":  new Date(1000 * $vil->{'modifiedxsay'}),
+		"modifiedvsay":  new Date(1000 * $vil->{'modifiedvsay'})
+	},
+	"messages": []
+};
+_HTML_
+	if ($secret) {
+		my $committedpl  = $vil->getcommittedpl();
+		print <<"_HTML_";
+gon.event.player.committed = $committedpl,
+gon.event.grudge = $vil->{'grudge'};
+_HTML_
+	}
+}
+
+
 #----------------------------------------
 # 村データラベル
 #----------------------------------------
@@ -761,8 +1140,11 @@ sub GetVilDataLabel {
 		'starttype',
 		'randomtarget',
 		'showid',
+		'aiming',
 		'undead',
 		'extend',
+		'entrust',
+		'seqevent',
 		'noselrole',
 		'mob',
 		'cntvillager',
@@ -802,6 +1184,7 @@ sub GetVilDataLabel {
 		'cntdyingpossess',
 		'cntoracle',
 		'cntsorcerer',
+		'cntwalpurgis',
 		'cntwolf',
 		'cntaurawolf',
 		'cntintwolf',
@@ -827,6 +1210,7 @@ sub GetVilDataLabel {
 		'cnthatedevil',
 		'cntdish',
 		'cntbitch',
+		'cnttangle',
 		'cntdipsy',
 		'cntdecide',
 		'cntshield',

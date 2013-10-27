@@ -157,17 +157,60 @@ sub outhtml {
 	my $vmind = $self->{'v_mind'};
 	my $pmind = $self->{'p_mind'};
 	print <<"_HTML_";
-<DIV class=toppage>
+<script>
+gon = {};
+gon.welcome = [
+{ mesicon:'',
+  name:'学者 レオナルド',
+  text:'ようこそ。ここにはこのサイトを楽しむためのルールや心構\えを綴ってある。\\
+暖炉のそばが開いているから、腰を下ろして熟読しよう。楽しいゲームは全員が対等で、全員が読んで理解しているルールがあって成り立つんだ。<br>\\
+<br>\\
+ただし、やむを得ず、ルール違反をすることもあるだろうね。違反してしまった事実は覆らないけれど、ルールを破らざるをえなかった事情は、落ち着いて聞いてあげよう。\\
+<a class="mark" href="http://www.nihonjiten.com/data/763.html">罪を憎んで、人を憎まず。</a>\\
+これは話し合いをするゲームなんだ。<br>\\
+<br>\\
+<a title="法案や、企業の自主規制に従う必要はない。逆らう必要もない。それよりもきみのそばの十\数人のためを思おう。">このサイトは日本国の法律に従っている</a>。\\
+特にここで、六法全書を引き写して退屈な思いをするつもりはないけれど、不正アクセス禁止法、個人情報保護法は関わりが深いはずだ。<br>',
+updated_at:new Date(1370662886000),template:"message/say",style:"",mestype:"GSAY",csid:"all",face_id:"c96"}
+];
+gon.recovery = [
+{ mesicon:'',
+  name:'勧善懲悪委 アカリ',
+  text:'突然死は悪！そうですよね先生！',
+updated_at:new Date(1370662886000),template:"message/say",style:"head",mestype:"GSAY",csid:"all",face_id:"t07"},
+{ mesicon:'',
+  name:'学者 レオナルド',
+  text:'正解、国のルールだね。<br>\\
+<br>\\
+ただし、やむを得ない事情もあるかもしれない。そういう場合エピローグなどをつかい、話を聞いてみるとよい。\\
+エピローグでは全員が一同に介し、墓下と地上にわかれることなく、勝つための嘘もなく、より率直な話ができる。<br>\\
+笑い合える展望が拓けるかもしれないよ。<br><br>\\
+突然死に限らず、ルール違反全般に言えることだね。',
+updated_at:new Date(1370662886000),template:"message/say",style:"",mestype:"GSAY",csid:"all",face_id:"c96"},
+{ mesicon:'',
+  name:'学者 レオナルド',
+  text:'さて、もしもルールに違反してしまったとしたら？とても残念なことだけれど、まだ絶望しなくていい。<br>\\
+<br>\\
+きみには全員に釈明する、貴重な機会が残されているんだ。\\
+真剣な話し合いが必要なときは、協力してそのための時間をなんとか捻り出してほしい。\\
+家に帰るまでが遠足なのと同じで、エピローグが済むまでがその村なんだ。',
+updated_at:new Date(1370662886000),template:"message/say",style:"",mestype:"GSAY",csid:"all",face_id:"c96"}
+];
+gon.create = [
+{ mesicon:'',
+  name:'営利政府 トレイル',
+  text:'村建てフォームには、村のルールが既に記入してあります。<br>\\
+賛同できる内容はそのまま残して、不足なら筆を加え、余分と判断する事項は削除して村を建ててください。<br>\\
+<br>\\
+村を建てるとき気をつけると良いことを心構\えに纏めました。<br>\\
+ぜひご覧ください。',
+updated_at:new Date(1370662886000),template:"message/say",style:"",mestype:"GSAY",csid:"all",face_id:"t10"}
+];
+</script>
 <h2>準備はいいかな？</h2>
-<p class="paragraph">
-ようこそ。ここにはこのサイトで楽しむためのルールや心構\えを綴ってある。暖炉のそばが開いているから、腰を下ろして熟読しよう。楽しいゲームは全員が対等で、全員が読んで理解しているルールがあって成り立つんだ。<br$net>
-<br$net></p>
-<p class="paragraph">
-ただし、やむを得ず、ルール違反をすることもあるだろうね。違反してしまった事実は覆らないけれど、ルールを破らざるをえなかった事情は、落ち着いて聞いてあげよう。<a href="http://www.nihonjiten.com/data/763.html">罪を憎んで、人を憎まず。</a>これは話し合いをするゲームなんだ。<br$net>
-</p>
-<p class="paragraph">
-<a title="法案や、企業の自主規制に従う必要はない。逆らう必要もない。それよりもきみのそばの十\数人のためを思おう。">このサイトは日本国の法律に従っている</a>。特にここで、六法全書を引き写して退屈な思いをするつもりはないけれど、不正アクセス禁止法、個人情報保護法は関わりが深いはずだ。<br$net>
-<br$net></p>
+<div class="message_filter" ng-repeat="message in welcome" log="message"></div>
+<DIV class=toppage>
+
 <p class="paragraph">
 <h2>ルール</h2>
 <p class="paragraph">
@@ -176,7 +219,7 @@ sub outhtml {
 </p>
 <h3><a name="nation">国のルール</a></h3>
 <p class="paragraph">
-<dl>
+<dl class="accordion">
 _HTML_
 	$list = $nrule->{'name'};
 	for( $i=0; $i<@$list; $i++ ){
@@ -186,7 +229,6 @@ _HTML_
 	print <<"_HTML_";
 <dt><strong>$name</strong></dt>
 <dd>$text</dd>
-<br$net>
 _HTML_
 	}
 	print <<"_HTML_";
@@ -195,7 +237,7 @@ _HTML_
 <hr class="invisible_hr"$net>
 <h3><a name="village">村のルール</a></h3>
 <p class="paragraph">
-<dl>
+<dl class="accordion">
 _HTML_
 	$list = $vrule->{'name'};
 	for( $i=0; $i<@$list; $i++ ){
@@ -205,7 +247,6 @@ _HTML_
 	print <<"_HTML_";
 <dt><strong>$name</strong></dt>
 <dd>$text</dd>
-<br$net>
 _HTML_
 	}
 	print <<"_HTML_";
@@ -213,19 +254,14 @@ _HTML_
 </p>
 <hr class="invisible_hr"$net>
 <h2>ルール違反があったら？</h2>
-<p class="paragraph">
-もしもルールに違反してしまったとしたら？とても残念なことだけれど、まだ絶望しなくていい。<br$net>
-きみには全員に釈明する、貴重な機会が残されているんだ。エピローグでは全員が一同に介し、墓下と地上にわかれることなく、勝つための嘘もなく、より率直な話ができる。<br$net>
-真剣な話し合いが必要なときは、協力してそのための時間をなんとか捻り出してほしい。家に帰るまでが遠足なのと同じで、エピローグが済むまでがその村なんだ。<br$net>
-<br$net>
-</p>
+<div class="message_filter" ng-repeat="message in recovery" log="message"></div>
 <hr class="invisible_hr"$net>
 <h2><a name="mind">心構\え</a></h2>
 <p class="paragraph">
 心構\えを守って、楽しく、強く遊ぼう。<br$net>
 </p>
 <p class="paragraph">
-<dl>
+<dl class="accordion">
 _HTML_
 	$list = $pmind->{'name'};
 	for( $i=0; $i<@$list; $i++ ){
@@ -235,7 +271,6 @@ _HTML_
 	print <<"_HTML_";
 <dt><strong>$name</strong></dt>
 <dd>$text</dd>
-<br$net>
 _HTML_
 	}
 	print <<"_HTML_";
@@ -244,15 +279,11 @@ _HTML_
 <hr class="invisible_hr"$net>
 <h2><a name="make">$sow->{'cfg'}->{'NAME_SW'}の運営</a></h2>
 <h3>村を建てるかたへ</h3>
-<p class="paragraph">
-村建てフォームには、村のルールが既に記入してあります。賛同できる内容はそのまま残して、不足なら筆を加え、余分と判断する事項は削除して村を建ててください。<br$net>
-村を建てるときに気をつけた方が良いことを、心構\えに纏めました。ぜひご覧ください。<br$net>
-<br$net>
-</p>
+<div class="message_filter" ng-repeat="message in create" log="message"></div>
 <hr class="invisible_hr"$net>
 <h3>村建て人の心構\え</h3>
 <p class="paragraph">
-<dl>
+<dl class="accordion">
 _HTML_
 	$list = $vmind->{'name'};
 	for( $i=0; $i<@$list; $i++ ){
@@ -262,7 +293,6 @@ _HTML_
 	print <<"_HTML_";
 <dt><strong>$name</strong></dt>
 <dd>$text</dd>
-<br$net>
 _HTML_
 	}
 	print <<"_HTML_";
@@ -308,7 +338,7 @@ sub outhtmlmb {
 </p>
 <h3><a name="nation">国のルール</a></h3>
 <p class="paragraph">
-<dl>
+<dl class="accordion">
 _HTML_
 	$list = $nrule->{'name'};
 	for( $i=0; $i<@$list; $i++ ){
@@ -318,7 +348,6 @@ _HTML_
 	print <<"_HTML_";
 <dt><strong>$name</strong></dt>
 <dd>$text</dd>
-<br$net>
 _HTML_
 	}
 	print <<"_HTML_";
@@ -327,7 +356,7 @@ _HTML_
 <hr class="invisible_hr"$net>
 <h3><a name="village">村のルール</a></h3>
 <p class="paragraph">
-<dl>
+<dl class="accordion">
 _HTML_
 	$list = $vrule->{'name'};
 	for( $i=0; $i<@$list; $i++ ){
@@ -337,7 +366,6 @@ _HTML_
 	print <<"_HTML_";
 <dt><strong>$name</strong></dt>
 <dd>$text</dd>
-<br$net>
 _HTML_
 	}
 	print <<"_HTML_";
@@ -357,7 +385,7 @@ _HTML_
 心構\えを守って、楽しく、強く遊ぼう。<br$net>
 </p>
 <p class="paragraph">
-<dl>
+<dl class="accordion">
 _HTML_
 	$list = $pmind->{'name'};
 	for( $i=0; $i<@$list; $i++ ){
@@ -367,7 +395,6 @@ _HTML_
 	print <<"_HTML_";
 <dt><strong>$name</strong></dt>
 <dd>$text</dd>
-<br$net>
 _HTML_
 	}
 	print <<"_HTML_";
@@ -384,7 +411,7 @@ _HTML_
 <hr class="invisible_hr"$net>
 <h3>村建て人の心構\え</h3>
 <p class="paragraph">
-<dl>
+<dl class="accordion">
 _HTML_
 	$list = $vmind->{'name'};
 	for( $i=0; $i<@$list; $i++ ){
@@ -394,7 +421,6 @@ _HTML_
 	print <<"_HTML_";
 <dt><strong>$name</strong></dt>
 <dd>$text</dd>
-<br$net>
 _HTML_
 	}
 	print <<"_HTML_";

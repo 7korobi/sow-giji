@@ -39,7 +39,7 @@ sub WinnerCheckGM {
 			my $targetname = $plsingle->getlongchrname();
 			$dishes++;
 		}
-		
+
 		# 以下、生存者のみ表示。
 		next if ($plsingle->{'live'} ne 'live');
 		next if ($plsingle->{'role'} == $sow->{'ROLEID_MOB'});
@@ -108,6 +108,7 @@ sub WinnerCheckGM {
 	$win_wolf = 1 if (($vil->{'game'} eq 'LIVE_TABULA')      &&($humen <= $wolves));
 	$win_wolf = 1 if (($vil->{'game'} eq 'TROUBLE')          &&($humen <= $wolves));
 	$win_wolf = 1 if (($vil->{'game'} eq 'VOV')              &&($humen <= $wolves));
+	$win_wolf = 1 if (($vil->{'game'} eq 'SECRET')           &&($humen <= $wolves));
 	$win_wolf = 1 if (($vil->{'game'} eq 'MISTERY')          &&(0 == $villager));
 	$win_wolf = 1 if (($vil->{'game'} eq 'MILLERHOLLOW')     &&(0 == $villager));
 	$win_wolf = 1 if (($vil->{'game'} eq 'LIVE_MILLERHOLLOW')&&(0 == $villager));
@@ -226,7 +227,7 @@ sub UpdateGM {
 	# 襲撃先決定
 	my ($murderpl, $killers ,$killedpl ) = &SelectKill($sow, $vil, $logfile, $score, 1);
 	my ($murderpl2,$killers2,$killedpl2) = &SelectKill($sow, $vil, $logfile, $score, 2) if ($vil->{'grudge'} == $vil->{'turn'}-1 );
-        
+
 	# 襲撃 (邪魔ーが知狼などから判定を隠すために$jammtargetplを渡す。$guardtargetplではない。）
 	&Kill($sow, $vil, $logfile, $score, $murderpl , $killers,  $killedpl, $jammtargetpl);
 	&Kill($sow, $vil, $logfile, $score, $murderpl2, $killers2, $killedpl2,$jammtargetpl) if ($vil->{'grudge'} == $vil->{'turn'}-1);
@@ -258,7 +259,7 @@ sub EventGM {
 	my $score = SWScore->new($sow, $vil, 0);
 
 	# 翌日のための処理
-	
+
 	# 死んだスケープゴートは咎められない。
 	my $scapegoatpl = $vil->getplbypno($vil->{'scapegoat'});
 	if ((0 < $vil->{'scapegoat'})&&( 'live' ne $scapegoatpl->{'live'} )) {
@@ -304,11 +305,17 @@ sub EventGM {
 	}
 
 	# 次の事件発生！
+	my $event_do;
+	if ($vil->{'seqevent'} > 0) {
+		$event_do = 1;
+	} else {
+		$event_do = int(rand(@events));
+	}
 	if ( $vil->{'event'} <= $sow->{'EVENTID_UNDEF'} ){
 		my @events = split('/', $vil->{'eventcard'});
 		# イベントがまだ残っているなら、消費する。
 		if ( 0 < scalar(@events) ){
-			my $choice = splice(@events, int(rand(@events)), 1);
+			my $choice = splice(@events, $event_do, 1);
 			$vil->{'eventcard'} = join('/', @events );
 			$vil->{'event'} = $choice;
 		}
@@ -412,7 +419,7 @@ sub EventGM {
 				$score->addresult($eventname, $plold->getlongchrname()." ⇒ ".$plnew->getlongchrname() );
 			}
 		}
-		
+
 		$logfile->writeinfo('', $sow->{'MESTYPE_INFONOM'}, $eventtext);
 	}
 
@@ -504,18 +511,17 @@ sub Equipment{
 	&SetRandomTarget($sow, $vil, $logfile, 'role','ABI_ROLE');
 	&SetRandomTarget($sow, $vil, $logfile, 'gift','ABI_GIFT');
 
-	my $pllist = $vil->getpllist();
+	my $pllist = $vil->getactivepllist();
 	foreach $plsingle (@$pllist) {
-		next if ( $plsingle->{'live'} ne 'live' ); # 死者は準備しない。
-		my $chrname  = $plsingle->getchrname();
-		if    ($plsingle->isdo('role1')){
+		if ($plsingle->isdo('role1')){
 			# 誰かのところへ。
 			my $targetpl = $vil->getplbypno($plsingle->{'role1'});
-			my $targetname = $targetpl->getchrname();
+
 			# 魔女の投薬
 			# 使う薬の種類は、操作時に誰を対象に選んでいるか、で決まる。この時点の生死を保存する。
 			# （ただし、突然死は投薬時にキャンセルする。）
-			if ( $plsingle->iscanrole($sow->{'ROLEID_WITCH'}) ){
+			if ( $plsingle->iscanrole($sow->{'ROLEID_WITCH'})
+			  || $plsingle->iscanrole($sow->{'ROLEID_WALPURGIS'}) ){
 				$plsingle->{'tmp_targetlive'} = $targetpl->{'live'};
 				$sow->{'debug'}->writeaplog($sow->{'APLOG_OTHERS'}, "target is " . $plsingle->{'tmp_targetlive'} );
 			}
@@ -578,9 +584,9 @@ sub Execution {
 
 		# ランダム委任
 		$plsingle->{'randomentrust'} = '';
-		if (($plsingle->{$entrust} > 0) && ($plsingle->{$vote} == $sow->{'TARGETID_RANDOM'})) {
+		if (($plsingle->{$entrust} > 0) && ($plsingle->{'entrust1'} == $sow->{'TARGETID_RANDOM'})) {
 			$plsingle->{$vote} = $livepllist->[rand(@$livepllist - 1)]->{'pno'};
-			$plsingle->{$vote} = $livepllist->[$#$livepllist]->{'pno'} if ($plsingle->{$vote} == $plsingle->{'pno'});
+			$plsingle->{$vote} = $livepllist->[$#$livepllist]->{'pno'} if ($plsingle->{'entrust1'} == $plsingle->{'pno'});
 			$plsingle->{'randomentrust'} = $vil->getText('RANDOMENTRUST');
 		}
 	}
@@ -592,14 +598,14 @@ sub Execution {
 		my @entrusts;
 		my $srcpl = $curpl;
 		$i = 0;
-		
+
 		# 委任指示の人たちから委任先を特定。
 		# また、ランダム投票の人を切り分け。
 		while ($srcpl->{$entrust} > 0) {
 			# 投票を他人に委任している人を配列に追加
 			push(@entrusts, $srcpl);
 			$i++;
-			$srcpl = $vil->getplbypno($srcpl->{$vote});
+			$srcpl = $vil->getplbypno($srcpl->{'entrust1'});
 			if (($i > $votablepl) || ($srcpl->{'live'} ne 'live')) {
 				# 委任ループに入っている時
 				# （又は委任先が死者の時）
@@ -688,7 +694,7 @@ sub Execution {
 			$votetext =~ s/_TARGET_/$votedname/g;
 			$votetext =~ s/_RANDOM_//g;
 			$votestext = $votestext . "$votetext<br>" if ($vil->{'votetype'} eq 'sign');
-	
+
 			$plvote->addhistory($votetext);
 			$logfile->writeinfo($plvote->{'uid'}, $sow->{'MESTYPE_INFOSP'}, $votetext) if ($vil->{'votetype'} ne 'sign');
 		}
@@ -762,7 +768,7 @@ sub Execution {
 		# 処刑候補が独りなので、粛々と処刑。
 		$executepl = $vil->getplbypno($lastvote[0]);
 	}
-	
+
 	my $chrname;
 	my $votetext;
 	if ($executetype eq 'abort') {
@@ -907,7 +913,7 @@ sub Twilight {
 	foreach $plsingle (@$livepllist) {
 		my $chrname  = $plsingle->getchrname();
 		my $targetpl = $vil->getplbypno($plsingle->{'role1'});
-		
+
 		# 盗賊の変身（必ず変身する）
 		if ($plsingle->{'role'} == $sow->{'ROLEID_ROBBER'}){
 			my @rolediscard = split('/', $vil->{'rolediscard'});
@@ -955,11 +961,11 @@ sub Twilight {
 			$pl2->setfriends();
 		}
 	}
-	
+
 	# 入門には連鎖があるため、盗賊より後に扱う。
 	foreach $plsingle (@$livepllist) {
 		my $targetpl = $vil->getplbypno($plsingle->{'role1'});
-		
+
 		# 入門（必ず入門する）。
 		if ($plsingle->{'role'} == $sow->{'ROLEID_LOVER'}){
 			$targetpl->addbond($plsingle->{'pno'});
@@ -1002,7 +1008,7 @@ sub Twilight {
 	}
 	foreach $plsingle (@$livepllist) {
 		my $targetpl = $vil->getplbypno($plsingle->{'role1'});
-		
+
 		# 少女の夜遊び
 		if ( $plsingle->iscanrole($sow->{'ROLEID_GIRL'}) ){
 			next if ( $plsingle->{'role1'} != $plsingle->{'pno'} ); # 独りにならないとだめ
@@ -1069,7 +1075,7 @@ sub Twilight {
 	# 片想い
 	foreach $plsingle (@$livepllist) {
 		my $targetpl = $vil->getplbypno($plsingle->{'role1'});
-		
+
 		if ($plsingle->{'role'} == $sow->{'ROLEID_PASSION'}){
 			next if (1 != $plsingle->isdo('role1')); # おまかせは除外
 			$targetpl->addbond($plsingle->{'pno'});
@@ -1098,7 +1104,7 @@ sub ThrowGift {
 	foreach $plsingle (@$livepllist) {
 		next if (1 != $plsingle->isdo('gift1')); # おまかせは除外
 		my $targetpl = $vil->getplbypno($plsingle->{'gift1'});
-		
+
 		# 贈り物をなげる（必ず）
 		my $throw_gift = 0;
 		$throw_gift = $plsingle->{'gift'} if ($plsingle->{'gift'} == $sow->{'GIFTID_SHIELD'});
@@ -1125,7 +1131,7 @@ sub ThrowGift {
 				my $seerresultrole = GetResultSeer($sow, $vil, $score, $targetpl, $jammed);
 				&SeerEffect($sow, $vil, $plsingle, $targetpl, $result.$seerresultrole, $logfile, $score, $jammed);
 			} else {
-				$plsingle->addhistory($result); 
+				$plsingle->addhistory($result);
 			}
 
 			# 対象が贈り物を保持中、失ったあと、無能、の場合は贈り物を壊す。
@@ -1138,7 +1144,7 @@ sub ThrowGift {
 				&breakGift($sow,$vil,$logfile,$targetpl,$giftname);
 				next;
 			}
-			
+
 			$targetpl->{'gift_tmp'} = $throw_gift;
 		}
 	}
@@ -1203,7 +1209,7 @@ sub SelectKill {
 
 		# 無記名投票風に投票結果集計
 		next if ($votes[$i] == 0);
-		next if ($vil->{'game'} ne 'TROUBLE');
+		next if (($vil->{'game'} ne 'TROUBLE')&&($vil->{'game'} ne 'SECRET'));
 		my $targetpl = $vil->getplbypno($i);
 		my $votetext = $targetpl->getTextByID('ANNOUNCE_SELECTKILL',1);
 		$votetext =~ s/_COUNT_/$votes[$i]/g;
@@ -1252,7 +1258,7 @@ sub SelectKill {
 			if (!defined($murderpl->{'uid'})) {
 				# 襲撃者が未定義（ありえないはず）
 				$sow->{'debug'}->writeaplog($sow->{'APLOG_WARNING'}, "murderpl is undef.");
-			} elsif ($vil->{'game'} eq 'TROUBLE'){
+			} elsif (($vil->{'game'} eq 'TROUBLE')||($vil->{'game'} eq 'SECRET')){
 				# 無記名投票風に投票結果表示
 				my $votetext = $targetpl->getTextByID('ANNOUNCE_SELECTKILL',2);
 				# 投票結果の出力
@@ -1298,7 +1304,7 @@ sub Kill {
 	if ((defined($targetpl->{'cid'})) && ($targetpl->{'live'} eq 'live')) {
 		my $deadflag = &CheckKill($sow, $vil, $logfile, $score, $murderpl, $killers, $targetpl);
 		if ($deadflag ne 'live') {
-			
+
 			if ($vil->{'event'} == $sow->{'EVENTID_GHOST'}) {
 				$targetpl->{'role'}      = $sow->{'ROLEID_WOLF'};
 				$targetpl->addhistory($vil->getText('RESULT_SEMIWOLF'));
@@ -1369,7 +1375,7 @@ sub Dawn{
 	foreach $dish (@$livepllist) {
 		if ( $dish->iscanrole($sow->{'ROLEID_DISH'}) ){
 			next if ( $dish->{'role1'} != $dish->{'pno'} ); # おまかせは除外
-			
+
 			my $scorehead = $vil->getTextByID('ABI_ROLE',$dish->{'role'});
 			$score->addresult($scorehead,$dish->getlongchrname() );
 
@@ -1389,13 +1395,13 @@ sub Dawn{
 		foreach $plsingle (@$livepllist){
 			my $deadflag = 'live';
 			# 死に行く者
-			$deadflag = 'droop' if ($plsingle->isbindrole($sow->{'ROLEID_DYING'})       ); 
+			$deadflag = 'droop' if ($plsingle->isbindrole($sow->{'ROLEID_DYING'})       );
 			$deadflag = 'droop' if ($plsingle->isbindrole($sow->{'ROLEID_DYINGPOSSESS'}));
 			$deadflag = 'droop' if ($plsingle->isbindrole($sow->{'ROLEID_DYINGWOLF'})   );
 			$deadflag = 'droop' if ($plsingle->isbindrole($sow->{'ROLEID_DYINGPIXI'})   );
 			next if ($deadflag eq 'live' );
 			&dead($sow, $vil, 0, $plsingle, 'droop', $logfile, $score, 0);
-		} 
+		}
 	}
 	$wolves = $vil->{'turn'} - 1;
 	if (0 < $wolves){
@@ -1404,7 +1410,7 @@ sub Dawn{
 			# 運命を自覚する。
 			my $result = $vil->getText('RESULT_DYING');
 			$result =~ s/_NUMBER_/$wolves/g;
-			$plsingle->addhistory($result) if ($plsingle->isbindrole($sow->{'ROLEID_DYING'})       ); 
+			$plsingle->addhistory($result) if ($plsingle->isbindrole($sow->{'ROLEID_DYING'})       );
 			$plsingle->addhistory($result) if ($plsingle->isbindrole($sow->{'ROLEID_DYINGPOSSESS'}));
 			$plsingle->addhistory($result) if ($plsingle->isbindrole($sow->{'ROLEID_DYINGWOLF'})   );
 			$plsingle->addhistory($result) if ($plsingle->isbindrole($sow->{'ROLEID_DYINGPIXI'})   );
@@ -1424,48 +1430,48 @@ sub Snatch{
 
 		# スナッチ
 		push(@snatch, $plsingle);
-		my $targetpl = $vil->getplbypno($plsingle->{'role1'}); 
-		my $snatchname = $plsingle->getchrname(); 
-		my $targetname = $targetpl->getchrname(); 
-		# 情報書き込み 
+		my $targetpl = $vil->getplbypno($plsingle->{'role1'});
+		my $snatchname = $plsingle->getchrname();
+		my $targetname = $targetpl->getchrname();
+		# 情報書き込み
 		my $snatchtext = $plsingle->getText('EXECUTESNATCH');
-		$snatchtext =~ s/_NAME_/$snatchname/g; 
-		$snatchtext =~ s/_TARGET_/$targetname/g; 
-		$logfile->writeinfo($plsingle->{'uid'}, $sow->{'MESTYPE_INFOSP'}, $snatchtext); 
+		$snatchtext =~ s/_NAME_/$snatchname/g;
+		$snatchtext =~ s/_TARGET_/$targetname/g;
+		$logfile->writeinfo($plsingle->{'uid'}, $sow->{'MESTYPE_INFOSP'}, $snatchtext);
 		$plsingle->addhistory($snatchtext);
 
 		my $scorehead = $vil->getTextByID('ABI_ROLE',$sow->{'ROLEID_SNATCH'});
 		$score->addresult($scorehead,$snatchname );
 		$score->addresult($scorehead,$targetname );
 	}
-	
+
 	# スナッチャー能力行使。
 	foreach $snatchpl (@snatch) {
-		my $targetpl = $vil->getplbypno($snatchpl->{'role1'}); 
+		my $targetpl = $vil->getplbypno($snatchpl->{'role1'});
 
 		# これらを取り残すことで、貌、名前の入れ替えを実現。
-		# ($snatchpl->{'cid'}, $targetpl->{'cid'}) = ($targetpl->{'cid'}, $snatchpl->{'cid'}); 
-		# ($snatchpl->{'csid'}, $targetpl->{'csid'}) = ($targetpl->{'csid'}, $snatchpl->{'csid'}); 
-		# ($snatchpl->{'jobname'}, $targetpl->{'jobname'}) = ($targetpl->{'jobname'}, $snatchpl->{'jobname'}); 
-		# ($snatchpl->{'postfix'}, $targetpl->{'postfix'}) = ($targetpl->{'postfix'}, $snatchpl->{'postfix'}); 
-		# ($snatchpl->{'clearance'}, $targetpl->{'clearance'}) = ($targetpl->{'clearance'}, $snatchpl->{'clearance'}); 
+		# ($snatchpl->{'cid'}, $targetpl->{'cid'}) = ($targetpl->{'cid'}, $snatchpl->{'cid'});
+		# ($snatchpl->{'csid'}, $targetpl->{'csid'}) = ($targetpl->{'csid'}, $snatchpl->{'csid'});
+		# ($snatchpl->{'jobname'}, $targetpl->{'jobname'}) = ($targetpl->{'jobname'}, $snatchpl->{'jobname'});
+		# ($snatchpl->{'postfix'}, $targetpl->{'postfix'}) = ($targetpl->{'postfix'}, $snatchpl->{'postfix'});
+		# ($snatchpl->{'clearance'}, $targetpl->{'clearance'}) = ($targetpl->{'clearance'}, $snatchpl->{'clearance'});
 
 		# sheep, bonds, lovers は、貌に準ずるので取り残す。
 		# <=> uid, role, rolesubid, selrole, live, deathday, vote, target, target2, entrust, history
-		($snatchpl->{'uid'},       $targetpl->{'uid'})       = ($targetpl->{'uid'},       $snatchpl->{'uid'}      ); 
-		($snatchpl->{'role'},      $targetpl->{'role'})      = ($targetpl->{'role'},      $snatchpl->{'role'}     ); 
-		($snatchpl->{'gift'},      $targetpl->{'gift'})      = ($targetpl->{'gift'},      $snatchpl->{'gift'}     ); 
-		($snatchpl->{'rolesubid'}, $targetpl->{'rolesubid'}) = ($targetpl->{'rolesubid'}, $snatchpl->{'rolesubid'}); 
-		($snatchpl->{'rolestate'}, $targetpl->{'rolestate'}) = ($targetpl->{'rolestate'}, $snatchpl->{'rolestate'}); 
-		($snatchpl->{'selrole'},   $targetpl->{'selrole'})   = ($targetpl->{'selrole'},   $snatchpl->{'selrole'}  ); 
-		($snatchpl->{'history'},   $targetpl->{'history'})   = ($targetpl->{'history'},   $snatchpl->{'history'}  ); 
+		($snatchpl->{'uid'},       $targetpl->{'uid'})       = ($targetpl->{'uid'},       $snatchpl->{'uid'}      );
+		($snatchpl->{'role'},      $targetpl->{'role'})      = ($targetpl->{'role'},      $snatchpl->{'role'}     );
+		($snatchpl->{'gift'},      $targetpl->{'gift'})      = ($targetpl->{'gift'},      $snatchpl->{'gift'}     );
+		($snatchpl->{'rolesubid'}, $targetpl->{'rolesubid'}) = ($targetpl->{'rolesubid'}, $snatchpl->{'rolesubid'});
+		($snatchpl->{'rolestate'}, $targetpl->{'rolestate'}) = ($targetpl->{'rolestate'}, $snatchpl->{'rolestate'});
+		($snatchpl->{'selrole'},   $targetpl->{'selrole'})   = ($targetpl->{'selrole'},   $snatchpl->{'selrole'}  );
+		($snatchpl->{'history'},   $targetpl->{'history'})   = ($targetpl->{'history'},   $snatchpl->{'history'}  );
 
 #		後追い決意者にスナッチしちゃったら、おとなしく死ぬ。
-#		($snatchpl->{'tmp_suicide'},$targetpl->{'tmp_suicide'})=($targetpl->{'tmp_suicide'},$snatchpl->{'tmp_suicide'}); 
-		($snatchpl->{'live'},      $targetpl->{'live'})      = ($targetpl->{'live'},      $snatchpl->{'live'}      ); 
-		($snatchpl->{'delay_live'},$targetpl->{'delay_live'})= ($targetpl->{'delay_live'},$snatchpl->{'delay_live'}); 
-		($snatchpl->{'deathday'},  $targetpl->{'deathday'})  = ($targetpl->{'deathday'},  $snatchpl->{'deathday'}  ); 
-		($snatchpl->{'saidcount'}, $targetpl->{'saidcount'}) = ($targetpl->{'saidcount'}, $snatchpl->{'saidcount'} ); 
+#		($snatchpl->{'tmp_suicide'},$targetpl->{'tmp_suicide'})=($targetpl->{'tmp_suicide'},$snatchpl->{'tmp_suicide'});
+		($snatchpl->{'live'},      $targetpl->{'live'})      = ($targetpl->{'live'},      $snatchpl->{'live'}      );
+		($snatchpl->{'delay_live'},$targetpl->{'delay_live'})= ($targetpl->{'delay_live'},$snatchpl->{'delay_live'});
+		($snatchpl->{'deathday'},  $targetpl->{'deathday'})  = ($targetpl->{'deathday'},  $snatchpl->{'deathday'}  );
+		($snatchpl->{'saidcount'}, $targetpl->{'saidcount'}) = ($targetpl->{'saidcount'}, $snatchpl->{'saidcount'} );
 
 		# カレントプレイヤー（ログイン中のプレイヤー）を変更するかもしれない。
 		$sow->{'curpl'} = $vil->getpl($sow->{'uid'}) if ($vil->checkentried() >= 0);
@@ -1522,14 +1528,14 @@ sub Regret{
 		$score->addresult($scorehead,$deadchrname );
 
 		# 仔狼の死体。復讐！
-		if ($plsingle->iscanrole($sow->{'ROLEID_CHILDWOLF'}) ){
+		if ($plsingle->iscanrole_or_dead($sow->{'ROLEID_CHILDWOLF'}) ){
 			$vil->{'grudge'} = $vil->{'turn'};
 			my $result = $plsingle->getText('EXECUTECHILDWOLF');
 			$logfile->writeinfo($plsingle->{'uid'}, $sow->{'MESTYPE_INFOWOLF'}, $result);
 		}
-		
+
 		# 煽動者の死体。暴動！
-		if ($plsingle->iscanrole($sow->{'ROLEID_FAN'}) ){
+		if ($plsingle->iscanrole_or_dead($sow->{'ROLEID_FAN'}) ){
 			$vil->{'riot'} = $vil->{'turn'};
 			my $result = $plsingle->getText('EXECUTEFAN');
 			$logfile->writeinfo('', $sow->{'MESTYPE_INFONOM'}, $result);
@@ -1539,7 +1545,7 @@ sub Regret{
 		$ismillerhollow = 0;
 		$ismillerhollow = 1 if ('MILLERHOLLOW'      eq $vil->{'game'});
 		$ismillerhollow = 1 if ('LIVE_MILLERHOLLOW' eq $vil->{'game'});
-		
+
 		if ( $ismillerhollow ){
 			$millerhollow .= GetResultRole($sow, $vil, $score, $plsingle, $jammed);
 		}
@@ -1592,7 +1598,7 @@ sub cycle {
 	}
 
 	# 賞金稼ぎ
-	if ( $deadpl->iscanrole($sow->{'ROLEID_HUNTER'}) ){
+	if ( $deadpl->iscanrole_or_dead($sow->{'ROLEID_HUNTER'}) ){
 		return if ( $deadpl->{'role1'} < 0); # おまかせは除外
 		# 「当夜内無能」に設定し、賞金稼ぎの能力が二重発動しないように。
 		$deadpl->{'tmp_rolestate'} = $sow->{'ROLESTATE_ABI_NONE'};
@@ -1616,8 +1622,8 @@ sub revenge {
 	my $chrname = $deadpl->getchrname();
 	# 長老を殺害すると、殺害者は能力を失う。
 	# 病人を殺害すると、殺害者は能力を失う。
-	if (($deadpl->iscanrole($sow->{'ROLEID_ELDER'})  )
-	  ||($deadpl->iscanrole($sow->{'ROLEID_INVALID'}))  ) {
+	if (($deadpl->iscanrole_or_dead($sow->{'ROLEID_ELDER'})  )
+	  ||($deadpl->iscanrole_or_dead($sow->{'ROLEID_INVALID'}))  ) {
 		&toCurse($sow,$vil,$killer,$logfile);
 		my $scorehead = $vil->getTextByID('ROLENAME',$deadpl->{'role'});
 		$score->addresult($scorehead, $chrname );
@@ -1626,6 +1632,15 @@ sub revenge {
 	# 飲薬中の錬金術師を殺害すると、殺害者はしぬ。
 	if (($deadpl->isbindrole($sow->{'ROLEID_ALCHEMIST'}))&&($deadpl->{'role1'} == $deadpl->{'pno'})) {
 		&dead($sow, $vil, $killer, $killer, 'cursed', $logfile, $score);
+	}
+
+	# 死亡した怨霊は、誰かを蘇生し、その能力を共有する。
+	# これによって初めて勝利条件を得る。
+	if (($deadpl->iscanrole_or_dead($sow->{'ROLEID_TANGLE'}))){
+		my $targetpl = $vil->getplbypno($deadpl->{'role1'});
+
+		&WitchHeal($sow, $vil, $deadpl, $targetpl, $logfile, $score);
+		$deadpl->{'role'} = $->{'role'};
 	}
 }
 
@@ -1661,6 +1676,10 @@ sub heal {
 	$deadpl->{'role2'} = $sow->{'TARGETID_TRUST'};
 	$deadpl->{'gift1'} = $sow->{'TARGETID_TRUST'};
 	$deadpl->{'gift2'} = $sow->{'TARGETID_TRUST'};
+
+	# 突然死メッセージ出力
+	my $mes = $deadpl->getText('LIVE');
+	$logfile->writeinfo('', $sow->{'MESTYPE_INFONOM'}, $mes);
 }
 
 sub CheckKill {
@@ -1742,14 +1761,14 @@ sub CheckKill {
 			}
 		}
 	}
-	
+
 	# 長老は一度だけ死なない
 	# 人犬は即死しない
 	if ( ($targetpl->iscanrole($sow->{'ROLEID_ELDER'})  )
 	   ||($targetpl->iscanrole($sow->{'ROLEID_WEREDOG'})) ) {
 		if (($targetpl->issensible())){
-			$targetpl->addhistory($vil->getText('RESULT_WEREDOG')) if($targetpl->{'role'} == $sow->{'ROLEID_WEREDOG'}); 
-			$targetpl->addhistory($vil->getText('RESULT_ELDER'  )) if($targetpl->{'role'} == $sow->{'ROLEID_ELDER'}  ); 
+			$targetpl->addhistory($vil->getText('RESULT_WEREDOG')) if($targetpl->{'role'} == $sow->{'ROLEID_WEREDOG'});
+			$targetpl->addhistory($vil->getText('RESULT_ELDER'  )) if($targetpl->{'role'} == $sow->{'ROLEID_ELDER'}  );
 		}
 		$targetpl->{'delay_rolestate'} &= $sow->{'ROLESTATE_HURT'};
 		$targetpl->{'tmp_deathday'} = $vil->{'turn'};
@@ -1898,7 +1917,7 @@ sub SeerEffect {
 	my $hasGJ=0;
 	foreach $plsingle (@$livepllist) {
 		# 邪魔でのGJ
-		if ($plsingle->{'role'} eq $sow->{'ROLEID_JAMMER'} && $plsingle->{'role1'} == $targetpl->{'pno'}) { 
+		if ($plsingle->{'role'} eq $sow->{'ROLEID_JAMMER'} && $plsingle->{'role1'} == $targetpl->{'pno'}) {
 			my $result = $vil->getText('RESULT_JAMM');
 			$result =~ s/_TARGET_/$targetname/g;
 			$plsingle->addhistory($result) if (defined($targetpl->{'uid'}));
@@ -1911,11 +1930,11 @@ sub SeerEffect {
 		&dead($sow, $vil, $plsingle, $targetpl, 'cursed', $logfile, $score);
 	}
 	# 呪人
-	if ($targetpl->iscanrole($sow->{'ROLEID_CURSE'})) {
+	if ($targetpl->iscanrole_or_dead($sow->{'ROLEID_CURSE'})) {
 		&dead($sow, $vil, $targetpl, $plsingle, 'cursed', $logfile, $score);
 	}
 	# 呪狼
-	if ($targetpl->iscanrole($sow->{'ROLEID_CURSEWOLF'})) {
+	if ($targetpl->iscanrole_or_dead($sow->{'ROLEID_CURSEWOLF'})) {
 		&dead($sow, $vil, $targetpl, $plsingle, 'cursed', $logfile, $score);
 	}
 	# 狼血族
@@ -1957,13 +1976,15 @@ sub Alchemist{
 
 sub Witch{
 	my ($sow, $vil, $logfile, $score, $jammtargetpl) = @_;
-	my $pllist = $vil->getlivepllist();
+	my $pllist = $vil->getactivepllist();
 	foreach $plsingle (@$pllist) {
 		next if (1 != $plsingle->isdo('role1')); # おまかせは除外
 		my $targetpl = $vil->getplbypno($plsingle->{'role1'});
 		my $targetname = $targetpl->getchrname();
 		# 魔女の投薬
-		if ($plsingle->iscanrole($sow->{'ROLEID_WITCH'})){
+		if ($plsingle->iscanrole($sow->{'ROLEID_WITCH'})
+		  ||$plsingle->iscanrole($sow->{'ROLEID_WALPURGIS'})){
+
 			# 実際の生死にかかわらず、薬を使う。
 			if ($plsingle->{'tmp_targetlive'} eq 'live'){
 				# 毒薬がない場合NG
@@ -1990,25 +2011,32 @@ sub Witch{
 				# 蘇生薬がない場合NG
 				next if ($plsingle->isDisableState('MASKSTATE_ABI_LIVE'));
 				$plsingle->{'delay_rolestate'} &= $sow->{'ROLESTATE_ABI_LIVE'};
-				# 蘇生薬を使う
-				if ($plsingle->issensible()){
-					my $result = $plsingle->getText('EXECUTELIVEWITCH');
-					$result =~ s/_TARGET_/$targetname/g;
-					$logfile->writeinfo($plsingle->{'uid'}, $sow->{'MESTYPE_INFOSP'}, $result);
-					$result = $vil->getText('RESULT_LIVE');
-					$result =~ s/_TARGET_/$targetname/g;
-					$plsingle->addhistory($result);
-				}
-
-				my $scorehead = $sow->{'textrs'}->{'STATUS_LIVE'}->{'live'};
-				$score->addresult($scorehead, $targetname );
-
-				&heal($sow, $vil, $targetpl, $logfile, $score);
+				&WitchHeal($sow, $vil, $plsingle, $targetpl, $logfile, $score);
 			}
-
 		}
 	}
 }
+
+sub WitchHeal{
+	my ($sow, $vil, $plsingle, $deadpl, $logfile, $score) = @_;
+
+	# 蘇生薬を使う
+	if ($plsingle->issensible()){
+		my $deadname = $deadpl->getchrname();
+		my $result = $plsingle->getText('EXECUTELIVEWITCH');
+		$result =~ s/_TARGET_/$deadname/g;
+		$logfile->writeinfo($plsingle->{'uid'}, $sow->{'MESTYPE_INFOSP'}, $result);
+		$result = $vil->getText('RESULT_LIVE');
+		$result =~ s/_TARGET_/$deadname/g;
+		$plsingle->addhistory($result);
+	}
+
+	my $scorehead = $sow->{'textrs'}->{'STATUS_LIVE'}->{'live'};
+	$score->addresult($scorehead, $deadname );
+
+	&heal($sow, $vil, $deadpl, $logfile, $score);
+}
+
 
 sub GetResultSeerEncount {
 	my ($sow, $vil, $score, $targetpl, $jammed) = @_;
@@ -2018,9 +2046,9 @@ sub GetResultSeerEncount {
 	$result = $result_hit if  ($targetpl->iskiller('role')); # 人狼勢力
 	$result = $result_hit if  ($targetpl->iskiller('gift')); # 人狼勢力
 	$result = $result_hit if  ($targetpl->isDisableState('MASKSTATE_ZOMBIE')); # ゾンビにされました。
-	$result = $result_hit if  ($targetpl->{'role'} == $sow->{'ROLEID_LONEWOLF'}  );
-	$result = $result_hit if  ($targetpl->{'role'} == $sow->{'ROLEID_RIGHTWOLF'} );
-	$result = ""          if  ($targetpl->iscanrole(  $sow->{'ROLEID_WHITEWOLF'}));
+	$result = $result_hit if  ($targetpl->{'role'}    ==    $sow->{'ROLEID_LONEWOLF'}  );
+	$result = $result_hit if  ($targetpl->{'role'}    ==    $sow->{'ROLEID_RIGHTWOLF'} );
+	$result = ""          if  ($targetpl->iscanrole_or_dead($sow->{'ROLEID_WHITEWOLF'}));
 	foreach $plsingle (@$jammed){
 		$result =  "" if ($plsingle == $targetpl);
 	}
@@ -2053,9 +2081,9 @@ sub GetResultDoctorEncount {
 sub GetResultAuraEncount {
 	my ($sow, $vil, $score, $targetpl, $jammed) = @_;
 	my $result = $vil->getText('RESULT_ENCOUNT');
-	$result = "" if ($targetpl->{'role'} == $sow->{'ROLEID_VILLAGER'} );
-	$result = "" if ($targetpl->{'role'} == $sow->{'ROLEID_WOLF'}     );
-	$result = "" if ($targetpl->iscanrole( $sow->{'ROLEID_WHITEWOLF'}));
+	$result = "" if ($targetpl->{'role'}    ==    $sow->{'ROLEID_VILLAGER'} );
+	$result = "" if ($targetpl->{'role'}    ==    $sow->{'ROLEID_WOLF'}     );
+	$result = "" if ($targetpl->iscanrole_or_dead($sow->{'ROLEID_WHITEWOLF'}));
 	$result = "" if ($targetpl->isDisableState('MASKSTATE_ZOMBIE')); # ゾンビにされました。
 	foreach $plsingle (@$jammed){
 		$result = "" if ($plsingle == $targetpl);
@@ -2076,9 +2104,9 @@ sub GetResultSeer {
 	$result = 2 if  ($targetpl->iskiller('role')); # 人狼勢力
 	$result = 2 if  ($targetpl->iskiller('gift')); # 人狼勢力
 	$result = 2 if  ($targetpl->isDisableState('MASKSTATE_ZOMBIE')); # ゾンビにされました。
-	$result = 2 if  ($targetpl->{'role'} == $sow->{'ROLEID_LONEWOLF'}  );
-	$result = 2 if  ($targetpl->{'role'} == $sow->{'ROLEID_RIGHTWOLF'} );
-	$result = 1 if  ($targetpl->iscanrole(  $sow->{'ROLEID_WHITEWOLF'}));
+	$result = 2 if  ($targetpl->{'role'}    ==    $sow->{'ROLEID_LONEWOLF'}  );
+	$result = 2 if  ($targetpl->{'role'}    ==    $sow->{'ROLEID_RIGHTWOLF'} );
+	$result = 1 if  ($targetpl->iscanrole_or_dead($sow->{'ROLEID_WHITEWOLF'}));
 	foreach $plsingle (@$jammed){
 		$result = 8 if ($plsingle == $targetpl);
 	}
@@ -2114,9 +2142,9 @@ sub GetResultDoctor {
 sub GetResultAura {
 	my ($sow, $vil, $score, $targetpl, $jammed) = @_;
 	my $result = 4;
-	$result = 3 if ($targetpl->{'role'} == $sow->{'ROLEID_VILLAGER'} );
-	$result = 3 if ($targetpl->{'role'} == $sow->{'ROLEID_WOLF'}     );
-	$result = 3 if ($targetpl->iscanrole( $sow->{'ROLEID_WHITEWOLF'}));
+	$result = 3 if ($targetpl->{'role'}    ==    $sow->{'ROLEID_VILLAGER'} );
+	$result = 3 if ($targetpl->{'role'}    ==    $sow->{'ROLEID_WOLF'}     );
+	$result = 3 if ($targetpl->iscanrole_or_dead($sow->{'ROLEID_WHITEWOLF'}));
 	$result = 3 if ($targetpl->isDisableState('MASKSTATE_ZOMBIE')); # ゾンビにされました。
 	foreach $plsingle (@$jammed){
 		$result = 8 if ($plsingle == $targetpl);
@@ -2174,10 +2202,10 @@ sub GetResultRole {
 #----------------------------------------
 sub SetRandomTarget {
 	my ($sow, $vil, $logfile, $role,$abi_role) = @_;
-	my $livepllist = $vil->getlivepllist();
+	my $pllist = $vil->getactivepllist();
 
 	my $srcpl;
-	foreach $srcpl (@$livepllist) {
+	foreach $srcpl (@$pllist) {
 		my $abirole = $vil->getTextByID($abi_role,$srcpl->{$role});
 		if ($srcpl->{$role.'1'} == $sow->{'TARGETID_RANDOM'}) {
 			# ランダム対象
@@ -2199,15 +2227,15 @@ sub SetInitVoteTarget {
 	my ($sow, $vil, $logfile) = @_;
 	my $allpllist = $vil->getallpllist();
 
-	$sow->{'debug'}->writeaplog($sow->{'APLOG_OTHERS'}, "Start: SetInitVoteTarget.");
 	foreach $plsingle (@$allpllist) {
-		if( $plsingle->{'live'} eq 'live' ){
+		if( $plsingle->isactive() ){
 			$plsingle->setInitTarget('gift',1, $logfile, -1);
 			$plsingle->setInitTarget('gift',2, $logfile, $plsingle->{'gift1'}); # 仔狼死亡時。
 			$plsingle->setInitTarget('role',1, $logfile, -1);
 			$plsingle->setInitTarget('role',2, $logfile, $plsingle->{'role1'}); # 仔狼死亡時とトリックスターで使い回し。
 		}
 		if( $plsingle->isvoter() ){
+			$plsingle->setInitTarget('entrust',1, $logfile, -1);
 			$plsingle->setInitTarget('vote',1, $logfile, -1);
 			$plsingle->setInitTarget('vote',2, $logfile, $plsingle->{'vote1'}); # 扇動者死亡時。
 		}
@@ -2294,27 +2322,29 @@ sub StartSession {
 	$logfile->writeinfo('', $sow->{'MESTYPE_INFONOM'}, $announce_first );
 
 	# 役職割り当てアナウンス
-	my $rolename = $textrs->{'ROLENAME'};
-	my $giftname = $textrs->{'GIFTNAME'};
-	my $i;
+	if($vil->{'mob'} ne 'gamemaster'){
+		my $rolename = $textrs->{'ROLENAME'};
+		my $giftname = $textrs->{'GIFTNAME'};
+		my $i;
 
-	my @rolelist;
-	my @giftlist;
-	my $ar = $textrs->{'ANNOUNCE_ROLE'};
-	for ($i = 0; $i < @{$sow->{'ROLEID'}}; $i++) {
-		my $roleplcnt = $rolematrix->[$i];
-		$roleplcnt++ if ($i == $sow->{'ROLEID_VILLAGER'}); # ダミーキャラの分１増やす
-		push (@rolelist, "$rolename->[$i]$ar->[1]$roleplcnt$ar->[2]") if ($roleplcnt > 0);
+		my @rolelist;
+		my @giftlist;
+		my $ar = $textrs->{'ANNOUNCE_ROLE'};
+		for ($i = 0; $i < @{$sow->{'ROLEID'}}; $i++) {
+			my $roleplcnt = $rolematrix->[$i];
+			$roleplcnt++ if ($i == $sow->{'ROLEID_VILLAGER'}); # ダミーキャラの分１増やす
+			push (@rolelist, "$rolename->[$i]$ar->[1]$roleplcnt$ar->[2]") if ($roleplcnt > 0);
+		}
+		for ($i = 2; $i < @{$sow->{'GIFTID'}}; $i++) {
+			my $giftplcnt = $giftmatrix->[$i];
+			push (@rolelist, "$giftname->[$i]$ar->[1]$giftplcnt$ar->[2]") if ($giftplcnt > 0);
+		}
+		my $rolelist = join($ar->[3], @rolelist);
+		my $giftlist = join($ar->[3], @giftlist);
+		my $roleinfo = $ar->[0];
+		$roleinfo =~ s/_ROLE_/$rolelist/;
+		$logfile->writeinfo('', $sow->{'MESTYPE_INFONOM'}, $roleinfo);
 	}
-	for ($i = 2; $i < @{$sow->{'GIFTID'}}; $i++) {
-		my $giftplcnt = $giftmatrix->[$i];
-		push (@rolelist, "$giftname->[$i]$ar->[1]$giftplcnt$ar->[2]") if ($giftplcnt > 0);
-	}
-	my $rolelist = join($ar->[3], @rolelist);
-	my $giftlist = join($ar->[3], @giftlist);
-	my $roleinfo = $ar->[0];
-	$roleinfo =~ s/_ROLE_/$rolelist/;
-	$logfile->writeinfo('', $sow->{'MESTYPE_INFONOM'}, $roleinfo);
 
 	# ダミーキャラ発言
 	$plsingle = $vil->getpl($sow->{'cfg'}->{'USERID_NPC'});

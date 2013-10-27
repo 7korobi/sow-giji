@@ -13,15 +13,6 @@ sub SetRole {
 	my ($roletable, $gifttable, $eventtable ) = &GetSetRoleTable($sow, $vil, $vil->{'roletable'}, scalar(@$pllist));
 	my ($i, @roles, @gifts, @events);
 
-	# イベント用の配列を用意\n";
-	for ($i = 1; $i < $sow->{'COUNT_EVENT'}; $i++) {
-		my $j = 0;
-		for ($j=0; $j < $eventtable->[$i]; $j++) {
-			push(@events, $i);
-		}
-	}
-	$vil->{'eventcard'} = join('/',@events);
-
 	# アイテム用の配列を用意\n";
 	for ($i = 0; $i < $sow->{'COUNT_GIFT'}; $i++) {
 		my @giftpllist;
@@ -86,7 +77,7 @@ sub SetRole {
 			$rolecount--;
 		}
 	}
-	
+
 
 	# 余り札確保\n";
 	my $robbers = $roletable->[$sow->{'ROLEID_ROBBER'}];
@@ -127,7 +118,7 @@ sub SetRole {
 		next if ($_->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'});
 		my $selrolelist = $roles[$_->{'selrole'}];
 		# 役職希望を無視して、全員をおまかせに
-		$selrolelist = $roles[0] if (($vil->{'noselrole'} > 0)&&($_->{'role'} == -1)); 
+		$selrolelist = $roles[0] if (($vil->{'noselrole'} > 0)&&($_->{'role'} == -1));
 		push(@$selrolelist, $_);
 	}
 
@@ -270,7 +261,7 @@ sub GetSetVillager {
 	for ($i = 0; $i < $sow->{'COUNT_ROLE'}; $i++) {
 		$total += $roles->[$i];
 	}
-	
+
 	# サイモンを引くこと。
 	$roles->[$sow->{'ROLEID_VILLAGER'}] = $plcnt - $total - 1;
 }
@@ -467,9 +458,6 @@ sub GetSetRoleTableWBBS_G {
 
 	# 狩人
 	$roles->[$sow->{'ROLEID_GUARD'}]++ if ($plcnt >= 11);
-
-	# 共有者
-	$roles->[$sow->{'ROLEID_FM'}] += 2 if ($plcnt >= 16);
 
 	# 村人
 	&GetSetVillager($sow, $plcnt, $roles);

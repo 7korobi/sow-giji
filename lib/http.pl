@@ -81,7 +81,6 @@ sub outheader {
 
 	# クッキーの出力
 	my $expirescookie = $sow->{'dt'}->getcookiedt($sow->{'time'} + $sow->{'cfg'}->{'TIMEOUT_COOKIE'});
-	$sow->{'cookie_expires'} =  $sow->{'dt'}->cvtdt($sow->{'time'} + $sow->{'cfg'}->{'TIMEOUT_COOKIE'});
 	my $setcookie = $sow->{'setcookie'}; # 保留
 	my @keys = keys(%$setcookie);
 	foreach (@keys) {
@@ -141,8 +140,8 @@ sub outheader {
 
 		# 303未対応ブラウザのためのHTML出力
 		print <<"_HTML_";
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html lang="ja">
+<!doctype html>
+<html lang="ja" ng-controller="CGI">
 <head>
   <meta http-equiv="refresh" content="0; URL=$self->{'location'}">
   <title>See Other</title>
@@ -260,7 +259,7 @@ sub getquery {
 	}
 	$sow->{'QUERY_STRING'} = $buffer;
 
-	foreach (split(/[&;]/, $buffer)) { 
+	foreach (split(/[&;]/, $buffer)) {
 		my ($key, $data) = split(/=/);
 		next if ((!defined($key)) || ($key eq ''));
 
@@ -291,7 +290,7 @@ sub getquery {
 
 		# Not a Number(NaN)、Infinity(Inf) 対策
 		if (!defined($sow->{'QUERY_INVALID'}->{$key})) {
-			$sow->{'debug'}->writeaplog($sow->{'APLOG_CAUTION'}, "invalid querydata. [$key]");
+			$sow->{'debug'}->raise($sow->{'APLOG_CAUTION'}, "invalid querydata. [$key]");
 			$query{$key} = 'INVALID';
 		} elsif (($sow->{'QUERY_INVALID'}->{$key} == 0) && ($data =~ /(nan|inf)/i)) {
 			$query{$key} = 0;
@@ -428,7 +427,7 @@ sub SetIfModifiedSince {
 	}
 
 	return $result;
-}    
+}
 
 #----------------------------------------
 # エンティティタグの照合

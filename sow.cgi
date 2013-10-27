@@ -16,6 +16,8 @@ my @t = times();
 $t[0] = $t[0] + $t[1];
 
 use strict;
+use warnings;
+use CGI::Carp qw(fatalsToBrowser);
 
 srand; # 乱数値の初期化
 
@@ -113,9 +115,6 @@ sub TaskBranch {
 		# ユーザー情報編集
 		require "$dirlib/cmd_editprof.pl";
 		&SWCmdEditProfile::CmdEditProfile($sow);
-	} elsif ($cmd eq 'facevote') {
-		require "$dirlib/cmd_facevote.pl";
-		&SWCmdFaceVote::CmdFaceVote($sow);
 	} elsif ($sow->{'query'}->{'prof'} ne '') {
 		# ユーザー情報表示
 		require "$dirlib/cmd_profile.pl";
@@ -188,6 +187,10 @@ sub TaskBranch {
 		# 村を点呼します。
 		require "$dirlib/cmd_muster.pl";
 		&SWCmdMuster::CmdMuster($sow);
+	} elsif ($cmd eq 'gamemaster') {
+		# 状態変更
+		require "$dirlib/cmd_gamemaster.pl";
+		&SWCmdGameMaster::CmdGameMaster($sow);
 	} elsif ($cmd eq 'writepr') {
 		# 発言プレビュー表示
 		require "$dirlib/cmd_writepr.pl";
@@ -204,10 +207,6 @@ sub TaskBranch {
 		# 発言
 		require "$dirlib/cmd_write.pl";
 		&SWCmdWrite::CmdWrite($sow);
-	} elsif ($cmd eq 'editmes') {
-		# 発言修正
-		require "$dirlib/cmd_editmes.pl";
-		&SWCmdEditMes::CmdEditMes($sow);
 	} elsif ($cmd eq 'cancel') {
 		# 発言撤回
 		require "$dirlib/cmd_cancel.pl";
@@ -229,7 +228,7 @@ sub TaskBranch {
 		&CheckValidityStart($sow);
 		require "$dirlib/cmd_start.pl";
 		&SWCmdStartSession::CmdStartSession($sow);
-	} elsif (($cmd eq 'vote') || ($cmd eq 'role') || ($cmd eq 'gift')){
+	} elsif (($cmd eq 'entrust') || ($cmd eq 'vote') || ($cmd eq 'role') || ($cmd eq 'gift')){
 		# 投票／能力対象設定
 		require "$dirlib/cmd_vote.pl";
 		&SWCmdVote::CmdVote($sow);
@@ -324,8 +323,8 @@ sub TaskBranch {
 		&CheckValidityUpdate($sow);
 		require "$dirhtml/html_dialog.pl";
 		&SWHtmlDialog::OutHTMLDialog($sow);
-	} elsif (($cmd eq 'spec') 
-	       ||($cmd eq 'changelog') 
+	} elsif (($cmd eq 'spec')
+	       ||($cmd eq 'changelog')
 	       ||($cmd eq 'howto')
 	       ||($cmd eq 'operate')
 	       ||($cmd eq 'prohibit')
@@ -334,8 +333,8 @@ sub TaskBranch {
 	       ||($cmd eq 'rolematrix')
 	       ||($cmd eq 'rolelist')
 	       ||($cmd eq 'roleaspect')
-	       ||($cmd eq 'trsdiff')   
-	       ||($cmd eq 'trslist')   
+	       ||($cmd eq 'trsdiff')
+	       ||($cmd eq 'trslist')
 	       ){
 		# 遊び方／ルール／概略の表示
 		require "$dirhtml/html_doc.pl";
@@ -426,8 +425,8 @@ sub InstallCheck {
 Content-Type: text/html; charset=Shift_JIS
 Content-Style-Type: text/css
 
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html lang="ja">
+<!doctype html>
+<html lang="ja" ng-controller="CGI">
 <head>
   <meta name="robots" content="noindex,nofollow">
   <meta name="robots" content="noarchive">

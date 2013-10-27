@@ -46,6 +46,7 @@ sub getdatalabel {
 		'saidpoint',
 		'countinfosp',
 		'countthink',
+		'entrust1',
 		'vote1',
 		'vote2',
 		'role1',
@@ -53,6 +54,7 @@ sub getdatalabel {
 		'gift1',
 		'gift2',
 		'entrust',
+		'entrusted',
 		'bonds',
 		'love',
 		'pseudobonds',
@@ -89,6 +91,8 @@ sub createpl {
 	$self->{'rolesubid'}    = -1;
 	$self->{'jobname'}      = '';
 	$self->{'entrust'}      = 0;
+	$self->{'entrusted'}    = 1;
+	$self->{'entrust1'}     = 0;
 	$self->{'vote1'}        = 0;
 	$self->{'vote2'}        = 0;
 	$self->{'role1'}        = 0;
@@ -210,8 +214,9 @@ sub setInitTarget {
 	my $trusttarget = 0;
 	if ( $self->issensible() ){
 		$trusttarget = 1 if (($vil->{'turn'} > 1)&&($self->iskiller($targethd)));
-		$trusttarget = 1 if (($targethd eq 'role')&&($self->{'role'} eq $sow->{'ROLEID_SNATCH'}));
-		$trusttarget = 1 if (($targethd eq 'role')&&($self->{'role'} eq $sow->{'ROLEID_WITCH' }));
+		$trusttarget = 1 if (($targethd eq 'role')&&($self->{'role'} == $sow->{'ROLEID_SNATCH'   }));
+		$trusttarget = 1 if (($targethd eq 'role')&&($self->{'role'} == $sow->{'ROLEID_WITCH'    }));
+		$trusttarget = 1 if (($targethd eq 'role')&&($self->{'role'} == $sow->{'ROLEID_WALPURGIS'}));
 	}
 #	$trusttarget = 0;
 
@@ -223,7 +228,6 @@ sub setInitTarget {
 	}
 	if ($trusttarget == 1){
 		$self->{$targetid} = $sow->{'TARGETID_TRUST'}; # おまかせ
-		$sow->{'debug'}->writeaplog($sow->{'APLOG_OTHERS'}, "ChangeTarget UNDEF (Wolf): $self->{'uid'}($self->{'pno'})=$self->{$targetid}");
 	}
 	if ($trusttarget == 2){
 		$self->{$targetid} = $self->{'pno'};
@@ -393,20 +397,20 @@ sub zap {
 sub getbondlist {
 	my ($self) = @_;
 	my $bonds = $self->{'bonds'};
-	
+
 	return  split('/', $bonds );
 }
 sub getpseudobondlist {
 	my ($self) = @_;
 	my $bonds = $self->{'pseudobonds'};
-	
+
 	return  split('/', $bonds );
 }
 
 sub getallbondlist {
 	my ($self) = @_;
 	my $bonds = join('/', ($self->{'bonds'},$self->{'pseudobonds'}) );
-	
+
 	return  split('/', $bonds );
 }
 
@@ -430,6 +434,7 @@ sub gettargetlist {
 #	$abstain = 0 if (($vil->{'debug'} == 1 ));
 	# 投票にはお任せを認めない。
 	$abstain = 0 if (($cmd eq 'vote'));
+	$abstain = 0 if (($cmd eq 'entrust'));
 	if (($cmd eq 'role')&&($turn == 1)){
 	# １日目、弟子、悪戯妖精、襲撃にはお任せを認めない。
 		$abstain = 0 if (($self->{'role'} == $sow->{'ROLEID_PASSION'}  ));
@@ -454,12 +459,13 @@ sub gettargetlist {
 			pno     => $sow->{'TARGETID_TRUST'},
 		);
 		push(@targetlist, \%target);
-	} 
+	}
 
 	# 能力使用日以外は、パス以外選べない。
-	return \@targetlist if (($cmd eq 'vote')&&($self->isEnableVote($turn) == 0));
-	return \@targetlist if (($cmd eq 'role')&&($self->isEnableRole($turn) == 0));
-	return \@targetlist if (($cmd eq 'gift')&&($self->isEnableGift($turn) == 0));
+	return \@targetlist if (($cmd eq 'entrust')&&($self->isEnableVote($turn) == 0));
+	return \@targetlist if (($cmd eq 'vote'   )&&($self->isEnableVote($turn) == 0));
+	return \@targetlist if (($cmd eq 'role'   )&&($self->isEnableRole($turn) == 0));
+	return \@targetlist if (($cmd eq 'gift'   )&&($self->isEnableGift($turn) == 0));
 
 	# 自覚のない場合、特別扱い処理はしない。
 	# 少女の能力の場合
@@ -516,10 +522,14 @@ sub gettargetlist {
 			next if ($livepl->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'});
 			next if ($livepl->{'pno'} eq $self->{'pno'});
 		} elsif ($cmd eq 'role'){
-			if ($self->{'role'} == $sow->{'ROLEID_WITCH'}) {
+			if (($self->{'role'} == $sow->{'ROLEID_WITCH' })
+			  ||($self->{'role'} == $sow->{'ROLEID_WALPURGIS' })) {
 				next if ( $self->isDisableState('MASKSTATE_ABI_ROLE') );
 				next if (($self->isDisableState('MASKSTATE_ABI_LIVE') )&&($livepl->{'live'} ne 'live'));
 				next if (($self->isDisableState('MASKSTATE_ABI_KILL') )&&($livepl->{'live'} eq 'live'));
+				next if (($livepl->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'})); # ダミーは投薬の対象にしない。
+			} elsif ($self->{'role'} == $sow->{'ROLEID_TANGLE'}) {
+				next if ($livepl->{'live'} eq 'live');
 				next if (($livepl->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'})); # ダミーは投薬の対象にしない。
 			}else{
 				next if ($livepl->{'live'} ne 'live');
@@ -534,11 +544,15 @@ sub gettargetlist {
 			if (($self->{'role'} == $sow->{'ROLEID_TRICKSTER'})
 			  ||($self->{'role'} == $sow->{'ROLEID_LOVEANGEL'})
 			  ||($self->{'role'} == $sow->{'ROLEID_HATEDEVIL'})) {
-				next if ($livepl->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'}); # ピクシーの対象にはダミーキャラを含まない
-			} elsif ($self->{'role'} == $sow->{'ROLEID_BITCH'}){
-				next if ($livepl->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'}); # ピクシーの対象にはダミーキャラを含まない
+				# ピクシーの対象にはダミーキャラを含まない
+				next if ($livepl->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'});
+			} elsif (($self->{'role'} == $sow->{'ROLEID_BITCH' })
+				   ||($self->{'role'} == $sow->{'ROLEID_TANGLE'})){
+				# 遊び人、怨霊の対象にはダミー、自分自身を含まない。
+				next if ($livepl->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'});
 				next if (($livepl->{'uid'} eq $self->{'uid'}));
 			} else {
+				# 以外では、対象に自分自身を含まない。
 				next if (($livepl->{'uid'} eq $self->{'uid'}));
 			}
 		}
@@ -549,22 +563,24 @@ sub gettargetlist {
 				next if ( $self->isDisableState('MASKSTATE_ABI_GIFT') );
 			}
 		}
-		if (($cmd eq 'vote')) {
+		if (($cmd eq 'vote') or ($cmd eq 'entrust')) {
 			next if (($vil->{'scapegoat'} > 0)
                    &&($livepl->{'pno'} != $vil->{'scapegoat'})
                    &&($self->{'pno'}   != $vil->{'scapegoat'})
                    );
+			next if ( $livepl->isDisableState('MASKSTATE_VOTE_TARGET') );
 			next if ( $livepl->{'live'} ne 'live');
 			next if ( $livepl->{'uid'}  eq $self->{'uid'});
 			# 委任の時は自分が選べたら困る。とかあるので。
 			# 最も安易に、自殺票のときは選択肢に「*」をつけない。
 		}
-		
+
 		# それが襲撃フォームなら
 		if ( $self->iskiller($cmd) ) {
 			next if (($turn == 1) && ($livepl->{'uid'} ne $sow->{'cfg'}->{'USERID_NPC'})); # １日目の襲撃対象はダミーキャラのみ
 			my $knight = 0;
 			$knight = 1	if ($vil->{'game'} eq 'TROUBLE');
+			$knight = 1	if ($vil->{'game'} eq 'SECRET');
 			$knight = 1 if (($cmd eq 'role')&&($self->{'role'} == $sow->{'ROLEID_HEADLESS'}));
 			if (0 == $knight){
 				next if ( $livepl->{'role'} == $sow->{'ROLEID_MIMICRY'}); # 擬狼妖精は除外
@@ -589,7 +605,7 @@ sub gettargetlist {
 			pno     => $sow->{'TARGETID_TRUST'},
 		);
 		push(@targetlist, \%target);
-	} 
+	}
 	return \@targetlist;
 }
 
@@ -615,7 +631,7 @@ sub gettargetlistwithrandom {
 	}
 
 	# １日目の襲撃対象はダミーキャラのみ
-	$randomtarget = 0 if (($self->iskiller($cmd))&&($turn == 1)); 
+	$randomtarget = 0 if (($self->iskiller($cmd))&&($turn == 1));
 	if ($randomtarget > 0) {
 		my %randomtarget = (
 			chrname => $sow->{'textrs'}->{'RANDOMTARGET'},
@@ -667,7 +683,7 @@ sub getText {
 	my $chrname = $self->getchrname();
 	my $result  = $vil->getText($text);
 	$result =~ s/_NAME_/$chrname/;
-	
+
 	return $result;
 }
 
@@ -677,7 +693,7 @@ sub getTextByID {
 	my $chrname = $self->getchrname();
 	my $result  = $vil->getTextByID($text,$id);
 	$result =~ s/_NAME_/$chrname/;
-	
+
 	return $result;
 }
 
@@ -692,20 +708,52 @@ sub getsaybuttonlabel {
 	return $buttonlabel;
 }
 
+sub getchoice {
+	my ($self, $cmd) = @_;
+	my $sow = $self->{'sow'};
+	my $vil = $self->{'vil'};
+
+    my $choice = '';
+	if      ( $cmd eq 'entrust'){
+		$choice = "* " if( 0 != $self->{'entrust'});
+		return $choice;
+
+	} elsif ( $cmd eq 'vote' ){
+		$choice = "* " if( 0 == $self->{'entrust'});
+		return $choice;
+	} elsif ( $cmd eq 'role' ){
+		$choice = "* ";
+		return $choice ;
+	} elsif ( $cmd eq 'gift' ){
+		$choice = "* ";
+		return $choice ;
+	} else {
+		return "";
+	}
+	return $votelabel;
+}
+
 sub getlabel {
 	my ($self, $cmd) = @_;
 	my $sow = $self->{'sow'};
 	my $vil = $self->{'vil'};
 
-	my $votelabel = "";
-	if ( $cmd eq 'role' ){
+	if      ( $cmd eq 'entrust'){
+		return $sow->{'textrs'}->{'VOTELABELS'}->[1] ;
+
+	} elsif ( $cmd eq 'vote' ){
+		return $sow->{'textrs'}->{'VOTELABELS'}->[0] ;
+	} elsif ( $cmd eq 'role' ){
 		if ( $self->issensible() ){
-			$votelabel =  $sow->{'textrs'}->{'ABI_ROLE'}->[$self->{'role'}] ;
+			return $sow->{'textrs'}->{'ABI_ROLE'}->[$self->{'role'}] ;
 		} else {
-			$votelabel =  $sow->{'textrs'}->{'ABI_ROLE'}->[0] ;
+			return $sow->{'textrs'}->{'ABI_ROLE'}->[0] ;
 		}
+	} elsif ( $cmd eq 'gift' ){
+		return $sow->{'textrs'}->{'ABI_GIFT'}->[$self->{'gift'}];
+	} else {
+		return "";
 	}
-	$votelabel =  $sow->{'textrs'}->{'ABI_GIFT'}->[$self->{'gift'}]  if ( $cmd eq 'gift' );
 	return $votelabel;
 }
 
@@ -716,10 +764,11 @@ sub gettargetlabel {
 	my ($self, $cmd, $turn) = @_;
 	my $sow = $self->{'sow'};
 	my $vil = $self->{'vil'};
-	my $targetlabel = '';
 	my $abi_vote = $sow->{'textrs'}->{'VOTELABELS'};
 	my $abi_role = $sow->{'textrs'}->{'ABI_ROLE'};
 	my $abi_gift = $sow->{'textrs'}->{'ABI_GIFT'};
+
+	my $targetlabel = '';
 
 	# 投票について。
 	if ($vil->{'riot'} == $turn) {
@@ -754,6 +803,8 @@ sub setfriends {
 	my $sense_sympathy = $vil->getrolepllist($sow->{'ROLEID_SYMPATHY'});
 	my $sense_bat      = $vil->getrolepllist($sow->{'ROLEID_BAT'});
 	my $sense_fanatic  = $vil->getrolepllist($sow->{'ROLEID_FANATIC'});
+	my $sense_mob      = $vil->getmobpllist();
+
 	# 共有者処理
 	if( $self->{'role'} == $sow->{'ROLEID_FM'} ){
 		$self->result_friend('RESULT_MEMBER', $sense_fm);
@@ -764,16 +815,17 @@ sub setfriends {
 		$self->result_friend('RESULT_MEMBER', $sense_fm);
 		$self->result_friend('RESULT_MEMBER', $sense_sympathy);
 	}
-	# 蝙蝠処理
-#	if( $self->iscursed('role')+$self->iscursed('gift') ){
-#		$self->result_friend('RESULT_BAT', $sense_bat);
-#	}
 
 	# 狂信者処理
 	if( ( $self->iskiller('role')+$self->iskiller('gift') )
 	  ||( $self->{'role'} == $sow->{'ROLEID_RIGHTWOLF'}   )
 	  ||( $self->{'role'} == $sow->{'ROLEID_MIMICRY'}     ) ){
 		$self->result_friend('RESULT_FANATIC', $sense_fanatic);
+	}
+
+	# 黒幕にむけて、全員が気配を発する。
+	if($vil->{'mob'} eq 'gamemaster'){
+		$self->result_friend('RESULT_SECRET', $sense_mob);
 	}
 }
 
@@ -782,22 +834,27 @@ sub result_friend {
 	my $sow = $self->{'sow'};
 	my $textrs = $sow->{'textrs'};
 	my $rolename = $textrs->{'ROLENAME'};
+	my $giftname = $textrs->{'GIFTNAME'};
 
 	my $chrrole = $rolename->[$self->{'role'}];
+	my $chrrolegift = $chrrole;
+	$chrrolegift .= "、" . $giftname->[$self->{'gift'}] if ($self->{'gift'} >= $sow->{'SIDEST_DEAL'});
+
 	my $sense;
 	foreach $sense (@$senses) {
 		next if ($self->{'uid'} eq $sense->{'uid'});
 		next if ( $self->isDisableState('MASKSTATE_ABI_ROLE') );
 		# センサー持ちはすべて役職なので、これでいい。
 		my $result  = $self->getText($basetext);
-		$result =~ s/_RESULT_/$chrrole/g;
+		$result =~ s/_ROLE_/$chrrole/g;
+		$result =~ s/_ROLEGIFT_/$chrrolegift/g;
 		$sense->{'history'} .= "$result<br>";
 	}
 }
 
 sub rolemessage {
 	my ($self, $mes) = @_;
-	
+
 	my $sow = $self->{'sow'};
 	my $vil = $self->{'vil'};
 	my $textrs = $sow->{'textrs'};
@@ -848,7 +905,7 @@ sub win_if {
 
 sub win_visible {
 	my ($self) = @_;
-	
+
 	my $winner = $self->win_if();
 	$winner = 'WIN_LOVER'    if ( $self->{'pseudolove'} eq 'love' );
 	$winner = 'WIN_HATER'    if ( $self->{'pseudolove'} eq 'hate' );
@@ -864,6 +921,7 @@ sub winresult {
 	my $isdeadlose = 0;
 	$isdeadlose = 1 if ('LIVE_TABULA'       eq $vil->{'game'});
 	$isdeadlose = 1 if ('LIVE_MILLERHOLLOW' eq $vil->{'game'});
+	$isdeadlose = 1 if ('SECRET'            eq $vil->{'game'});
 	$isdeadlose = 1 if (('TROUBLE'          eq $vil->{'game'})&&($win_if eq 'WIN_HUMAN'));
 	$isdeadlose = 1 if (($win_if eq 'WIN_LONEWOLF'));
 	$isdeadlose = 1 if (($win_if eq 'WIN_PIXI'    ));
@@ -898,6 +956,17 @@ sub winmessage {
 	return $winmes;
 }
 
+sub ispowerlessgrave {
+	my ($self, $vil) = @_;
+	my $sow = $self->{'sow'};
+
+	my $result = 1;
+	$result = 0 if ($vil->isepilogue());
+	$result = 0 if ($self->{'live'} eq 'live');
+	$result = 0 if ($self->{'role'} eq $sow->{'ROLEID_WALPURGIS'});
+	return $result;
+}
+
 sub ischeckedday {
 	my ($self,$turn,$target) = @_;
 	my @eclipse = split('/', $self->{$target});
@@ -924,7 +993,7 @@ sub ishappy {
 		my $pllist = $vil->getpllist();
 		foreach $target (@$pllist) {
 			# 生きている？
-			next if ($target->{'live'} eq 'live'); 
+			next if ($target->{'live'} eq 'live');
 			# 絆がない？
 			my @target_bonds = $self->getbondlist();
 			next if ( 0 == grep{$_ == $self->{'pno'}} @target_bonds );
@@ -932,16 +1001,16 @@ sub ishappy {
 			$happy = 0;
 		}
 	}
-	
+
 	return $happy;
 }
 
 sub getvisiblelovestate {
 	my ($self) = @_;
-	
+
 	my $lovestate       = $self->{'love'};
 	my $pseudolovestate = $self->{'pseudolove'};
-	
+
 	$lovestate = $pseudolovestate if( $pseudolovestate ne '' );
 	return $lovestate;
 }
@@ -953,7 +1022,7 @@ sub getvisiblelovestate {
 sub getvisiblebonds {
 	my ($self,$vil) = @_;
 	my @pllist;
-	
+
 	my $self_bondlist = join('/', ($self->{'bonds'},$self->{'pseudobonds'}));
 	if ($self_bondlist ne '') {
 		my @bonds = split('/', $self_bondlist );
@@ -1004,24 +1073,52 @@ sub isbindgift {
 # その役職能力が可能か。
 #----------------------------------------
 
-sub iscanrole {
+sub isactive {
+	my ($self) = @_;
+	my $sow = $self->{'sow'};
+	my $isok = 0;
+
+	if ($self->{'live'} eq 'live'){
+		$isok = 1;
+	} else {
+		$isok = 1 if ($self->{'role'} == $sow->{'ROLEID_WALPURGIS'});
+	}
+	return $isok;
+}
+
+sub iscanrole_or_dead {
 	my ($self,$roleid) = @_;
 	my $sow = $self->{'sow'};
-	my $isok = 1;
-	$isok = 0 if ( $self->{'role'} != $roleid  );
-	$isok = 0 if ( $self->isDisableState('MASKSTATE_HURT')      && ($roleid == $sow->{'ROLEID_ELDER'})   );
-	$isok = 0 if ( $self->isDisableState('MASKSTATE_HURT')      && ($roleid == $sow->{'ROLEID_WEREDOG'}) );
+
+	my $isok = ($self->{'role'} == $roleid);
+	$isok = 0 if ( $self->isDisableState('MASKSTATE_HURT') && ($roleid == $sow->{'ROLEID_ELDER'})    );
+	$isok = 0 if ( $self->isDisableState('MASKSTATE_HURT') && ($roleid == $sow->{'ROLEID_WEREDOG'})  );
 	$isok = 0 if ( $self->isDisableState('MASKSTATE_ZOMBIE') );
 	$isok = 0 if ( $self->isDisableState('MASKSTATE_ABI_ROLE') );
+	return $isok;
+}
+
+sub iscanrole {
+	my ($self,$roleid) = @_;
+	my $isok = $self->isactive();
+	$isok = 0 if ( 0 == $self->iscanrole_or_dead($roleid));
+	return $isok;
+}
+
+sub iscangift_or_dead {
+	my ($self,$giftid) = @_;
+	my $sow = $self->{'sow'};
+
+	my $isok = ($self->{'gift'} == $giftid);
+	$isok = 0 if ( $self->isDisableState('MASKSTATE_ZOMBIE') );
+	$isok = 0 if ( $self->isDisableState('MASKSTATE_ABI_GIFT') );
 	return $isok;
 }
 
 sub iscangift {
 	my ($self,$giftid) = @_;
 	my $isok = 1;
-	$isok = 0 if ( $self->{'gift'} != $giftid  );
-	$isok = 0 if ( $self->isDisableState('MASKSTATE_ZOMBIE') );
-	$isok = 0 if ( $self->isDisableState('MASKSTATE_ABI_GIFT') );
+	$isok = 0 if ( 0 == $self->iscangift_or_dead($giftid));
 	return $isok;
 }
 
@@ -1044,6 +1141,7 @@ sub rolesayswitch {
 	$sayswitch = '' if ($self->{'role'} < 1);
 	return $sayswitch if ($listen);
 	# しゃべる場合の条件
+	$sayswitch = '' if (($sayswitch eq 'wolf')&&($vil->{'game'} eq 'SECRET'));
 	$sayswitch = '' if (($sayswitch eq 'wolf')&&($vil->{'game'} eq 'TROUBLE'));
 	$sayswitch = '' if  ( $self->isDisableState('MASKSTATE_ABI_ROLE') );
 	return $sayswitch;
@@ -1056,6 +1154,7 @@ sub giftsayswitch {
 	$sayswitch = '' if ($self->{'gift'} < 1);
 	return $sayswitch if ($listen);
 	# しゃべる場合の条件
+	$sayswitch = '' if (($sayswitch eq 'wolf')&&($vil->{'game'} eq 'SECRET'));
 	$sayswitch = '' if (($sayswitch eq 'wolf')&&($vil->{'game'} eq 'TROUBLE'));
 	$sayswitch = '' if  ( $self->isDisableState('MASKSTATE_ABI_GIFT') );
 	return $sayswitch;
@@ -1097,12 +1196,12 @@ sub iskiller {
 	                                &&( $self->{'role'}  < $sow->{'SIDEED_WOLFSIDE'} ));
 	return $iskill;
 }
+
 sub cankiller {
 	my ($self) = @_;
 	my $cankillrole = ($self->iskiller('role'))&&($self->isEnableState('MASKSTATE_ABI_ROLE'));
 	my $cankillgift = ($self->iskiller('gift'))&&($self->isEnableState('MASKSTATE_ABI_GIFT'));
 	return ( $cankillrole || $cankillgift );
-	
 }
 
 
@@ -1166,9 +1265,9 @@ sub ishuman {
 	return 0 if ( $self->{'gift'} == $sow->{'GIFTID_OGRE'}  );
 	return 0 if ( $self->{'gift'} == $sow->{'GIFTID_FAIRY'} );
 	my $result = 0;
-	$result = 1 if (                   $sow->{'SIDEST_HUMANSIDE'} <= $self->{'role'} 
+	$result = 1 if (                   $sow->{'SIDEST_HUMANSIDE'} <= $self->{'role'}
 	              && $self->{'role'} < $sow->{'SIDEED_HUMANSIDE'} );
-	$result = 1 if (                   $sow->{'SIDEST_ENEMY'}     <= $self->{'role'} 
+	$result = 1 if (                   $sow->{'SIDEST_ENEMY'}     <= $self->{'role'}
 	              && $self->{'role'} < $sow->{'SIDEED_ENEMY'} );
 	return $result;
 }
@@ -1200,7 +1299,7 @@ sub iswolf {
 	return 2 if ( $self->{'gift'} == $sow->{'GIFTID_OGRE'}  );
 	return 0 if ( $self->{'gift'} == $sow->{'GIFTID_FAIRY'} );
 	my $result = 0;
-	$result = 1 if (                   $sow->{'SIDEST_WOLFSIDE'} <= $self->{'role'} 
+	$result = 1 if (                   $sow->{'SIDEST_WOLFSIDE'} <= $self->{'role'}
 	              && $self->{'role'} < $sow->{'SIDEED_WOLFSIDE'} );
 	$result = 1 if ( $self->{'role'} == $sow->{'ROLEID_LONEWOLF'} );
 	return $result;
@@ -1217,7 +1316,7 @@ sub ispixi {
 	return 0 if ( $self->{'gift'} == $sow->{'GIFTID_OGRE'}  );
 	return 2 if ( $self->{'gift'} == $sow->{'GIFTID_FAIRY'} );
 	my $result = 0;
-	$result = 1 if (                   $sow->{'SIDEST_PIXISIDE'} <= $self->{'role'} 
+	$result = 1 if (                   $sow->{'SIDEST_PIXISIDE'} <= $self->{'role'}
 	              && $self->{'role'} < $sow->{'SIDEED_PIXISIDE'} );
 	return $result;
 }
@@ -1316,6 +1415,9 @@ sub isEnableRole {
 	return 0 if ($self->isDisableState('MASKSTATE_ABI_ROLE'));
 	return 0 if ($abi_role->[$self->{'role'}] eq '');
 	my $result = 1;
+	$result = 0 if (($self->{'role'} == $sow->{'ROLEID_WALPURGIS'}) && ($self->{'live'} eq 'live'));
+	$result = 0 if (($self->{'role'} == $sow->{'ROLEID_WALPURGIS'}) && ($turn == 1));
+
 	$result = 0 if (($self->{'role'} == $sow->{'ROLEID_GIRL'}) && ($turn == 1));
 	$result = 0 if (($self->{'role'} == $sow->{'ROLEID_WITCH'}) && ($turn == 1));
 	$result = 0 if (($self->{'role'} == $sow->{'ROLEID_GUARD'})  && ($turn == 1));
@@ -1359,13 +1461,19 @@ sub isAim {
 	my $that_is_dead = !($that_is_live);
 	if  ($cfg->{'ENABLED_MOB_AIMING'}){
 		# 見物人内緒話ONなら
+		# 　黒幕見物人は見物人扱い。死者扱い。生者扱い。
 		# 　舞台見物人は見物人扱い。死者扱い。生者扱い。
 		# 　裏方見物人は見物人扱い。死者扱い。
 		# 　客席、陪審は見物人扱い。
 		$this_is_live = 1 if ($this_is_mob && ($vil->{'mob'} eq 'alive'));
+		$this_is_live = 1 if ($this_is_mob && ($vil->{'mob'} eq 'gamemaster'));
+
 		$that_is_live = 1 if ($that_is_mob && ($vil->{'mob'} eq 'alive'));
+		$that_is_live = 1 if ($that_is_mob && ($vil->{'mob'} eq 'gamemaster'));
+
 		$this_is_dead = 0 if ($this_is_mob && ($vil->{'mob'} eq 'juror'));
 		$this_is_dead = 0 if ($this_is_mob && ($vil->{'mob'} eq 'visiter'));
+
 		$that_is_dead = 0 if ($that_is_mob && ($vil->{'mob'} eq 'juror'));
 		$that_is_dead = 0 if ($that_is_mob && ($vil->{'mob'} eq 'visiter'));
 	} else {
@@ -1429,6 +1537,7 @@ sub setvote_to {
 sub setentrust {
 	my($curpl,$sow,$vil) = @_;
 	my $setentrust = 1;
+	$setentrust = 0 if (($vil->{'entrust'} != 1));
 	$setentrust = 0 if (($vil->{'mob'} eq 'juror'));
 	$setentrust = 0 if (($vil->{'scapegoat'} > 0));
 	$setentrust = 0 if (($vil->{'event'} == $sow->{'EVENTID_APRIL_FOOL'})&&( 0 < $curpl->getallbondlist() ));
@@ -1610,6 +1719,7 @@ sub GetMesType {
 	} else {
 		if (0 <= $query->{'target'}) {
 						$targetpl = $vil->getplbypno( $query->{'target'} ) ;
+						$targetpl = $writepl if (0 == $writepl->isAim($targetpl));
 		}
 		if      (($query->{'admin'} ne '')) {
 						# 管理人発言
@@ -1711,7 +1821,7 @@ sub GetMesType {
 			}
 		}
 	}
-	
+
 	$cost = 'none'  if ($vil->isfreecost());
 
 	return ($mestype, $saytype, $pttype, $modified, $que, $writepl, $targetpl, $chrname, $cost);
@@ -1748,7 +1858,7 @@ sub isLogPermition {
 		                                                    && ($log->{'mestype'} == $sow->{'MESTYPE_GSAY'}));
 		}
 		# 降霊会
-		$logpermit = $overhear if (($vil->isseance($sow->{'turn'})) 
+		$logpermit = $overhear if (($vil->isseance($sow->{'turn'}))
 		                                                    && ($log->{'mestype'} == $sow->{'MESTYPE_GSAY'}));
 		# ささやき
 		$logpermit = 1 if (($wisperrole eq 'wolf')          && ($log->{'mestype'} == $sow->{'MESTYPE_WSAY'}));
@@ -1765,40 +1875,43 @@ sub isLogPermition {
 	if      (($self->{'live'} eq 'mob')) {
 		$logpermit = 1 if (                                    ($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})); # 見物人
 		$logpermit = 1 if (($vil->{'mob'} eq 'grave')       && ($log->{'mestype'} == $sow->{'MESTYPE_GSAY'})); # 見物人から墓下が見えるのは、
-		$logpermit = 1 if (($vil->{'mob'} eq 'alive')       && ($log->{'mestype'} == $sow->{'MESTYPE_GSAY'})); # 舞台、裏方、のとき。
+		$logpermit = 1 if (($vil->{'mob'} eq 'alive')       && ($log->{'mestype'} == $sow->{'MESTYPE_GSAY'})); # 舞台、裏方、黒幕のとき。
+		$logpermit = 1 if (($vil->{'mob'} eq 'gamemaster')  && ($log->{'mestype'} == $sow->{'MESTYPE_GSAY'})); # 
+		$logpermit = 1 if (($vil->{'mob'} eq 'gamemaster')  && ($log->{'mestype'} == $sow->{'MESTYPE_INFOWOLF'})); # 黒幕
+		$logpermit = 1 if (($vil->{'mob'} eq 'gamemaster')  && ($log->{'mestype'} == $sow->{'MESTYPE_INFOSP'}));   # 黒幕
 	} elsif (($self->{'live'} ne 'live')) {
 		$logpermit = 1 if (                                    ($log->{'mestype'} == $sow->{'MESTYPE_GSAY'})); # うめき
 		$logpermit = 1 if (($vil->{'mob'} eq 'grave')       && ($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})); # 墓下から見物人見えるのは、裏方のとき。
 	}
 	# 幽界トークでの追加分
 	if($vil->{'undead'}>0){
-		$logpermit = 1 if (($wisperrole eq 'wolf')          && ($log->{'mestype'} == $sow->{'MESTYPE_GSAY'})); 
-		$logpermit = 1 if (($wispergift eq 'wolf')          && ($log->{'mestype'} == $sow->{'MESTYPE_GSAY'})); 
-		$logpermit = 1 if (($wisperrole eq 'pixi')          && ($log->{'mestype'} == $sow->{'MESTYPE_GSAY'})); 
-		$logpermit = 1 if (($wispergift eq 'pixi')          && ($log->{'mestype'} == $sow->{'MESTYPE_GSAY'})); 
-		$logpermit = 1 if (($wisperrole eq 'wolf')          && ($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})&&($vil->{'mob'} eq 'grave')); 
-		$logpermit = 1 if (($wispergift eq 'wolf')          && ($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})&&($vil->{'mob'} eq 'grave')); 
-		$logpermit = 1 if (($wisperrole eq 'pixi')          && ($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})&&($vil->{'mob'} eq 'grave')); 
-		$logpermit = 1 if (($wispergift eq 'pixi')          && ($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})&&($vil->{'mob'} eq 'grave')); 
-		$logpermit = 1 if (($self->{'live'} ne 'live')      && ($log->{'mestype'} == $sow->{'MESTYPE_WSAY'})); 
-		$logpermit = 1 if (($self->{'live'} ne 'live')      && ($log->{'mestype'} == $sow->{'MESTYPE_INFOWOLF'})); 
-		$logpermit = 1 if (($self->{'live'} ne 'live')      && ($log->{'mestype'} == $sow->{'MESTYPE_XSAY'})); 
+		$logpermit = 1 if (($wisperrole eq 'wolf')          && ($log->{'mestype'} == $sow->{'MESTYPE_GSAY'}));
+		$logpermit = 1 if (($wispergift eq 'wolf')          && ($log->{'mestype'} == $sow->{'MESTYPE_GSAY'}));
+		$logpermit = 1 if (($wisperrole eq 'pixi')          && ($log->{'mestype'} == $sow->{'MESTYPE_GSAY'}));
+		$logpermit = 1 if (($wispergift eq 'pixi')          && ($log->{'mestype'} == $sow->{'MESTYPE_GSAY'}));
+		$logpermit = 1 if (($wisperrole eq 'wolf')          && ($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})&&($vil->{'mob'} eq 'grave'));
+		$logpermit = 1 if (($wispergift eq 'wolf')          && ($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})&&($vil->{'mob'} eq 'grave'));
+		$logpermit = 1 if (($wisperrole eq 'pixi')          && ($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})&&($vil->{'mob'} eq 'grave'));
+		$logpermit = 1 if (($wispergift eq 'pixi')          && ($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})&&($vil->{'mob'} eq 'grave'));
+		$logpermit = 1 if (($self->{'live'} ne 'live')      && ($log->{'mestype'} == $sow->{'MESTYPE_WSAY'}));
+		$logpermit = 1 if (($self->{'live'} ne 'live')      && ($log->{'mestype'} == $sow->{'MESTYPE_INFOWOLF'}));
+		$logpermit = 1 if (($self->{'live'} ne 'live')      && ($log->{'mestype'} == $sow->{'MESTYPE_XSAY'}));
 		# 共鳴は墓と会話できない。確定シロだから。
 	}
 
 	# キューの発言は本人のみ。ただし、ＮＰＣ発言は憑依者だけは見ることができる。
-	$logpermit = 1 if (($log->{'target'} eq $self->{'uid'})); 
+	$logpermit = 1 if (($log->{'target'} eq $self->{'uid'}));
 
 	$logpermit = 0 if  ($log->{'mestype'} == $sow->{'MESTYPE_DELETED'});
 	$logpermit = 0 if  ($isque == 1);
 
-	$logpermit = 1 if (($log->{'uid'} eq $self->{'uid'})); 
+	$logpermit = 1 if (($log->{'uid'} eq $self->{'uid'}));
 
 	$logpermit = 1 if ( ($wisperrole eq 'muppet'                       )
 	                  &&($log->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'})
 	                  &&($self->isEnableState('MASKSTATE_ABI_ROLE')    )
 	                  &&($log->{'mestype'} == $sow->{'MESTYPE_MSAY'}   )
-	                  ); 
+	                  );
 
 	return $logpermit;
 }
@@ -1808,5 +1921,186 @@ sub isLogPermition {
 # 目安：役職系のパーミッションはログイン時のみ発生する。
 # 　　　このため、ログインできなくなる、という言い方で
 # 　　　アカウントが怪しくない場合、ここを疑うべき。
+
+
+sub gon_potof {
+	my ($pl, $vil) = @_;
+	my $sow = $vil->{'sow'};
+	my $cfg = $sow->{'cfg'};
+
+    # 発言/独り言/内緒話
+	my ($saycnt,$cost,$unit,$max_line,$max_size) = $vil->getsayptcosts();
+
+	my $is_epi = $vil->isepilogue();
+	my $blined = $is_epi;
+	my $secret = $is_epi;
+	my $showpt = $is_epi;
+	$showpt = $secret = $blined = 1 if ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'});
+	$showpt = $secret = 1 if ($pl->{'uid'} eq $sow->{'uid'});
+	my $showid = $vil->{'showid'} || $secret;
+
+	my $longchrname  = $pl->getlongchrname();
+	my $shortchrname = $pl->getshortchrname();
+	my $actaddpt = 0 + $pl->{'actaddpt'};
+	my $selrole = 0 + $pl->{'selrole'};
+	my $say   = 0 + $pl->{'say'};
+	my $tsay  = 0 + $pl->{'tsay'};
+	my $spsay = 0 + $pl->{'spsay'};
+	my $wsay  = 0 + $pl->{'wsay'};
+	my $gsay  = 0 + $pl->{'gsay'};
+	my $say_act = 0 + $pl->{'say_act'};
+	my $live = $pl->{'live'};
+	my $turn = 0 + $sow->{'turn'};
+
+	if(!$blined){
+		$live = 'victim' if(('executed' ne $live)and('suddendead' ne $live)and('live' ne $live)and('mob' ne $live));
+
+		my $live_from = 'live';
+		$live_from = $sow->{'curpl'}->{'live'} if (defined($sow->{'curpl'}->{'live'}));
+		$showpt = $vil->ispublic($pl);
+		$showpt = 1 if ($live_from ne 'live');
+		# 日蝕
+		$showpt = 0 if ($vil->iseclipse($vil->{'turn'}));
+	}
+
+	print <<"_HTML_";
+var pl = {
+	"turn":    $turn,
+    "pno":     $pl->{'pno'},
+	"csid":    "$pl->{'csid'}",
+	"face_id": "$pl->{'cid'}",
+	"deathday": $pl->{'deathday'},
+	"is_delete": true,
+
+	"name":    "$shortchrname",
+	"jobname": "$pl->{'jobname'}",
+	"longname": "$longchrname",
+	"shortname": "$shortchrname",
+	"clearance": $pl->{'clearance'},
+	"zapcount": $pl->{'zapcount'},
+	"postfix": "$pl->{'postfix'}",
+
+	"live": "$live",
+	"bonds": [],
+	"pseudobonds": [],
+
+	"point":{},
+	"say":{
+		"say": $say
+	}
+};
+_HTML_
+
+	if ($showpt){
+		if ($cost eq 'count'){
+			print <<"_HTML_";
+pl.point = {
+	"actaddpt":  $actaddpt,
+	"saidcount": $pl->{'saidcount'}
+};
+_HTML_
+		} else {
+			print <<"_HTML_";
+pl.point = {
+	"actaddpt":  $actaddpt,
+	"saidcount": $pl->{'saidcount'},
+	"saidpoint": $pl->{'saidpoint'}
+};
+_HTML_
+		}
+	}
+
+	if ($showid ){
+		print <<"_HTML_";
+pl.sow_auth_id = "$pl->{'uid'}";
+_HTML_
+	}
+	if ($secret) {
+		my $win_visible = "";
+		my $win_result  = $pl->winresult();
+		my $role = 0 + $pl->{'role'};
+		my $gift = 0 + $pl->{'gift'};
+
+		my $is_wolf = $pl->iswolf();
+		my $is_pixi = $pl->ispixi();
+		my $is_voter = $pl->isvoter();
+		my $is_canrole = $pl->iscanrole($pl->{'role'});
+		my $is_cangift = $pl->iscangift($pl->{'gift'});
+		my $is_human = $pl->ishuman();
+		my $is_enemy = $pl->isenemy();
+		my $is_sensible = $pl->issensible();
+		my $is_committer = $pl->iscommitter();
+
+		my $history = $pl->{'history'};
+		&SWHtml::ConvertJSON(\$history);
+
+		my $love = "";
+		my $bonds = "";
+		my $pseudolove = "";
+		my $pseudobonds = "";
+		if ($blined){
+			$win_visible = $pl->win_if();
+			$love = $pl->{'love'};
+			$bonds = $pl->{'bonds'};
+			$pseudolove = $pl->{'pseudolove'};
+			$pseudobonds = $pl->{'pseudobonds'};
+		} else {
+			$win_visible = $pl->win_visible();
+			$love = $pl->getvisiblelovestate();
+			$bonds = $pl->{'pseudobonds'}."/".$pl->{'bonds'};
+			$role = $sow->{'ROLEID_VILLAGER'} if ($pl->{'role'} == $sow->{'ROLEID_RIGHTWOLF'});
+			$role = 0   if (($is_sensible == 0)||($pl->{'role'} == 0));
+		}
+		$bonds =~ s/\//,/g;
+		$pseudobonds =~ s/\//,/g;
+
+		print <<"_HTML_";
+pl.is_canrole = (0 !== $is_canrole);
+pl.is_cangift = (0 !== $is_cangift);
+
+pl.win = {
+	visible: "$win_visible",
+	result:  "$win_result"
+};
+
+pl.live = "$pl->{'live'}";
+pl.role = _.compact([
+	SOW_RECORD.CABALA.roles[$role],
+	SOW_RECORD.CABALA.gifts[$gift]
+]);
+pl.rolestate = $pl->{'rolestate'};
+pl.select = SOW_RECORD.CABALA.roles[$selrole];
+
+pl.history = "$history";
+pl.sheep = "$pl->{'sheep'}";
+pl.overhear = [];
+
+pl.love = "$love";
+pl.bonds = [$bonds];
+pl.pseudolove = "$pseudolove";
+pl.pseudobonds = [$pseudobonds];
+
+pl.is_voter = (0 !== $is_voter);
+pl.is_human = (0 !== $is_human);
+pl.is_enemy = (0 !== $is_enemy);
+pl.is_wolf = (0 !== $is_wolf);
+pl.is_pixi = (0 !== $is_pixi);
+pl.is_sensible = (0 !== $is_sensible);
+pl.is_committer = (0 !== $is_committer);
+pl.say = {
+	"say":   $say,
+	"tsay":  $tsay,
+	"spsay": $spsay,
+	"wsay":  $wsay,
+	"gsay":  $gsay,
+	"say_act": $say_act
+};
+pl.timer = {
+	"entrieddt":    new Date(1000 * $pl->{'entrieddt'}),
+	"limitentrydt": new Date(1000 * $pl->{'limitentrydt'})
+};
+_HTML_
+	}
+}
 
 1;

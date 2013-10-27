@@ -1,9 +1,9 @@
-package SWHtmlVlogPC;
+package SWHtmlVlogJS;
 
 #----------------------------------------
 # 村ログ表示（PCモード）のHTML出力
 #----------------------------------------
-sub OutHTMLVlogPC {
+sub OutHTMLVlogJS {
 	my ($sow, $vil, $maxrow, $logfile, $logs, $logkeys, $logrows, $memofile, $memos, $memokeys, $memorows) = @_;
 	my $pllist = $vil->getpllist();
 
@@ -28,32 +28,7 @@ sub OutHTMLVlogPC {
 	my $modesingle = 0;
 	$modesingle = 1 if (($query->{'logid'} ne '') && ($query->{'move'} ne 'prev') && ($query->{'move'} ne 'next'));
 
-	# ログインHTML
-	$sow->{'html'}->outcontentheader();
-	&SWHtmlPC::OutHTMLLogin($sow) if ($modesingle == 0);
-    &SWHtmlPC::OutHTMLChangeCSS($sow);
-
-	# 見出し（村名とRSS）
-	my $linkrss = " <a href=\"$link$amp". "cmd=rss\">RSS</a>";
-	$linkrss = '' if ($cfg->{'ENABLED_RSS'} == 0);
-
-	print <<"_HTML_";
-<h2>{{story.vid}} {{story.name}} $linkrss</h2>
-<h3>{{subtitle}}</h3>
-<div class="pagenavi form-inline" template="navi/page_navi" ng-show="page"></div>
-<div template="navi/messages" id="messages"></div>
-<div template="navi/forms"></div>
-<hr class="invisible_hr"$net>
-<div class="pagenavi form-inline" template="navi/page_navi" ng-show="page"></div>
-_HTML_
-
-	&SWHtmlSayFilter::OutHTMLHeader   ($sow, $vil);
-
-	# トップページへ戻る
-	&SWHtmlPC::OutHTMLReturnPC($sow) if ($modesingle == 0);
-	$sow->{'html'}->outcontentfooter();
-
-	&SWHtmlPC::OutHTMLGonInit($sow); # ログイン欄の出力
+	&OutHTMLGonInit($sow); # ログイン欄の出力
 	# アナウンス／入力・参加フォーム表示
 	if (($modesingle == 0) && ($sow->{'turn'} == $vil->{'turn'}) && ($logrows->{'end'} > 0)) {
 		&OutHTMLVlogFormArea($sow, $vil, $memofile)
@@ -61,20 +36,19 @@ _HTML_
 	$vil->gon_story();
 	$vil->gon_event();
 	$vil->gon_potofs();
-	require "$cfg->{'DIR_HTML'}/html_vlogsingle_pc.pl";
 
-	# 村ログ表示
-    my $last = "";
-	my $has_all_messages = 0 + ($maxrow < 1);
 	print <<"_HTML_";
-gon.event.is_news = (0 == $has_all_messages);
-gon.event.has_all_messages = (0 != $has_all_messages);
 var mes = {
 	"template": "sow/village_info",
 	"logid": "vilinfo00000"
 };
 gon.event.messages.push(mes);
 _HTML_
+
+	# 村ログ表示
+	require "$cfg->{'DIR_HTML'}/html_vlogsingle_pc.pl";
+    my $last = "";
+	my $has_all_messages = 0 + ($maxrow < 1);
 
 	if (@$memos > 0) {
 		my %memokeys;
@@ -111,15 +85,13 @@ _HTML_
 	}
 
 	print <<"_HTML_";
-var log =  "$last<br />" + ((new Date).format(Date.ISO8601_DATE + '({dow})  {TT}{hh}時{mm}分', 'ja'));
+gon.event.is_news = (0 == $has_all_messages);
+gon.event.has_all_messages = (0 != $has_all_messages);
 var mes = {
 	"template": "sow/log_last",
 	"logid":  "IX99999",
-	"plain": {
-		"text": log
-	},
-	"log": log,
-	"updated_at": new Date
+	"log":   "$last<br />" + ((new Date).format(Date.ISO8601_DATE + '({dow})  {TT}{hh}時{mm}分', 'ja')),
+	"date":  new Date
 };
 gon.event.messages.push(mes);
 </script>
@@ -224,6 +196,33 @@ _HTML_
 		}
 	}
 	return;
+}
+
+sub OutHTMLGonInit {
+  my $sow = $_[0];
+  my $cfg = $sow->{'cfg'};
+  my $uid = $sow->{'uid'};
+  my $path = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}";
+  my $cmdfrom = $query->{'cmd'};
+  my $logined = $sow->{'user'}->logined() + 0;
+  my $expired = $sow->{'time'} + $cfg->{'TIMEOUT_COOKIE'};
+  my $is_admin = ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'}) + 0;
+  my $admin_uri = $path."?cmd=admin" if ($is_admin);
+
+  print <<"_HTML_";
+<script>
+window.gon = \$.extend(true, {}, OPTION.gon);
+gon.form.login = {
+  "cmd": "login",
+  "admin_uri": "$admin_uri",
+  "is_admin": $is_admin,
+  "cmdfrom": "$cmdfrom",
+  "expired": new Date(1000 * $expired),
+  "uidtext": "$uid".replace(" ","&nbsp;"),
+  "uid": "$uid"
+}
+gon.form.uri = "$path";
+_HTML_
 }
 
 #----------------------------------------

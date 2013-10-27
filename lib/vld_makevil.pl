@@ -11,7 +11,7 @@ sub CheckValidityMakeVilSummary {
 
 	require "$sow->{'cfg'}->{'DIR_LIB'}/vld_text.pl";
 	$sow->{'debug'}->raise($sow->{'APLOG_NOTICE'}, "ログインして下さい。", "no login.$errfrom") if ($sow->{'user'}->logined() <= 0);
-	$sow->{'debug'}->raise($sow->{'APLOG_CAUTION'}, "村の作成はできません。", "cannot vmake.$errfrom") if ($sow->{'cfg'}->{'ENABLED_VMAKE'} == 0);
+	$sow->{'debug'}->raise($sow->{'APLOG_CAUTION'}, "村の作成はできません。", "cannot vmake.$errfrom") if (($sow->{'cfg'}->{'ENABLED_VMAKE'} == 0) && ('editvil' ne $query->{'cmd'}));
 
 	&SWValidityText::CheckValidityText($sow, $errfrom, $query->{'vname'}, 'VNAME', 'vname', '村の名前', 1);
 }
@@ -21,6 +21,8 @@ sub CheckValidityMakeVil {
 	my $query = $sow->{'query'};
 	my $debug = $sow->{'debug'};
 	my $errfrom = "[uid=$sow->{'uid'}, cmd=$query->{'cmd'}]";
+
+	my $saycnt = $sow->{'cfg'}->{'COUNTS_SAY'}->{$query->{'saycnttype'}};
 
 	&CheckValidityMakeVilSummary($sow);
 
@@ -46,7 +48,7 @@ sub CheckValidityMakeVil {
 		$sow->{'debug'}->raise($sow->{'APLOG_NOTICE'}, '最低人数は定員以下の人数で入力して下さい。', "too many vplcntstart.$errfrom") if ($query->{'vplcntstart'} > $query->{'vplcnt'});
 	}
 
-	$sow->{'debug'}->raise($sow->{'APLOG_CAUTION'}, '発言制限が未選択です。', "no saycnttype.$errfrom") if ($query->{'saycnttype'} eq ''); # 通常起きない
+	$sow->{'debug'}->raise($sow->{'APLOG_CAUTION'}, '発言制限が未選択です。', "no saycnttype.$errfrom") if (! defined $saycnt); # 通常起きない
 	$sow->{'debug'}->raise($sow->{'APLOG_CAUTION'}, '非対応の参加制限を選択しています。', "invalid entrylimit.$errfrom") if (($query->{'entrylimit'} ne 'free') && ($query->{'entrylimit'} ne 'password')); # 通常起きない
 	&SWValidityText::CheckValidityText($sow, $errfrom, $query->{'entrypwd'}, 'PASSWD', 'entrypwd', '参加パスワード', 1) if ($query->{'entrylimit'} eq 'password');
 
@@ -153,6 +155,7 @@ sub CheckValidityMakeVil {
 	$isdeadlose     = 1 if ('LIVE_TABULA'       eq $query->{'game'});
 	$isdeadlose     = 1 if ('LIVE_MILLERHOLLOW' eq $query->{'game'});
 	$isdeadlose     = 1 if ('TROUBLE'           eq $query->{'game'});
+	$isdeadlose     = 1 if ('SECRET'            eq $query->{'game'});
 	if ( $istabula ){
 		# タブラの人狼特有のチェック
 		if ($wolves *2 + 1 >= ($vplcnt - $pixies )) {
@@ -170,7 +173,7 @@ sub CheckValidityMakeVil {
 		# 「死んだら負け」特有のチェック
 		$sow->{'debug'}->raise($sow->{'APLOG_NOTICE'}, '据え膳は勝利できません。', "DISH can't win. $errfrom") if (0 < $dishes );
 	}
-	
+
 	if ( $ismillerhollow ){
 		# ミラーズホロー特有のチェック
 		$sow->{'debug'}->raise($sow->{'APLOG_NOTICE'}, 'ダミーキャラ以外に、村人は最低 1 人入れてください。', "no villagers. $errfrom") if ($roletable->[$sow->{'ROLEID_VILLAGER'}] < 1);
@@ -180,7 +183,7 @@ sub CheckValidityMakeVil {
 		# 陪審員制度特有のチェック
 		$sow->{'debug'}->raise($sow->{'APLOG_NOTICE'}, '最低 1 人、陪審員を入れてください。', "no Juror. $errfrom") if (0 == $mobs );
 	}
-	
+
 
 	return;
 }

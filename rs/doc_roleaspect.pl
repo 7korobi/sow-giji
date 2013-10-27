@@ -160,17 +160,15 @@ _HTML_
 			my $aura='”\—ÍŽÒ';
 			$aura = '‚È‚µ'  if ($mobpl->{'role'} == $sow->{'ROLEID_VILLAGER'});
 			$aura = '‚È‚µ'  if ($mobpl->{'role'} == $sow->{'ROLEID_WOLF'});
-			$aura = '‚È‚µ' if  ($mobpl->iscanrole(  $sow->{'ROLEID_WHITEWOLF'}));
+			$aura = '‚È‚µ'  if ($mobpl->{'role'} == $sow->{'ROLEID_WHITEWOLF'});
 
-			my $seer_result = 1;
-			# l˜T”»’èB–ðE‚ªl˜TA‰¶Œb‚ªl˜TAˆê•C˜TA˜TŒŒ‘°Bƒ]ƒ“ƒrB‚Ü‚½A”’˜T‚ÍlŠÔ”»’èB
-			$seer_result = 2 if  ($targetpl->iskiller('role')); # l˜T¨—Í
-			$seer_result = 2 if  ($targetpl->iskiller('gift')); # l˜T¨—Í
-			$seer_result = 2 if  ($targetpl->isDisableState('MASKSTATE_ZOMBIE')); # ƒ]ƒ“ƒr‚É‚³‚ê‚Ü‚µ‚½B
-			$seer_result = 2 if  ($targetpl->{'role'} == $sow->{'ROLEID_LONEWOLF'}  );
-			$seer_result = 2 if  ($targetpl->{'role'} == $sow->{'ROLEID_RIGHTWOLF'} );
-			$seer_result = 1 if  ($targetpl->iscanrole(  $sow->{'ROLEID_WHITEWOLF'}));
-			my $seer=('','l','˜T')[$seer_result];
+			my $seer='l';
+			$seer = '˜T' if  ($mobpl->iskiller('role')); # l˜T¨—Í
+			$seer = '˜T' if  ($mobpl->iskiller('gift')); # l˜T¨—Í
+			$seer = '˜T' if  ($mobpl->{'role'} == $sow->{'ROLEID_LONEWOLF'}  );
+			$seer = '˜T' if  ($mobpl->{'role'} == $sow->{'ROLEID_RIGHTWOLF'} );
+			$seer = 'l' if  ($mobpl->iscanrole(  $sow->{'ROLEID_WHITEWOLF'}));
+
 
 			my $rolelnk  =  $cfg->{'URL_ROLE'}.uc($sow->{'ROLEID'}->[$i]);
 			my $giftlnk  =  $cfg->{'URL_GIFT'}.uc($sow->{'GIFTID'}->[$j]);
