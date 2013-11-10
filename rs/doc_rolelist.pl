@@ -300,7 +300,9 @@ _HTML_
 <script>
 window.gon = {};
 gon.form_show = {
-	find: function(o){return true;}
+	memo: true,
+	open: true,
+	action: true
 };
 gon.roles_form = [];
 _HTML_

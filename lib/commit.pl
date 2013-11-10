@@ -499,6 +499,10 @@ sub Deployment{
 		# 一時的状態（この夜のみ有効な内容）をここで初期化。
 		$plsingle->{'tmp_rolestate'} = $plsingle->{'rolestate'};
 		$plsingle->{'tmp_suicide'}   = $sow->{'TARGETID_TRUST'};
+
+		next if ( $plsingle->{'deathday'} ne $vil->{'turn'} );
+		# （主に前日の黒幕のせいで）死んだばかりの人物
+		&nowdead($sow, $vil, 0, $plsingle, $plsingle->{'live'}, $logfile, $score, 0);
 	}
 }
 
