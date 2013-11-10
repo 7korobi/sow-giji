@@ -88,15 +88,19 @@ _HTML_
 	if ($isplok) {
 		print "<option value=\"-1\"$roleselected>$sow->{'textrs'}->{'RANDOMROLE'}$sow->{'html'}->{'option'}";
 		my $rolename = $sow->{'textrs'}->{'ROLENAME'};
-		my ( $rolematrix, $giftmatrix ) = &SWSetRole::GetSetRoleTable($sow, $vil, $vil->{'roletable'}, $vil->{'vplcnt'});
+		if ($vil->{'mob'} eq 'gamemaster'){
+			print "<option value=\"0\">$rolename->[0]\n";
+		} else {
+			my ( $rolematrix, $giftmatrix ) = &SWSetRole::GetSetRoleTable($sow, $vil, $vil->{'roletable'}, $vil->{'vplcnt'});
 
-		my $i;
-		foreach ($i = 0; $i < @{$sow->{'ROLEID'}}; $i++) {
-			my $output = $rolematrix->[$i];
-			$output = 1 if ($i == 0); # おまかせは必ず表示
-			$roleselected = '';
-			$roleselected = " $sow->{'html'}->{'selected'}" if ((defined($query->{'role'})) && ($query->{'role'} == $i));
-			print "<option value=\"$i\"$roleselected>$rolename->[$i]$sow->{'html'}->{'option'}\n" if ($output > 0);
+			my $i;
+			foreach ($i = 0; $i < @{$sow->{'ROLEID'}}; $i++) {
+				my $output = $rolematrix->[$i];
+				$output = 1 if ($i == 0); # おまかせは必ず表示
+				$roleselected = '';
+				$roleselected = " $sow->{'html'}->{'selected'}" if ((defined($query->{'role'})) && ($query->{'role'} == $i));
+				print "<option value=\"$i\"$roleselected>$rolename->[$i]$sow->{'html'}->{'option'}\n" if ($output > 0);
+			}
 		}
 	}
 	if ($ismobok){
