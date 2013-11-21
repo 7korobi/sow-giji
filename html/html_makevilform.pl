@@ -239,26 +239,26 @@ _HTML_
 			if ($sow->{'cfg'}->{'ENABLED_SEQ_EVENT'} > 0) {
 				print <<"_HTML_";
 <dt><label for="seqevent">事件正順</label>
-<dd><input id="seqevent" name="seqevent" type="checkbox" ng-checked="_.include(story.options, 'seq-event')">
+<dd><input id="seqevent" name="seqevent" type="checkbox" ng-checked="story_has_option('seq-event')">
   事件が順序どおりに発生する
 _HTML_
 			}
 			print <<"_HTML_";
 <dt><label for="entrust">委任投票</label>
-<dd><input id="entrust" name="entrust" type="checkbox" ng-checked="_.include(story.options, 'entrust')">
+<dd><input id="entrust" name="entrust" type="checkbox" ng-checked="story_has_option('entrust')">
   委任投票をする
 <dt><label for="noselrole">役職希望</label>
-<dd><input id="noselrole" name="noselrole" type="checkbox" ng-checked="! _.include(story.options, 'select-role')">
+<dd><input id="noselrole" name="noselrole" type="checkbox" ng-checked="! story_has_option('select-role')">
   役職希望を無視する
 <dt><label for="showid">ID公開</label>
-<dd><input id="showid" name="showid" type="checkbox" ng-checked="_.include(story.options, 'show-id')">
+<dd><input id="showid" name="showid" type="checkbox" ng-checked="story_has_option('show-id')">
   プレイヤーIDを公開する
 _HTML_
 			# ランダム対象
 			if ($sow->{'cfg'}->{'ENABLED_RANDOMTARGET'} > 0) {
 				print <<"_HTML_";
 <dt><label for="randomtarget">ランダム</label>
-<dd><input id="randomtarget" name="randomtarget" type="checkbox" ng-checked="_.include(story.options, 'random-target')">
+<dd><input id="randomtarget" name="randomtarget" type="checkbox" ng-checked="story_has_option('random-target')">
   投票・能\力の対象に「ランダム」を含める
 _HTML_
 			}
@@ -266,7 +266,7 @@ _HTML_
 			if ($cfg->{'ENABLED_UNDEAD'} == 1){
 				print <<"_HTML_";
 <dt><label for="undead">幽界トーク</label>
-<dd><input id="undead" name="undead" type="checkbox" ng-checked="_.include(story.options, 'undead-talk')">
+<dd><input id="undead" name="undead" type="checkbox" ng-checked="story_has_option('undead-talk')">
   狼・妖精と死者との間で、会話ができる
 _HTML_
 			}
@@ -274,7 +274,7 @@ _HTML_
 			if ($cfg->{'ENABLED_AIMING'} == 1){
 				print <<"_HTML_";
 <dt><label for="aiming">内緒話</label>
-<dd><input id="aiming" name="aiming" type="checkbox" ng-checked="_.include(story.options, 'aiming-talk')">
+<dd><input id="aiming" name="aiming" type="checkbox" ng-checked="story_has_option('aiming-talk')">
   ふたりだけの内緒話をすることができる
 _HTML_
 			}
