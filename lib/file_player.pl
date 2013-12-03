@@ -410,9 +410,9 @@ sub getpseudobondlist {
 sub getallbondlist {
 	my ($self) = @_;
 	my $bonds = "";
-	$bonds .= $self->{      'bonds'}   if ($self->{      'bonds'});
-	$bonds .= '/' if ($self->{'bonds'} and $self->{'pseudobonds'});
-	$bonds .= $self->{'pseudobonds'}   if ($self->{'pseudobonds'});
+	$bonds .= $self->{      'bonds'} if ("" ne $self->{      'bonds'});
+	$bonds .= '/' if (("" ne $self->{'bonds'}) and ("" ne $self->{'pseudobonds'}));
+	$bonds .= $self->{'pseudobonds'} if ("" ne $self->{'pseudobonds'});
 
 	return  split('/', $bonds );
 }
