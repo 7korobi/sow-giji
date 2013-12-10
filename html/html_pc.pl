@@ -41,6 +41,14 @@ sub OutHTMLHeaderPC {
   <meta name="Author" content="$sow->{'NAME_AUTHOR'}"$net>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!--[if lt IE 9]>
+  <script src="http://giji.load.jp/javascripts/json3.min.js"></script>
+  <script src="http://giji.load.jp/javascripts/jquery-1.10.2.min.js"></script>
+<![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+  <script src="http://giji.load.jp/javascripts/jquery-2.0.3.min.js"></script>
+<!--<![endif]-->
+
   <link rel="shortcut icon" href="$cfg->{'BASEDIR_DOC'}/$cfg->{'FILE_FAVICON'}"$net>
 _HTML_
 

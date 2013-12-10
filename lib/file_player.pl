@@ -409,7 +409,10 @@ sub getpseudobondlist {
 
 sub getallbondlist {
 	my ($self) = @_;
-	my $bonds = join('/', ($self->{'bonds'},$self->{'pseudobonds'}) );
+	my $bonds = "";
+	$bonds .= $self->{      'bonds'} if ("" ne $self->{      'bonds'});
+	$bonds .= '/' if (("" ne $self->{'bonds'}) and ("" ne $self->{'pseudobonds'}));
+	$bonds .= $self->{'pseudobonds'} if ("" ne $self->{'pseudobonds'});
 
 	return  split('/', $bonds );
 }
@@ -496,18 +499,20 @@ sub gettargetlist {
 	# 不具合だが、直すのを放棄中。
 	if ( $vil->{'event'} == $sow->{'EVENTID_APRIL_FOOL'} ){
 		my @bondpno = $self->getallbondlist();
-		if ( 0 < scalar(@bondpno) ){
-			foreach $pno (@bondpno) {
-				$livepl = $vil->getplbypno($pno);
-				my $postfix = '';
-				$postfix = '(故人)' if ($livepl->{'live'} ne 'live');
-				my %target = (
-					chrname => $livepl->getlongchrname().$postfix,
-					pno     => $pno,
-				);
-				push(@targetlist, \%target);
+		if ($cmd eq 'vote'){
+			if ( 0 < scalar(@bondpno) ){
+				foreach $pno (@bondpno) {
+					$livepl = $vil->getplbypno($pno);
+					my $postfix = '';
+					$postfix = '(故人)' if ($livepl->{'live'} ne 'live');
+					my %target = (
+						chrname => $livepl->getlongchrname().$postfix,
+						pno     => $pno,
+					);
+					push(@targetlist, \%target);
+				}
+				return \@targetlist;
 			}
-			return \@targetlist;
 		}
 	}
 

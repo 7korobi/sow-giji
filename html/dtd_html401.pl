@@ -41,7 +41,7 @@ sub outheader {
 
 	print <<"_HTML_";
 <!doctype html>
-<html lang="ja" ng-controller="CGI">
+<html lang="ja" id="ng-app" ng-controller="CGI">
 _HTML_
 
 	&SWHtmlPC::OutHTMLHeaderPC($self->{'sow'}, $title);
