@@ -53,8 +53,8 @@ sub OutHTMLHeaderPC {
 _HTML_
 
   # スタイルシートの出力
-  my $css = "cinema800";
-  my $css = $cookie->{'theme'} . $cookie->{'width'} if ( $cookie->{"theme"} && $cookie->{"width"} );
+  my $css   = $cookie->{'theme'} . $cookie->{'width'};
+  my $css ||= "cinema800";
   print "  <link id=\"giji_css\"      href=\"$sow->{'cfg'}->{'DIR_CSS'}/$css.css\" rel=\"stylesheet\" type=\"text/css\">\n";
   print "  <link id=\"giji_css_font\" href=\"$sow->{'cfg'}->{'DIR_CSS'}/font/normal.css\" rel=\"stylesheet\" type=\"text/css\">\n";
 
@@ -79,7 +79,7 @@ _HTML_
   if (defined($sow->{'html'}->{'file_js'})) {
     my $file_js = $sow->{'html'}->{'file_js'};
     foreach (@$file_js) {
-      print "  <script type=\"text/javascript\" src=\"$cfg->{'DIR_JS'}/$_\" charset=\"UTF-8\"></script>\n";
+      print "  <script type=\"text/javascript\" src=\"$cfg->{'BASEDIR_DOC'}/$_\" charset=\"UTF-8\"></script>\n";
     }
   }
 
@@ -99,13 +99,9 @@ _HTML_
   print ">\n";
 
   # 外枠
-  my $classoutframe = 'outframe';
-  if (($sow->{'query'}->{'cmd'} eq '') && (defined($sow->{'query'}->{'vid'})) && ($sow->{'query'}->{'logid'} eq '') && ($sow->{'filter'}->{'layoutfilter'} eq '1')) {
-    $classoutframe = 'outframe_navimode';
-  }
   print <<"_HTML_";
 
-<div id="outframe" class="$classoutframe">
+<div id="outframe" class="outframe">
 _HTML_
 
 }
