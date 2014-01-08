@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="ja" id="ng-app">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <meta http-equiv="Content-Script-Type" content="text/javascript">
+
+  <script type="text/javascript" src="http://localhost/javascripts/angular-scenario.js" charset="UTF-8" ng-autotest></script>
+  <script type="text/javascript" src="/assets/spec.js" charset="UTF-8"></script>
+</head>
+<body>
+<script>
+window.gon = {
+  "errors": {
+
+  },
+  "cautions": [
+    "演じたいキャラクターを選び、発言してください。",
+    "ルールをよく理解した上でご参加下さい。",
+    "※希望能力についての発言は控えてください。",
+    "{{lax_time(story.timer.scraplimitdt)}}までに開始しなかった場合、この村は廃村となります。",
+    "ゲーム参加者希望者はログインして下さい。"
+  ],
+  "form": {
+    "side": [
+
+    ],
+    "links": [
+
+    ],
+    "texts": [
+
+    ],
+    "secrets": [
+
+    ],
+    "commands": {
+
+    },
+    "styles": [
+      {
+        "name": "(通常)",
+        "val": ""
+      },
+      {
+        "name": "等幅",
+        "val": "mono"
+      },
+      {
+        "name": "見出し",
+        "val": "head"
+      }
+    ],
+    "login": {
+      "cmd": "login",
+      "admin_uri": "",
+      "is_admin": 0,
+      "cmdfrom": "",
+      "expired": "2014-01-09T06:04:18.000Z",
+      "uidtext": "",
+      "uid": ""
+    },
+    "uri": "./sow.cgi",
+    "turn": 0
+  },
+  "story": {
+    "folder": "BRAID",
+    "vid": 28,
+    "turn": 0,
+    "link": "./sow.cgi?vid=1&cmd=vinfo",
+    "name": "てすてすてす",
+    "rating": "default",
+    "comment": "（村のルールは、自由に編集できるよ！）<br>■村のルール<br>1.多重ログインをしない。<br>2.システムの出力内容を、そのまま書き写さない。<br>3.エピローグまで秘密を守る。参加中の村の内容は秘密だ。<br>4.エピローグまで秘密を守る。希望した能力、画面を見ているきみが何者なのかは秘密だ。<br>5.エピローグまで勝利を目指す。",
+    "csid": "all",
+    "order": 0,
+    "is_finish": false,
+    "is_epilogue": false,
+    "is_prologue": true,
+    "is_scrap": false,
+    "is_totalcommit": false,
+    "options": [
+      "aiming-talk",
+      "select-role"
+    ],
+    "entry": {
+      "limit": "free"
+    },
+    "card": {
+      "discard": [
+
+      ],
+      "event": [
+
+      ],
+      "config": [
+        ""
+      ]
+    },
+    "announce": {
+      "game_name": "深い霧の夜",
+      "game_help": "<li>同数票の処刑候補が複数いた場合、ランダムに処刑する。<li>村側は自分の役職を自覚しない。</li><li>村側は、能力の結果不審者を見かけることがある。</li><li>人狼の行動対象に選ばれると、不審者を見かける。</li><li>狼を全滅させると、村勝利。<li>役職「村人」を全滅させると、狼勝利。（役職を持つ村側の生き残りは、勝利に直接は寄与しない。）",
+      "trs_name": "オール☆スター",
+      "trs_help": "すべての役職、恩恵、事件を楽しむことができる、「全部入り」のセットです。また、進行中以外はクローンにされたり、セキュリティ・クリアランスが変ったりします。",
+      "csidcaptions": "人狼議事 ちゃんぷる ",
+      "starttype": "人狼BBS型（更新時間が来たら開始）",
+      "totalcommit": "",
+      "rating": "とくになし",
+      "nrules": [
+        "1.ここは長期人狼サーバーだ。短期はできない。",
+        "2.情報ページ（ここ）を熟読する。",
+        "3.ルールを守り、つねに心構えに気を配る。",
+        "4.進行中は、どんな嘘でもＯＫ。",
+        "5.ただし、（村建て人）、（管理人）の発言では嘘をつかないこと。",
+        "6.突然死をしない。"
+      ]
+    },
+    "timer": {
+      "extend": 2,
+      "updateddt": "2014-01-05T07:49:08.000Z",
+      "nextupdatedt": "2014-01-08T15:00:00.000Z",
+      "nextchargedt": "2014-01-06T15:00:00.000Z",
+      "nextcommitdt": "2014-01-05T07:49:08.000Z",
+      "scraplimitdt": "2014-01-10T15:00:00.000Z"
+    },
+    "type": {
+      "roletable": "secret",
+      "say": "weak",
+      "start": "wbbs",
+      "vote": "anonymity",
+      "mob": "gamemaster",
+      "game": "MISTERY"
+    },
+    "upd": {
+      "interval": 1,
+      "hour": 0,
+      "minute": 0
+    },
+    "vpl": [
+      8,
+      8
+    ]
+  },
+  "events": [
+    {
+      "is_progress": true,
+      "name": "プロローグ (最新)",
+      "link": "./sow.cgi?vid=1&rowall=on&turn=0",
+      "news": "./sow.cgi?vid=1",
+      "turn": 0
+    }
+  ],
+  "event": {
+    "turn": 0,
+    "winner": "WIN_NONE",
+    "event": null,
+    "riot": -1,
+    "scapegoat": -1,
+    "is_seance": false,
+    "is_public": true,
+    "is_eclipse": false,
+    "is_freecost": false,
+    "is_epilogue": false,
+    "is_startable": false,
+    "player": {
+      "start": 8,
+      "limit": 8,
+      "mob": 1,
+      "votable": 0,
+      "commitable": 0
+    },
+    "say": {
+      "modifiedsay": "2014-01-08T10:04:18.000Z",
+      "modifiedwsay": "1970-01-01T00:00:00.000Z",
+      "modifiedgsay": "1970-01-01T00:00:00.000Z",
+      "modifiedspsay": "1970-01-01T00:00:00.000Z",
+      "modifiedxsay": "1970-01-01T00:00:00.000Z",
+      "modifiedvsay": "2014-01-05T09:08:16.000Z"
+    },
+    "messages": [
+      {
+        "template": "sow/village_info",
+        "logid": "vilinfo00000"
+      },
+      {
+        "subid": "I",
+        "logid": "II00000",
+        "csid": "_none_",
+        "face_id": "_none_",
+        "style": "",
+        "name": "[情報]",
+        "to": "",
+        "plain": {
+          "updated_at": 1388908148,
+          "type": 7,
+          "text": "この村にも恐るべき“人狼”の噂が流れてきた。ひそかに人間と入れ替わり、夜になると人間を襲うという魔物。不安に駆られた村人たちは、集会所へと集まるのだった……。"
+        },
+        "mesicon": "",
+        "mestype": "INFONOM",
+        "date": "2014-01-05T07:49:08.000Z",
+        "log": "この村にも恐るべき“人狼”の噂が流れてきた。ひそかに人間と入れ替わり、夜になると人間を襲うという魔物。不安に駆られた村人たちは、集会所へと集まるのだった……。"
+      },
+      {
+        "subid": "S",
+        "logid": "SS00000",
+        "csid": "all",
+        "face_id": "all",
+        "style": "",
+        "name": "かみさま パルック",
+        "to": "",
+        "plain": {
+          "updated_at": 1388908148,
+          "type": 9,
+          "text": "ちゃんとご注文通り、さまざまな人たちをお呼びしましたよ。<br>いたるところから…そう、地平の果てや、宇宙の彼方からも。<br><br>中には、主様を消してくださるような方もいらっしゃるかもしれません。"
+        },
+        "mesicon": "人:",
+        "mestype": "SAY",
+        "date": "2014-01-05T07:49:08.000Z",
+        "log": "ちゃんとご注文通り、さまざまな人たちをお呼びしましたよ。<br>いたるところから…そう、地平の果てや、宇宙の彼方からも。<br><br>中には、主様を消してくださるような方もいらっしゃるかもしれません。"
+      },
+      {
+        "subid": "I",
+        "logid": "II00001",
+        "csid": "all",
+        "face_id": "c110",
+        "style": "",
+        "name": "ろくでなし リー",
+        "to": "",
+        "plain": {
+          "updated_at": 1388908173,
+          "type": 7,
+          "text": "<b>ろくでなし リー</b>が参加しました。"
+        },
+        "mesicon": "",
+        "mestype": "INFONOM",
+        "date": "2014-01-05T07:49:33.000Z",
+        "log": "<b>ろくでなし リー</b>が参加しました。"
+      },
+      {
+        "subid": "S",
+        "logid": "VS00000",
+        "csid": "all",
+        "face_id": "c110",
+        "style": "",
+        "name": "ろくでなし リー",
+        "to": "",
+        "plain": {
+          "updated_at": 1388908173,
+          "type": 15,
+          "text": "見物なう"
+        },
+        "mesicon": "見:",
+        "mestype": "VSAY",
+        "date": "2014-01-05T07:49:33.000Z",
+        "log": "見物なう"
+      },
+      {
+        "subid": "I",
+        "logid": "II00002",
+        "csid": "all",
+        "face_id": "c49",
+        "style": "",
+        "name": "石工 ボリス",
+        "to": "",
+        "plain": {
+          "updated_at": 1388908345,
+          "type": 7,
+          "text": "<b>石工 ボリス</b>が参加しました。"
+        },
+        "mesicon": "",
+        "mestype": "INFONOM",
+        "date": "2014-01-05T07:52:25.000Z",
+        "log": "<b>石工 ボリス</b>が参加しました。"
+      },
+      {
+        "subid": "I",
+        "logid": "II00003",
+        "csid": "_none_",
+        "face_id": "_none_",
+        "style": "",
+        "name": "[情報]",
+        "to": "",
+        "plain": {
+          "updated_at": 1388908361,
+          "type": 7,
+          "text": "<b>石工 ボリス</b>がいたような気がしたが、気のせいだったようだ……(<b>石工 ボリス</b>は村を出ました)"
+        },
+        "mesicon": "",
+        "mestype": "INFONOM",
+        "date": "2014-01-05T07:52:41.000Z",
+        "log": "<b>石工 ボリス</b>がいたような気がしたが、気のせいだったようだ……(<b>石工 ボリス</b>は村を出ました)"
+      },
+      {
+        "subid": "I",
+        "logid": "II00004",
+        "csid": "all",
+        "face_id": "c49",
+        "style": "",
+        "name": "石工 ボリス",
+        "to": "",
+        "plain": {
+          "updated_at": 1388908489,
+          "type": 7,
+          "text": "<b>石工 ボリス</b>が参加しました。"
+        },
+        "mesicon": "",
+        "mestype": "INFONOM",
+        "date": "2014-01-05T07:54:49.000Z",
+        "log": "<b>石工 ボリス</b>が参加しました。"
+      },
+      {
+        "subid": "S",
+        "logid": "SS00001",
+        "csid": "all",
+        "face_id": "c49",
+        "style": "",
+        "name": "石工 ボリス",
+        "to": "",
+        "plain": {
+          "updated_at": 1388908489,
+          "type": 9,
+          "text": "aaaaaa"
+        },
+        "mesicon": "人:",
+        "mestype": "SAY",
+        "date": "2014-01-05T07:54:49.000Z",
+        "log": "aaaaaa"
+      },
+      {
+        "subid": "A",
+        "logid": "SA00000",
+        "csid": "all",
+        "face_id": "c49",
+        "style": "",
+        "name": "ボリス",
+        "to": "",
+        "plain": {
+          "updated_at": 1388908616,
+          "type": 9,
+          "text": "パルックにロケットシューズを差し出した。10、9、8、……"
+        },
+        "mesicon": "人:",
+        "mestype": "SAY",
+        "date": "2014-01-05T07:56:56.000Z",
+        "log": "パルックにロケットシューズを差し出した。10、9、8、……"
+      },
+      {
+        "subid": "I",
+        "logid": "II00005",
+        "csid": "_none_",
+        "face_id": "_none_",
+        "style": "",
+        "name": "[情報]",
+        "to": "",
+        "plain": {
+          "updated_at": 1388911584,
+          "type": 7,
+          "text": "<b>かみさま パルック</b>は死んだ。"
+        },
+        "mesicon": "",
+        "mestype": "INFONOM",
+        "date": "2014-01-05T08:46:24.000Z",
+        "log": "<b>かみさま パルック</b>は死んだ。"
+      },
+      {
+        "subid": "I",
+        "logid": "II00006",
+        "csid": "_none_",
+        "face_id": "_none_",
+        "style": "",
+        "name": "[情報]",
+        "to": "",
+        "plain": {
+          "updated_at": 1388911800,
+          "type": 7,
+          "text": "<b>石工 ボリス</b>は死んだ。"
+        },
+        "mesicon": "",
+        "mestype": "INFONOM",
+        "date": "2014-01-05T08:50:00.000Z",
+        "log": "<b>石工 ボリス</b>は死んだ。"
+      },
+      {
+        "subid": "I",
+        "logid": "II00007",
+        "csid": "_none_",
+        "face_id": "_none_",
+        "style": "",
+        "name": "[情報]",
+        "to": "",
+        "plain": {
+          "updated_at": 1388911805,
+          "type": 7,
+          "text": "<b>石工 ボリス</b>は生き返った。"
+        },
+        "mesicon": "",
+        "mestype": "INFONOM",
+        "date": "2014-01-05T08:50:05.000Z",
+        "log": "<b>石工 ボリス</b>は生き返った。"
+      },
+      {
+        "subid": "S",
+        "logid": "VS00001",
+        "csid": "all",
+        "face_id": "c110",
+        "style": "",
+        "name": "ろくでなし リー",
+        "to": "",
+        "plain": {
+          "updated_at": 1388912896,
+          "type": 15,
+          "text": "<mw SS00001,0,1> へ"
+        },
+        "mesicon": "見:",
+        "mestype": "VSAY",
+        "date": "2014-01-05T09:08:16.000Z",
+        "log": "<mw SS00001,0,1> へ"
+      },
+      {
+        "subid": "I",
+        "logid": "II00008",
+        "csid": "_none_",
+        "face_id": "_none_",
+        "style": "",
+        "name": "[情報]",
+        "to": "",
+        "plain": {
+          "updated_at": 1389009483,
+          "type": 7,
+          "text": "定員に達しなかったため、村の更新日時が24時間延長されました。"
+        },
+        "mesicon": "",
+        "mestype": "INFONOM",
+        "date": "2014-01-06T11:58:03.000Z",
+        "log": "定員に達しなかったため、村の更新日時が24時間延長されました。"
+      },
+      {
+        "subid": "I",
+        "logid": "II00009",
+        "csid": "_none_",
+        "face_id": "_none_",
+        "style": "",
+        "name": "[情報]",
+        "to": "",
+        "plain": {
+          "updated_at": 1389175458,
+          "type": 7,
+          "text": "<b>ろくでなし リー</b>がいたような気がしたが、気のせいだったようだ……(<b>ろくでなし リー</b>は村を出ました)"
+        },
+        "mesicon": "",
+        "mestype": "INFONOM",
+        "date": "2014-01-08T10:04:18.000Z",
+        "log": "<b>ろくでなし リー</b>がいたような気がしたが、気のせいだったようだ……(<b>ろくでなし リー</b>は村を出ました)"
+      },
+      {
+        "subid": "I",
+        "logid": "II00010",
+        "csid": "_none_",
+        "face_id": "_none_",
+        "style": "",
+        "name": "[情報]",
+        "to": "",
+        "plain": {
+          "updated_at": 1389175458,
+          "type": 7,
+          "text": "<b>石工 ボリス</b>がいたような気がしたが、気のせいだったようだ……(<b>石工 ボリス</b>は村を出ました)"
+        },
+        "mesicon": "",
+        "mestype": "INFONOM",
+        "date": "2014-01-08T10:04:18.000Z",
+        "log": "<b>石工 ボリス</b>がいたような気がしたが、気のせいだったようだ……(<b>石工 ボリス</b>は村を出ました)"
+      },
+      {
+        "subid": "I",
+        "logid": "II00011",
+        "csid": "_none_",
+        "face_id": "_none_",
+        "style": "",
+        "name": "[情報]",
+        "to": "",
+        "plain": {
+          "updated_at": 1389175458,
+          "type": 7,
+          "text": "定員に達しなかったため、村の更新日時が24時間延長されました。"
+        },
+        "mesicon": "",
+        "mestype": "INFONOM",
+        "date": "2014-01-08T10:04:18.000Z",
+        "log": "定員に達しなかったため、村の更新日時が24時間延長されました。"
+      },
+      {
+        "template": "sow/log_last",
+        "logid": "IX99999",
+        "plain": {
+          "text": "メモはありません。<br />2014-01-08(水曜日)  午後07時11分"
+        },
+        "log": "メモはありません。<br />2014-01-08(水曜日)  午後07時11分",
+        "updated_at": "2014-01-08T10:11:17.545Z"
+      }
+    ],
+    "is_news": true,
+    "has_all_messages": false
+  },
+  "potofs": [
+    {
+      "turn": 0,
+      "pno": 0,
+      "csid": "all",
+      "face_id": "all",
+      "deathday": 1,
+      "is_delete": true,
+      "name": "パルック",
+      "jobname": "",
+      "longname": "かみさま パルック",
+      "shortname": "パルック",
+      "clearance": 1,
+      "zapcount": 0,
+      "postfix": "",
+      "live": "victim",
+      "bonds": [
+
+      ],
+      "pseudobonds": [
+
+      ],
+      "point": {
+        "actaddpt": 2,
+        "saidcount": 1,
+        "saidpoint": 0
+      },
+      "say": {
+        "say": 1200
+      }
+    }
+  ]
+}
+</script>
+</div>
+</body>
+</html>

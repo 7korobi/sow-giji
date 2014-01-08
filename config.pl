@@ -491,14 +491,16 @@ sub GetConfig {
 	);
 
 	my @file_js = (
-		'../assets/data.js',
-		'../assets/base.js',
-		'../assets/sow.js',
+		'assets/data.js',
+		'assets/base.js',
+		'assets/sow.js',
+		'assets/boot.js',
 	);
 	my @file_js_vil = (
-		'../assets/data.js',
-		'../assets/base.js',
-		'../assets/sow.js',
+		'assets/data.js',
+		'assets/base.js',
+		'assets/sow.js',
+		'assets/boot.js',
 	);
 
 	my %cfg = (

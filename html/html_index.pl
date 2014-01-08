@@ -124,31 +124,29 @@ if (new Date % (24*3600000) - 9 * 3600000 < 0) {
 gon.oldlog = [
 { mesicon:'',
   name:'留守番 ジョージ',
-  text:'ここの蔵の中だよ。<a class="mark" href="$urlsow?cmd=oldlog">もう終了している村</a>の記録が、奥で静かに眠っているんだ。',
+  text:'この奥だよ。もう<a class="mark" href="$urlsow?cmd=oldlog">終了した村</a>の記録が眠っている。\\
+静かに、ひっそりとね。',
 updated_at: new Date(1389008975000),template:"message/say",mestype:"TSAY",csid:"all",face_id:"c76"},
 ];
 
 gon.guide = [
 { name:'ティモシー',
-  text:'（↓）をそっと畳み、目を上げた。<br><a href="http://crazy-crazy.sakura.ne.jp/giji/"><img src="$urlimg/banner/guide.png"></a>',
+  text:'（↓）をそっと畳み、営業を再開した。<br><a href="http://crazy-crazy.sakura.ne.jp/giji/"><img src="$urlimg/banner/guide.png"></a>',
 updated_at: new Date(1389008975000),template:"message/action",mestype:"SAY"},
 { mesicon:'',
   name:'雑貨屋 ティモシー',
-  text: hello + '。$cfg->{'NAME_SW'}のことを知りたいんだね。それなら、人狼議事公式ガイドブックを開いてごらん。<br>\\
-あるいは…、こちらのリンク先を見てみるといい。<br>\\
+  text: 'いらっしゃい。$cfg->{'NAME_SW'}のことを知りたいんだね。それなら、人狼議事公式ガイドブックを開いてごらん。<br>\\
+あるいは、ほかのリンク先をお求めかな。<br>\\
 <br>\\
 <ul>\\
 <li><a class="mark" href="$urlsow?cmd=about">ご紹介</a>そもそも、どういうものなんだろう\\
-<li><a class="mark" href="$urlsow?cmd=howto">プレイガイド</a>参加から終了までの流れが知りたい\\
+<li><a class="mark" href="$urlsow?cmd=howto">遊び方</a>参加から終了までの流れが知りたい\\
 <li><a class="mark" href="$urlwiki$linkoperate">操作方法</a>プレイ中の詳しい操作を知りたい\\
 </ul>',
 updated_at: new Date(1389008975000),template:"message/say",mestype:"SAY",csid:"all",face_id:"c07"},
-];
-
-gon.summary = [
 { mesicon:'',
   name:'花売り メアリー',
-  text:'もしあなたが、どこかで人狼ゲームを遊んだ事があるなら、<a class="mark" href="$urlwiki$linkspec">他の人狼ゲームとの違い</a>をどうぞ。<br>\\
+  text: hello + '。もしあなたが、どこかで人狼ゲームを遊んだ事があるなら、<a class="mark" href="$urlwiki$linkspec">他の人狼ゲームとの違い</a>をどうぞ。<br>\\
 それとも調べ物？だったらお好きな一輪を。<br><br>\\
 <ul>\\
 <li><a class="mark" href="$urlsow?cmd=roleaspect&trsid=all">役職と能\力の一覧\表\</a>を調べる。\\
@@ -161,8 +159,8 @@ gon.rule = [
 { mesicon:'',
   name:'学者 レオナルド',
   text:'<a href="sow.cgi?cmd=rule" class="mark">ルールと心構\え</a>を守って、楽しく、強く遊ぼう。<br>\\
-みんなに守ってほしいルールと、吟味してほしい心構\えを紹介するので、リンク先をよく読んでほしい。<br>\\
-',
+ここでは、みんなに守ってほしいルールや、吟味してほしい心構\えを紹介するよ。<br>\\
+では、リンク先の１ページ目から\―\―\― ',
 updated_at: new Date(1389008975000),template:"message/say",mestype:"SAY",csid:"all",face_id:"c96",style:"head"},
 ];
 
@@ -246,10 +244,6 @@ _HTML_
 <dt>プレイガイド
 <dd class="plain">
 <div class="message_filter" ng-repeat="message in guide" log="message"></div>
-
-<dt>サマリー
-<dd class="plain">
-<div class="message_filter" ng-repeat="message in summary" log="message"></div>
 
 </dl>
 
