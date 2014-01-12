@@ -302,6 +302,7 @@ window.gon = {};
 gon.form_show = {
 	memo: true,
 	open: true,
+	secret: true,
 	action: true
 };
 gon.roles_form = [];

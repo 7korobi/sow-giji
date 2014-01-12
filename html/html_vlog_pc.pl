@@ -39,8 +39,8 @@ sub OutHTMLVlogPC {
 
 	print <<"_HTML_";
 <h2>{{story.vid}} {{story.name}} $linkrss</h2>
-<h3>{{subtitle}}</h3>
 <div class="pagenavi form-inline" template="navi/page_navi" ng-show="page"></div>
+<h3>{{subtitle}}</h3>
 <div template="navi/messages" id="messages"></div>
 <div template="navi/forms"></div>
 <hr class="invisible_hr"$net>

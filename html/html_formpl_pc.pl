@@ -755,6 +755,7 @@ sub OutHTMLUpdateSessionButtonPC {
 	print <<"_HTML_";
 var command;
 var a = [];
+gon.form.command_targets = a;
 _HTML_
 	$targetlist = $vil->getallpllist();
 	foreach (@$targetlist) {
@@ -775,7 +776,7 @@ command = {
 	jst: "target",
 	live: "droop",
 	targets: a,
-	title: "死ぬ。"
+	title: "参加者として死ぬ。"
 };
 gon.form.commands.gm_droop = command;
 command = {
@@ -785,7 +786,7 @@ command = {
 	rolestate: 'HEAL',
 	calcstate: 'enable',
 	targets: a,
-	title: "生きる。"
+	title: "参加者として生きる。"
 };
 gon.form.commands.gm_live = command;
 command = {
