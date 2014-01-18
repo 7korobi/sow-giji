@@ -366,6 +366,7 @@ _HTML_
 
 		&SWHtmlPlayerFormPC::OutHTMLPlayerFormPC($sow, $vil);
 		print <<"_HTML_";
+INIT_FORM(gon.form)
 gon.roles_form.push(gon.form);
 _HTML_
 	}

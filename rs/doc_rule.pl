@@ -175,7 +175,8 @@ gon.welcome = [
 特にここで、六法全書を引き写して退屈な思いをするつもりはないけれど、不正アクセス禁止法、個人情報保護法は関わりが深いはずだ。<br>',
 updated_at:new Date(1370662886000),template:"message/say",style:"",mestype:"GSAY",csid:"all",face_id:"c96"}
 ];
-gon.recovery = [
+
+gon.violation = [
 { mesicon:'',
   name:'学者 レオナルド',
   text:'もし、ルールに違反してしまったとしたら？とても残念なことだけれど、まだ絶望しなくていい。<br>\\
@@ -185,20 +186,56 @@ gon.recovery = [
 家に帰るまでが遠足なのと同じで、エピローグが済むまでがその村なんだ。',
 updated_at:new Date(1370662886000),template:"message/say",style:"",mestype:"GSAY",csid:"all",face_id:"c96"},
 { mesicon:'',
+  name:'学者 レオナルド',
+  text:'エピローグでは全員が一同に介し、墓下と地上にわかれることなく、勝つための嘘もなく、より率直な話ができる。この特性から、$cfg->{'NAME_SW'}ではエピローグでの話し合いを推奨しているよ。<br>\\
+古い時代にサムライは、どのような事情にも沈黙して咎を一身に引き受けることを美徳としていたそうだ。起こったことを水に流すにはそれもいいだろうけれど、残念ながらみんなの気持ちはこのことに残ってしまうので、あまりよくない。<br><br>\\
+解散するときに心残りなく、さっぱりとお別れができるよう、エピローグを活用してほしい。もやもやと蟠りが残るのは、だめだね。',
+updated_at:new Date(1370662886000),template:"message/say",style:"",mestype:"GSAY",csid:"all",face_id:"c96"},
+];
+gon.no_suddendeath = [
+{ mesicon:'',
   name:'勧善懲悪委 アカリ',
-  text:'突然死は悪！そうですよね先生！',
+  text:'突然死は悪！そうですよね先生！<br><br>みんな一生懸命がんばっているのに、そんなことで汚されるの、悔しいです！',
 updated_at:new Date(1370662886000),template:"message/say",mestype:"GSAY",csid:"all",face_id:"t07",style:"head"},
 { mesicon:'',
   name:'学者 レオナルド',
   text:'正解、国のルールだね。<br>\\
-<br>\\
-ただ、やむを得ない事情があるかもしれない。人狼議事では、１日間発言しない場合には突然死とする措置と、ゲーム不参加扱いとする措置をとっている。その罰則以上に重大なことかどうか、冷静に考えてほしい。<br>\\
-他のルール違反でもそうだけれど、エピローグなどをつかって話を聞いてみるとよいね。<br><br>\\
-エピローグでは全員が一同に介し、墓下と地上にわかれることなく、勝つための嘘もなく、より率直な話ができる。<br>\\
-僕らは遊びに来ているんだ。笑い合って解散できることを目指し、がんばってほしい。<br><br>\\
-突然死に限らず、ルール違反全般に言えることだね。',
+ただ、人狼議事では、１日間発言しない場合には２つの措置をとっている。<br><br>\\
+ひとつ、突然死とする措置。<br>\\
+ふたつ、ゲーム不参加扱いとする措置。<br><br>\\
+これらの罰則を超えて重大なことなのか、冷静に考えて行動しよう。また、事故的な、やむを得ない事情があるかもしれないよ。もし事情があれば、考慮して考えてみよう。<br>\\
+僕らはここに遊びに来ているんだ。最後には笑い合って解散できることを目指そうね。',
 updated_at:new Date(1370662886000),template:"message/say",style:"",mestype:"GSAY",csid:"all",face_id:"c96"},
 ];
+gon.recovery = [
+{ mesicon:'',
+  name:'学者 レオナルド',
+  text:'ここでは、ルール違反についてとるべき対応を話そう。<br><br>\\
+さきの項目でアカリくんが嘆いていたように、真剣なゲームをしていれば、ルール違反を許したくないという強い情動もあるものなんだ。<br>\\
+いっぽう、粗相があったらコップ一杯の日本酒を一気飲みして、ちょっといいところを見せればよい、という考え方もあるものだよ。<br>\\
+<br>\\
+こうした考え方が村の中でずれていると、いざ何かがあったときに困ったり、不満が溜まったりしてしまう。<br>\\
+開始前に、あなたの村ではどう対応する、という方針を明らかにしておくと、志向の合わない人と衝突してしまうこも減るはずだよ。<br>\\
+どう対応するとよいのかを宿題にします、みなさんの良心にしたがって考えてみよう。',
+updated_at:new Date(1370662886000),template:"message/say",style:"",mestype:"GSAY",csid:"all",face_id:"c96"},
+{ mesicon:'',
+  name:'白鶴拳 志偉',
+  text:'うちの道場じゃ、気の抜けた奴は師範代が叩き出してるぜ！リアルがヤバそうだったり、難しくてわかんないなら控えとけよってことよ。<br><br>\\
+よーし、俺の建てる村は違反なんて許さん。アカリや†ルシフェル†みたいに、きちんと参加できるやつら誘ってガンガンいくのだあ！',
+updated_at:new Date(1370662886000),template:"message/say",mestype:"GSAY",csid:"all",face_id:"g02"},
+{ mesicon:'',
+  name:'友愛組合 チアキ',
+  text:'道場みたいな処だと窮屈だな。よーし、自分で村を建てよう。僕の村は忙しい人もフォローするし、ルール違反（突然死とか）があっても許したいんだ。<br><br>\\
+…村に書いちゃうの勇気いるなあ。違反してもOKみたいに聞かれてしまいそうだ。ゴクリ。<br>\\
+<sub>せっかく集まった仲間を責めたくないだけなんだけれど…どう伝えよう…</sub>',
+updated_at:new Date(1370662886000),template:"message/say",mestype:"GSAY",csid:"all",face_id:"t01"},
+{ mesicon:'',
+  name:'長老 ナタリア',
+  text:'あたしは難しいことを考えるのが苦手でねえ。あんまり上手に勝とうとできていなくても、厳しくしてほしくないねえ。<br><br>\\
+そうだわ、ヌマタロウさんをお誘いして、そういう村を建ててみようかしらねえ。お茶受けは拳骨煎餅かしらねえ。',
+updated_at:new Date(1370662886000),template:"message/say",style:"",mestype:"GSAY",csid:"all",face_id:"c24"},
+];
+
 gon.create = [
 { mesicon:'',
   name:'営利政府 トレイル',
@@ -263,7 +300,15 @@ _HTML_
 <dl class="accordion">
 <dt> <span class="mark"> &#x2718; </span>
 
-<dt> <span class="mark"> 開く </span>
+<dt> <span class="mark"> はじめに </span>
+<dd class="plain">
+<div class="message_filter" ng-repeat="message in violation" log="message"></div>
+
+<dt> <span class="mark"> 突然死 </span>
+<dd class="plain">
+<div class="message_filter" ng-repeat="message in no_suddendeath" log="message"></div>
+
+<dt> <span class="mark"> どうすればいいの？ </span>
 <dd class="plain">
 <div class="message_filter" ng-repeat="message in recovery" log="message"></div>
 </dl>
@@ -293,134 +338,6 @@ _HTML_
 <h2><a name="make">$sow->{'cfg'}->{'NAME_SW'}の運営</a></h2>
 <h3>村を建てるかたへ</h3>
 <div class="message_filter" ng-repeat="message in create" log="message"></div>
-<hr class="invisible_hr"$net>
-<h3>村建て人の心構\え</h3>
-<p class="paragraph">
-<dl class="accordion">
-_HTML_
-	$list = $vmind->{'name'};
-	for( $i=0; $i<@$list; $i++ ){
-		next if ( '' eq $list->[$i] );
-		my $name = $vmind->{'name'}->[$i];
-		my $text = $vmind->{'text'}->[$i];
-	print <<"_HTML_";
-<dt><strong>$name</strong></dt>
-<dd>$text</dd>
-_HTML_
-	}
-	print <<"_HTML_";
-</dl>
-</p>
-</DIV>
-_HTML_
-
-}
-
-#---------------------------------------------
-# ルールと心構え（詳細）
-# 運営者が適時書き換えて下さい。
-#---------------------------------------------
-sub outhtmlmb {
-	my $self = shift;
-	my $sow = $self->{'sow'};
-	my $cfg   = $sow->{'cfg'};
-	my $net = $sow->{'html'}->{'net'}; # Null End Tag
-	my $atr_id = $sow->{'html'}->{'atr_id'};
-
-	my $nrule = $self->{'n_rule'};
-	my $vrule = $self->{'v_rule'};
-	my $vmind = $self->{'v_mind'};
-	my $pmind = $self->{'p_mind'};
-	print <<"_HTML_";
-<DIV class=toppage>
-<h2>準備はいいかな？</h2>
-<p class="paragraph">
-ようこそ。ここにはこのサイトで楽しむためのルールや心構\えを綴ってある。暖炉のそばが開いているから、腰を下ろして熟読しよう。楽しいゲームは全員が対等で、全員が読んで理解しているルールがあって成り立つんだ。<br$net>
-<br$net></p>
-<p class="paragraph">
-ただし、やむを得ず、ルール違反をすることもあるだろうね。違反してしまった事実は覆らないけれど、ルールを破らざるをえなかった事情は、落ち着いて聞いてあげよう。<a href="http://www.nihonjiten.com/data/763.html">罪を憎んで、人を憎まず。</a>これは話し合いをするゲームなんだ。<br$net>
-</p>
-<p class="paragraph">
-<a title="法案や、企業の自主規制に従う必要はない。逆らう必要もない。それよりもきみのそばの十\数人のためを思おう。">このサイトは日本国の法律に従っている</a>。特にここで、六法全書を引き写して退屈な思いをするつもりはないけれど、不正アクセス禁止法、個人情報保護法は関わりが深いはずだ。<br$net>
-<br$net></p>
-<p class="paragraph">
-<h2>ルール</h2>
-<p class="paragraph">
-村に書いてあったルールの詳細が知りたければ、ここから下を読もう。<br$net>
-<br$net>
-</p>
-<h3><a name="nation">国のルール</a></h3>
-<p class="paragraph">
-<dl class="accordion">
-_HTML_
-	$list = $nrule->{'name'};
-	for( $i=0; $i<@$list; $i++ ){
-		next if ( '' eq $list->[$i] );
-		my $name = $nrule->{'name'}->[$i];
-		my $text = $nrule->{'text'}->[$i];
-	print <<"_HTML_";
-<dt><strong>$name</strong></dt>
-<dd>$text</dd>
-_HTML_
-	}
-	print <<"_HTML_";
-</dl>
-</p>
-<hr class="invisible_hr"$net>
-<h3><a name="village">村のルール</a></h3>
-<p class="paragraph">
-<dl class="accordion">
-_HTML_
-	$list = $vrule->{'name'};
-	for( $i=0; $i<@$list; $i++ ){
-		next if ( '' eq $list->[$i] );
-		my $name = $vrule->{'name'}->[$i];
-		my $text = $vrule->{'text'}->[$i];
-	print <<"_HTML_";
-<dt><strong>$name</strong></dt>
-<dd>$text</dd>
-_HTML_
-	}
-	print <<"_HTML_";
-</dl>
-</p>
-<hr class="invisible_hr"$net>
-<h2>ルール違反があったら？</h2>
-<p class="paragraph">
-もしもルールに違反してしまったとしたら？とても残念なことだけれど、まだ絶望しなくていい。<br$net>
-きみには全員に釈明する、貴重な機会が残されているんだ。エピローグでは全員が一同に介し、墓下と地上にわかれることなく、勝つための嘘もなく、より率直な話ができる。<br$net>
-真剣な話し合いが必要なときは、協力してそのための時間をなんとか捻り出してほしい。家に帰るまでが遠足なのと同じで、エピローグが済むまでがその村なんだ。<br$net>
-<br$net>
-</p>
-<hr class="invisible_hr"$net>
-<h2><a name="mind">心構\え</a></h2>
-<p class="paragraph">
-心構\えを守って、楽しく、強く遊ぼう。<br$net>
-</p>
-<p class="paragraph">
-<dl class="accordion">
-_HTML_
-	$list = $pmind->{'name'};
-	for( $i=0; $i<@$list; $i++ ){
-		next if ( '' eq $list->[$i] );
-		my $name = $pmind->{'name'}->[$i];
-		my $text = $pmind->{'text'}->[$i];
-	print <<"_HTML_";
-<dt><strong>$name</strong></dt>
-<dd>$text</dd>
-_HTML_
-	}
-	print <<"_HTML_";
-</dl>
-</p>
-<hr class="invisible_hr"$net>
-<h2><a name="make">$sow->{'cfg'}->{'NAME_SW'}の運営</a></h2>
-<h3>村を建てるかたへ</h3>
-<p class="paragraph">
-村建てフォームには、村のルールが既に記入してあります。賛同できる内容はそのまま残して、不足なら筆を加え、余分と判断する事項は削除して村を建ててください。<br$net>
-村を建てるときに気をつけた方が良いことを、心構\えに纏めました。ぜひご覧ください。<br$net>
-<br$net>
-</p>
 <hr class="invisible_hr"$net>
 <h3>村建て人の心構\え</h3>
 <p class="paragraph">

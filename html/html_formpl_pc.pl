@@ -641,7 +641,7 @@ sub OutHTMLCommitFormPC {
 	my $nosay = '';
 	if (($sow->{'curpl'}->{'saidcount'} == 0)&&($vil->{'event'} != $sow->{'EVENTID_NIGHTMARE'})) {
 		$disabled = 1;
-		$nosay = "<br><br>最低一発言して確定しないと、時間を進める事ができません。";
+		$nosay = "<br>最低一発言して確定しないと、時間を進める事ができません。";
 	}
 
 	print <<"_HTML_";
