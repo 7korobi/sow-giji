@@ -409,10 +409,7 @@ sub getpseudobondlist {
 
 sub getallbondlist {
 	my ($self) = @_;
-	my $bonds = "";
-	$bonds .= $self->{      'bonds'} if ("" ne $self->{      'bonds'});
-	$bonds .= '/' if (("" ne $self->{'bonds'}) and ("" ne $self->{'pseudobonds'}));
-	$bonds .= $self->{'pseudobonds'} if ("" ne $self->{'pseudobonds'});
+	my $bonds = $self->all_bonds_str();
 
 	return  split('/', $bonds );
 }
@@ -1000,7 +997,7 @@ sub ishappy {
 			# 生きている？
 			next if ($target->{'live'} eq 'live');
 			# 絆がない？
-			my @target_bonds = $self->getbondlist();
+			my @target_bonds = $target->getbondlist();
 			next if ( 0 == grep{$_ == $self->{'pno'}} @target_bonds );
 			# 死んでいて、絆があるなら、その時に限り不幸です。
 			$happy = 0;
@@ -1024,16 +1021,24 @@ sub getvisiblelovestate {
 #----------------------------------------
 # 絆が眼に見えるか
 #----------------------------------------
+sub all_bonds_str {
+	my ($self) = @_;
+	my $str = $self->{'bonds'};
+	$str   .= '/' if (($self->{'bonds'} ne '')&&($self->{'pseudobonds'} ne ''));
+	$str   .= $self->{'pseudobonds'};
+	return $str;
+}
+
 sub getvisiblebonds {
 	my ($self,$vil) = @_;
 	my @pllist;
 
-	my $self_bondlist = join('/', ($self->{'bonds'},$self->{'pseudobonds'}));
+	my $self_bondlist = $self->all_bonds_str();
 	if ($self_bondlist ne '') {
 		my @bonds = split('/', $self_bondlist );
 		foreach(@bonds) {
 			my $target          = $vil->getplbypno($_);
-			my $target_bondlist = join('/', ($target->{'bonds'},$target->{'pseudobonds'}));
+			my $target_bondlist = $target->all_bonds_str();
 			my @target_bonds    = split('/', $target_bondlist );
 			# 両思いの絆だけが、目に見える。
 			if ( 0 < grep{$_ == $self->{'pno'}} @target_bonds ) {
@@ -2052,7 +2057,7 @@ _HTML_
 		} else {
 			$win_visible = $pl->win_visible();
 			$love = $pl->getvisiblelovestate();
-			$bonds = $pl->{'pseudobonds'}."/".$pl->{'bonds'};
+			$bonds = $pl->all_bonds_str();
 			$role = $sow->{'ROLEID_VILLAGER'} if ($pl->{'role'} == $sow->{'ROLEID_RIGHTWOLF'});
 			$role = 0   if (($is_sensible == 0)||($pl->{'role'} == 0));
 		}
