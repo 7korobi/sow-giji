@@ -47,6 +47,9 @@ sub SetDataCmdEntry {
 	my ($q_csid, $q_cid) = split('/', $query->{'csid_cid'});
 
 	# プレイヤー参加済みチェック
+	if ( '' eq $sow->{'uid'}){
+		$sow->{'debug'}->raise($sow->{'APLOG_NOTICE'}, 'ログインしてください。', "uid is null.");
+	}
 	if (defined($sow->{'curpl'})) {
 		$sow->{'debug'}->raise($sow->{'APLOG_NOTICE'}, 'あなたは既にこの村へ参加しています。', "user found.[$sow->{'uid'}]");
 	}
