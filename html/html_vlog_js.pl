@@ -48,7 +48,7 @@ _HTML_
 	# ‘ºƒƒO•\Ž¦
 	require "$cfg->{'DIR_HTML'}/html_vlogsingle_pc.pl";
     my $last = "";
-	my $has_all_messages = 0 + ($maxrow < 1);
+	my $has_all_messages = 0 + (($maxrow < 1)&&($sow->{'turn'} != $vil->{'turn'}));
 
 	if (@$memos > 0) {
 		my %memokeys;

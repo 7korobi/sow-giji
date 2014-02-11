@@ -65,7 +65,8 @@ _HTML_
 
 	# ë∫ÉçÉOï\é¶
     my $last = "";
-	my $has_all_messages = 0 + ($maxrow < 1);
+	my $has_all_messages = 0 + (($maxrow < 1)&&($sow->{'turn'} != $vil->{'turn'}));
+
 	print <<"_HTML_";
 gon.event.is_news = (0 == $has_all_messages);
 gon.event.has_all_messages = (0 != $has_all_messages);
