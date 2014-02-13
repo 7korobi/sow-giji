@@ -140,14 +140,9 @@ var mes = {
 	"style": "$style",
 	"name": "$name",
 	"to": "$to",
-	"plain": {
-		"updated_at": $log->{'date'},
-		"type": $log->{'mestype'},
-		"text": mes_log
-	},
 	"mesicon": SOW_RECORD.CABALA.mestypeicons[$log->{'mestype'}],
 	"mestype": SOW_RECORD.CABALA.mestypes[$log->{'mestype'}],
-	"date": new Date(1000 * $log->{'date'}),
+	"date": 1000 * $log->{'date'},
 	"log": mes_log
 };
 _HTML_
@@ -219,14 +214,9 @@ var mes = {
 	"style": "$style",
 	"name": "$name",
 	"to": "$to",
-	"plain": {
-		"updated_at": $log->{'date'},
-		"type": $log->{'mestype'},
-		"text": mes_log
-	},
 	"mesicon": SOW_RECORD.CABALA.mestypeicons[$log->{'mestype'}],
 	"mestype": SOW_RECORD.CABALA.mestypes[$log->{'mestype'}],
-	"date": new Date(1000 * $log->{'date'}),
+	"date": 1000 * $log->{'date'},
 	"log": mes_log
 };
 _HTML_

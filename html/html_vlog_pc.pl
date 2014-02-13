@@ -42,9 +42,12 @@ sub OutHTMLVlogPC {
 <div class="pagenavi form-inline" template="navi/page_navi" ng-show="page"></div>
 <h3>{{subtitle}}</h3>
 <div template="navi/messages" id="messages"></div>
-<div template="navi/forms"></div>
+<div template="navi/forms" id="forms"></div>
 <hr class="invisible_hr"$net>
 <div class="pagenavi form-inline" template="navi/page_navi" ng-show="page"></div>
+
+<h3 ng-show="page">•\\¦‚µ‚Ä‚¢‚éó‘Ô</h3>
+<div class="pagenavi form-inline" template="navi/switch" ng-show="page"></div>
 _HTML_
 
 	&SWHtmlSayFilter::OutHTMLHeader   ($sow, $vil);
@@ -112,13 +115,10 @@ _HTML_
 	}
 
 	print <<"_HTML_";
-var log =  "$last<br />" + ((new Date).format(Date.ISO8601_DATE + '({dow})  {TT}{hh}{mm}•ª', 'ja'));
+var log = "© " + ((new Date).format('({dow}){TT}{hh}{mm}•ª', 'ja')) + " ‚æ‚èæ‚ğŒ©‚é<br />$last";
 var mes = {
 	"template": "sow/log_last",
 	"logid":  "IX99999",
-	"plain": {
-		"text": log
-	},
 	"log": log,
 	"updated_at": new Date
 };

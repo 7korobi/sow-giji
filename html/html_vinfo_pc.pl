@@ -89,7 +89,7 @@ sub OutHTMLVilInfoInner {
 		$showbtn = 1 if ($sow->{'uid'} eq $sow->{'cfg'}->{'USERID_ADMIN'});
 		if ($showbtn){
 			print <<"_HTML_";
-<div template="navi/forms"></div>
+<div template="navi/forms" id="forms"></div>
 _HTML_
 		}
 	}

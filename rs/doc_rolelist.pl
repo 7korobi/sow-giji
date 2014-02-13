@@ -295,7 +295,7 @@ _HTML_
 <h2>インターフェイス</h2>
 <div ng-repeat="form in roles_form | filter:search | limitTo: 1">
 <h3>{{form.title}}</h3>
-<div template="navi/forms"></div>
+<div template="navi/forms" id="forms"></div>
 </div>
 <script>
 window.gon = {};
