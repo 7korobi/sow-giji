@@ -40,7 +40,8 @@ sub OutHTMLVlogJS {
 	print <<"_HTML_";
 var mes = {
 	"template": "sow/village_info",
-	"logid": "vilinfo00000"
+	"logid": "vilinfo00000",
+	"date": 0
 };
 gon.event.messages.push(mes);
 _HTML_

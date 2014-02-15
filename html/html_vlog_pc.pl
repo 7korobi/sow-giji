@@ -75,7 +75,8 @@ gon.event.is_news = (0 == $has_all_messages);
 gon.event.has_all_messages = (0 != $has_all_messages);
 var mes = {
 	"template": "sow/village_info",
-	"logid": "vilinfo00000"
+	"logid": "vilinfo00000",
+	"date": 0
 };
 gon.event.messages.push(mes);
 _HTML_

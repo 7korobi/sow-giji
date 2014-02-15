@@ -70,6 +70,7 @@ _HTML_
 var mes = {
 	"template": "sow/village_info",
 	"logid": "vilinfo00001"
+	"date": 1
 };
 gon.event.messages.push(mes);
 </script>
