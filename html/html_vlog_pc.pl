@@ -55,6 +55,7 @@ _HTML_
 	# トップページへ戻る
 	&SWHtmlPC::OutHTMLReturnPC($sow) if ($modesingle == 0);
 	$sow->{'html'}->outcontentfooter();
+	print '<div id="tab" template="sow/navi"></div>';
 
 	&SWHtmlPC::OutHTMLGonInit($sow); # ログイン欄の出力
 	# アナウンス／入力・参加フォーム表示

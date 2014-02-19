@@ -159,9 +159,6 @@ _HTML_
 </address>
 </div><!-- inframe footer -->
 </div><!-- contentframe footer -->
-
-<div id="tab" template="sow/navi"></div>
-
 _HTML_
 
 }
