@@ -102,9 +102,6 @@ sub OutHTMLHeader {
   my $rowall_link = &SWBase::GetLinkValues($sow, $reqvals);
   $rowall_link = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?" . $rowall_link;
 
-	print <<"_HTML_";
-<div id="tab" template="sow/navi"></div>
-_HTML_
   OutHTMLTurnLink($sow, $vil);
   return;
 }

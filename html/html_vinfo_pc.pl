@@ -44,7 +44,6 @@ sub OutHTMLVilInfo {
 <h2>{{story.vid}} {{story.name}} $linkrss</h2>
 <h3>{{subtitle}}</h3>
 <div template="navi/messages" id="messages"></div>
-<div id="tab" template="sow/navi"></div>
 _HTML_
 	&OutHTMLVilInfoInner($sow,$vil);
 

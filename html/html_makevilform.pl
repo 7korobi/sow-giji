@@ -407,11 +407,6 @@ _HTML_
 	&SWHtmlPC::OutHTMLReturnPC($sow); # トップページへ戻る
 
 	$sow->{'html'}->outcontentfooter();
-
-	require "$cfg->{'DIR_HTML'}/html_sayfilter.pl";
-	print <<"_HTML_";
-<div id="tab" template="sow/navi_edit"></div>
-_HTML_
 	$sow->{'html'}->outfooter(); # HTMLフッタの出力
 	$sow->{'http'}->outfooter();
 
