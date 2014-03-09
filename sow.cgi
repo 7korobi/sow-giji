@@ -324,7 +324,6 @@ sub TaskBranch {
 		require "$dirhtml/html_dialog.pl";
 		&SWHtmlDialog::OutHTMLDialog($sow);
 	} elsif (($cmd eq 'spec')
-	       ||($cmd eq 'changelog')
 	       ||($cmd eq 'howto')
 	       ||($cmd eq 'operate')
 	       ||($cmd eq 'prohibit')
