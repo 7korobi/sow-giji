@@ -53,10 +53,7 @@ sub OutHTMLHeaderPC {
 _HTML_
 
   # スタイルシートの出力
-  my $css   = $cookie->{'theme'} . $cookie->{'width'};
-  my $css ||= "cinema800";
-  print "  <link id=\"giji_css\"      href=\"$sow->{'cfg'}->{'DIR_CSS'}/$css.css\" rel=\"stylesheet\" type=\"text/css\">\n";
-  print "  <link id=\"giji_css_font\" href=\"$sow->{'cfg'}->{'DIR_CSS'}/font/normal.css\" rel=\"stylesheet\" type=\"text/css\">\n";
+  print "  <link href=\"$cfg->{'BASEDIR_DOC'}/assets/application.css\" rel=\"stylesheet\" type=\"text/css\">\n";
 
   # RSSの出力
   if (($sow->{'html'}->{'rss'} ne '') && ($cfg->{'ENABLED_RSS'} > 0)) {
@@ -196,7 +193,7 @@ sub OutHTMLLogin {
   my $hidden = &SWBase::GetHiddenValues($sow, $reqvals, '  ');
 
   print <<"_HTML_";
-<div template="sow/login" ng-show="form.login"></div>
+<div template="sow/login" ng-if="form.login"></div>
 <hr class="invisible_hr"$net>
 _HTML_
 }
@@ -261,13 +258,11 @@ sub OutHTMLChangeCSS {
   my $theme = $cfg->{'THEME'};
 
   print <<"_HTML_";
-<div class="choice">
-<p style="text-align:right; font-size: 100%;" theme="$theme">
-<span><a href="sow.cgi?ua=mb">携帯</a></span>
-｜
-
-</p>
+<div class="choice css_changer">
+  <span><a class="mark" href="sow.cgi?ua=mb">携帯</a></span>
+  <span theme="$theme"></span>
 </div>
+<div class="paginavi" template="theme/style_navi"></div>
 _HTML_
 }
 

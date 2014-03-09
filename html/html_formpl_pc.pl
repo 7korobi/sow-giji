@@ -109,19 +109,11 @@ sub OutHTMLSayPC {
 	$memocnttext = "‚ ‚Æ".$curpl->{'say_act'}.$unitmemo                         if( $costmemo eq 'count' );
 	$memocnttext = "‚ ‚Æ".&SWBase::GetSayCountText($sow, $vil, $sow->{'curpl'}) if( $costmemo eq 'point' );
 
-	my $mes = "";
-	if ($memofile){
-		my $memo = $memofile->getnewmemo($curpl);
-		$mes = $memo->{'log'};
-		&SWHtml::ConvertJSONbyUser(\$mes);
-		$mes = &SWLog::ReplaceAnchorHTMLText($sow, $vil, $mes, $anchor);
-	}
-
 	print <<"_HTML_";
 text_form = {
 	cmd: "wrmemo",
 	jst: "memo",
-	text: "$mes",
+	text: "",
 	votes: [],
 	style: "",
 	title: "ƒƒ‚‚ð“\\‚é",
@@ -145,6 +137,7 @@ text_form = {
 	votes: [],
 	style: "",
 	title: "$title",
+	mestype: "SAY",
 	caption: "",
 	max: {
 		unit: "$cost",
@@ -529,7 +522,31 @@ sub  OutHTMLSayTextAreaExtPC {
 	$title =~ s/_BUTTON_/$label/g;
 	my $count = " ‚ ‚Æ$curpl->{$countid}$unit" if ($cost ne 'none');
 
+    # ƒƒ‚ŠÖ˜A
+	my ($saycnt,$costmemo,$unitmemo,$max_line_memo,$max_size_memo) = $vil->getmemoptcosts();
+
 	print <<"_HTML_";
+text_form = {
+	cmd: "wrmemo",
+	jst: "memo",
+	text: "",
+	style: "",
+	title: "ƒƒ‚‚ð“\\‚é",
+	count: "",
+	caption: "",
+	max: {
+		unit: "$costmemo",
+		line: $max_line_memo,
+		size: $max_size_memo
+	},
+	votes: [],
+	switch: "$sayswitch",
+	mestype: SOW.switch["$sayswitch"].mestype,
+	longname: "$longname",
+	csid_cid: "$img",
+};
+gon.form.texts.push(text_form);
+
 text_form = {
 	cmd: "write",
 	jst: "secret",
@@ -566,6 +583,7 @@ sub OutHTMLVilMakerPC {
 	my $curpl = $sow->{'curpl'};
 	my $csidlist = $sow->{'csidlist'};
 	my @keys = keys(%$csidlist);
+	my $mestype = uc $writemode; 
 
 	# –¼‘O‚ÆID
 	my $longname = $sow->{'charsets'}->getchrname($keys[0], $writemode);
@@ -595,7 +613,7 @@ text_form = {
 	},
 	votes: [],
 	switch: "$writemode",
-	mestype: "SAY",
+	mestype: "$mestype",
 	longname: "$longname",
 	csid_cid: "$keys[0]/$writemode"
 };
@@ -617,7 +635,7 @@ text_form = {
 	votes: [],
 	target: "-1",
 	switch: "$writemode",
-	mestype: "SAY",
+	mestype: "$mestype",
 	longname: "$longname",
 	csid_cid: "$keys[0]/$writemode"
 };

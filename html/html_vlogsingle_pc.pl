@@ -18,7 +18,7 @@ sub OutHTMLSingleLogCastPC {
 	$winlabel  = '参加' if ($cfg->{'ENABLED_WINNER_LABEL'} != 1 );
 
 	print <<"_HTML_";
-<table border="1" class="vindex" summary="配役一覧">
+<table border="1" class="table vindex" summary="配役一覧">
 <thead>
 
 <tr>
@@ -182,9 +182,6 @@ sub OutHTMLMemoSinglePC {
 		} elsif ($memo->{'mestype'} == $sow->{'MESTYPE_INFOSP'}){
 			$append = "";
 		}
-	}
-	if ($log->{'log'} eq '') {
-		$log->{'log'} = '（メモをはがした）' ;
 	}
 
 	my $secret = $vil->isepilogue();

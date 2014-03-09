@@ -139,7 +139,7 @@ sub GetTextRS {
 	my @explain_event = (
 '未定義のイベントです。',
 '今日は、特別なことのない一日のようだ。さあ普段通り、誰かを処刑台にかけよう。',
-'<b><A href="http://crazy-crazy.sakura.ne.jp/giji/?(Event)EVENTID_APRIL_FOOL" TARGET="_blank">四月馬鹿</A></b><br>大変、大変、大変なことになった。きみの役職は変化しているかもしれない。もしも誰かと絆を結んでいるなら、急に相手が憎くなってしまい、絆の相手だけにしか投票できない。そして悟ってしまった。今夜だけは、相方の後を追うことはないと……。<br><table><tr><th colspan=3>役職の変貌<th rowspan=4>※一日で元に戻る<tr><td>賢者<td>←→<td>魔女<tr><td>守護者<td>←→<td>長老<tr><td>賞金稼<td>←→<td>少女</table>',
+'<b><A href="http://crazy-crazy.sakura.ne.jp/giji/?(Event)EVENTID_APRIL_FOOL" TARGET="_blank">四月馬鹿</A></b><br>大変、大変、大変なことになった。きみの役職は変化しているかもしれない。もしも誰かと絆を結んでいるなら、急に相手が憎くなってしまい、絆の相手だけにしか投票できない。そして悟ってしまった。今夜だけは、相方の後を追うことはないと……。<br><table class="table"><tr><th colspan=3>役職の変貌<th rowspan=4>※一日で元に戻る<tr><td>賢者<td>←→<td>魔女<tr><td>守護者<td>←→<td>長老<tr><td>賞金稼<td>←→<td>少女</table>',
 '<b><A href="http://crazy-crazy.sakura.ne.jp/giji/?(Event)EVENTID_TURN_FINK" TARGET="_blank">二重スパイ</A></b><br>なんということだろう！一人が村側を裏切り、狼に与する半端者になってしまった。明日以降も、彼は村人を裏切り続けるだろう……。<br>決定者や光の輪の持ち主なら、このときにその力を手放してしまう。',
 '<b><A href="http://crazy-crazy.sakura.ne.jp/giji/?(Event)EVENTID_TURN_FAIRY" TARGET="_blank">妖精の輪</A></b><br>なんということだろう！一人が森に立ち入り、妖精の養子になってしまった。明日以降も、彼は村人を裏切り続けるだろう……。<br>決定者や光の輪の持ち主なら、このときにその力を手放してしまう。',
 '<b><A href="http://crazy-crazy.sakura.ne.jp/giji/?(Event)EVENTID_ECLIPSE" TARGET="_blank">日蝕</A></b><br>暗い日蝕が村中を覆い、お互い顔も名前も解らない。この闇夜は丸一日続くだろう。他人になりすまし、議論を混乱させることもできてしまうかもしれない。',

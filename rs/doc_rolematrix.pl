@@ -59,7 +59,7 @@ _HTML_
 <h3>$caption</h3>
 
 <div class="paragraph">
-<table class="vindex" summary="$sow->{'textrs'}->{'CAPTION_ROLETABLE'}->{$_}配分表\">
+<table class="table" summary="$sow->{'textrs'}->{'CAPTION_ROLETABLE'}->{$_}配分表\">
 <thead>
 <tr>
 <th scope="col">人数

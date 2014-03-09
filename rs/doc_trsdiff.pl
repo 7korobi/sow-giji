@@ -52,7 +52,7 @@ _HTML_
 	
 	print <<"_HTML_";
 <h3><a $atr_id="ending">勝利者</a></h3>
-<table style="font-size: smaller;;" border="1" class="vindex" summary="勝利陣営\表\示一覧">
+<table style="font-size: smaller;;" border="1" class="table" summary="勝利陣営\表\示一覧">
 <thead>
 <tr>
 _HTML_
@@ -88,7 +88,7 @@ _HTML_
 <hr class="invisible_hr"$net>
 
 <h3><a $atr_id="role">村側の能\力者（役職）</a></h3>
-<table style="font-size: smaller;" border="1" class="vindex" summary="能\力者一覧（村側）">
+<table style="font-size: smaller;" border="1" class="table" summary="能\力者一覧（村側）">
 <thead>
 <tr>
 _HTML_
@@ -127,7 +127,7 @@ _HTML_
 <hr class="invisible_hr"$net>
 
 <h3><a $atr_id="role">$enemyの能\力者（役職）</a></h3>
-<table style="font-size: smaller;" border="1" class="vindex" summary="能\力者一覧（村側）">
+<table style="font-size: smaller;" border="1" class="table" summary="能\力者一覧（村側）">
 <thead>
 <tr>
 _HTML_
@@ -163,7 +163,7 @@ _HTML_
 <hr class="invisible_hr"$net>
 
 <h3><a $atr_id="rolewolf">人狼側の能\力者（役職）</a></h3>
-<table style="font-size: smaller;;" border="1" class="vindex" summary="能\力者一覧（人狼側）">
+<table style="font-size: smaller;;" border="1" class="table" summary="能\力者一覧（人狼側）">
 <thead>
 <tr>
 _HTML_
@@ -199,7 +199,7 @@ _HTML_
 <hr class="invisible_hr"$net>
 
 <h3><a $atr_id="rolepixi">第三勢力の能\力者（役職）</a></h3>
-<table style="font-size: smaller;;" border="1" class="vindex" summary="能\力者一覧（第三勢力）">
+<table style="font-size: smaller;;" border="1" class="table" summary="能\力者一覧（第三勢力）">
 <thead>
 <tr>
 _HTML_
@@ -235,7 +235,7 @@ _HTML_
 <hr class="invisible_hr"$net>
 
 <h3><a $atr_id="roleother">それ以外の能\力者（役職）</a></h3>
-<table style="font-size: smaller;;" border="1" class="vindex" summary="能\力者一覧（その他）">
+<table style="font-size: smaller;;" border="1" class="table" summary="能\力者一覧（その他）">
 <thead>
 <tr>
 _HTML_
@@ -271,7 +271,7 @@ _HTML_
 <hr class="invisible_hr"$net>
 
 <h3><a $atr_id="rolegift">役職以外の能\力（恩恵）</a></h3>
-<table style="font-size: smaller;;" border="1" class="vindex" summary="能\力者一覧（恩恵）">
+<table style="font-size: smaller;;" border="1" class="table" summary="能\力者一覧（恩恵）">
 <thead>
 <tr>
 _HTML_
@@ -311,7 +311,7 @@ _HTML_
 <p class="paragraph">
 <a href="sow.cgi?cmd=howto&trsid=$query->{'trsid'}#event">事件の説明</a>は、遊び方のページにある。
 </p>
-<table style="font-size: smaller;;" border="1" class="vindex" summary="事件一覧">
+<table style="font-size: smaller;;" border="1" class="table" summary="事件一覧">
 <thead>
 <tr>
 _HTML_

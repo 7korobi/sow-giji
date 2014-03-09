@@ -82,12 +82,12 @@ _HTML_
 
 <fieldset>
 <legend>村の名前と説明</legend>
-<input id="vname" type="text" name="vname" ng-model="story.name" size="50">
+<input id="vname" type="text" name="vname" ng-model="story.name" class="form-control">
 _HTML_
 	if ( $fullmanage ) {
 		$vcomment =~ s/<br( \/)?>/\n/ig;
 		print <<"_HTML_";
-<textarea id="vcomment" class="multicolumn_role" name="vcomment" cols="30" rows="10">$vcomment</textarea>
+<textarea id="vcomment" class="form-control" name="vcomment" cols="30" rows="10">$vcomment</textarea>
 </fieldset>
 <fieldset>
 <p>
@@ -227,8 +227,8 @@ _HTML_
 <label><input type="radio" name="entrylimit" value="free" ng-checked="0 == story.entry.password.length">制限なし</label><br>
 <label>
 <input type="radio" name="entrylimit" value="password" ng-checked="0 < story.entry.password.length">参加用パスワード必須（半角８文字以内）
+<input type="text" class="form-control" name="entrypwd" maxlength="8" size="8" ng-model="story.entry.password">
 </label>
-<input type="text" name="entrypwd" maxlength="8" size="8" ng-model="story.entry.password">
 <br>
 </fieldset>
 
@@ -282,7 +282,7 @@ _HTML_
 			# 役職希望無視
 			print <<"_HTML_";
 <dt><label for="game">ゲームルール</label>
-<dd><select id="game" name="game" class="input-large" ng-model="story.type.game">
+<dd><select id="game" name="game" class="form-control" ng-model="story.type.game">
 _HTML_
 
 			my $game     = $sow->{'basictrs'}->{'GAME'};
@@ -303,8 +303,11 @@ _HTML_
 _HTML_
 	}
 	print <<"_HTML_";
-<dt><label for="rating">こだわり</label>
-<dd><select id="rating" name="rating" class="input-large" ng-model="story.rating">
+<dt><label for="rating">
+こだわり
+<img name=cd_img src="$cfg->{'DIR_IMG'}/icon/cd_{{story.rating}}.png">
+</label>
+<dd><select id="rating" name="rating" class="form-control" ng-model="story.rating">
 _HTML_
 
 	# レイティング
@@ -315,13 +318,12 @@ _HTML_
 
 	print <<"_HTML_";
 </select>
-<img name=cd_img src="$cfg->{'DIR_IMG'}/icon/cd_{{story.rating}}.png">
 _HTML_
 
 	if ( $fullmanage ) {
 		print <<"_HTML_";
 <dt><label for="csid">登場人物</label>
-<dd><select id="csid" name="csid" class="input-large" ng-model="story.csid">
+<dd><select id="csid" name="csid" class="form-control" ng-model="story.csid">
 _HTML_
 
 		my $csidlist = $sow->{'cfg'}->{'CSIDLIST'};
@@ -341,7 +343,7 @@ _HTML_
 		print <<"_HTML_";
 </select>
 <dt><label for="saycnttype">発言制限</label>
-<dd><select id="saycnttype" name="saycnttype" class="input-large" ng-model="story.type.say">
+<dd><select id="saycnttype" name="saycnttype" class="form-control" ng-model="story.type.say">
 _HTML_
 
 		my $countssay = $sow->{'cfg'}->{'COUNTS_SAY'};
@@ -353,7 +355,7 @@ _HTML_
 		print <<"_HTML_";
 </select>
 <dt><label for="starttype">開始方法</label>
-<dd><select id="starttype" name="starttype" class="input-large" ng-model="story.type.start">
+<dd><select id="starttype" name="starttype" class="form-control" ng-model="story.type.start">
 _HTML_
 
 		my $starttype = $sow->{'basictrs'}->{'STARTTYPE'};
@@ -365,7 +367,9 @@ _HTML_
 		print <<"_HTML_";
 </select>
 <dt><label for="mob">見物人</label>
-<dd><select id="mob" name="mob" class="input-small" ng-model="story.type.mob">
+<dd>
+<div class="form-inline"><div class="form-group">
+<select id="mob" name="mob" class="form-control input-medium" ng-model="story.type.mob">
 _HTML_
 		my $mob = $sow->{'basictrs'}->{'MOB'};
 		foreach (@{$mob->{'ORDER'}}) {
@@ -374,9 +378,13 @@ _HTML_
 
 		print <<"_HTML_";
 </select>
-<span class="add-on">に</span>
-<input id="cntmob" type="text" name="cntmob" class="input-tiny" size="3" value="$vil->{"cntmob"}">
-<span class="add-on">人</span>
+<span>に</span>
+</div>
+<div class="form-group"><div class="input-group input-small">
+<input id="cntmob" type="number" name="cntmob" class="form-control" size="3" value="$vil->{"cntmob"}">
+<span class="input-group-addon">人</span>
+</div></div>
+</div>
 </fieldset>
 
 <div class="exevmake">
@@ -395,7 +403,7 @@ _HTML_
 	$disabled = " $sow->{'html'}->{'disabled'}" if ($sow->{'user'}->logined() <= 0);
 
 	print <<"_HTML_";
-<input type="submit" value="村の$vmode"$disabled$net>
+<input class="form-control" type="submit" value="村の$vmode"$disabled$net>
 </div>
 </div>
 </form>

@@ -45,7 +45,7 @@ sub outhtml {
 	&SWBase::LoadTextRS($sow, $vil);
 
 	print <<"_HTML_";
-<DIV class=toppage>
+<DIV class="toppage table">
 <p class="paragraph">
 基本設定で、ゲームの詳細なルールを決めています。ルールを確認したい基本設定を選んでから、この下を読みましょう。
 </p>
@@ -171,7 +171,7 @@ _HTML_
 $sow->{'textrs'}->{'WIN_HUMAN'}
 </p>
 <div id="filter_role"> 
-<table border="1" class="vindex" summary="能\力者一覧（村側）">
+<table border="1" class="table" summary="能\力者一覧（村側）">
 <thead>
   <tr>
     <th scope="col">能\力</th>
@@ -215,7 +215,7 @@ _HTML_
 $enemy_win
 </p>
 <div id="filter_roleenemy"> 
-<table border="1" class="vindex" summary="能\力者一覧（$enemy）">
+<table border="1" class="table" summary="能\力者一覧（$enemy）">
 <thead>
   <tr>
     <th scope="col">能\力</th>
@@ -253,7 +253,7 @@ _HTML_
 $sow->{'textrs'}->{'WIN_WOLF'}
 </p>
 <div id="filter_rolewolf"> 
-<table border="1" class="vindex" summary="能\力者一覧（人狼側）">
+<table border="1" class="table" summary="能\力者一覧（人狼側）">
 <thead>
   <tr>
     <th scope="col">能\力</th>
@@ -291,7 +291,7 @@ _HTML_
 $sow->{'textrs'}->{'WIN_PIXI'}
 </p>
 <div id="filter_rolepixi"> 
-<table border="1" class="vindex" summary="能\力者一覧（第三勢力）">
+<table border="1" class="table" summary="能\力者一覧（第三勢力）">
 <thead>
   <tr>
     <th scope="col">能\力</th>
@@ -327,7 +327,7 @@ _HTML_
 </p>
 
 <div id="filter_roleother"> 
-<table border="1" class="vindex" summary="能\力者一覧（その他）">
+<table border="1" class="table" summary="能\力者一覧（その他）">
 <thead>
   <tr>
     <th scope="col">能\力</th>
@@ -364,7 +364,7 @@ _HTML_
 </p>
 
 <div id="filter_rolegift"> 
-<table border="1" class="vindex" summary="恩恵一覧">
+<table border="1" class="table" summary="恩恵一覧">
 <thead>
   <tr>
     <th scope="col">恩恵</th>
@@ -423,7 +423,7 @@ _HTML_
 </p>
 
 <div id="filter_event"> 
-<table border="1" class="vindex" summary="事件一覧">
+<table border="1" class="table" summary="事件一覧">
 <thead>
   <tr>
     <th scope="col">事件</th>
@@ -501,7 +501,7 @@ _HTML_
 勝負が終わると、生き残りの人数や、特定の役が生きているか、どのように死んだのかによって、勝敗が決定します。結果によって勝利宣言がなされ、全員のIDと割り当てられた能\力が公開されます。また、独り言や囁きなど、勝負の最中には他人に見えないようになっていた発言も公開されます。
 </p>
 
-<table class=vindex>
+<table class=table>
 <thead>
 <tr>
 <th scope="col">勝敗</th>

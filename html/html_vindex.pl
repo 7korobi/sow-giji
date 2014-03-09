@@ -21,10 +21,10 @@ sub OutHTMLVIndex {
 	$pageno = $query->{'pageno'} if (defined($query->{'pageno'}));
 
 	print <<"_HTML_";
-<table border="1" class="vindex" summary="‘º‚Ìˆê——">
+<table border="1" class="vindex table" summary="‘º‚Ìˆê——">
 <thead>
   <tr>
-    <th scope="col"><code ng-click="stories_is_small = ! stories_is_small"><i class="icon-resize-small" ng-show="stories_is_small"></i><i class="icon-resize-full" ng-hide="stories_is_small"></i></code></th>
+    <th scope="col"><code ng-click="stories_is_small = ! stories_is_small"><i class="glyphicon glyphicon-resize-small" ng-show="stories_is_small"></i><i class="glyphicon glyphicon-resize-full" ng-hide="stories_is_small"></i></code></th>
 _HTML_
 
 	if ($vmode eq 'oldlog') {
@@ -148,7 +148,7 @@ _HTML_
 		$link = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?".$link;
 
 		$reqvals->{'cmd'} = 'vinfo';
-		my $linkvinfo = $link . "#mode=info_open_player";
+		my $linkvinfo = $link . "#mode=info_open_last";
 
 		$reqvals->{'cmd'} = 'howto';
 		$reqvals->{'trsid'} = $vil->{'trsid'};

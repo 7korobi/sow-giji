@@ -19,9 +19,15 @@ sub OutHTMLEntryFormPC {
 	# 発言欄textarea要素の出力
 	my ($saycnt,$cost,$unit,$max_line,$max_size) = $vil->getsayptcosts();
 
-	print <<"_HTML_" unless ($isplok);
+    if ($isplok) {
+		print <<"_HTML_"
+gon.cautions.push("あと $isplok 人参加できます。");
+_HTML_
+    } else {
+		print <<"_HTML_"
 gon.cautions.push("既に定員に達しています。");
 _HTML_
+    }
 	return unless (($isplok)||($ismobok));
 
 	require "$sow->{'cfg'}->{'DIR_LIB'}/setrole.pl";

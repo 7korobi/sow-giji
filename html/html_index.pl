@@ -87,7 +87,7 @@ _HTML_
 	$linkrss = '' if ($cfg->{'ENABLED_RSS'} == 0);
 
 
-	my $linkvmake = '<input type="submit"  class="btn" value="村の作成">';
+	my $linkvmake = '<input type="submit"  class="btn btn-default" value="村の作成">';
 	my $vcnt          = $sow->{'cfg'}->{'MAX_VILLAGES'} - $vindex->getactivevcnt() ;
 	my $caution_vmake = 'あと'.$vcnt.'村が建てられます。';
 
@@ -160,7 +160,7 @@ gon.rule = [
   name:'学者 レオナルド',
   text:'<a href="sow.cgi?cmd=rule" class="mark">ルールと心構\え</a>を守って、楽しく、強く遊ぼう。<br>\\
 ここでは、みんなに守ってほしいルールや、吟味してほしい心構\えを紹介するよ。<br>\\
-では、リンク先の１ページ目から\―\―\― ',
+では、リンク先の１ページ目から\―\―\―\ ',
 updated_at: new Date(1389008975000),template:"message/say",mestype:"SAY",csid:"all",face_id:"c96",style:"head"},
 ];
 
@@ -258,7 +258,7 @@ _HTML_
 <dd class="plain">
 <div class="chrlist">
 <p>キャラクターを選ぶ参考に、<a class="mark" href="http://giji.check.jp/map_reduce/faces">人気度集計</a>をチェックしてもいいかもね。</p>
-<div style="font-size:80%; line-height:120%;" template="navi/chr_list">
+<div template="navi/chr_list">
 </div></div>
 <dt>この州の設定
 <dd class="plain">
@@ -324,7 +324,7 @@ _HTML_
 <div class="ng-scope ng-binding"><div class="VSAY"><div class="action">
 _HTML_
 	if ( $sow->{'cfg'}->{'ENABLED_VMAKE'} > 0 ) {
-		if ('CIEL' eq $cfg->{'RULE'}){
+		if ('CHEAT' eq $cfg->{'TYPE'}){
 			print <<"_HTML_";
 <p class="text">
 便利な<a class="mark" href="{{link.plan}}">企画村予\定表\</a>はもう見た？建てた村に人が集まりそうかどうか、\予\想できるかもしれないよ。<br>
@@ -340,10 +340,10 @@ _HTML_
 		print <<"_HTML_";
 <div class="mark ng-binding"></div>
 <div class="controls controls-row formpl_content" ng-show="yes_i_read_it">
-<form action="$urlsow" method="get" ng-show="yes_i_read_it">
+<form class="form-inline" action="$urlsow" method="get" ng-show="yes_i_read_it">
 <input type="hidden" name="cmd" value="makevilform">
 <input type="hidden" name="css" value="$sow->{'query'}->{'css'}">
-<select id="trsid" name="trsid">
+<select class="form-control input-large" id="trsid" name="trsid">
 _HTML_
 		foreach (@$trsidlist) {
 			my %dummyvil = (
@@ -380,10 +380,10 @@ _HTML_
 <dt>ゲーム内での文章
 <dd>
 ゲーム内で現れる文章の一覧を見ることができます。参考にどうぞ。
-<form action="$urlsow" method="get" >
+<form class="form-inline" action="$urlsow" method="get" >
 <input type="hidden" name="cmd" value="trslist">
 <input type="hidden" name="css" value="$sow->{'query'}->{'css'}">
-<select id="trsid" name="trsid">
+<select class="form-control input-large" id="trsid" name="trsid">
 _HTML_
 	foreach (@$trsidlist) {
 		my %dummyvil = (
@@ -398,7 +398,7 @@ _HTML_
 
 	print <<"_HTML_";
 </select>
-<input type="submit"  class="btn" value="文章を見る">
+<input type="submit"  class="btn btn-default" value="文章を見る">
 </form>
 
 </dl>

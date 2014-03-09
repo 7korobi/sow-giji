@@ -29,7 +29,7 @@ sub outhtml {
 	my $docid = "css=$query->{'css'}&trsid=$query->{'trsid'}";
 
 	print <<"_HTML_";
-<DIV class=toppage>
+<DIV class="toppage">
 _HTML_
 	require "$sow->{'cfg'}->{'DIR_LIB'}/file_vil.pl";
 	my $vil = SWFileVil->new($sow, 0);
@@ -59,7 +59,8 @@ _HTML_
   <li>生存人数カウント　　人間一人、と数えるのか、人狼ひとり、と数えるのか、どちらにも数えないのか。</li>
   <li>勝利条件　　どの条件で終了したとき、勝利するのか</li>
 </ul>
-<table class=vindex>
+<div class="table-swipe">
+<table class="table">
 <thead>
 <tr><td rowspan=3><td rowspan=3>ログ<td colspan=2>襲撃<td rowspan=2 colspan=4>占・霊能\力判定結果<td rowspan=3>気配<td colspan=3 class=sayfilter_incontent>寿命に関わる狼人数
 <tr class=small><td colspan=2>選択可？<td><td colspan=2>生存人数カウント
@@ -195,6 +196,7 @@ _HTML_
 	print <<"_HTML_";
 </tbody>
 </table>
+</div>
 
 <h3><a $atr_id="ending">勝敗の決定</a></h3>
 <p class="paragraph">
@@ -205,7 +207,7 @@ _HTML_
 勝負が終わると、生き残りの人数や、特定の役が生きているか、どのように死んだのかによって、勝敗が決定します。結果によって勝利宣言がなされ、全員のIDと割り当てられた能\力が公開されます。また、独り言や囁きなど、勝負の最中には他人に見えないようになっていた発言も公開されます。
 </p>
 
-<table class=vindex>
+<table class="table">
 <thead>
 <tr>
 <th scope="col">勝敗</th>

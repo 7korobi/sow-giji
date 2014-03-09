@@ -299,6 +299,7 @@ _HTML_
 </div>
 <script>
 window.gon = {};
+gon.errors = {};
 gon.form_show = {
 	memo: true,
 	open: true,

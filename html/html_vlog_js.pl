@@ -5,45 +5,40 @@ package SWHtmlVlogJS;
 #----------------------------------------
 sub OutHTMLVlogJS {
 	my ($sow, $vil, $maxrow, $logfile, $logs, $logkeys, $logrows, $memofile, $memos, $memokeys, $memorows) = @_;
-	my $pllist = $vil->getpllist();
-
-	my $net   = $sow->{'html'}->{'net'}; # Null End Tag
-	my $amp   = $sow->{'html'}->{'amp'};
 	my $cfg   = $sow->{'cfg'};
-	my $query = $sow->{'query'};
-
-	my $reqvals = &SWBase::GetRequestValues($sow);
-
-	$reqvals->{'row'} = '';
-	$reqvals->{'rowall'} = '';
-	my $news_link = &SWBase::GetLinkValues($sow, $reqvals);
-	$news_link   = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?" . $news_link;
-
-	my $link = &SWBase::GetLinkValues($sow, $reqvals);
-	$link = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$link";
-
-	my $logfilelist = $logfile->getlist();
-
-	# ログID指定表示スイッチ
-	my $modesingle = 0;
-	$modesingle = 1 if (($query->{'logid'} ne '') && ($query->{'move'} ne 'prev') && ($query->{'move'} ne 'next'));
 
 	&OutHTMLGonInit($sow); # ログイン欄の出力
 	# アナウンス／入力・参加フォーム表示
 	if (($modesingle == 0) && ($sow->{'turn'} == $vil->{'turn'}) && ($logrows->{'end'} > 0)) {
 		&OutHTMLVlogFormArea($sow, $vil, $memofile)
 	}
+
 	$vil->gon_story();
 	$vil->gon_event();
 	$vil->gon_potofs();
 
 	print <<"_HTML_";
 var mes = {
-	"template": "sow/village_info",
-	"logid": "vilinfo00000",
+	"template": "sow/status_info",
+	"logid": "status",
 	"date": 0
 };
 gon.event.messages.push(mes);
+
+var mes = {
+	"template": "message/cast",
+	"logid": "potofs",
+	"date": 1
+};
+gon.event.messages.push(mes);
+
+var mes = {
+	"template": "sow/village_info",
+	"logid": "vilinfo",
+	"date": 2
+};
+gon.event.messages.push(mes);
+
 _HTML_
 
 	# 村ログ表示
@@ -63,11 +58,15 @@ _HTML_
 			&SWHtmlVlogSinglePC::OutHTMLMemoSinglePC($sow, $vil, $memofile, $_, \%anchor);
 		}
 	} else {
-		$last .= "メモはありません。";
+		print <<"_HTML_";
+gon.cautions.push("メモはありません。");
+_HTML_
 	}
 
 	if (($sow->{'turn'} == $vil->{'turn'}) && ($vil->{'epilogue'} < $vil->{'turn'})) {
-		$last .= "終了しました。";
+		print <<"_HTML_";
+gon.cautions.push("メモはありません。");
+_HTML_
 	} else {
 		my %anchor = (
 			logfile => $logfile,
@@ -89,11 +88,9 @@ _HTML_
 gon.event.is_news = (0 == $has_all_messages);
 gon.event.has_all_messages = (0 != $has_all_messages);
 
-var log = "← " + ((new Date).format('({dow}){TT}{hh}時{mm}分', 'ja')) + " より先を見る<br />$last";
 var mes = {
 	"template": "sow/log_last",
 	"logid":  "IX99999",
-	"log":   log,
 	"date":  new Date
 };
 gon.event.messages.push(mes);
@@ -109,7 +106,7 @@ _HTML_
 sub OutHTMLVlogFormArea {
 	my ($sow, $vil, $memofile) = @_;
 	my $cfg = $sow->{'cfg'};
-	my $net = $sow->{'html'}->{'net'};
+
 	my $pllist = $vil->getpllist();
 	my $date = $sow->{'dt'}->cvtdt($vil->{'nextupdatedt'});
 
