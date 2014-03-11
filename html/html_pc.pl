@@ -118,7 +118,7 @@ sub OutHTMLContentFrameHeader {
   $reqvals->{'turn'} = '';
   my $link = &SWBase::GetLinkValues($sow, $reqvals);
 
-  my $titlestart = "<a href=\"$urlsow?$link\">";
+  my $titlestart = "<a tabindex=\"-1\" href=\"$urlsow?$link\">";
   my $titleend = '</a>';
   if (($query->{'cmd'} eq 'entrypr') || ($query->{'cmd'} eq 'writepr')) {
     $titlestart = '';
@@ -144,7 +144,7 @@ sub OutHTMLContentFrameFooter {
 
   print <<"_HTML_";
 <address>
-<a $atr_id="bottom">$sow->{'VERSION_SW'}</a> <a href="$sow->{'URL_AUTHOR'}">$sow->{'COPY_AUTHOR'}</a><br$net>
+<a tabindex="-1" $atr_id="bottom">$sow->{'VERSION_SW'}</a> <a tabindex="-1" href="$sow->{'URL_AUTHOR'}">$sow->{'COPY_AUTHOR'}</a><br$net>
 _HTML_
 
   my $copyrights = $sow->{'cfg'}->{'COPYRIGHTS'};
@@ -242,7 +242,7 @@ sub OutHTMLReturnPC {
 
   print <<"_HTML_";
 <p class="return">
-<a href="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$link">トップページに戻る</a>
+<a tabindex="-1" href="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$link">トップページに戻る</a>
 </p>
 <hr class="invisible_hr"$net>
 

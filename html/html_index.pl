@@ -83,7 +83,7 @@ _HTML_
 		$imgrating .= "<img src=\"$cfg->{'DIR_IMG'}/$rating->{$_}->{'FILE'}\" width=\"$rating->{$_}->{'WIDTH'}\" height=\"$rating->{$_}->{'HEIGHT'}\" alt=\"[$rating->{$_}->{'ALT'}]\" title=\"$rating->{$_}->{'CAPTION'}\"$net> " if ($rating->{$_}->{'FILE'} ne '');
 	}
 
-	my $linkrss = " <a href=\"$urlsow?cmd=rss\">RSS</a>";
+	my $linkrss = " <a tabindex=\"-1\" href=\"$urlsow?cmd=rss\">RSS</a>";
 	$linkrss = '' if ($cfg->{'ENABLED_RSS'} == 0);
 
 

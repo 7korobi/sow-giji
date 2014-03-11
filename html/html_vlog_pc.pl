@@ -23,7 +23,7 @@ sub OutHTMLVlogPC {
     &SWHtmlPC::OutHTMLChangeCSS($sow);
 
 	# å©èoÇµÅië∫ñºÇ∆RSSÅj
-	my $linkrss = " <a href=\"$link$amp". "cmd=rss\">RSS</a>";
+	my $linkrss = " <a tabindex=\"-1\" href=\"$link$amp". "cmd=rss\">RSS</a>";
 	$linkrss = '' if ($cfg->{'ENABLED_RSS'} == 0);
 
 	print <<"_HTML_";

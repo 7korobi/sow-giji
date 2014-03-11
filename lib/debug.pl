@@ -217,7 +217,7 @@ _HTML_
 
 	print <<"_HTML_";
 <p class="return">
-<a href="$cfg->{'BASEDIR_CGIERR'}/$cfg->{'FILE_SOW'}">必死にトップページに戻る</a>
+<a tabindex="-1" href="$cfg->{'BASEDIR_CGIERR'}/$cfg->{'FILE_SOW'}">必死にトップページに戻る</a>
 </p>
 
 _HTML_
