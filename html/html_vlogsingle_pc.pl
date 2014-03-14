@@ -104,7 +104,7 @@ _HTML_
 sub OutHTMLSingleLogPC {
 	my ($sow, $vil, $log, $no, $newsay, $anchor, $modesingle) = @_;
 	my $cfg = $sow->{'cfg'};
-	
+
 	my $logmestype = substr($log->{'logid'}, 0, 1);
 
 	my $to   = "";
@@ -130,11 +130,16 @@ sub OutHTMLSingleLogPC {
 	}
 	&SWHtml::ConvertJSONbyUser(\$log->{'log'});
 
+  my $vid = $vil->{'vid'};
+  my $turn = $sow->{'turn'};
+	my $logid = $log->{'logid'};
+
 	print <<"_HTML_";
 var mes_log = "$log->{'log'}";
 var mes = {
+	"_id": "SOW-$vid-$turn-$logid",
 	"subid": "$log->{'logsubid'}",
-	"logid": "$log->{'logid'}",
+	"logid": "$logid",
 	"csid": "$log->{'csid'}",
 	"face_id": "$log->{'cid'}",
 	"style": "$style",
@@ -201,11 +206,16 @@ sub OutHTMLMemoSinglePC {
 	my $name = $log->{'chrname'};
 	&SWHtml::ConvertJSONbyUser(\$log->{'log'});
 
+  my $vid = $vil->{'vid'};
+  my $turn = $sow->{'turn'};
+	my $logid = "MM".$log->{'logid'};
+
 	print <<"_HTML_";
 var mes_log = "$log->{'log'}";
 var mes = {
+	"_id": "SOW-$vid-$turn-$logid",
 	"subid": "M",
-	"logid": "MM$log->{'logid'}",
+	"logid": "$logid",
 	"csid": "$log->{'csid'}",
 	"face_id": "$log->{'cid'}",
 	"style": "$style",
