@@ -82,7 +82,6 @@ sub SetDataCmdWriteMemo {
 
 	my $memofile = SWSnake->new($sow, $vil, $vil->{'turn'}, 0);
 	my $newmemo = $memofile->getnewmemo($writepl);
-	$debug->raise($sow->{'APLOG_NOTICE'}, 'メモを貼っていません。', "memo not found.$errfrom") if (($checknosay == 0) && ($newmemo->{'log'} eq ''));
 
 	# メモデータファイルへの書き込み
 	my $monospace = 0 + $query->{'monospace'};
