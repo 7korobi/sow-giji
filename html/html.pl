@@ -16,6 +16,7 @@ sub new {
 		rss    => '',
 	};
 	$self->{'file_js'} = $sow->{'cfg'}->{'FILE_JS'};
+	$self->{'file_css'} = $sow->{'cfg'}->{'FILE_CSS'};
 
 	bless($self, $class);
 	$self->initua($forceua); # ’[––Ž¯•Ê

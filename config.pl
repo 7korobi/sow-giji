@@ -490,17 +490,21 @@ sub GetConfig {
 		biohazard => \%cd_biohazard,
 	);
 
+	my @file_css = (
+		'assets-angular/application.css',
+	);
+
 	my @file_js = (
-		'assets/data.js',
-		'assets/base.js',
-		'assets/sow.js',
-		'assets/boot.js',
+		'assets-angular/data.js',
+		'assets-angular/base.js',
+		'assets-angular/sow.js',
+		'assets-angular/boot.js',
 	);
 	my @file_js_vil = (
-		'assets/data.js',
-		'assets/base.js',
-		'assets/sow.js',
-		'assets/boot.js',
+		'assets-angular/data.js',
+		'assets-angular/base.js',
+		'assets-angular/sow.js',
+		'assets-angular/boot.js',
 	);
 
 	my %cfg = (
@@ -680,6 +684,7 @@ sub GetConfig {
 		FILE_MEMOINDEX => "memoidx.cgi",
 		FILE_SCORE     => "score.cgi",
 
+		FILE_CSS       => \@file_css,
 		FILE_JS        => \@file_js,
 		FILE_JS_VIL    => \@file_js_vil,
 		FILE_FAVICON   => "favicon.ico",
@@ -712,8 +717,6 @@ sub GetConfig {
 	$cfg{'DIR_VIL'}        = "./data/vil";
 	$cfg{'DIR_USER'}       = "./data/user";
 	$cfg{'DIR_IMG'}        = "$cfg{'BASEDIR_DOC'}/images";
-	$cfg{'DIR_CSS'}        = "$cfg{'BASEDIR_DOC'}/stylesheets";
-	$cfg{'DIR_JS'}         = "$cfg{'BASEDIR_DOC'}/javascripts";
 	$cfg{'DIR_LOG'}        = "$cfg{'BASEDIR_DAT'}/log";
 	$cfg{'FILE_LOCK'}      = "$cfg{'BASEDIR_DAT'}/lock";
 	$cfg{'DIR_RECORD'}     = "$cfg{'BASEDIR_DAT'}/record";

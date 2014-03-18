@@ -53,7 +53,12 @@ sub OutHTMLHeaderPC {
 _HTML_
 
   # スタイルシートの出力
-  print "  <link href=\"$cfg->{'BASEDIR_DOC'}/assets/application.css\" rel=\"stylesheet\" type=\"text/css\">\n";
+  if (defined($sow->{'html'}->{'file_css'})) {
+    my $file_css = $sow->{'html'}->{'file_css'};
+    foreach (@$file_css) {
+      print "  <link href=\"$cfg->{'BASEDIR_DOC'}/$_\" rel=\"stylesheet\" type=\"text/css\">\n";
+    }
+  }
 
   # RSSの出力
   if (($sow->{'html'}->{'rss'} ne '') && ($cfg->{'ENABLED_RSS'} > 0)) {
