@@ -144,6 +144,10 @@ _HTML_
 
 		$reqvals->{'cmd'} = '';
 		$reqvals->{'vid'} = $_->{'vid'};
+		if ($vmode eq 'oldlog'){
+			$reqvals->{'turn'} = 0;
+			$reqvals->{'rowall'} = 'on';
+		}
 		my $link = &SWBase::GetLinkValues($sow, $reqvals);
 		$link = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?".$link;
 
