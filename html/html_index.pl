@@ -239,16 +239,16 @@ _HTML_
 
 <dt>終了した村
 <dd class="plain">
-<div class="message_filter" ng-repeat="message in oldlog" log="message"></div>
+<div class="message_filter" logs="oldlog"></div>
 
 <dt>プレイガイド
 <dd class="plain">
-<div class="message_filter" ng-repeat="message in guide" log="message"></div>
+<div class="message_filter" logs="guide"></div>
 
 </dl>
 
 <h2>村を選ぶ</h2>
-<div class="message_filter" ng-repeat="message in rule" log="message"></div>
+<div class="message_filter" logs="rule"></div>
 
 
 <dl class="accordion">
@@ -262,7 +262,7 @@ _HTML_
 </div></div>
 <dt>この州の設定
 <dd class="plain">
-<div class="message_filter" ng-repeat="message in setting" log="message"></div>
+<div class="message_filter" logs="setting"></div>
 </dl>
 
 <h3>募集中／開始待ち$linkrss</h3>
@@ -410,7 +410,7 @@ _HTML_
 <dt> <span class="mark"> &#x2718; </span>
 <dt> 対応ブラウザ
 <dd class="plain">
-<div class="message_filter" ng-repeat="message in browsers" log="message"></div>
+<div class="message_filter" logs="browsers"></div>
 <dt> プログラム
 <dd>
 <ul>
@@ -421,7 +421,7 @@ _HTML_
 </ul>
 <dt> 謝辞
 <dd>
-<p> 
+<p>
 作成にあたり、こちらのサイトを参考にさせていただきました。<br>
 ありがとうございます。
 </p>
