@@ -21,21 +21,21 @@ sub OutHTMLVlogJS {
 var mes = {
 	"template": "sow/status_info",
 	"logid": "status",
-	"date": 0
+	"date": 1
 };
 gon.event.messages.push(mes);
 
 var mes = {
 	"template": "message/cast",
 	"logid": "potofs",
-	"date": 1
+	"date": 2
 };
 gon.event.messages.push(mes);
 
 var mes = {
 	"template": "sow/village_info",
 	"logid": "vilinfo",
-	"date": 2
+	"date": 3
 };
 gon.event.messages.push(mes);
 
@@ -43,7 +43,7 @@ _HTML_
 
 	# 村ログ表示
 	require "$cfg->{'DIR_HTML'}/html_vlogsingle_pc.pl";
-    my $last = "";
+  my $last = "";
 	my $has_all_messages = 0 + (($maxrow < 1)&&($sow->{'turn'} != $vil->{'turn'}));
 
 	if (@$memos > 0) {
@@ -65,7 +65,7 @@ _HTML_
 
 	if (($sow->{'turn'} == $vil->{'turn'}) && ($vil->{'epilogue'} < $vil->{'turn'})) {
 		print <<"_HTML_";
-gon.cautions.push("メモはありません。");
+gon.cautions.push("終了しました。");
 _HTML_
 	} else {
 		my %anchor = (
