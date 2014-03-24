@@ -491,20 +491,20 @@ sub GetConfig {
 	);
 
 	my @file_css = (
-		'assets-angular/application.css',
+		'assets-cleanup/application.css',
 	);
 
 	my @file_js = (
-		'assets-angular/data.js',
-		'assets-angular/base.js',
-		'assets-angular/sow.js',
-		'assets-angular/boot.js',
+		'assets-cleanup/data.js',
+		'assets-cleanup/base.js',
+		'assets-cleanup/sow.js',
+		'assets-cleanup/boot.js',
 	);
 	my @file_js_vil = (
-		'assets-angular/data.js',
-		'assets-angular/base.js',
-		'assets-angular/sow.js',
-		'assets-angular/boot.js',
+		'assets-cleanup/data.js',
+		'assets-cleanup/base.js',
+		'assets-cleanup/sow.js',
+		'assets-cleanup/boot.js',
 	);
 
 	my %cfg = (
@@ -516,14 +516,14 @@ sub GetConfig {
 		USERID_NPC     => "master",
 		USERID_ADMIN   => "admin",
 		ENABLED_VMAKE  => 1,
-		URL_SW         => "http://localhost/angular",
+		URL_SW         => "http://localhost/cleanup",
 		NAME_HOME      => "l˜T‹cŽ– ŽI‚Ì–¡‘XŽÏ",
 		RULE           => "BRAID",
 		MAX_VILLAGES   => 2,
 		TIMEOUT_SCRAP  => 5,
 		TIMEOUT_ENTRY  => 2,
 		TOPPAGE_INFO   => "./_info.pl",
-		BASEDIR_CGIERR => "http://localhost/angular//",
+		BASEDIR_CGIERR => "http://localhost/cleanup//",
 		BASEDIR_CGI    => ".",
 		BASEDIR_DAT    => "./data",
 		BASEDIR_DOC    => "http://localhost",
