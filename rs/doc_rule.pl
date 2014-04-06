@@ -248,7 +248,7 @@ updated_at:new Date(1370662886000),template:"message/say",style:"",mestype:"GSAY
 ];
 </script>
 <h2>準備はいいかな？</h2>
-<div class="message_filter" ng-repeat="message in welcome" log="message"></div>
+<div class="message_filter" logs="welcome"></div>
 <DIV class=toppage>
 
 <p class="paragraph">
@@ -302,15 +302,15 @@ _HTML_
 
 <dt> <span class="mark"> はじめに </span>
 <dd class="plain">
-<div class="message_filter" ng-repeat="message in violation" log="message"></div>
+<div class="message_filter" logs="violation"></div>
 
 <dt> <span class="mark"> 突然死 </span>
 <dd class="plain">
-<div class="message_filter" ng-repeat="message in no_suddendeath" log="message"></div>
+<div class="message_filter" logs="no_suddendeath"></div>
 
 <dt> <span class="mark"> どうすればいいの？ </span>
 <dd class="plain">
-<div class="message_filter" ng-repeat="message in recovery" log="message"></div>
+<div class="message_filter" logs="recovery"></div>
 </dl>
 
 <hr class="invisible_hr"$net>
@@ -337,7 +337,7 @@ _HTML_
 <hr class="invisible_hr"$net>
 <h2><a name="make">$sow->{'cfg'}->{'NAME_SW'}の運営</a></h2>
 <h3>村を建てるかたへ</h3>
-<div class="message_filter" ng-repeat="message in create" log="message"></div>
+<div class="message_filter" logs="create"></div>
 <hr class="invisible_hr"$net>
 <h3>村建て人の心構\え</h3>
 <p class="paragraph">

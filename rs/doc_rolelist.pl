@@ -300,6 +300,8 @@ _HTML_
 <script>
 window.gon = {};
 gon.errors = {};
+gon.events = [{is_progress: true}];
+gon.event = {};
 gon.form_show = {
 	memo: true,
 	open: true,
