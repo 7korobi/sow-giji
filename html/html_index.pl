@@ -138,7 +138,7 @@ updated_at: new Date(1389008975000),template:"message/action",mestype:"SAY"},
   text: 'いらっしゃい。$cfg->{'NAME_SW'}のことを知りたいんだね。それなら、人狼議事公式ガイドブックを開いてごらん。<br>\\
 あるいは、ほかのリンク先をお求めかな。<br>\\
 <br>\\
-<ul>\\
+<ul class="text">\\
 <li><a class="mark" href="$urlsow?cmd=about">ご紹介</a>そもそも、どういうものなんだろう\\
 <li><a class="mark" href="$urlsow?cmd=howto">遊び方</a>参加から終了までの流れが知りたい\\
 <li><a class="mark" href="$urlwiki$linkoperate">操作方法</a>プレイ中の詳しい操作を知りたい\\
@@ -148,7 +148,7 @@ updated_at: new Date(1389008975000),template:"message/say",mestype:"SAY",csid:"a
   name:'花売り メアリー',
   text: hello + '。もしあなたが、どこかで人狼ゲームを遊んだ事があるなら、<a class="mark" href="$urlwiki$linkspec">他の人狼ゲームとの違い</a>をどうぞ。<br>\\
 それとも調べ物？だったらお好きな一輪を。<br><br>\\
-<ul>\\
+<ul class="text">\\
 <li><a class="mark" href="$urlsow?cmd=roleaspect&trsid=all">役職と能\力の一覧\表\</a>を調べる。\\
 <li><a class="mark" href="$urlsow?cmd=rolelist">役職ごとのインターフェース</a>を調べる。\\
 </ul>',
@@ -168,7 +168,7 @@ gon.setting = [
 { mesicon:'【赤】',
   name:'新聞配達 モリス', to:'？',
   text:'<a class="mark" href="$link_state_page">くわしい特徴</a>はこうだ。わかるか？…またな。<br>\\
-<ul>\\
+<ul class="text">\\
 <li>廃村期限は$cfg->{'TIMEOUT_SCRAP'}日間\\
 <li>内緒話の村を$enabled_aiming\\
 <li>狂人は$enabled_ambidexter\\
@@ -188,7 +188,8 @@ gon.browsers = [
 { mesicon:'【人】',
   name:'店番 ソ\フィア',
   text:'これらのブラウザで動作確認済みです。\\
-<br><ul>\\
+<br>\\
+<ul class="text">\\
 <li>Internet Explorer : 9 以降\\
 <li>Firefox : 20.0 以降\\
 <li>Opera 12.15 以降\\
