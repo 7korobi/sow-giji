@@ -845,7 +845,7 @@ sub gon_story {
 		$config = join('/', @config_list);
 		$eventcard = $vil->{'eventcard'};
 		$rolediscard = $vil->{'rolediscard'};
-	} 
+	}
 
 	my $vstatus = $vil->getvstatus();
 
@@ -1007,11 +1007,10 @@ _HTML_
 		$turnname = "プロローグ" if ($i == 0);
 		$turnname = "エピローグ" if ($i == $vil->{'epilogue'});
 
-		my $linkturn = $amp."rowall=on".$amp."turn=$i";
+		my $linkturn = "&rowall=on&turn=$i";
 		my $newsturn = "";
 	    if ($i == $vil->{'turn'}){
     		$is_progress = 1;
-			$turnname .= " (最新)";
 	    } else {
     		$is_progress = 0;
 	    }
@@ -1021,7 +1020,7 @@ _HTML_
 var event = {
 	"is_progress": (1 == $is_progress),
 	"name": "$turnname",
-	"link": _.unescape("$link_to"),
+	"link": "$link_to",
 	"news": null,
 	"turn": $i
 }
@@ -1029,7 +1028,7 @@ gon.events.push(event);
 _HTML_
 	    if ($is_progress){
 			print <<"_HTML_";
-event.news = _.unescape("$news_to");
+event.news = "$news_to";
 _HTML_
 		}
 	}

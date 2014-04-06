@@ -19,8 +19,8 @@ sub OutHTMLVlogJS {
 
 	print <<"_HTML_";
 var mes = {
-	"template": "sow/status_info",
-	"logid": "status",
+	"template": "sow/unread_info",
+	"logid": "unread",
 	"date": 1
 };
 gon.event.messages.push(mes);
