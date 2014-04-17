@@ -35,11 +35,19 @@ sub glock {
 	my $sow = $self->{'sow'};
 
 	my @sig = ('INT', 'HUP', 'QUIT', 'TERM', 'PIPE', 'DIE');
+
 	foreach (@sig) {
 		if (defined($SIG{$_})) {
 			$SIG{$_} = \&gunlock($self);
 		}
 	}
+	$SIG{ALRM} = sub {
+		$self->gunlock();
+		$sow->{'debug'}->raise($sow->{'APLOG_CAUTION'}, "30秒待ってやり直してください。同村者の処理に長く時間がかかっています。", "too long lock. anyone process more than 30 sec.");
+		die "timeout";
+	};
+
+	alarm(5);  # 先行プロセスを待つ時間（5sec）
 
 	if ($sow->{'cfg'}->{'ENABLED_GLOCK'} == 0) {
 		$sow->{'debug'}->writeaplog($sow->{'APLOG_OTHERS'}, 'no lock.[Lock]');
@@ -49,6 +57,8 @@ sub glock {
 	} else {
 		$self->glockr();
 	}
+
+	alarm(30); # 自分自身の制限時間（30sec）
 }
 
 #----------------------------------------
@@ -66,6 +76,7 @@ sub gunlock {
 	} else {
 		$self->gunlockr();
 	}
+	alarm(0); # 無事済んだのでリセット
 }
 
 #----------------------------------------
@@ -77,7 +88,8 @@ sub gflock {
 	my $lockname = $sow->{'cfg'}->{'FILE_LOCK'} . $self->{'vid'};
 
 	open (LOCK, "+<$lockname") || $sow->{'debug'}->raise($sow->{'APLOG_WARNING'}, 'ファイルロックに失敗しました。', 'lockfile could not open.');
-	eval { flock(LOCK, 2); };
+	flock(LOCK, 2);
+
 	$self->{'lock'} = 'lock';
 	$sow->{'debug'}->writeaplog($sow->{'APLOG_OTHERS'}, 'locked.[flock]');
 }
