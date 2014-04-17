@@ -43,7 +43,9 @@ sub glock {
 	}
 	$SIG{ALRM} = sub {
 		$self->gunlock();
-		$sow->{'debug'}->raise($sow->{'APLOG_CAUTION'}, "30秒待ってやり直してください。同村者の処理に長く時間がかかっています。", "too long lock. anyone process more than 30 sec.");
+		# エラーメッセージは鯖を読む
+		$sow->{'debug'}->raise($sow->{'APLOG_CAUTION'}, "一分待ってやり直してください。同村者の処理に長く時間がかかっています。", "too long lock. anyone process more than 1 minutes.");
+		$sow->{'http'}->outfooter();
 		die "timeout";
 	};
 
@@ -58,7 +60,7 @@ sub glock {
 		$self->glockr();
 	}
 
-	alarm(30); # 自分自身の制限時間（30sec）
+	alarm(20); # 自分自身の制限時間（20sec）
 }
 
 #----------------------------------------
@@ -76,6 +78,8 @@ sub gunlock {
 	} else {
 		$self->gunlockr();
 	}
+
+	alarm(1); # ロック終了後はすぐ終わるはずなので、制限を切り詰める（ 1sec）
 }
 
 #----------------------------------------
