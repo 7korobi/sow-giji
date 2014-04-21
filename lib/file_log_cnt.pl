@@ -73,17 +73,22 @@ sub getlogcntdatalabel {
 	# Version 2.0
 	@datalabel = (
 		'-S', # MESTYPE_UNDEF
-		'iI', # MESTYPE_INFOSP
 		'dS', # MESTYPE_DELETEDADMIN
-		'cS', # MESTYPE_CAST
-		'mS', # MESTYPE_MAKER
-		'mA', # MESTYPE_MAKER
-		'aS', # MESTYPE_ADMIN
-		'aA', # MESTYPE_ADMIN
-		'AA', # MESTYPE_ANONYMOUS
-		'qS', # MESTYPE_QUEUE
-		'II', # MESTYPE_INFONOM
 		'DS', # MESTYPE_DELETED
+		'cS', # MESTYPE_CAST
+		'qS', # MESTYPE_QUEUE
+
+		'iI', # MESTYPE_INFOSP
+		'II', # MESTYPE_INFONOM
+		'wI', # MESTYPE_INFOWOLF
+
+		'AA', # MESTYPE_ANONYMOUS
+
+		'mA', # MESTYPE_MAKER
+		'mS', # MESTYPE_MAKER
+		'aA', # MESTYPE_ADMIN
+		'aS', # MESTYPE_ADMIN
+
 		'SA', # MESTYPE_SAY
 		'SB', # MESTYPE_SAY
 		'SS', # MESTYPE_SAY
@@ -91,19 +96,21 @@ sub getlogcntdatalabel {
 		'TA', # MESTYPE_TSAY
 		'TS', # MESTYPE_TSAY
 		      # MESTYPE_AIM
+		'WA', # MESTYPE_WSAY
 		'WS', # MESTYPE_WSAY
 		'GA', # MESTYPE_GSAY
 		'GB', # MESTYPE_GSAY
 		'GS', # MESTYPE_GSAY
+		'PA', # MESTYPE_SPSAY
 		'PS', # MESTYPE_SPSAY
+		'XA', # MESTYPE_XSAY
 		'XS', # MESTYPE_XSAY
 		'VA', # MESTYPE_VSAY
 		'VB', # MESTYPE_VSAY
 		'VS', # MESTYPE_VSAY
-		'wI', # MESTYPE_INFOWOLF
 	);
 
-	return @datalabel;		
+	return @datalabel;
 }
 
 1;
