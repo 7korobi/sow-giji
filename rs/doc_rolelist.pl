@@ -351,10 +351,7 @@ _HTML_
 	foreach $pl (@pllist){
 		print <<"_HTML_";
 
-gon.form = \$.extend(true, {}, OPTION.gon.form, {
-		title: "$pl->{'title'}",
-		uri: "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}"
-});
+gon.form = giji.form.gon("$pl->{'title'}", "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}");
 _HTML_
 
 		$pl->{'role'} = $pl->{'lock'} if( 0 < $pl->{'lock'}  );

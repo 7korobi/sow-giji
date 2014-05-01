@@ -541,7 +541,7 @@ text_form = {
 	},
 	votes: [],
 	switch: "$sayswitch",
-	mestype: SOW.switch["$sayswitch"].mestype,
+	mestype: giji.form.mestype("$sayswitch"),
 	longname: "$longname",
 	csid_cid: "$img",
 };
@@ -563,7 +563,7 @@ text_form = {
 	style: "",
 	target: "-1",
 	switch: "$sayswitch",
-	mestype: SOW.switch["$sayswitch"].mestype,
+	mestype: giji.form.mestype("$sayswitch"),
 	csid_cid: "$img",
 	longname: "$longname"
 };
@@ -583,7 +583,7 @@ sub OutHTMLVilMakerPC {
 	my $curpl = $sow->{'curpl'};
 	my $csidlist = $sow->{'csidlist'};
 	my @keys = keys(%$csidlist);
-	my $mestype = uc $writemode; 
+	my $mestype = uc $writemode;
 
 	# –¼‘O‚ÆID
 	my $longname = $sow->{'charsets'}->getchrname($keys[0], $writemode);

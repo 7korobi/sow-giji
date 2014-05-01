@@ -1886,7 +1886,7 @@ sub isLogPermition {
 		$logpermit = 1 if (                                    ($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})); # 見物人
 		$logpermit = 1 if (($vil->{'mob'} eq 'grave')       && ($log->{'mestype'} == $sow->{'MESTYPE_GSAY'})); # 見物人から墓下が見えるのは、
 		$logpermit = 1 if (($vil->{'mob'} eq 'alive')       && ($log->{'mestype'} == $sow->{'MESTYPE_GSAY'})); # 舞台、裏方、黒幕のとき。
-		$logpermit = 1 if (($vil->{'mob'} eq 'gamemaster')  && ($log->{'mestype'} == $sow->{'MESTYPE_GSAY'})); # 
+		$logpermit = 1 if (($vil->{'mob'} eq 'gamemaster')  && ($log->{'mestype'} == $sow->{'MESTYPE_GSAY'})); #
 		$logpermit = 1 if (($vil->{'mob'} eq 'gamemaster')  && ($log->{'mestype'} == $sow->{'MESTYPE_INFOWOLF'})); # 黒幕
 		$logpermit = 1 if (($vil->{'mob'} eq 'gamemaster')  && ($log->{'mestype'} == $sow->{'MESTYPE_INFOSP'}));   # 黒幕
 	} elsif (($self->{'live'} ne 'live')) {
@@ -2074,12 +2074,9 @@ pl.win = {
 };
 
 pl.live = "$pl->{'live'}";
-pl.role = _.compact([
-	SOW_RECORD.CABALA.roles[$role],
-	SOW_RECORD.CABALA.gifts[$gift]
-]);
+pl.role = giji.potof.roles($role, $gift);
 pl.rolestate = $pl->{'rolestate'};
-pl.select = SOW_RECORD.CABALA.roles[$selrole];
+pl.select = giji.potof.select($selrole);
 
 pl.history = "$history";
 pl.sheep = "$pl->{'sheep'}";

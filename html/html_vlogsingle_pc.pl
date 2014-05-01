@@ -145,8 +145,8 @@ var mes = {
 	"style": "$style",
 	"name": "$name",
 	"to": "$to",
-	"mesicon": SOW_RECORD.CABALA.mestypeicons[$log->{'mestype'}],
-	"mestype": SOW_RECORD.CABALA.mestypes[$log->{'mestype'}],
+	"mesicon": giji.log.mesicon($log->{'mestype'}),
+	"mestype": giji.log.mestype($log->{'mestype'}),
 	"date": 1000 * $log->{'date'},
 	"log": mes_log
 };
@@ -221,8 +221,8 @@ var mes = {
 	"style": "$style",
 	"name": "$name",
 	"to": "$to",
-	"mesicon": SOW_RECORD.CABALA.mestypeicons[$log->{'mestype'}],
-	"mestype": SOW_RECORD.CABALA.mestypes[$log->{'mestype'}],
+	"mesicon": giji.log.mesicon($log->{'mestype'}),
+	"mestype": giji.log.mestype($log->{'mestype'}),
 	"date": 1000 * $log->{'date'},
 	"log": mes_log
 };

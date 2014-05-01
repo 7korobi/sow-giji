@@ -211,7 +211,7 @@ sub OutHTMLGonInit {
 
   print <<"_HTML_";
 <script>
-window.gon = \$.extend(true, {}, OPTION.gon);
+window.gon = giji.gon();
 gon.form.login = {
   "cmd": "login",
   "admin_uri": "$admin_uri",

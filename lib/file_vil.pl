@@ -927,8 +927,8 @@ gon.story = {
 	},
 
 	"card":{
-		"discard": _.compact(_.map("$rolediscard".split('/'), function(n) { return(SOW_RECORD.CABALA.gifts[n]) })),
-		"event":   _.compact(_.map("$eventcard".split('/'),  function(n) { return(SOW_RECORD.CABALA.events[n]) })),
+		"discard": giji.story.card.discard("$rolediscard"),
+		"event":   giji.story.card.event("$eventcard"),
 		"config":  "$config".split('/')
 	},
 	"announce":{
@@ -1057,17 +1057,17 @@ sub gon_event {
 	print <<"_HTML_";
 gon.form.turn = $turn;
 gon.event = {
-    "turn":   $turn,
-    "winner": SOW_RECORD.CABALA.winners[$vil->{'winner'}],
-	"event":  SOW_RECORD.CABALA.events[$vil->{'event'}],
+	"turn":   $turn,
+	"winner": giji.event.winner($vil->{'winner'}),
+	"event":  giji.event.event($vil->{'event'}),
 	"riot":      $vil->{'riot'},
 	"scapegoat": $vil->{'scapegoat'},
-    "is_seance": (0 !== $isseance),
-    "is_public": (0 !== $ispublic),
-    "is_eclipse": (0 !== $iseclipse),
-    "is_freecost": (0 !== $isfreecost),
-    "is_epilogue": (0 !== $isepilogue),
-    "is_startable": (0 !== $isstartable),
+	"is_seance": (0 !== $isseance),
+	"is_public": (0 !== $ispublic),
+	"is_eclipse": (0 !== $iseclipse),
+	"is_freecost": (0 !== $isfreecost),
+	"is_epilogue": (0 !== $isepilogue),
+	"is_startable": (0 !== $isstartable),
 	"player":{
 		"start": $vil->{'vplcntstart'},
 		"limit": $vil->{'vplcnt'},
