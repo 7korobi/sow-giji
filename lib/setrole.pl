@@ -322,10 +322,10 @@ sub GetSetRoleTableMistery {
 	# ‹¶l
 	$roles->[$sow->{'ROLEID_POSSESS'}]   = 1 if ($plcnt ==  6);
 	$roles->[$sow->{'ROLEID_POSSESS'}]   = 1 if ($plcnt ==  7);
-	$roles->[$sow->{'ROLEID_MUPETTING'}] = 1 if ($plcnt ==  9);
-	$roles->[$sow->{'ROLEID_MUPETTING'}] = 1 if ($plcnt == 10);
-	$roles->[$sow->{'ROLEID_MUPETTING'}] = 1 if ($plcnt == 11);
-	$roles->[$sow->{'ROLEID_MUPETTING'}] = 1 if ($plcnt == 12);
+	$roles->[$sow->{'ROLEID_MUPPETING'}] = 1 if ($plcnt ==  9);
+	$roles->[$sow->{'ROLEID_MUPPETING'}] = 1 if ($plcnt == 10);
+	$roles->[$sow->{'ROLEID_MUPPETING'}] = 1 if ($plcnt == 11);
+	$roles->[$sow->{'ROLEID_MUPPETING'}] = 1 if ($plcnt == 12);
 	$roles->[$sow->{'ROLEID_JAMMER'}]    = 1 if ($plcnt >= 13);
 
 	# l˜T

@@ -803,15 +803,16 @@ sub gon_story {
 	my $amp = $sow->{'html'}->{'amp'};
 
 	my $secret = $vil->isepilogue();
-	$secret = 1 if ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'});
+	my $admin = ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'});
 	my $maker = ($sow->{'uid'} eq $vil->{'makeruid'});
+  $secret = 1 if ($admin);
 
-    my $roletable = 'secret';
+	my $roletable = 'secret';
 	my $config = '';
 	my $eventcard = '';
 	my $rolediscard = '';
 
-	if ($secret||$maker||($vil->{'mob'} ne 'gamemaster')) {
+	if ($secret || $maker || ($vil->{'mob'} ne 'gamemaster')) {
 		my $roleid = $sow->{'ROLEID'};
 		my $giftid = $sow->{'GIFTID'};
 		my $eventid = $sow->{'EVENTID'};
@@ -988,7 +989,7 @@ _HTML_
 gon.story.announce.nrules = a;
 })();
 _HTML_
-	if ($secret) {
+	if ($maker || $admin) {
 		print <<"_HTML_";
 gon.story.sow_auth_id    = "$vil->{'makeruid'}";
 gon.story.entry.password = "$vil->{'entrypwd'}";
