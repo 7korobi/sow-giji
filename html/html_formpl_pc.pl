@@ -10,6 +10,8 @@ sub OutHTMLPlayerFormPC {
 
 	# 発言欄HTML出力
 	&OutHTMLSayPC($sow, $vil, $memofile);
+	#&OutHTMLExpressionFormPC($sow, $vil);
+	&OutHTMLActionFormPC($sow, $vil);
 
 	# コミットボタン
 	&OutHTMLCommitFormPC($sow, $vil) if (($vil->{'turn'} > 0) && ($vil->isepilogue() == 0) && ($sow->{'curpl'}->iscommitter()));
@@ -127,7 +129,7 @@ text_form = {
 	mestype: "$mestype",
 	csid_cid: "$img",
 	longname: "$longchrname"
-}
+};
 gon.form.texts.push(text_form);
 
 text_form = {
@@ -193,21 +195,15 @@ text_form.targets = a;
 text_form.roles   = b;
 })();
 gon.form.texts.push(text_form);
+var text_form_open = text_form;
 _HTML_
 
-	# 投票先変更プルダウン
 	if( $curpl->setvote_to($sow,$vil) != 0 ){
 		&OutHTMLVotePC($sow, $vil, 'vote');
 	}
 	if( $curpl->setentrust($sow,$vil) != 0 ){
 		&OutHTMLVotePC($sow, $vil, 'entrust');
 	}
-
-	# 表情選択欄
-	#&OutHTMLExpressionFormPC($sow, $vil);
-
-	# アクション
-	&OutHTMLActionFormPC($sow, $vil);
 	return;
 }
 
@@ -404,46 +400,24 @@ _HTML_
 		&SWHtml::ConvertJSON(\$history);
 
 		# 囁き/共鳴/念話
-		my $sayswitch = "";
-		$sayswitch = $curpl->rolesayswitch($vil);
-		if ( '' ne $sayswitch ){
-
+		my $sayswitch_role = $curpl->rolesayswitch($vil);
+		if ( '' ne $sayswitch_role ){
 			my $label   = $sow->{'textrs'}->{'CAPTION_ROLESAY'}->[$curpl->{'role'}];
 			my $countid = $sow->{'ROLESAYCOUNTID'}->[$curpl->{'role'}];
-			&OutHTMLSayTextAreaExtPC($sow, $vil, $sayswitch, $label, $countid );
-		} elsif ($curpl->isEnableRole($vil->{'turn'})) {
-			print <<"_HTML_";
-text_form = {
-	cmd: "write",
-	jst: "silent",
-	votes: [],
-	mestype: "TSAY",
-	longname: "$longname",
-	csid_cid: "$img"
-};
-gon.form.texts.push(text_form);
-_HTML_
+			&OutHTMLSayTextAreaExtPC($sow, $vil, $sayswitch_role, $label, $countid );
+		} else {
+			print "text_form = text_form_open;";
 		}
 		&OutHTMLVotePC($sow, $vil, 'role');
 
 		# 囁き/共鳴/念話
-		$sayswitch = $curpl->giftsayswitch($vil);
-		if ( '' ne $sayswitch ){
+		my $sayswitch_gift = $curpl->giftsayswitch($vil);
+		if (( '' ne $sayswitch_gift )&&($sayswitch_role ne $sayswitch_gift)){
 			my $label   = $sow->{'textrs'}->{'CAPTION_GIFTSAY'}->[$curpl->{'gift'}];
 			my $countid = $sow->{'GIFTSAYCOUNTID'}->[$curpl->{'gift'}];
-			&OutHTMLSayTextAreaExtPC($sow, $vil, $sayswitch, $label, $countid );
-		} elsif ($curpl->isEnableGift($vil->{'turn'})) {
-			print <<"_HTML_";
-text_form = {
-	cmd: "write",
-	jst: "silent",
-	votes: [],
-	mestype: "TSAY",
-	longname: "$longname",
-	csid_cid: "$img"
-};
-gon.form.texts.push(text_form);
-_HTML_
+			&OutHTMLSayTextAreaExtPC($sow, $vil, $sayswitch_gift, $label, $countid );
+		} else {
+			print "text_form = text_form_open;";
 		}
 		&OutHTMLVotePC($sow, $vil, 'gift');
 
