@@ -52,9 +52,9 @@ sub read {
 	my $data = $self->{'memo'}->{'file'}->read($pos);
 	if( 7 <  $logpermit  ){
 		my $sow = $self->{'sow'};
-		$data->{'mestype'} = $sow->{'MESTYPE_INFOSP'};
 		$data->{'chrname'} = 'H';
-		$data->{'cid'} = '';
+		$data->{'csid'} = '-';
+		$data->{'cid'} = '-';
 	}
 	$data->{'log'} = '' if ($data->{'log'} eq $self->{'sow'}->{'DATATEXT_NONE'});
 	if( 9 == $logpermit  ){
@@ -175,16 +175,22 @@ sub getmemolist {
 		for ($i = $#$list; $i >= 0; $i--) {
 			my $log = $list->[$i];
 			my $disable_mestype = 1;
+			my $uniq = "";
+
+			if ( 7 < $self->CheckMemoPermition($log)){
+			} else {
+				$uniq = $log->{'csid'} . $log->{'cid'};
+			}
+
 			$disable_mestype = 0 if ($log->{'mestype'} == $sow->{'MESTYPE_MAKER'});
 			$disable_mestype = 0 if ($log->{'mestype'} == $sow->{'MESTYPE_ADMIN'});
 			$disable_mestype = 0 if ($log->{'mestype'} == $sow->{'MESTYPE_ANONYMOUS'});
 			next if (0 == $disable_mestype);
-			my $plsingle = $self->{'vil'}->getpl($log->{'uid'});
-			next if (!defined($plsingle->{'uid'}));
-			next if (defined($uids{$log->{'uid'}}));
-			next if (($plsingle->{'entrieddt'} > $log->{'date'}) && ($plsingle->{'entrieddt'} != 0));
+			next if (!defined($log->{'csid'}));
+			next if (!defined($log->{'cid'}));
+			next if (defined($uids{$uniq}));
 			unshift(@newlogs, $log);
-			$uids{$log->{'uid'}} = 1;
+			$uids{$uniq} = 1;
 		}
 		$list = \@newlogs;
 	}
@@ -439,9 +445,13 @@ sub CheckMemoPermition {
 	$logpermit = 1 if (($log->{'mestype'} == $sow->{'MESTYPE_ANONYMOUS'})); # “½–¼”­Œ¾
 	$logpermit = 1 if (($log->{'mestype'} == $sow->{'MESTYPE_SAY'})); # ’Êí”­Œ¾
 	# Œ©•¨l
-	$logpermit = 1 if (($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})&&($vil->{'mob'} eq 'alive')); 
-	$logpermit = 1 if (($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})&&($vil->{'mob'} ne 'alive')&&($vil->{'turn'} == 0)); 
-	$logpermit = 1 if (($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})&&($vil->{'mob'} ne 'alive')&&(defined($query->{'turn'}))&&($query->{'turn'} == 0)); 
+	if(($vil->{'mob'} eq 'alive')||($vil->{'mob'} eq 'gamemaster')){
+		$logpermit = 1 if  ($log->{'mestype'} == $sow->{'MESTYPE_VSAY'});
+		$logpermit = 1 if  ($log->{'mestype'} == $sow->{'MESTYPE_VSAY'});
+	}else{
+		$logpermit = 1 if (($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})&&($vil->{'turn'} == 0));
+		$logpermit = 1 if (($log->{'mestype'} == $sow->{'MESTYPE_VSAY'})&&(defined($query->{'turn'}))&&($query->{'turn'} == 0));
+	}
 
 	# “úI
 	if ($vil->iseclipse($sow->{'turn'})){
@@ -468,7 +478,7 @@ sub CheckMemoPermition {
 	}
 
 	# íœÏ‚Ý”­Œ¾‚ÍŒ©‚¹‚È‚¢
-	$logpermit = 0 if (($log->{'mestype'} == $sow->{'MESTYPE_DELETED'}) && ($sow->{'cfg'}->{'ENABLED_DELETED'} == 0));	
+	$logpermit = 0 if (($log->{'mestype'} == $sow->{'MESTYPE_DELETED'}) && ($sow->{'cfg'}->{'ENABLED_DELETED'} == 0));
 
 	$log->{'logpermit'} = $logpermit;
 	return $logpermit;

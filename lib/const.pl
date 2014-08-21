@@ -36,6 +36,9 @@ sub InitConst {
 		l      => 1, # 村ログ表示時の基準ログID（短縮形）
 		pno    => 0, # プレイヤー番号（絞り込み用）
 
+		rolestate    => 1, # 状態設定
+		calcstate    => 1, # 状態設定
+		live         => 1, # 状態設定
 		status       => 1, # 廃村復活機能
 		vname        => 1, # 村の名前
 		vcomment     => 2, # 村の説明
@@ -58,6 +61,9 @@ sub InitConst {
 		trsid        => 1, # 文字列リソースセット
 		randomtarget => 1, # ランダム対象
 		noselrole    => 1, # 役職希望無視
+		aiming       => 1, # 内緒話
+		seqevent     => 1, # 事件整頓
+		entrust      => 1, # 委任可能
 		undead       => 1, # 幽界トーク
 		showid       => 1, # ID公開
 		mob          => 1, # 見物人タイプ
@@ -93,6 +99,7 @@ sub InitConst {
 		cntgirl         => 0,
 		cntscapegoat    => 0,
 		cntelder        => 0,
+
 		cntpossess      => 0,
 		cntfanatic      => 0,
 		cntmuppeting    => 0,
@@ -101,6 +108,8 @@ sub InitConst {
 		cntdyingpossess => 0,
 		cntoracle       => 0,
 		cntsorcerer     => 0,
+		cntwalpurgis    => 0,
+
 		cntwolf         => 0,
 		cntaurawolf     => 0,
 		cntintwolf      => 0,
@@ -110,6 +119,7 @@ sub InitConst {
 		cntdyingwolf    => 0,
 		cntsilentwolf   => 0,
 		cntheadless     => 0,
+
 		cnthamster      => 0,
 		cntguru         => 0,
 		cntbat          => 0,
@@ -119,6 +129,7 @@ sub InitConst {
 		cntsnatch       => 0,
 		cnttelepathy    => 0,
 		cntdyingpixi    => 0,
+
 		cntrobber       => 0,
 		cntlover        => 0,
 		cntlonewolf     => 0,
@@ -127,6 +138,8 @@ sub InitConst {
 		cntpassion      => 0,
 		cntdish         => 0,
 		cntbitch        => 0,
+        cnttangle       => 0,
+
 		cntdecide       => 0,
 		cntshield       => 0,
 		cntglass        => 0,
@@ -134,6 +147,7 @@ sub InitConst {
 		cntogre         => 0,
 		cntfairy        => 0,
 		cntmob          => 0,
+		eventcard       => 1,
 		cntnothing      => 0,
 		cntaprilfool    => 0,
 		cntturnfink     => 0,
@@ -167,7 +181,6 @@ sub InitConst {
 		muppet     => 1, # 念話スイッチ
 		monospace  => 1, # 委任スイッチ
 		safety     => 1, # 誤爆防止チェック
-		entrust    => 1, # 委任スイッチ
 		expression => 0, # 表情ID
 		commit     => 0, # コミット
 		jobname    => 1, # 肩書き
@@ -314,17 +327,17 @@ sub InitConst {
 
 	# 役職配分表リスト
 	my @order_roletable = (
-		'default',  
-		'mistery',  
-		'wbbs_c', 
-		'wbbs_f', 
-		'wbbs_g', 
-		'test1st', 
-		'test2nd', 
-		'starwars', 
-		'ocarina', 
-		'lover', 
-		'hater', 
+		'default',
+		'mistery',
+		'wbbs_c',
+		'wbbs_f',
+		'wbbs_g',
+		'test1st',
+		'test2nd',
+		'starwars',
+		'ocarina',
+		'lover',
+		'hater',
 		'custom',   # 自由設定
 	);
 
@@ -607,7 +620,7 @@ sub InitConst {
 		'dyingpossess',
 		'oracle',
 		'sorcerer',
-		'49th',
+		'walpurgis',
 		'50th',
 		'51th',
 		'headless',
@@ -660,7 +673,7 @@ sub InitConst {
 		'99th',
 		'100th',
 		'bitch',
-		'102th',
+		'tangle',
 		'103th',
 		'104th',
 		'105th',
@@ -866,7 +879,7 @@ sub InitConst {
 		# 役職番号
 		ROLEID_UNDEF         =>  0,
 		SIDEST_HUMANSIDE     =>  1,
-		
+
 		ROLEID_VILLAGER      =>  1,
 		ROLEID_STIGMA        =>  2,
 		ROLEID_FM            =>  3,
@@ -895,7 +908,7 @@ sub InitConst {
 		ROLEID_GIRL          => 26,
 		ROLEID_SCAPEGOAT     => 27,
 		ROLEID_ELDER         => 28,
-		
+
 		SIDEED_HUMANSIDE     => 30,
 		SIDEST_ENEMY         => 30,
 
@@ -910,10 +923,11 @@ sub InitConst {
 		ROLEID_DYINGPOSSESS  => 46,
 		ROLEID_ORACLE        => 47,
 		ROLEID_SORCERER      => 48,
-		
+		ROLEID_WALPURGIS     => 49,
+
 		SIDEED_ENEMY         => 50,
 		SIDEST_WOLFSIDE      => 50,
-		
+
 		ROLEID_HEADLESS      => 52,
 		ROLEID_WOLF          => 61,
 		ROLEID_AURAWOLF      => 62,
@@ -923,15 +937,15 @@ sub InitConst {
 		ROLEID_CHILDWOLF     => 66,
 		ROLEID_DYINGWOLF     => 67,
 		ROLEID_SILENTWOLF    => 68,
-		
+
 		SIDEED_WOLFSIDE      => 70,
 		SIDEST_PIXISIDE      => 70,
-		
+
 		ROLEID_HAMSTER       => 81,
 		ROLEID_MIMICRY       => 86,
 		ROLEID_DYINGPIXI     => 88,
 		ROLEID_TRICKSTER     => 89,
-		
+
 		SIDEED_PIXISIDE      => 90,
 		SIDEST_OTHER         => 90,
 
@@ -944,6 +958,7 @@ sub InitConst {
 		ROLEID_GURU          => 97,
 		ROLEID_DISH          => 98,
 		ROLEID_BITCH         => 101,
+		ROLEID_TANGLE        => 102,
 		SIDEED_OTHER         => 110,
 		ROLEID_MOB           => 999,
 
@@ -952,24 +967,29 @@ sub InitConst {
 		COUNT_EVENT      => scalar(@eventid),
 		ORDER_ROLETABLE  => \@order_roletable,
 
-		ROLESTATE_DEFAULT    =>  0b011111111,  # 通常
-		ROLESTATE_ABI_LIVE   =>  0b011111110,  # 使う 蘇生薬
-		ROLESTATE_ABI_KILL   =>  0b011111101,  # 使う 毒薬
-		ROLESTATE_ABI_NOROLE =>  0b011111100,  # 能力を使い果たした
-		ROLESTATE_ABI_NOGIFT =>  0b011111011,  # 恩恵を使い果たした
-		ROLESTATE_ABI_NONE   =>  0b011110000,  # 能力、恩恵、投票を使い果たした（賞金稼ぎが死ぬ前、一時的に発生）
-		ROLESTATE_CURSED     =>  0b011111000,  # 呪われた状態（能力、恩恵がない）
-		ROLESTATE_HURT       =>  0b011011111,  # 手負いになる
-		ROLESTATE_ZOMBIE     =>  0b010111000,  # 感染する（能力、恩恵がない）
-		MASKSTATE_ABI_LIVE   =>  0b000000001,  # 枠 蘇生薬
-		MASKSTATE_ABI_KILL   =>  0b000000010,  # 枠 毒薬
-		MASKSTATE_ABI_ROLE   =>  0b000000011,  # 枠 能力
-		MASKSTATE_ABI_GIFT   =>  0b000000100,  # 枠 恩恵
-		MASKSTATE_ABILITY    =>  0b000000111,  # 枠 能力全体（投票無効は、単に予約枠）
-		MASKSTATE_HURT       =>  0b000100000,  # 枠 襲撃負傷
-		MASKSTATE_ZOMBIE     =>  0b001000000,  # 枠 感染
-		MASKSTATE_MEDIC      =>  0b001000000,  # 枠 医者による回復
-		MASKSTATE_HEAL       =>  0b000100000,  # 枠 死亡＆蘇生時の回復
+		# use 32bit fields.
+		ROLESTATE_DEFAULT     =>  0b1111111111111111_1111_111_11111,  # 通常
+		ROLESTATE_ABI_LIVE    =>  0b1111111111111111_1111_111_11110,  # 使う 蘇生薬
+		ROLESTATE_ABI_KILL    =>  0b1111111111111111_1111_111_11101,  # 使う 毒薬
+		ROLESTATE_ABI_NOROLE  =>  0b1111111111111111_1111_111_11100,  # 能力を使い果たした
+		ROLESTATE_ABI_NOGIFT  =>  0b1111111111111111_1111_111_11011,  # 恩恵を使い果たした
+		ROLESTATE_CURSED      =>  0b1111111111111111_1111_111_11000,  # 呪われた状態（能力、恩恵がない）
+		ROLESTATE_ABI_NONE    =>  0b1111111111111111_1111_111_10000,  # 能力、恩恵、投票を使い果たした（賞金稼ぎが死ぬ前、一時的に発生）
+		MASKSTATE_ABI_LIVE    =>  0b0000000000000000_0000_000_00001,  # 枠 蘇生薬
+		MASKSTATE_ABI_KILL    =>  0b0000000000000000_0000_000_00010,  # 枠 毒薬
+		MASKSTATE_ABI_ROLE    =>  0b0000000000000000_0000_000_00011,  # 枠 能力
+		MASKSTATE_ABI_GIFT    =>  0b0000000000000000_0000_000_00100,  # 枠 恩恵
+		MASKSTATE_ABILITY     =>  0b0000000000000000_0000_000_00111,  # 枠 能力全体（投票無効は、単に予約枠）
+
+		ROLESTATE_HURT        =>  0b1111111111111111_1111_110_11111,  # 手負いになる
+		ROLESTATE_ZOMBIE      =>  0b1111111111111111_1111_101_11000,  # 感染する（能力、恩恵がない）
+		MASKSTATE_HURT        =>  0b0000000000000000_0000_001_00000,  # 枠 襲撃負傷
+		MASKSTATE_ZOMBIE      =>  0b0000000000000000_0000_010_00000,  # 枠 感染
+		MASKSTATE_HEAL        =>  0b0000000000000000_0000_001_00000,  # 枠 死亡＆蘇生時の回復
+		MASKSTATE_MEDIC       =>  0b0000000000000000_0000_010_00000,  # 枠 医者による回復
+
+		ROLESTATE_VOTE_TARGET =>  0b1111111111111111_1011_111_11111,  # 投票の対象外
+		MASKSTATE_VOTE_TARGET =>  0b0000000000000000_0100_000_00000,  # 投票の対象外
 
 #		生き死にに関わる回復
 #		負傷：回復する。人犬の負傷者などを考慮すると、村人よりか弱くなるため役職コンセプトを外れる。

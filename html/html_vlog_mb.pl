@@ -25,7 +25,7 @@ _HTML_
 	my $titleupdate = &SWHtmlMb::GetTitleNextUpdate($sow, $vil);
 	my $reqvals     = &SWBase::GetRequestValues($sow);
 	my $linkvalues  = &SWBase::GetLinkValues($sow, $reqvals);
-	my $linkrss = " <a href=\"?$linkvalues$amp". "cmd=rss\">RSS</a>";
+	my $linkrss = " <a tabindex=\"-1\" href=\"?$linkvalues$amp". "cmd=rss\">RSS</a>";
 	$linkrss = '' if ($cfg->{'ENABLED_RSS'} == 0);
 	print "<a $atr_id=\"top\">$sow->{'query'}->{'vid'} $vil->{'vname'}</a><br$net>\n";
 	print "$titleupdate $linkrss<br>" if ($vil->{'epilogue'} >= $vil->{'turn'});

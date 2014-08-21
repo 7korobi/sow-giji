@@ -30,6 +30,7 @@ sub SetDataCmdVLog {
 
 	require "$sow->{'cfg'}->{'DIR_LIB'}/log.pl";
 	require "$sow->{'cfg'}->{'DIR_LIB'}/file_log.pl";
+	require "$sow->{'cfg'}->{'DIR_LIB'}/file_memo.pl";
 
 	# 発言確定処理
 	if ($vil->{'epilogue'} >= $vil->{'turn'}) {
@@ -61,9 +62,10 @@ sub SetDataCmdVLog {
 #----------------------------------------
 sub OutHTMLCmdVLog {
 	my ($sow, $vil) = @_;
-	my $cfg   = $sow->{'cfg'};
-	my $query = $sow->{'query'};
-	my $ua    = $sow->{'outmode'};
+	my $cfg    = $sow->{'cfg'};
+	my $query  = $sow->{'query'};
+	my $cookie = $sow->{'cookie'};
+	my $ua     = $sow->{'outmode'};
 
 	# HTML出力用ライブラリの読み込み
 	require "$cfg->{'DIR_HTML'}/html.pl";
@@ -71,9 +73,6 @@ sub OutHTMLCmdVLog {
 
 	my $turn = $sow->{'turn'};
 	$turn = $vil->{'epilogue'} if ($sow->{'turn'} > $vil->{'epilogue'}); # 終了している時は終了日
-
-	# 村ログファイルを開く
-	my $logfile = SWBoa->new($sow, $vil, $turn, 0);
 
 	$sow->{'cookie'}->{'modified'} = 'js' if (!defined($sow->{'cookie'}->{'modified'}));
 
@@ -116,27 +115,58 @@ sub OutHTMLCmdVLog {
 
 	# 表示行数の設定
 	my $maxrow = $sow->{'cfg'}->{'MAX_ROW'}; # 標準行数
-	$maxrow = $query->{'row'} if (defined($query->{'row'}) && ($query->{'row'} ne '')); # 引数による行数指定
-#	$query->{'rowall'} = 'on' if ((($ua ne 'mb')) && ($sow->{'turn'} < $vil->{'turn'})); # 自動全表示
+	$maxrow = $cookie->{'row'} if (defined($cookie->{'row'}) && ($cookie->{'row'} ne '')); # 引数による行数指定
 	$maxrow = -1 if (($maxrow eq 'all') || ($query->{'rowall'} ne '')); # 引数による全表示指定
 
-	# ログの取得
-	my ($logs, $logkeys, $rows);
-	if (($sow->{'turn'} != $vil->{'turn'}) || ($vil->{'epilogue'} >= $vil->{'turn'})) {
-		($logs, $logkeys, $rows) = $logfile->getvlogs($maxrow);
-	}
-	$sow->{'lock'}->gunlock();
 
 	# HTMLの出力
 	if ($ua eq 'mb') {
+		# ログの取得
+		my $logfile  = SWBoa->new($sow, $vil, $turn, 0);
+		my ($logs, $logkeys, $rows);
+		if (($sow->{'turn'} != $vil->{'turn'}) || ($vil->{'epilogue'} >= $vil->{'turn'})) {
+			($logs,  $logkeys, $rows) = $logfile->getvlogs($maxrow);
+		}
+		$sow->{'lock'}->gunlock();
+
 		require "$cfg->{'DIR_HTML'}/html_vlog_mb.pl";
 		&SWHtmlVlogMb::OutHTMLVlogMb($sow, $vil, $logfile, $maxrow, $logs, $logkeys, $rows);
+
+		$logfile->close();
+	} elsif ($ua eq 'javascript') {
+		# ログの取得
+		my $logfile  = SWBoa->new($sow, $vil, $turn, 0);
+		my $memofile = SWSnake->new($sow, $vil, $turn, 0);
+		my ($logs, $logkeys, $logrows, $memos, $memokeys, $memorows);
+		if (($sow->{'turn'} != $vil->{'turn'}) || ($vil->{'epilogue'} >= $vil->{'turn'})) {
+			($logs,  $logkeys,  $logrows)  = $logfile->getvlogs($maxrow);
+			($memos, $memokeys, $memorows) = $memofile->getmemo($maxrow);
+		}
+		$sow->{'lock'}->gunlock();
+
+		require "$cfg->{'DIR_HTML'}/html_vlog_js.pl";
+		&SWHtmlVlogJS::OutHTMLVlogJS($sow, $vil, $maxrow, $logfile, $logs, $logkeys, $logrows, $memofile, $memos, $memokeys, $memorows);
+
+		$logfile->close();
+		$memofile->close();
 	} else {
+		# ログの取得
+		my $logfile  = SWBoa->new($sow, $vil, $turn, 0);
+		my $memofile = SWSnake->new($sow, $vil, $turn, 0);
+		my ($logs, $logkeys, $logrows, $memos, $memokeys, $memorows);
+		if (($sow->{'turn'} != $vil->{'turn'}) || ($vil->{'epilogue'} >= $vil->{'turn'})) {
+			($logs,  $logkeys,  $logrows)  = $logfile->getvlogs($maxrow);
+			($memos, $memokeys, $memorows) = $memofile->getmemo($maxrow);
+		}
+		$sow->{'lock'}->gunlock();
+
 		require "$cfg->{'DIR_HTML'}/html_vlog_pc.pl";
 		require "$cfg->{'DIR_HTML'}/html_sayfilter.pl";
-		&SWHtmlVlogPC::OutHTMLVlogPC($sow, $vil, $logfile, $maxrow, $logs, $logkeys, $rows);
+		&SWHtmlVlogPC::OutHTMLVlogPC($sow, $vil, $maxrow, $logfile, $logs, $logkeys, $logrows, $memofile, $memos, $memokeys, $memorows);
+
+		$logfile->close();
+		$memofile->close();
 	}
-	$logfile->close();
 
 	$sow->{'html'}->outfooter(); # HTMLフッタの出力
 	$sow->{'http'}->outfooter();

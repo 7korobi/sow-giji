@@ -45,6 +45,9 @@ sub SetDataCmdVote {
 	# 投票／能力対象設定
 	my $cmd   = $query->{'cmd'};
 	my $curpl = $sow->{'curpl'};
+	if('mb' eq $sow->{'ua'}){
+		$cmd = 'entrust' if ($query->{'entrust'} = 'on');
+	}
 
 	# 村ログ関連基本入力値チェック
 	require "$sow->{'cfg'}->{'DIR_LIB'}/vld_vil.pl";
@@ -65,7 +68,8 @@ sub SetDataCmdVote {
 		$debug->raise($sow->{'APLOG_CAUTION'}, "選択できない対象２を選んでいます。", "cannot vote.") if (( $target2count == 0));
 	}
 
-	$debug->raise($sow->{'APLOG_CAUTION'}, "今日は投票できる日ではありません。", "cannot vote.")                  if (($cmd eq 'vote') && ($curpl->isEnableVote($vil->{'turn'}) == 0));
+	$debug->raise($sow->{'APLOG_CAUTION'}, "今日は投票できる日ではありません。", "cannot vote.")              if (($cmd eq 'entrust') && ($curpl->isEnableVote($vil->{'turn'}) == 0));
+	$debug->raise($sow->{'APLOG_CAUTION'}, "今日は投票できる日ではありません。", "cannot vote.")                 if (($cmd eq 'vote') && ($curpl->isEnableVote($vil->{'turn'}) == 0));
 	$debug->raise($sow->{'APLOG_CAUTION'}, "今日は能\力対象を設定できる日ではありません。", "cannot set target.") if (($cmd eq 'role') && ($curpl->isEnableRole($vil->{'turn'}) == 0));
 	$debug->raise($sow->{'APLOG_CAUTION'}, "今日は能\力対象を設定できる日ではありません。", "cannot set target.") if (($cmd eq 'gift') && ($curpl->isEnableGift($vil->{'turn'}) == 0));
 
@@ -80,16 +84,12 @@ sub SetDataCmdVote {
 			$modified = 1;
 		}
 	}
-	my $saveentrust = $curpl->{'entrust'};
-	if ($query->{'cmd'} eq 'vote') {
-		# 委任
-		$curpl->queryentrust($sow,$vil,$query);
-	}
+	$curpl->queryentrust($sow,$vil,$query) if (($query->{'cmd'} eq 'vote') or ($query->{'cmd'} eq 'entrust'));
 	$curpl->{'modified'} = $sow->{'time'} if (($modified > 0) || ($saveentrust != $curpl->{'entrust'}));
 	$vil->writevil();
 
 	# 投票／能力対象変更操作を村ログへ書き込み
-	if ((($vil->{'event'} == $sow->{'EVENTID_FORCE'})||($sow->{'cfg'}->{'ENABLED_PLLOG'} > 0)) 
+	if ((($vil->{'event'} == $sow->{'EVENTID_FORCE'})||($sow->{'cfg'}->{'ENABLED_PLLOG'} > 0))
 	 && (($modified > 0) || ($saveentrust != $curpl->{'entrust'}))  ){
 		require "$sow->{'cfg'}->{'DIR_LIB'}/log.pl";
 		require "$sow->{'cfg'}->{'DIR_LIB'}/file_log.pl";
@@ -99,21 +99,16 @@ sub SetDataCmdVote {
 
 		# 書き込み文の生成
 		my $textrs = $sow->{'textrs'};
-		my $mes;
-		if ($query->{'cmd'} eq 'vote') {
-			if ($query->{'entrust'} eq '') {
-				$mes = $textrs->{'ANNOUNCE_SETVOTE'};
-			} else {
-				$mes = $textrs->{'ANNOUNCE_SETENTRUST'};
-			}
-		} else {
-			$mes = $textrs->{'ANNOUNCE_SETTARGET'};
-		}
-
-		my $curplchrname = $curpl->getlongchrname();
+		my $format = 'ANNOUNCE_SETTARGET';
+		$format    = 'ANNOUNCE_SETVOTE'     if($cmd eq 'vote');
+		$format    = 'ANNOUNCE_SETENTRUST'  if($cmd eq 'entrust');
+		my $mes = $textrs->{$format};
 		$mes =~ s/_ABILITY_/$textrs->{'ABI_ROLE'}->[$curpl->{'role'}]/g if ($cmd eq 'role');
 		$mes =~ s/_ABILITY_/$textrs->{'ABI_GIFT'}->[$curpl->{'gift'}]/g if ($cmd eq 'gift');
+
+		my $curplchrname = $curpl->getlongchrname();
 		$mes =~ s/_NAME_/$curplchrname/g;
+
 		my $targetpl = $vil->getplbypno($curpl->{$cmd.'1'});
 		my $targetname;
 		if ($curpl->{$cmd.'1'} >= 0) {

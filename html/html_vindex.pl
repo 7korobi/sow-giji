@@ -6,24 +6,25 @@ package SWHtmlVIndex;
 sub OutHTMLVIndex {
 	my ($sow, $vindex, $vmode) = @_;
 	my $cfg   = $sow->{'cfg'};
-	my $query = $sow->{'query'};
+	my $query  = $sow->{'query'};
+	my $cookie = $sow->{'cookie'};
 	my $net = $sow->{'html'}->{'net'}; # Null End Tag
 	my $amp = $sow->{'html'}->{'amp'};
+	my $note_start =  '<span class="note" ng-show="stories_is_small">';
+	my $note_end   =  '</span>';
 
 	my $maxrow = $sow->{'cfg'}->{'MAX_ROW'}; # 標準行数
-	$maxrow = $query->{'row'} if (defined($query->{'row'}) && ($query->{'row'} ne '')); # 引数による行数指定
+	$maxrow = $cookie->{'row'} if (defined($cookie->{'row'}) && ($cookie->{'row'} ne '')); # 引数による行数指定
 	$maxrow = -1 if (($maxrow eq 'all') || ($query->{'rowall'} ne '')); # 引数による全表示指定
 
 	my $pageno = 0;
 	$pageno = $query->{'pageno'} if (defined($query->{'pageno'}));
 
 	print <<"_HTML_";
-<table border="1" class="vindex" summary="村の一覧">
+<table border="1" class="vindex table" summary="村の一覧">
 <thead>
   <tr>
-    <th scope="col">id</th>
-    <th scope="col">村の名前</th>
-    <th scope="col">人数</th>
+    <th scope="col"><code ng-click="stories_is_small = ! stories_is_small"><i class="glyphicon glyphicon-resize-small" ng-show="stories_is_small"></i><i class="glyphicon glyphicon-resize-full" ng-hide="stories_is_small"></i></code></th>
 _HTML_
 
 	if ($vmode eq 'oldlog') {
@@ -34,7 +35,6 @@ _HTML_
 
 	print <<"_HTML_";
     <th scope="col">ルール</th>
-    <th scope="col">制限</th>
   </tr>
 </thead>
 
@@ -50,7 +50,7 @@ _HTML_
 	my $virow = -1;
 	foreach (@$vilist) {
 		my $date = sprintf("%02d:%02d", $_->{'updhour'}, $_->{'updminite'});
-	
+
 		my $vstatusno = 'playing';
 		$vstatusno = 'prologue' if ($_->{'vstatus'} == $sow->{'VSTATUSID_PRO'}); # プロローグ
 		$vstatusno = 'oldlog'   if ($_->{'vstatus'} == $sow->{'VSTATUSID_END'});
@@ -69,7 +69,7 @@ _HTML_
 			# 村データがぶっ飛んだ場合に一応被害を食い止める
 			print <<"_HTML_";
   <tr>
-    <td colspan="5"><span class="cautiontext">$_->{'vid'}村のデータが取得できません。</span></td>
+    <td colspan="4"><span class="cautiontext">$_->{'vid'}村のデータが取得できません。</span></td>
   </tr>
 
 _HTML_
@@ -106,7 +106,7 @@ _HTML_
 		my $vstatus = "$vil->{'turn'}日目";
 		if ($vil->{'winner'} != 0) {
 			$vstatus = '決着';
-			$plcnt .= "<i><br>".$sow->{'textrs'}->{'CAPTION_WINNER'}->[$vil->{'winner'}]."</i>";
+			$plcnt .= "$note_start<br>".$sow->{'textrs'}->{'CAPTION_WINNER'}->[$vil->{'winner'}]."$note_end";
 		} elsif ($vil->isepilogue() > 0) {
 			$vid = '&vid='.$_->{'vid'};
 			$cssid = '';
@@ -144,28 +144,32 @@ _HTML_
 
 		$reqvals->{'cmd'} = '';
 		$reqvals->{'vid'} = $_->{'vid'};
+		if ($vmode eq 'oldlog'){
+			$reqvals->{'turn'} = 0;
+			$reqvals->{'rowall'} = 'on';
+		}
 		my $link = &SWBase::GetLinkValues($sow, $reqvals);
+		$link = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?".$link;
+
 		$reqvals->{'cmd'} = 'vinfo';
-		my $linkvinfo = &SWBase::GetLinkValues($sow, $reqvals);
+		my $linkvinfo = $link . "#mode=info_open_last";
+
 		$reqvals->{'cmd'} = 'howto';
 		$reqvals->{'trsid'} = $vil->{'trsid'};
 		$reqvals->{'game'}  = $vil->{'game'};
 		my $linkhowto = &SWBase::GetLinkValues($sow, $reqvals) . "#rolerule";
+
 		$reqvals->{'cmd'} = 'rolematrix';
 		my $linkrolematrix = &SWBase::GetLinkValues($sow, $reqvals);
+
 		my $rtname = "$sow->{'textrs'}->{'CAPTION_ROLETABLE'}->{$vil->{'roletable'}}";
 		my $saycnttype = $sow->{'cfg'}->{'COUNTS_SAY'}->{$vil->{'saycnttype'}};
-		my $csname = $saycnttype->{'CAPTION'};
-		my $cshelp = '';
-#		if(($vmode eq 'oldlog')||($vmode eq 'playing')||($vmode eq 'dispose')){
-#
-			$cshelp = '';
-#		}
-#		if(($vmode eq 'prologue')){
-#			$cshelp = '<br>'.$saycnttype->{'HELP'};
-#
-#			$cshelp =~ s/ /<br>/ig;
-#		}
+		my $scname = $saycnttype->{'CAPTION'};
+
+		my $schelp = '';
+		if(($vmode eq 'prologue')){
+			$schelp = $saycnttype->{'HELP'};
+		}
 
 		my $game = $sow->{'basictrs'}->{'GAME'}->{$vil->{'game'}}->{'CAPTION'};
 		my $vid_fmt = "%01d";
@@ -174,24 +178,26 @@ _HTML_
 		$vid_fmt = "%04d" if (1000 <= @$vilist);
 		my $vid  = sprintf($vid_fmt,$_->{'vid'});
 		print <<"_HTML_";
-<tr class="i_hover">
-<td>$vid 
-<td><a href="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linkvinfo">$vil->{'vname'}</a>
-<i><br>〈<a href="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$link#newsay">最新</a>〉
-$imgpwdkey</i>$imgrating<i class="small">
+<tr>
+<td>$vid <a href="$linkvinfo">$vil->{'vname'}</a>
+$note_start<br>〈<a href="$link">最新</a>〉
+$imgpwdkey$note_end$imgrating$note_start
 <br>　　人物 ： $csidcaption
-<br>　　更新 ： $date $updintervalday</i>
-</td>
-<td class="small">$plcnt
-</td>
-<td class="small">$vstatus
+<br>　　更新 ： $date $updintervalday
+<br>　 $schelp
+$note_end
 </td>
 <td class="small">
-$game<i>
-<br><a href="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linkhowto">$sow->{'textrs'}->{'CAPTION'}</a>
-<br><a href="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linkrolematrix">$rtname</a></i>
+$plcnt
+$note_start<br>$note_end
+$vstatus
 </td>
-<td class="small">$csname<i>$cshelp</i>
+<td>
+$note_start$scname<br>$note_end
+$game$note_start
+<br><a href="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linkhowto">$sow->{'textrs'}->{'CAPTION'}</a>
+<br><a href="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linkrolematrix">$rtname</a>
+$note_end
 </td>
 </tr>
 
@@ -207,7 +213,7 @@ _HTML_
 			$vmodetext = '終了済み';
 		} elsif ($vmode eq 'dispose') {
 			$vmodetext = '廃村';
-		} else {	
+		} else {
 			$vmodetext = '進行中';
 		}
 

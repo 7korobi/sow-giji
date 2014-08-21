@@ -20,9 +20,14 @@ sub OutHTMLNoReady {
 	$sow->{'html'}->outcontentheader();
 
 	&SWHtmlPC::OutHTMLLogin($sow); # ログイン欄の出力
+    &SWHtmlPC::OutHTMLChangeCSS($sow);
+
 	my $net = $sow->{'html'}->{'net'}; # Null End Tag
+	&SWHtmlPC::OutHTMLGonInit($sow);
 
 	print <<"_HTML_";
+</script>
+<h2 style="font-size: xx-large;">$cfg->{'NAME_HOME'}</h2>
 <h2>$noregistnameがまだ登録されていません</h2>
 <p class="paragraph">
 $noregistidが未登録です。<br$net>

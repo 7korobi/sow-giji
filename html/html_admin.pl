@@ -20,6 +20,7 @@ sub OutHTMLAdminManager {
 	$sow->{'html'}->outcontentheader();
 
 	&SWHtmlPC::OutHTMLLogin($sow); # ƒƒOƒCƒ“—“‚Ìo—Í
+    &SWHtmlPC::OutHTMLChangeCSS($sow);
 
 	my $reqvals = &SWBase::GetRequestValues($sow);
 	my $urlsow = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}";

@@ -45,7 +45,7 @@ sub outhtml {
 	&SWBase::LoadTextRS($sow, $vil);
 
 	print <<"_HTML_";
-<DIV class=toppage>
+<DIV class="toppage table">
 <p class="paragraph">
 Šî–{Ý’è‚ÅAƒQ[ƒ€‚ÌÚ×‚Èƒ‹[ƒ‹‚ðŒˆ‚ß‚Ä‚¢‚Ü‚·Bƒ‹[ƒ‹‚ðŠm”F‚µ‚½‚¢Šî–{Ý’è‚ð‘I‚ñ‚Å‚©‚çA‚±‚Ì‰º‚ð“Ç‚Ý‚Ü‚µ‚å‚¤B
 </p>
@@ -78,7 +78,9 @@ $cfg->{'NAME_SW'}‚ÍA‚â‚â•~‹‚Ì‚‚¢ƒQ[ƒ€‚Å‚·B—V‚Ñ•û‚ð‚æ‚­“Ç‚ÝAX‚ÉŠù‚ÉI—¹‚µ‚
 </ul>
 <hr class="invisible_hr"$net>
 
+<div class="accordion">
 <h3><a $atr_id="regist">ƒ†[ƒU[“o˜^‚ÆƒƒOƒCƒ“</a></h3>
+<div>
 <p class="paragraph">
 $cfg->{'NAME_SW'}‚Å—V‚Ô‚½‚ß‚É‚ÍA‚Ü‚¸ƒ†[ƒU[“o˜^‚ª•K—v‚Å‚·Bƒ†[ƒU[“o˜^‚ð‚·‚é‚É‚ÍA‰Eã‚É‚ ‚éuƒƒOƒCƒ“vƒ{ƒ^ƒ“‚Ås‚¢‚Ü‚·iuƒƒOƒCƒ“vƒ{ƒ^ƒ“‚Íƒ†[ƒU[“o˜^ƒ{ƒ^ƒ“‚ðŒ“‚Ë‚Ä‚¢‚Ü‚·jB
 </p>
@@ -91,9 +93,11 @@ $cfg->{'NAME_SW'}‚Å—V‚Ô‚½‚ß‚É‚ÍA‚Ü‚¸ƒ†[ƒU[“o˜^‚ª•K—v‚Å‚·Bƒ†[ƒU[“o˜^‚ð‚·‚é‚
 ƒQ[ƒ€‚ð‚·‚é‚É‚ÍAƒƒOƒCƒ“‚µ‚È‚¯‚ê‚Î‚È‚è‚Ü‚¹‚ñBŠù‚ÉƒƒOƒCƒ“‚µ‚Ä‚¢‚é‚È‚çuƒƒOƒAƒEƒgvƒ{ƒ^ƒ“‚ª•\\Ž¦‚³‚ê‚Ä‚¢‚Ü‚·‚ªA•\\Ž¦‚³‚ê‚Ä‚¢‚È‚¢‚È‚çƒƒOƒCƒ“‚µ‚Ü‚µ‚å‚¤B<br$net>
 ƒƒOƒCƒ“‚Ì‚â‚è•û‚É‚ÍAƒ†[ƒU[“o˜^‚Ì‚â‚è•û‚Æ“¯‚¶‚Å‚·B‰Eã‚Ì“ü—Í—“‚Éƒ†[ƒUID‚ÆƒpƒXƒ[ƒh‚ð“ü—Í‚µ‚ÄuƒƒOƒCƒ“vƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢B
 </p>
+</div>
 <hr class="invisible_hr"$net>
 
 <h3><a $atr_id="entry">‘º‚Ö‚ÌŽQ‰Á</a></h3>
+<div>
 <p class="paragraph">
 ŽŸ‚ÉAŽQ‰Á‚µ‚½‚¢‘º‚ðƒgƒbƒvƒy[ƒW‚Ìu‘º‚Ìˆê——v‚©‚ç‘I‚Ñ‚Ü‚·B‘º‚Ìˆê——‚Ìuisv‚Æ‚¢‚¤—“‚ðŒ©‚Ä‰º‚³‚¢B‚±‚±‚ªu•åW’†v‚È‚çA‚ ‚È‚½‚Í‚»‚Ì‘º‚ÖŽQ‰Á‚·‚éŽ–‚ª‚Å‚«‚Ü‚·B<br$net>
 ŽQ‰Á‚µ‚½‚¢‘º‚ðŒˆ‚ß‚½‚çA‘º‚Ì–¼‘O‚ðƒNƒŠƒbƒN‚µ‚Ä‚­‚¾‚³‚¢B‚»‚Ì‘º‚Ìƒvƒƒ[ƒO‚ª•\\Ž¦‚³‚êAˆê”Ô‰º‚ÉŽQ‰ÁŽÒ“ü—Í—“‚ª•\\Ž¦‚³‚ê‚Ü‚·B
@@ -130,24 +134,28 @@ _HTML_
 <p class="paragraph">
 ŽQ‰Ál”‚ª’èˆõ‚Ü‚Å’B‚µ‚Ä‚µ‚Ü‚¤‚ÆA‚½‚Æ‚¦Œ©•¨l‚ÌÈ‚ª‹ó‚¢‚Ä‚¢‚Ä‚àŠJŽn‘Ò‚¿‚Æ‚È‚è‚Ü‚·BŒ©•¨l‚Ì•åW‚Í’÷‚ßØ‚ç‚ê‚Ü‚¹‚ñ‚ªA¡‚Ü‚³‚ÉŠJŽn‚·‚é‚©‚à‚µ‚ê‚Ü‚¹‚ñB
 </p>
-
+</div>
 <hr class="invisible_hr"$net>
 
 <h3><a $atr_id="exit">‘º‚©‚ço‚é</a></h3>
+<div>
 <p class="paragraph">
 ˆê’UŽQ‰Á‚µ‚Ä‚àAƒvƒƒ[ƒO’†‚Å‚ ‚ê‚Î‘º‚©‚ço‚é‚±‚Æ‚ª‰Â”\‚Å‚·B<br$net>
 ”­Œ¾ƒtƒH[ƒ€‚Ì‰º‚É‚ ‚éu‘º‚ðo‚év‚ð‘I‚Ñ‚Ü‚µ‚å‚¤B<br$net>
 ‚ ‚È‚½‚Ì‘€ìˆÈŠO‚ÉAƒvƒƒ[ƒO‚Å’·‚¢ŠÔ”­Œ¾‚ª‚È‚¢‚Æ‚«A‚ ‚È‚½‚ª‘º‚É‹‚é‚×‚«‚Å‚È‚¢‚Æ”»’f‚³‚ê‚½‚Æ‚«A‚ ‚È‚½‚Í‘º‚©‚ço‚Ä‚¢‚Ü‚·B<br$net>
 ‘ºŒš‚Äl‚ÍA‘º‚Ì’†‚É‚¢‚Ä‚Í‚Ü‚¸‚¢A‚Æ”»’f‚µ‚½l‚ð‘Þ‹Ž‚³‚¹‚é‹@”\‚ðŽ‚Á‚Ä‚¢‚Ü‚·Bu‘º‚Ìî•ñv—“‚Ì—‰ð‚ªó‚¢AŽQ‰ÁŽp¨‚É•sˆÀ‚ª‚ ‚é‚È‚Ç‚Ì”»’f‚ð‚³‚ê‚½ê‡A—§‚¿‘Þ‚«‚Æ‚È‚è‚Ü‚·‚Ì‚ÅA‚µ‚Á‚©‚è‚Æ‘º‚Ìî•ñ‚ð“Ç‚ñ‚ÅŽQ‰Á‚µA‘Sˆõ‚ÅŠy‚µ‚ß‚éƒvƒŒƒC‚ðS‚ª‚¯‚Ü‚µ‚å‚¤B<br$net>
 </p>
+</div>
 <hr class="invisible_hr"$net>
 
 <h3><a $atr_id="muster">“_ŒÄ‚ð‚Æ‚é</a></h3>
+<div>
 <p class="paragraph">
 ‚»‚ë‚»‚ëŠJŽnA‚Æ‚¢‚¤‚Æ‚«‚ÉAW‚Ü‚è‚ªˆ«‚¢‚Æ‚¢‚´Žn‚Ü‚Á‚½‚Æ‚«‚É‚à¨‚¢‚æ‚­‚Í‰ï˜b‚Å‚«‚Ü‚¹‚ñ‚ËB<br$net>
 ‚»‚ê‚Í‚Â‚Ü‚ç‚È‚¢A‚Æl‚¦‚é‘ºŒš‚Äl‚Ì‚½‚ß‚ÉA“_ŒÄ‚ð‚Æ‚é‹@”\‚ª‚ ‚è‚Ü‚·B“_ŒÄ‚ðŠJŽn‚·‚é‚ÆA‚¢‚¿‚Ç‘Sˆõ‚Ì”­Œ¾‚µ‚½‰ñ”‚ðƒ[ƒ‚É‚·‚é‚Ì‚ÅA‚»‚ÌuŠÔˆÈ~‚Å”­Œ¾‚Ì‚È‚¢l‚ª‚Í‚Á‚«‚è‚í‚©‚è‚Ü‚·B<br$net>
 ‚»‚ÌŽŸ‚ÌXVŽž‚Ü‚Å‘Ò‹@‚·‚ê‚ÎŽ©“®“I‚É–³”­Œ¾ˆµ‚¢‚Å‘º‚ðo‚Ü‚·‚µAŽè“®XV‚Ì‚Â‚à‚è‚Å‚¢‚é‚È‚çAXV‚Ì‚P‚O•ª‘O‚ ‚½‚è‚ð‚ß‚Ç‚ÉA‚»‚±‚Ü‚Å–³”­Œ¾‚Ì‚Ü‚Ü‚Ìl‚ÍŽQ‰Á‚Å‚«‚È‚¢Ž–î‚ª‚Å‚«‚½‚ÆŒ©‚È‚µ‚Ü‚·B‚È‚Ç‚ÆƒAƒiƒEƒ“ƒX‚µ‚Ä‚¨‚­‚ÆAŽQ‰Á‚É•sŽ©—R‚µ‚»‚¤‚Èl‚ð‚Í‚Á‚«‚èŒ©•ª‚¯‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B‚»‚ê‚ªŒˆ‚ß‚Ä‚¨‚¢‚½•ûj‚È‚çA‘Þ‹Ž‚¢‚½‚¾‚­‚Ì‚à‚¢‚¢‚Å‚µ‚å‚¤<br$net>
 </p>
+</div>
 <hr class="invisible_hr"$net>
 
 <h3><a $atr_id="rolerule">”\\—Í</a></h3>
@@ -156,14 +164,14 @@ _HTML_
 </p>
 
 
-
 <h3 title="‘º‘¤‚Ì”\\—ÍŽÒ"><a $atr_id="role">‘º‘¤‚Ì”\\—ÍŽÒi–ðEj</a></h3> 
+<div>
 <p class="paragraph" onclick="\$('#filter_role').slideToggle('slow');">
 —Í‚ð‡‚í‚¹‚ÄAˆ«ŽÒ’B‚ðŒ‚‘Þ‚µ‚Ü‚µ‚å‚¤B”Þ‚ç‚Í“Á•Ê‚È‚±‚Æ‚ª‚È‚¢ŒÀ‚èA‘ºlw‰c‚Æ‚µ‚ÄŠˆ–ô‚µ‚Ü‚·B<br>
 $sow->{'textrs'}->{'WIN_HUMAN'}
 </p>
 <div id="filter_role"> 
-<table border="1" class="vindex" summary="”\\—ÍŽÒˆê——i‘º‘¤j">
+<table border="1" class="table" summary="”\\—ÍŽÒˆê——i‘º‘¤j">
 <thead>
   <tr>
     <th scope="col">”\\—Í</th>
@@ -197,15 +205,17 @@ _HTML_
 </tbody>
 </table>
 </div>
+</div>
 <hr class="invisible_hr"$net>
 
 <h3><a $atr_id="roleenemy">$enemy‚Ì”\\—ÍŽÒi–ðEj</a></h3>
+<div>
 <p class="paragraph" onclick="\$('#filter_roleenemy').slideToggle('slow');">
 ‘º‚É‚Í‘P—Ç‚È‘ºl’B‚Ì‘¼‚ÉAlŠÔ‚Å‚ ‚è‚È‚ª‚ç“G‚É‰ñ‚é— Ø‚èŽÒ’B‚à‚¢‚Ü‚·B–é‚Í‚ ‚È‚½‚½‚¿‚ÌŽžŠÔ‚Å‚·B<br>
 $enemy_win
 </p>
 <div id="filter_roleenemy"> 
-<table border="1" class="vindex" summary="”\\—ÍŽÒˆê——i$enemyj">
+<table border="1" class="table" summary="”\\—ÍŽÒˆê——i$enemyj">
 <thead>
   <tr>
     <th scope="col">”\\—Í</th>
@@ -233,15 +243,17 @@ _HTML_
 </tbody>
 </table>
 </div>
+</div>
 <hr class="invisible_hr"$net>
 
 <h3><a $atr_id="rolewolf">l˜T‘¤‚Ì”\\—ÍŽÒi–ðEj</a></h3>
+<div>
 <p class="paragraph" onclick="\$('#filter_rolewolf').slideToggle('slow');">
 ‘º‚É‚Í‘P—Ç‚È‘ºl’B‚Ì‘¼‚ÉA”Þ‚ç‚É‚È‚è‚·‚Ü‚µ‚Ä‘ºl‚ðP‚¤l˜T‚âAlŠÔ‚Å‚ ‚è‚È‚ª‚çl˜T‚É‹¦—Í‚·‚é— Ø‚èŽÒ’B‚à‚¢‚Ü‚·B–é‚Í‚ ‚È‚½‚½‚¿‚ÌŽžŠÔ‚Å‚·B<br>
 $sow->{'textrs'}->{'WIN_WOLF'}
 </p>
 <div id="filter_rolewolf"> 
-<table border="1" class="vindex" summary="”\\—ÍŽÒˆê——il˜T‘¤j">
+<table border="1" class="table" summary="”\\—ÍŽÒˆê——il˜T‘¤j">
 <thead>
   <tr>
     <th scope="col">”\\—Í</th>
@@ -269,15 +281,17 @@ _HTML_
 </tbody>
 </table>
 </div>
+</div>
 <hr class="invisible_hr"$net>
 
 <h3><a $atr_id="rolepixi">‘æŽO¨—Í‚Ì”\\—ÍŽÒi–ðEj</a></h3>
+<div>
 <p class="paragraph" onclick="\$('#filter_rolepixi').slideToggle('slow');">
 ‘º‚É‚Í‘º‘¤‚É‚àl˜T‘¤‚É‚à‘®‚³‚È‚¢ŽÒ’B‚ª‚¢‚Ü‚·B‘ºl‘¤‚©l˜T‘¤‚ªŸ—˜‚·‚éðŒ‚ð–ž‚½‚µ‚½ŽžA”Þ‚ç‚Í‰¡‚©‚çŸ—˜‚ðŸ²‚Á‚Ä‚¢‚«‚Ü‚·B<br>
 $sow->{'textrs'}->{'WIN_PIXI'}
 </p>
 <div id="filter_rolepixi"> 
-<table border="1" class="vindex" summary="”\\—ÍŽÒˆê——i‘æŽO¨—Íj">
+<table border="1" class="table" summary="”\\—ÍŽÒˆê——i‘æŽO¨—Íj">
 <thead>
   <tr>
     <th scope="col">”\\—Í</th>
@@ -303,15 +317,17 @@ _HTML_
 </tbody>
 </table>
 </div>
+</div>
 <hr class="invisible_hr"$net>
 
 <h3><a $atr_id="roleother">‚»‚êˆÈŠO‚Ì”\\—ÍŽÒi–ðEj</a></h3>
+<div>
 <p class="paragraph" onclick="\$('#filter_roleother').slideToggle('slow');">
 ã‹L‚É‚ ‚Ä‚Í‚Ü‚ç‚È‚¢A“ÁŽê‚È”\\—Í‚ÌŽ‚¿Žå‚Å‚·B‚Ç‚¤‚µ‚½‚çŸ—˜‚·‚é‚©A‚Ç‚Ì‚æ‚¤‚È«Ž¿‚Ì–ðE‚©A‚Ü‚¿‚Ü‚¿‚È‚Ì‚Å‚æ‚­Šm”F‚µ‚Ü‚µ‚å‚¤B
 </p>
 
 <div id="filter_roleother"> 
-<table border="1" class="vindex" summary="”\\—ÍŽÒˆê——i‚»‚Ì‘¼j">
+<table border="1" class="table" summary="”\\—ÍŽÒˆê——i‚»‚Ì‘¼j">
 <thead>
   <tr>
     <th scope="col">”\\—Í</th>
@@ -338,15 +354,17 @@ _HTML_
 </tbody>
 </table>
 </div>
+</div>
 <hr class="invisible_hr"$net>
 
 <h3><a $atr_id="rolegift">–ðEˆÈŠO‚Ì”\\—Íi‰¶Œbj</a></h3>
+<div>
 <p class="paragraph" onclick="\$('#filter_rolegift').slideToggle('slow');">
 ”\\—Í‚Æ‚Í“Æ—§‚µ‚ÄA“Á•Ê‚Èƒ‹[ƒ‹‚ª‰Á‚í‚é‚±‚Æ‚à‚ ‚è‚Ü‚·B‚Ç‚¤‚µ‚½‚çŸ—˜‚·‚é‚©A‚Ç‚Ì‚æ‚¤‚È«Ž¿‚Ì–ðE‚©A‚Ü‚¿‚Ü‚¿‚È‚Ì‚Å‚æ‚­Šm”F‚µ‚Ü‚µ‚å‚¤B
 </p>
 
 <div id="filter_rolegift"> 
-<table border="1" class="vindex" summary="‰¶Œbˆê——">
+<table border="1" class="table" summary="‰¶Œbˆê——">
 <thead>
   <tr>
     <th scope="col">‰¶Œb</th>
@@ -372,10 +390,12 @@ _HTML_
 </tbody>
 </table>
 </div>
+</div>
 <hr class="invisible_hr"$net>
 
 
 <h3><a $atr_id="start">‘º‚ªŽn‚Ü‚Á‚½‚ç</a></h3>
+<div>
 <p class="paragraph">
 ‘º‚ªŽn‚Ü‚é‚ÆŽQ‰ÁŽÒ‚ÌŠó–]‚É‰ž‚¶‚Ä”\\—ÍŽÒ‚ªŒˆ’è‚³‚êA‚»‚µ‚Ä‚Ç‚ñ‚È”\\—ÍŽÒ‚ª‰½l‚¢‚é‚Ì‚©‚Æ‚¢‚¤“à–ó‚ª•\\Ž¦‚³‚ê‚Ü‚·B<br$net>
 ‚Ü‚¸‚Í‚ ‚È‚½‚ª‚Ç‚ñ‚È”\\—ÍŽÒ‚É‚È‚Á‚Ä‚¢‚é‚Ì‚©Šm”F‚µ‚Ü‚µ‚å‚¤BŠó–]‚ª’Ê‚Á‚Ä–]‚Ý’Ê‚è‚Ì”\\—ÍŽÒ‚É‚È‚Á‚Ä‚¢‚é‚©‚à‚µ‚ê‚Ü‚¹‚ñ‚µAŽv‚¢‚ª‚¯‚È‚¢”\\—ÍŽÒ‚É‚È‚Á‚Ä‚µ‚Ü‚Á‚Ä‚¢‚é‚©‚à‚µ‚ê‚Ü‚¹‚ñB
@@ -393,15 +413,17 @@ _HTML_
 <p class="paragraph">
 Å‰‚Í‚Ç‚¤”­Œ¾‚·‚ê‚Î‚¢‚¢‚Ì‚©‚í‚©‚ç‚È‚¢‚©‚à‚µ‚ê‚Ü‚¹‚ñB‘åä•vA‚«‚Á‚Æ’N‚©‚ªu‹c‘èv‚ðo‚µ‚Ä‚­‚ê‚Ü‚·BÅ‰‚Í‚±‚Ì‹c‘è‚É“š‚¦‚Ä‚¢‚¯‚Î‚¢‚¢‚Ì‚Å‚·B‹c‘è‚É“š‚¦‚é‚¤‚¿A’N‚©‚ª‚ ‚È‚½‚Ì‰ñ“š‚ÉŽ¿–â‚ð‚Ô‚Â‚¯‚Ä—ˆ‚é‚Å‚µ‚å‚¤B¡“x‚Í‚»‚ÌŽ¿–â‚É“š‚¦‚Ä‚Ý‚Ü‚µ‚å‚¤B‚»‚¤‚â‚Á‚Ä‚¢‚é“à‚ÉA‚ ‚È‚½‚à‚¾‚ñ‚¾‚ñŠµ‚ê‚Ä‚­‚é‚Í‚¸B
 </p>
+</div>
 <hr class="invisible_hr"$net>
 
 <h3><a $atr_id="event">Ž–Œ</a></h3>
+<div>
 <p class="paragraph" onclick="\$('#filter_event').slideToggle('slow');">
 “ÁŽê‚ÈŽ–î‚ª”­¶‚·‚é“ú‚ª‚ ‚è‚Ü‚·B‚»‚Ì“úA‘º‚Í’ñŽ¦‚³‚ê‚½ƒ‹[ƒ‹‚É]‚¤‚Å‚µ‚å‚¤B
 </p>
 
 <div id="filter_event"> 
-<table border="1" class="vindex" summary="Ž–Œˆê——">
+<table border="1" class="table" summary="Ž–Œˆê——">
 <thead>
   <tr>
     <th scope="col">Ž–Œ</th>
@@ -427,10 +449,12 @@ _HTML_
 </tbody>
 </table>
 </div>
+</div>
 <hr class="invisible_hr"$net>
 
 
 <h3><a $atr_id="die">Ž€–S</a></h3>
+<div>
 <p class="paragraph">
 ƒQ[ƒ€‚ði‚ß‚Ä‚¢‚­‚¤‚¿AˆŒY‚³‚ê‚½‚èl˜T‚ÉPŒ‚‚³‚ê‚½‚è‚µ‚ÄA‚ ‚È‚½‚ª–½‚ð—Ž‚Æ‚·Ž–‚É‚È‚é‚©‚à‚µ‚ê‚Ü‚¹‚ñB<br$net>
 Ž€–S‚·‚é‚ÆA‚ ‚È‚½‚ÍŽ€ŽÒ‚Ì¢ŠE‚ÖŒü‚©‚¢‚Ü‚·BŽ€ŽÒ‚Ì¢ŠE‚Å‚ÍŽ€ŽÒ“¯Žm‚ª‰ï˜b‚ðŒð‚í‚·Ž–‚ª‚Å‚«‚Ü‚·B‚½‚¾‚µAŽ€ŽÒ“¯Žm‚Ì‰ï˜b‚Í¶‘¶ŽÒ‚É‚Í•·‚±‚¦‚Ü‚¹‚ñBŽ€ŽÒ‚½‚é‚ ‚È‚½‚Í¶‘¶ŽÒ‚Æ‰ï˜b‚ðŒð‚í‚·Ž–‚ª‚Å‚«‚Ü‚¹‚ñB<br$net>
@@ -446,9 +470,11 @@ _HTML_
 <p class="paragraph">
 ‚µ‚©‚µAŽ€–S‚µ‚Ä‚µ‚Ü‚Á‚½‚ ‚È‚½‚É‚ÍA‚à‚¤’¼ÚŸ”s‚ÉŠÖ‚í‚éŽ–‚Í‚Å‚«‚Ü‚¹‚ñB‚Å‚·‚Ì‚ÅA‘¼‚ÌŽ€ŽÒ‚½‚¿‚Æ‚Æ‚à‚É‚Ü‚¾¶‚«‚Ä‚¢‚é’‡ŠÔ‚½‚¿‚ð‰ž‰‡‚µ‚½‚èA¶‘¶ŽÒ‚Ì‚¨‚©‚µ‚ÈˆÓŒ©‚ÉƒcƒbƒRƒ~‚ð“ü‚ê‚½‚èA‚ ‚é‚¢‚Í’P‚ÉŽG’k‚µ‚½‚è‚µ‚ÄAŽ€ŽÒ‚Ì¢ŠE‚ðŠy‚µ‚Ý‚Ü‚µ‚å‚¤B
 </p>
+</div>
 <hr class="invisible_hr"$net>
 
 <h3><a $atr_id="suddendeath">“Ë‘RŽ€</a></h3>
+<div>
 <p class="paragraph">
 ”­Œ¾‚ð‚µ‚È‚¢‚Ü‚ÜXV‚ðŒ}‚¦‚é‚ÆAƒQ[ƒ€•úŠü‚Æ‚Ý‚È‚³‚ê‚ÄŽ©“®“I‚Éu“Ë‘RŽ€v‚µAƒQ[ƒ€‚©‚çœŠO‚³‚ê‚Ü‚·B<br$net>
 ‚±‚Ì“®ì‚Í‚Æ‚«‚É—–\‚·‚¬A‘º‚Ì•ûj‚Æ“éõ‚Ü‚È‚¢‚±‚Æ‚à‚ ‚é‚Å‚µ‚å‚¤B
@@ -462,9 +488,11 @@ _HTML_
 <p class="paragraph">
 ‘º‚É–¢”­Œ¾ŽÒ‚ª‚¢‚éê‡A”­Œ¾“ü—Í—“‚Ì‚·‚®ã‚Éu–{“ú‚Ü‚¾”­Œ¾‚µ‚Ä‚¢‚È‚¢ŽÒ‚Í`v‚Æ‚¢‚¤ƒVƒXƒeƒ€ƒƒbƒZ[ƒW‚ª•\\Ž¦‚³‚ê‚Ü‚·B‚±‚±‚ÉŽ©•ª‚Ì–¼‘O‚ª•\\Ž¦‚³‚ê‚Ä‚¢‚È‚¯‚ê‚ÎA‚ ‚È‚½‚ÍXV‚ðŒ}‚¦‚Ä‚à“Ë‘RŽ€‚µ‚Ü‚¹‚ñB
 </p>
+</div>
 <hr class="invisible_hr"$net>
 
 <h3><a $atr_id="ending">Ÿ”s‚ÌŒˆ’è</a></h3>
+<div>
 <p class="paragraph">
 ‘ºl‘¤‚ªl˜T‚ð‘S–Å‚³‚¹‚é‚©AlŠÔ‚Ìl”‚ªl˜T‚Ìl”‚Æ“¯‚¶‚Ü‚½‚Í‚»‚êˆÈ‰º‚É‚Ü‚ÅŒ¸‚é‚©A‚»‚Ì‚Ç‚¿‚ç‚©‚ÌðŒ‚ð–ž‚½‚·‚ÆŸ•‰‚ªI‚í‚è‚Ü‚·BlŠÔ‚É”‚¦‚é–ðEAl˜T‚É”‚¦‚é–ðE‚É‚Â‚¢‚Ä‚Í<a href="#rolerule">‚±‚¿‚ç‚ðŒ©‚Ü‚µ‚å‚¤</a>B<br$net>
 </p>
@@ -473,7 +501,7 @@ _HTML_
 Ÿ•‰‚ªI‚í‚é‚ÆA¶‚«Žc‚è‚Ìl”‚âA“Á’è‚Ì–ð‚ª¶‚«‚Ä‚¢‚é‚©A‚Ç‚Ì‚æ‚¤‚ÉŽ€‚ñ‚¾‚Ì‚©‚É‚æ‚Á‚ÄAŸ”s‚ªŒˆ’è‚µ‚Ü‚·BŒ‹‰Ê‚É‚æ‚Á‚ÄŸ—˜éŒ¾‚ª‚È‚³‚êA‘Sˆõ‚ÌID‚ÆŠ„‚è“–‚Ä‚ç‚ê‚½”\\—Í‚ªŒöŠJ‚³‚ê‚Ü‚·B‚Ü‚½A“Æ‚èŒ¾‚âš‘‚«‚È‚ÇAŸ•‰‚ÌÅ’†‚É‚Í‘¼l‚ÉŒ©‚¦‚È‚¢‚æ‚¤‚É‚È‚Á‚Ä‚¢‚½”­Œ¾‚àŒöŠJ‚³‚ê‚Ü‚·B
 </p>
 
-<table class=vindex>
+<table class=table>
 <thead>
 <tr>
 <th scope="col">Ÿ”s</th>
@@ -514,7 +542,9 @@ _HTML_
 <p class="paragraph">
 ‚±‚±‚©‚ç‚ÍƒGƒsƒ[ƒO‚ÌŽžŠÔ‚Å‚·B–¾‚©‚³‚ê‚½‘S‚Ä‚Ì”­Œ¾‚È‚Ç‚ð˜b‚ÌŽí‚É‚µ‚ÄA‚Ý‚ñ‚È‚ÅFXÎ‚Á‚½‚è’Q‚¢‚½‚è‚µ‚Ü‚µ‚å‚¤BŠy‚µ‚­‚Ä•Ê‚ê“ï‚¢‚È‚çA‘ºŒš‚Äl‚³‚ñ‚ÍXV‚ð‰„’·‚µ‚Ä‚à‚¢‚¢‚Å‚µ‚å‚¤B‚¨”æ‚ê—l‚Å‚µ‚½B
 </p>
+</div>
 <hr class="invisible_hr"$net>
+</div>
 </DIV>
 _HTML_
 

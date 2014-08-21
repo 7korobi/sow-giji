@@ -1,7 +1,7 @@
-package SWHtml401;
+package SWjavascript;
 
 #----------------------------------------
-# HTML4.01 Transitional DTD
+# Plain Text
 #----------------------------------------
 
 #----------------------------------------
@@ -21,8 +21,8 @@ sub new {
 
 	my $http = $html->{'sow'}->{'http'};
 	$http->{'contenttype'} = 'html';
-	$http->{'styletype'}   = 'text/css';
-	$http->{'scripttype'}  = 'text/javascript';
+	$http->{'styletype'}   = '';
+	$http->{'scripttype'}  = '';
 
 	my $self = {
 		sow       => $html->{'sow'},
@@ -41,10 +41,12 @@ sub outheader {
 
 	print <<"_HTML_";
 <!doctype html>
-<html lang="ja" id="ng-app" ng-app="giji" ng-controller="CGI" ng-class="html_class">
+<html lang="ja">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+</head>
+<body>
 _HTML_
-
-	&SWHtmlPC::OutHTMLHeaderPC($self->{'sow'}, $title);
 	return;
 }
 
@@ -53,7 +55,11 @@ _HTML_
 #----------------------------------------
 sub outfooter {
 	my ($self, $t) = @_;
-	&SWHtmlPC::OutHTMLFooterPC($self->{'sow'}, $t);
+
+	print <<"_HTML_";
+</body>
+</html>
+_HTML_
 	return;
 }
 
@@ -62,7 +68,7 @@ sub outfooter {
 #----------------------------------------
 sub outcontentheader {
 	my $self = $_[0];
-	&SWHtmlPC::OutHTMLContentFrameHeader($self->{'sow'});
+
 	return;
 }
 
@@ -71,7 +77,7 @@ sub outcontentheader {
 #----------------------------------------
 sub outcontentfooter {
 	my $self = $_[0];
-	&SWHtmlPC::OutHTMLContentFrameFooter($self->{'sow'});
+
 	return;
 }
 

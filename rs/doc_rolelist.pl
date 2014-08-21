@@ -16,7 +16,7 @@ sub new {
 	return bless($self, $class);
 }
 
-sub getTurn { 
+sub getTurn {
 	my ($self,$pl) = @_;
 	my $sow = $self->{'sow'};
 
@@ -36,7 +36,7 @@ sub getTurn {
 #----------------------------------------
 # 役職一覧HTML出力
 #----------------------------------------
-sub outhtml { 
+sub outhtml {
 	my $self  = shift;
 	my $sow   = $self->{'sow'};
 	my $net   = $sow->{'html'}->{'net'}; # Null End Tag
@@ -58,7 +58,6 @@ sub outhtml {
 	print <<"_HTML_";
 <hr class="invisible_hr"$net>
 <h2>役職能\力早見表\</h2>
-<p>能\力の行使結果はランダムで生成しています。変だなと思ったら、リロードしてみましょう。</p>
 _HTML_
 
 	# ダミーデータの生成
@@ -68,7 +67,7 @@ _HTML_
 	$vil->{'trsid'} = $sow->{'query'}->{'trsid'};
 	$vil->{'game'}  = $sow->{'query'}->{'game'};
 	$vil->{'saycnttype'} = 'infinity';
-	$vil->{'mob'} = 'alive';
+	$vil->{'mob'} = 'gamemaster';
 	$vil->{'turn'} = 1;
 	$vil->{'winner'} = 0;
 	$vil->{'randomtarget'} = 1;
@@ -128,12 +127,14 @@ _HTML_
 			$plsingle->{'selrole'}   = $i;
 			$plsingle->{'gift'}      = 1;
 			$plsingle->{'role'}      = $i;
-			$plsingle->{'rolestate'} = $sow->{'ROLESTATE_DEFAULT'};
+			$plsingle->{'rolestate'} = -1;
 			$plsingle->{'live'}      = 'live' ;
+			$plsingle->{'live'}      = 'executed' if ( $i == $sow->{'ROLEID_WALPURGIS'});
 			$plsingle->{'deathday'}  = -1;
 			$plsingle->{'title'}     = $rolename->[$plsingle->{'role'}];
 			$plsingle->{'lock'}      = $i if ((93==$i)||(94==$i));
-			
+			$plsingle->{'actaddpt'}  = 0;
+
 			$no++;
 			push( @plstack1, $plsingle ) if ( 1 == $self->getTurn($plsingle) );
 			push( @plstack2, $plsingle ) if ( 1 <  $self->getTurn($plsingle) );
@@ -156,6 +157,7 @@ _HTML_
 				$mobpl->{'rolestate'} = $sow->{'ROLESTATE_DEFAULT'};
 				$mobpl->{'live'}      = 'live' ;
 				$mobpl->{'deathday'}  =  -1;
+				$mobpl->{'actaddpt'}  = 0;
 				$mobpl->{'title'}     = $rolename->[$plsingle->{'role'}]."（能\力使用後）";
 
 				$no++;
@@ -183,6 +185,7 @@ _HTML_
 			$plsingle->{'rolestate'} = $sow->{'ROLESTATE_DEFAULT'};
 			$plsingle->{'live'}      = 'live' ;
 			$plsingle->{'deathday'}  = -1;
+			$plsingle->{'actaddpt'}  = 0;
 			$plsingle->{'title'}     = $giftname->[$plsingle->{'gift'}];
 
 			$no++;
@@ -205,16 +208,39 @@ _HTML_
 				$mobpl->{'rolestate'} = $sow->{'ROLESTATE_DEFAULT'};
 				$mobpl->{'live'}      = 'live' ;
 				$mobpl->{'deathday'}  =  -1;
+				$mobpl->{'actaddpt'}  = 0;
 				$mobpl->{'title'}     = $giftname->[$plsingle->{'gift'}]."（能\力使用後）";
 
 				$no++;
 				push( @plstack2, $mobpl );
 				push( @pllist, $mobpl );
 			}
-		
+
 		}
 	}
 
+
+	# 投票の対象にない
+	if (defined($sow->{'textrs'}->{'STATE_BIND'})) {
+		my $mobpl = SWPlayer->new($sow);
+		$mobpl->createpl('a97');
+		$mobpl->{'pno'}       = 97;
+		$mobpl->{'csid'}      = $vil->{'csid'};
+		$mobpl->{'cid'}       = $order->[-4];
+		$mobpl->{'selrole'}   = $sow->{'ROLEID_WOLF'};
+		$mobpl->{'gift'}      = 1;
+		$mobpl->{'role'}      = $sow->{'ROLEID_WOLF'};
+		$mobpl->{'rolestate'} = $sow->{'ROLESTATE_VOTE_TARGET'};
+		$mobpl->{'live'}      = 'live' ;
+		$mobpl->{'deathday'}  =  -1;
+		$mobpl->{'actaddpt'}  = 0;
+		$mobpl->{'title'}     = '投票されない状態';
+
+		$no++;
+		push( @plstack1, $mobpl ) if ( 1 == $self->getTurn($mobpl) );
+		push( @plstack2, $mobpl ) if ( 1 <  $self->getTurn($mobpl) );
+		push( @pllist, $mobpl );
+	}
 
 	# 能力を失う
 	if (defined($sow->{'textrs'}->{'STATE_BIND'})) {
@@ -229,6 +255,7 @@ _HTML_
 		$mobpl->{'rolestate'} = $sow->{'ROLESTATE_CURSED'};
 		$mobpl->{'live'}      = 'live' ;
 		$mobpl->{'deathday'}  =  -1;
+		$mobpl->{'actaddpt'}  = 0;
 		$mobpl->{'title'}     = '能力を失った状態';
 
 		$no++;
@@ -255,15 +282,34 @@ _HTML_
 	$mobpl->{'gift'} = $sow->{'GIFTID_NOT_HAVE'} ;
 	$mobpl->{'live'} = 'mob' ;
 
+	push( @plstack1, $mobpl );
 	push( @pllist, $mobpl );
 
 	print <<"_HTML_";
-<a href="sow.cgi?cmd=roleaspect&$docid#rolerule">役職とルールの細かい点はこちら。</a>
+<div class="paragraph">
+<p>能\力の行使結果はランダムで生成しています。変だなと思ったら、リロードしてみましょう。</p>
+<p><a href="sow.cgi?cmd=roleaspect&$docid#rolerule">役職とルールの細かい点はこちら。</a></p>
+<p>見たい役職は：<select ng-model="search.title" ng-options="f.title as f.title group by name.group(f.win.substring(4)) for f in roles_form"></select></p>
+</div>
 <hr class="invisible_hr"$net>
 <h2>インターフェイス</h2>
-
+<div ng-repeat="form in roles_form | filter:search | limitTo: 1">
+<h3>{{form.title}}</h3>
+<div template="navi/forms" id="forms"></div>
+</div>
+<script>
+window.gon = {};
+gon.errors = {};
+gon.events = [{is_progress: true}];
+gon.event = {};
+gon.form_show = {
+	memo: true,
+	open: true,
+	secret: true,
+	action: true
+};
+gon.roles_form = [];
 _HTML_
-
 	require "$cfg->{'DIR_LIB'}/commit.pl";
 	# ログ・メモデータファイルの作成
 	require "$cfg->{'DIR_LIB'}/log.pl";
@@ -277,7 +323,7 @@ _HTML_
 		$vil->addpl($plsingle);   # 村へ追加
 		$plsingle->setsaycount(); # 発言数初期化
 	}
-	
+
 	for ($i = 1; $i <= $emulatedays; $i++) {
 		$vil->{'turn'} = $i;
 		my $limit = $emulatedays - $i;
@@ -289,19 +335,25 @@ _HTML_
 			last if ( $result > 0 );
 			&SWCommit::EventGM ($sow,$vil,$logfile);
 		}
-		my @plstacknow;
-		@plstacknow = @plstack1 if ( 0 == $limit );
-		if( @plstacknow ){
-			foreach $plsingle ( @plstacknow ){
-				next unless defined( $plsingle );
-				$vil->addpl($plsingle);   # 村へ追加
-				$plsingle->setsaycount(); # 発言数初期化
-			}
-		}
 		&SWCommit::SetInitVoteTarget($sow, $vil, $logfile);
 	}
+	my @plstacknow;
+	@plstacknow = @plstack1;
+	if( @plstacknow ){
+		foreach $plsingle ( @plstacknow ){
+			next unless defined( $plsingle );
+			$vil->addpl($plsingle);   # 村へ追加
+			$plsingle->setsaycount(); # 発言数初期化
+		}
+	}
+
 	require "$cfg->{'DIR_HTML'}/html_formpl_pc.pl";
 	foreach $pl (@pllist){
+		print <<"_HTML_";
+
+gon.form = giji.form.gon("$pl->{'title'}", "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}");
+_HTML_
+
 		$pl->{'role'} = $pl->{'lock'} if( 0 < $pl->{'lock'}  );
 		next if (($query->{'roleid'} ne '')&&($sow->{$query->{'roleid'}} ne $pl->{'selrole'}));
 		next if (($query->{'giftid'} ne '')&&($sow->{$query->{'giftid'}} ne $pl->{'gift'}));
@@ -309,15 +361,21 @@ _HTML_
 		if( $sow->{'ROLEID_ROBBER'} == $pl->{'pno'} ){
 			$pl->{'role'} = $pl->{'pno'};
 		}
-		print "<h3>$pl->{'title'}</h3>\n";
 		$sow->{'curpl'} = $pl;
 		$sow->{'uid'}   = $sow->{'curpl'}->{'uid'};
 
 		&SWHtmlPlayerFormPC::OutHTMLPlayerFormPC($sow, $vil);
 		print <<"_HTML_";
-<hr class="invisible_hr"$net>
+INIT_FORM(gon.form)
+gon.roles_form.push(gon.form);
 _HTML_
 	}
+	$vil->gon_potofs();
+
+	print <<"_HTML_";
+</script>
+_HTML_
+
 	my $win_message = $sow->{'textrs'}->{'ANNOUNCE_WINNER'}->[$result];
 
 	if (defined($sow->{'query'}->{'emulatedays'})){

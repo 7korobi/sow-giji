@@ -125,17 +125,19 @@ _HTML_
 _HTML_
 	}
 
-	my $roleid = $sow->{'ROLEID'};
-	my $giftid = $sow->{'GIFTID'};
-	my $eventid = $sow->{'EVENTID'};
-	my $roletabletext;
+	my $secret = $vil->isepilogue();
+	$secret = 1 if ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'});
+	my $maker = ($sow->{'uid'} eq $vil->{'makeruid'});
 
-	print <<"_HTML_";
+	if ($secret||$maker||($vil->{'mob'} ne 'gamemaster')) {
+		my $roleid = $sow->{'ROLEID'};
+		my $giftid = $sow->{'GIFTID'};
+		my $eventid = $sow->{'EVENTID'};
+		my $roletabletext;
+
+		print <<"_HTML_";
 ■役職配分：<br$net>$sow->{'textrs'}->{'CAPTION_ROLETABLE'}->{$vil->{'roletable'}}
 _HTML_
-
-	if (1){
-#	if (($vil->{'turn'} > 0)||($vil->{'roletable'} eq 'custom')) {
 		# 役職配分表示
 		require "$sow->{'cfg'}->{'DIR_LIB'}/setrole.pl";
 		my ( $rolematrix, $giftmatrix, $eventmatrix ) = &SWSetRole::GetSetRoleTable($sow, $vil, $vil->{'roletable'}, $plcnt);
@@ -160,6 +162,10 @@ _HTML_
 			}
 		}
 		print "（$roletabletext）<br$net>\n"
+	} else {
+		print <<"_HTML_";
+■役職配分：（非公開）
+_HTML_
 	}
 	print "<hr$net>\n";
 

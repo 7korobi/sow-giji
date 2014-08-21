@@ -16,6 +16,7 @@ sub new {
 		rss    => '',
 	};
 	$self->{'file_js'} = $sow->{'cfg'}->{'FILE_JS'};
+	$self->{'file_css'} = $sow->{'cfg'}->{'FILE_CSS'};
 
 	bless($self, $class);
 	$self->initua($forceua); # 端末識別
@@ -78,6 +79,9 @@ sub initua {
 		require "$dirhtml/html_pc.pl";
 		require "$dirhtml/dtd_xhtml.pl";
 		$self->{'dtd'} = SWXHtml11->new($self);
+	} elsif ($ua eq 'javascript') {
+		require "$dirhtml/dtd_javascript.pl";
+		$self->{'dtd'} = SWjavascript->new($self);
 	} else {
 		# HTML4.01 Transitional DTD
 		$sow->{'ua'} = 'html401';
@@ -142,6 +146,28 @@ sub ConvertNET {
 	$$text =~ s/<(br|img|hr)([^>]*)( \/)?>/<$1$2$net>/ig;
 	return $text;
 }
+
+#----------------------------------------
+# JSON処理
+#----------------------------------------
+sub ConvertJSONbyUser {
+	my ($text) = @_;
+
+	$$text =~ s/\x5c/\\\x5c/ig;
+	$$text =~ s/([\x81-\x9f\xe0-\xfc]\x5c)\x5c/$1/ig; # shift-jis kanji escape cancel.
+	$$text =~ s/\x22/\\\x22/ig;
+	$$text =~ s/\x27/\\\x27/ig;
+	return $text;
+}
+
+sub ConvertJSON {
+	my ($text) = @_;
+
+	$$text =~ s/\x22/\\\x22/ig;
+	$$text =~ s/\x27/\\\x27/ig;
+	return $text;
+}
+
 
 #----------------------------------------
 # 「トップページに戻る」HTML出力

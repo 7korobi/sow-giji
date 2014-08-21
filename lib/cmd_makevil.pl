@@ -11,6 +11,7 @@ sub CmdMakeVil {
 	&SWValidityMakeVil::CheckValidityMakeVil($sow);
 
 	require "$sow->{'cfg'}->{'DIR_LIB'}/file_vindex.pl";
+	require "$sow->{'cfg'}->{'DIR_LIB'}/file_vil.pl";
 	my $vindex = SWFileVIndex->new($sow);
 	$vindex->openvindex();
 	my $vcnt = $vindex->getactivevcnt();
@@ -18,6 +19,7 @@ sub CmdMakeVil {
 	$vindex->closevindex();
 
 	# 村作成処理
+	my $vil = SWFileVil->new($sow, $query->{'vid'});
 	my $vil = &WriteDataCmdMakeVil($sow);
 
 	# HTML出力
@@ -83,7 +85,7 @@ sub WriteDataCmdMakeVil {
 		$sowgrobal = SWFileSWGrobal->new($sow);
 		$sowgrobal->openmw();
 		$sowgrobal->{'vlastid'}++;
-	
+
 		# 村データの作成
 		$query->{'vid'} = $sowgrobal->{'vlastid'};
 		$oldvid = 0;
@@ -155,13 +157,6 @@ sub WriteDataCmdMakeVil {
 	$vindex->writevindex();
 	$vindex->closevindex();
 
-	# 人狼譜出力用ファイルの作成
-	if ($sow->{'cfg'}->{'ENABLED_SCORE'} > 0) {
-		require "$sow->{'cfg'}->{'DIR_LIB'}/score.pl";
-		my $score = SWScore->new($sow, $vil, 1);
-		$score->close();
-	}
-
 	$sow->{'debug'}->writeaplog($sow->{'APLOG_POSTED'}, "Make Vil. [uid=$sow->{'uid'}]");
 
 	return $vil;
@@ -206,10 +201,16 @@ sub SetDataCmdMakeVil {
 	$vil->{'randomtarget'} = 1 if (($sow->{'cfg'}->{'ENABLED_RANDOMTARGET'} > 0) && ($query->{'randomtarget'} ne ''));
 	$vil->{'showid'}       = 0;
 	$vil->{'showid'}       = 1 if ($query->{'showid'} ne '');
+	$vil->{'aiming'}       = 0;
+	$vil->{'aiming'}       = 1 if ($query->{'aiming'} ne '');
 	$vil->{'undead'}       = 0;
 	$vil->{'undead'}       = 1 if ($query->{'undead'} ne '');
 	$vil->{'noselrole'}    = 0;
 	$vil->{'noselrole'}    = 1 if ($query->{'noselrole'} ne '');
+	$vil->{'seqevent'}     = 0;
+	$vil->{'seqevent'}     = 1 if ($query->{'seqevent'} ne '');
+	$vil->{'entrust'}      = 0;
+	$vil->{'entrust'}      = 1 if ($query->{'entrust'} ne '');
 	$vil->{'mob'}          = $query->{'mob'};
 	$vil->{'game'}         = $query->{'game'};
 
@@ -231,12 +232,7 @@ sub SetDataCmdMakeVil {
 		$vil->{"cnt$giftid->[$i]"} = int($countgift);
 	}
 
-	my $eventid = $sow->{'EVENTID'};
-	for ($i = 1; $i < @$eventid; $i++) {
-		my $countevent = 0;
-		$countevent = $query->{"cnt$eventid->[$i]"} if (defined($query->{"cnt$eventid->[$i]"}));
-		$vil->{"cnt$eventid->[$i]"} = int($countevent);
-	}
+	$vil->{'eventcard'} = $query->{'eventcard'};
 }
 
 

@@ -27,6 +27,7 @@ sub OutHTMLDebugVillage {
 	$sow->{'html'}->outcontentheader();
 
 	&SWHtmlPC::OutHTMLLogin($sow); # ログイン欄の出力
+    &SWHtmlPC::OutHTMLChangeCSS($sow);
 
 	print <<"_HTML_";
 <h2>$vil->{'vid'}村のデータ</h2>

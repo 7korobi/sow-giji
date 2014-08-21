@@ -290,16 +290,8 @@ sub setcookie {
 	my ($self, $setcookie) = @_;
 	my $sow = $self->{'sow'};
 	my $query = $sow->{'query'};
-	if ($sow->{'cfg'}->{'ENABLED_TYPEKEY'} > 0) {
-		my $nick = $query->{'nick'};
-		&SWBase::JcodeConvert($sow, \$nick, 'sjis', 'utf8');
-		$setcookie->{'name'} = $query->{'name'};
-		$setcookie->{'nick'} = $nick;
-		$setcookie->{'sig'}  = $query->{'sig'};
-	} else {
-		$setcookie->{'uid'} = $query->{'uid'};
-		$setcookie->{'pwd'} = $query->{'pwd'};
-	}
+	$setcookie->{'uid'} = $query->{'uid'};
+	$setcookie->{'pwd'} = $query->{'pwd'};
 
 	return;
 }

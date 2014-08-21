@@ -3,7 +3,7 @@ package SWHtmlEditProfileForm;
 #----------------------------------------
 # ユーザー情報編集画面のHTML出力
 #----------------------------------------
-sub OutHTMLEditProfileForm { 
+sub OutHTMLEditProfileForm {
 	my ($sow, $vindex) = @_;
 	my $cfg   = $sow->{'cfg'};
 	my $query = $sow->{'query'};
@@ -18,6 +18,7 @@ sub OutHTMLEditProfileForm {
 	$sow->{'html'}->outcontentheader('');
 
 	&SWHtmlPC::OutHTMLLogin($sow); # ログイン欄の出力
+    &SWHtmlPC::OutHTMLChangeCSS($sow);
 
 	my $user = SWUser->new($sow);
 	$user->{'uid'} = $sow->{'uid'};

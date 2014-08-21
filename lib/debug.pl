@@ -185,8 +185,20 @@ sub OutHTMLErrorPC {
 	my ($self, $mes1, $mes2, $mes3, $mes4) = @_;
 	my $sow = $self->{'sow'};
 	my $cfg = $sow->{'cfg'};
+	my $cmd = $sow->{'query'}->{'cmd'};
 
 	print <<"_HTML_";
+<script>
+var e = [];
+e.push("$mes1");
+e.push("$mes2");
+
+window.gon = {
+	"errors": {
+		"$cmd": e
+	}
+};
+</script>
 <div class="paragraph">
 <p>$mes1</p>
 <p>$mes2</p>
@@ -205,7 +217,7 @@ _HTML_
 
 	print <<"_HTML_";
 <p class="return">
-<a href="$cfg->{'BASEDIR_CGIERR'}/$cfg->{'FILE_SOW'}">必死にトップページに戻る</a>
+<a tabindex="-1" href="$cfg->{'BASEDIR_CGIERR'}/$cfg->{'FILE_SOW'}">必死にトップページに戻る</a>
 </p>
 
 _HTML_

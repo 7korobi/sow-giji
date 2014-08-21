@@ -25,6 +25,9 @@ sub InitSW {
 	require "$cfg->{'DIR_LIB'}/charsets.pl";
 
 	&LoadJcode($sow); # jcode.pl/JCode.pm の読み込み
+	$sow->{'lock'}  = SWLock->new($sow);
+	$sow->{'debug'} = SWDebug->new($sow);
+	$sow->{'dt'}    = SWDateTime->new($sow); # 日付変換用
 
 	$sow->{'http'}   = SWHttp->new($sow); # HTTP制御の初期化
 	$sow->{'query'}  = $sow->{'http'}->getquery(); # 入力値
@@ -39,11 +42,7 @@ sub InitSW {
 	$sow->{'charsets'} = SWCharsets->new($sow);
 	&LoadBasicTextRS($sow);
 
-	$sow->{'dt'}     = SWDateTime->new($sow); # 日付変換用
-	$sow->{'debug'} = SWDebug->new($sow);
-	$sow->{'lock'} = SWLock->new($sow);
 	$sow->{'lock'}->glock(); # ファイルロック
-
 	return $sow;
 }
 
@@ -126,7 +125,7 @@ sub CheckUA {
 	}
 
 	# ua引数認識
-	my @ualist = ('ihtml', 'hdml', 'au', 'voda', 'vodax', 'xhtml', 'html401', 'rss');
+	my @ualist = ('ihtml', 'hdml', 'au', 'voda', 'vodax', 'xhtml', 'html401', 'javascript', 'rss');
 	foreach (@ualist) {
 		$ua = $_ if ($sow->{'query'}->{'ua'} eq $_);
 	}
@@ -141,6 +140,7 @@ sub CheckUA {
 	$outmode = 'mb' if ($ua eq 'vodax');
 	$outmode = 'mb' if ($ua eq 'voda');
 	$outmode = 'rss' if ($ua eq 'rss');
+	$outmode = 'javascript' if ($ua eq 'javascript');
 
 	return ($ua, $outmode);
 }
@@ -482,9 +482,9 @@ sub CheckWriteSafetyRole {
 
 	my $curpl = &SWBase::GetCurrentPl($sow, $vil);
 	my $enablecheck = 0;
-	$enablecheck = 1 if ( $curpl->rolesayswitch($vil,1) ne ''); 
-	$enablecheck = 1 if ( $curpl->giftsayswitch($vil,1) ne ''); 
-	
+	$enablecheck = 1 if ( $curpl->rolesayswitch($vil,1) ne '');
+	$enablecheck = 1 if ( $curpl->giftsayswitch($vil,1) ne '');
+
 	return $enablecheck;
 }
 
@@ -497,6 +497,7 @@ sub ExtractChrRef {
 	$$text =~ s/&lt\;/</g;
 	$$text =~ s/&gt\;/>/g;
 	$$text =~ s/&quot\;/\"/g;
+	$$text =~ s/&apos\;/\'/g;
 	$$text =~ s/&amp\;/&/g;
 }
 
@@ -514,6 +515,7 @@ sub EscapeChrRef {
 	$$text =~ s/</&lt\;/g;
 	$$text =~ s/>/&gt\;/g;
 	$$text =~ s/\"/&quot\;/g;
+	$$text =~ s/\'/&apos\;/g;
 }
 
 #----------------------------------------

@@ -20,12 +20,7 @@ sub CmdEntry {
 		&SWCmdVLog::OutHTMLCmdVLog($sow, $vil);
 		$vil->closevil();
 	} else {
-		my $reqvals = &SWBase::GetRequestValues($sow);
-		my $link = &SWBase::GetLinkValues($sow, $reqvals);
-		$link = "$cfg->{'URL_SW'}/$cfg->{'FILE_SOW'}?$link#newsay";
-
-		$sow->{'http'}->{'location'} = "$link";
-		$sow->{'http'}->outheader(); # HTTPヘッダの出力
+		$sow->{'http'}->outheader();
 		$sow->{'http'}->outfooter();
 	}
 }
@@ -52,6 +47,9 @@ sub SetDataCmdEntry {
 	my ($q_csid, $q_cid) = split('/', $query->{'csid_cid'});
 
 	# プレイヤー参加済みチェック
+	if ( '' eq $sow->{'uid'}){
+		$sow->{'debug'}->raise($sow->{'APLOG_NOTICE'}, 'ログインしてください。', "uid is null.");
+	}
 	if (defined($sow->{'curpl'})) {
 		$sow->{'debug'}->raise($sow->{'APLOG_NOTICE'}, 'あなたは既にこの村へ参加しています。', "user found.[$sow->{'uid'}]");
 	}
@@ -109,11 +107,10 @@ sub SetDataCmdEntry {
 	require "$sow->{'cfg'}->{'DIR_LIB'}/log.pl";
 	my $logfile = SWBoa->new($sow, $vil, $vil->{'turn'}, 0);
 
+	my $monospace = 0 + $query->{'monospace'};
+
 	my $expression = 0;
 	$expression = $query->{'expression'} if (defined($query->{'expression'}));
-	my $monospace = 0;
-	$monospace = 1 if ($query->{'monospace'} eq 'monospace');
-	$monospace = 2 if ($query->{'monospace'} eq 'report'); 
 	my $mes = &SWString::GetTrimString($sow, $vil, $query->{'mes'});
 	my %entry = (
 		pl         => $plsingle,
@@ -147,12 +144,6 @@ sub SetDataCmdEntry {
 		$vindex->closevindex();
 	}
 	$vil->closevil();
-
-	my $reqvals = &SWBase::GetRequestValues($sow);
-	my $link = &SWBase::GetLinkValues($sow, $reqvals);
-	$link = "$cfg->{'URL_SW'}/$cfg->{'FILE_SOW'}?$link#newsay";
-
-	$sow->{'http'}->{'location'} = "$link";
 	return;
 }
 
