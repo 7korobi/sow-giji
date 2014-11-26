@@ -2052,17 +2052,18 @@ _HTML_
 			$win_visible = $pl->win_if();
 			$love = $pl->{'love'};
 			$bonds = $pl->{'bonds'};
+			$bonds =~ s/\//,/g;
 			$pseudolove = $pl->{'pseudolove'};
 			$pseudobonds = $pl->{'pseudobonds'};
+			$pseudobonds =~ s/\//,/g;
 		} else {
+			my $bond_values = $pl->getvisiblebonds($vil);
 			$win_visible = $pl->win_visible();
 			$love = $pl->getvisiblelovestate();
-			$bonds = $pl->all_bonds_str();
+			$bonds = join(',', @$bond_values);
 			$role = $sow->{'ROLEID_VILLAGER'} if ($pl->{'role'} == $sow->{'ROLEID_RIGHTWOLF'});
 			$role = 0   if (($is_sensible == 0)||($pl->{'role'} == 0));
 		}
-		$bonds =~ s/\//,/g;
-		$pseudobonds =~ s/\//,/g;
 
 		print <<"_HTML_";
 pl.is_canrole = (0 !== $is_canrole);
