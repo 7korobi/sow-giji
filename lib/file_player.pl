@@ -1991,6 +1991,7 @@ var pl = {
 	"postfix": "$pl->{'postfix'}",
 
 	"live": "$live",
+	"role": [],
 	"bonds": [],
 	"pseudobonds": [],
 
