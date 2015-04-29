@@ -15,8 +15,8 @@ sub OutHTMLChrList {
 	my $net = $sow->{'html'}->{'net'}; # Null End Tag
 	my $cfg = $sow->{'cfg'};
 	my $query = $sow->{'query'};
-
-
+    my $reqvals = &SWBase::GetRequestValues($sow);
+    my $hidden  = &SWBase::GetHiddenValues($sow, $reqvals, '      ');
 
 	# キャラセットの取得
 	my $csid = '';
@@ -43,14 +43,42 @@ sub OutHTMLChrList {
 	$maxwidth = 460 if ( 480 <= $csswidth);
 	$maxwidth = 560 if ( 800 <= $csswidth);
 	my $width    = $maxwidth;
-	my $order = $charset->{'ORDER'};
 	my $urlsow = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}";
 
+	$sow->{'query'}->{'trsid'} = $sow->{'cfg'}->{'DEFAULT_TEXTRS'} if ( "" eq $sow->{'query'}->{'trsid'});
+
+	my $tag = $query->{'tag'};
 	print <<"_HTML_";
+<p class="paragraph">
+<form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}#newsay" method="$cfg->{'METHOD_FORM_MB'}">
+<div class="formpl_content">
+<label for="tag">分類タグから探す：</label>
+<select name="tag">
+_HTML_
+	my $charset = $sow->{'charsets'}->{'csid'}->{$csid};
+	my $tagorder = $charset->{'TAG_ORDER'};
+	foreach (@$tagorder) {
+		if (! $tag) { $tag = $_; }
+		my $tagname = $sow->{'charsets'}->{'tag'}->{'TAG_NAME'}->{$_};
+		my $selected = '';
+		my $star = '';
+		$selected = " $sow->{'html'}->{'selected'}" if ($_ eq $tag);
+		$star = "* " if ($_ eq $tag);
+		print "<option value=\"$_\"$selected>$star$tagname$sow->{'html'}->{'option'}\n";
+	}
+	print <<"_HTML_";
+</select>
+<input type="hidden" name="cmd" value="$query->{'cmd'}"$net>$hidden
+<input type="submit" value="探す"$net>
+</div>
+</form>
+</p>
+
 <h2>キャラクター一覧 [$charset->{'CAPTION'}セット]</h2>
 <table class="chrlist">
 <tbody>
 _HTML_
+	my $order = $charset->{'CHRORDER'}->{$tag};
 	foreach (@$order) {
 		$width -= $imgwidth;
 		if ( $width < 0 ){
