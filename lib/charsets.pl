@@ -28,8 +28,14 @@ sub loadchrrs {
 	require "$fname";
 	my $sub = '::SWResource_' . $csid . '::GetRSChr';
 	my $charset = &$sub($sow);
-
 	$self->{'csid'}->{$csid} = $charset;
+
+	# “Ç‚İ‚İÏ‚İ‚È‚ç‰½‚à‚µ‚È‚¢
+	return if (defined($self->{'tag'}));
+
+	require "$sow->{'cfg'}->{'DIR_RS'}/tag.pl"; 
+	my $tagset = &SWResource_TAG::GetTag($sow);
+	$self->{'tag'} = $tagset;
 	return;
 }
 

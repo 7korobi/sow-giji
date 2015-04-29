@@ -7,8 +7,11 @@ package SWHtmlEntryFormPC;
 sub OutHTMLEntryFormPC {
 	my ($sow, $vil) = @_;
 	my $cfg   = $sow->{'cfg'};
-	my $query = $sow->{'query'};
 	my $net = $sow->{'html'}->{'net'};
+
+	my $query = $sow->{'query'};
+    my $reqvals = &SWBase::GetRequestValues($sow);
+    my $hidden  = &SWBase::GetHiddenValues($sow, $reqvals, '      ');
 
 	my $allpllist = $vil->getallpllist();
 	my $pllist    = $vil->getpllist();
@@ -38,16 +41,41 @@ sub OutHTMLEntryFormPC {
 	$imgwhid = 'FACE' if ($charset->{'BODY'} ne '');
 
 
+	my $tag = $query->{'tag'};
 	print <<"_HTML_";
-<form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$sow->{'cfg'}->{'METHOD_FORM'}">
 <div class="formpl_frame">
 <table class="formpl_common">
 <tr class="say">
 <td class="img"><img name="chr_img" src="$img" width="$charset->{'IMGBODYW'}" height="$charset->{'IMGBODYH'}">
 <td class="field"><div class="msg">
+<form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}#newsay" method="$cfg->{'METHOD_FORM_MB'}">
+<div class="formpl_content">
+<label for="tag">分類タグから探す：</label>
+<select name="tag">
+_HTML_
+	foreach $csid_val (@csidkey) {
+		my $charset = $sow->{'charsets'}->{'csid'}->{$csid_val};
+		my $tagorder = $charset->{'TAG_ORDER'};
+		foreach (@$tagorder) {
+			if (! $tag) { $tag = $_; }
+			my $tagname = $sow->{'charsets'}->{'tag'}->{'TAG_NAME'}->{$_};
+			my $selected = '';
+			my $star = '';
+			$selected = " $sow->{'html'}->{'selected'}" if ($_ eq $tag);
+			$star = "* " if ($_ eq $tag);
+			print "<option value=\"$_\"$selected>$star$tagname$sow->{'html'}->{'option'}\n";
+		}
+	}
+	print <<"_HTML_";
+</select>
+<input type="hidden" name="cmd" value="$query->{'cmd'}"$net>$hidden
+<input type="submit" value="探す"$net>
+</div>
+</form>
+<form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$sow->{'cfg'}->{'METHOD_FORM'}">
 <div class="formpl_content">
 <label for="selectcid">希望する配役：</label>
-<select id="selectcid" name="csid_cid" onFocus='javascript:chrImgChange(document.chr_img,this,"$charset->{'DIR'}/","$vil->{'csid'}","$body$charset->{'EXT'}")' onChange='javascript:chrImgChange(document.chr_img,this,"$charset->{'DIR'}/","$vil->{'csid'}","$body$charset->{'EXT'}")'>
+<select id="selectcid" name="csid_cid" onFocus='javascript:chrImgChange(document.chr_img,this,"$charset->{'DIR'}","$vil->{'csid'}","$body$charset->{'EXT'}")' onChange='javascript:chrImgChange(document.chr_img,this,"$charset->{'DIR'}","$vil->{'csid'}","$body$charset->{'EXT'}")'>
 _HTML_
 
 	# 参加済みのキャラをチェック
@@ -60,7 +88,7 @@ _HTML_
 	my $csid_val;
 	foreach $csid_val (@csidkey) {
 		my $charset = $sow->{'charsets'}->{'csid'}->{$csid_val};
-		my $chrorder = $charset->{'ORDER'};
+		my $chrorder = $charset->{'CHRORDER'}->{$tag};
 		foreach (@$chrorder) {
 			next if (defined($csid_cid{"$csid_val/$_"})); # 参加済みのキャラは除外
 			my $chrname = $sow->{'charsets'}->getchrname($csid_val, $_);
@@ -137,13 +165,13 @@ _HTML_
 
 	print <<"_HTML_";
 </div>
+</form>
 </table>
 
   <div class="clearboth">
     <hr class="invisible_hr"$net>
   </div>
 </div>
-</form>
 
 _HTML_
 

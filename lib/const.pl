@@ -44,6 +44,7 @@ sub InitConst {
 		vplcnt       => 0, # 定員
 		vplcntstart  => 0, # 最低人数（開始に必要な人数）
 		updinterval  => 0, # 更新間隔
+		tag          => 1, # キャラセット・タグ
 		csid         => 1, # キャラクタセット
 		saycnttype   => 1, # 発言制限種別
 		entrylimit   => 1, # 参加制限

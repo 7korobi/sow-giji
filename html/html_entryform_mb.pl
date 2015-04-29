@@ -48,7 +48,30 @@ sub OutHTMLEntryFormMb {
 <hr$net>
 _HTML_
 
+	my $tag = $query->{'tag'};
 	print <<"_HTML_";
+<form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$cfg->{'METHOD_FORM_MB'}">
+•ª—Þƒ^ƒO‚©‚ç’T‚·<br$net>
+<select name="tag">
+_HTML_
+	foreach $csid_val (@csidkey) {
+		my $charset = $sow->{'charsets'}->{'csid'}->{$csid_val};
+		my $tagorder = $charset->{'TAG_ORDER'};
+		foreach (@$tagorder) {
+			if (! $tag) { $tag = $_; }
+			my $tagname = $sow->{'charsets'}->{'tag'}->{'TAG_NAME'}->{$_};
+			my $selected = '';
+			my $star = '';
+			$selected = " $sow->{'html'}->{'selected'}" if ($_ eq $tag);
+			$star = "* " if ($_ eq $tag);
+			print "<option value=\"$_\"$selected>$star$tagname$sow->{'html'}->{'option'}\n";
+		}
+	}
+	print <<"_HTML_";
+</select>
+<input type="hidden" name="cmd" value="$query->{'cmd'}"$net>$hidden
+<input type="submit" value="’T‚·"$net>
+</form>
 <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}" method="$cfg->{'METHOD_FORM_MB'}">
 Šó–]”z–ð<br$net>
 <select name="csid_cid">
@@ -64,7 +87,7 @@ _HTML_
 	my $csid_val;
 	foreach $csid_val (@csidkey) {
 		my $charset = $sow->{'charsets'}->{'csid'}->{$csid_val};
-		my $chrorder = $charset->{'ORDER'};
+		my $chrorder = $charset->{'CHRORDER'}->{$tag};
 		foreach (@$chrorder) {
 			next if (defined($csid_cid{"$csid_val/$_"})); # ŽQ‰ÁÏ‚Ý‚ÌƒLƒƒƒ‰‚ÍœŠO
 			my $chrname = $sow->{'charsets'}->getchrname($csid_val, $_);
