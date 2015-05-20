@@ -12,8 +12,10 @@ sub GetRSChr {
 
 
   # •\\Ž¦‡
+  my @all = ('sf01', 'sf02', 'sf03', 'sf04', 'sf05', 'sf06', 'sf025', 'sf07', 'sf08', 'sf09', 'sf10', 'sf11', 'sf12', 'sf13', 'sf18', 'sf19', 'sf14', 'sf15', 'sf16', 'sf17', 'sf20', 'sf021', 'sf023', 'sf024', 'sf026', 'sf022', 'sf027', 'sf032', 'sf028', 'sf029', 'sf030', 'sf031');
   my @stratos = ('sf01', 'sf02', 'sf03', 'sf04', 'sf05', 'sf06', 'sf025', 'sf07', 'sf08', 'sf09', 'sf10', 'sf11', 'sf12', 'sf13', 'sf18', 'sf19', 'sf14', 'sf15', 'sf16', 'sf17', 'sf20', 'sf021', 'sf023', 'sf024', 'sf026', 'sf022', 'sf027', 'sf032', 'sf028', 'sf029', 'sf030', 'sf031');
   my %chrorder = (
+    'all' => \@all,
     'stratos' => \@stratos,
   );
 

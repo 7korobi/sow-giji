@@ -12,8 +12,10 @@ sub GetRSChr {
 
 
   # •\\¦‡
+  my @all = ('g05', 'g02', 'g01', 'g03', 'gc61', 'g04', 'g06', 'g07', 'g08');
   my @asia = ('g05', 'g02', 'g01', 'g03', 'gc61', 'g04', 'g06', 'g07', 'g08');
   my %chrorder = (
+    'all' => \@all,
     'asia' => \@asia,
   );
 
