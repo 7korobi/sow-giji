@@ -7,6 +7,7 @@ package SWResource_TAG;
 sub GetTag {
   # ƒ^ƒO‚Ì–¼‘O
   my %tag_name = (
+    'all' => '‚·‚×‚Ä',
     'giji' => 'l˜T‹cŽ–',
     'shoji' => '‚Ä‚â‚ñ‚Å‚¦',
     'travel' => '‹AŠÒŽÒ‹cŽ–',
@@ -31,7 +32,6 @@ sub GetTag {
     'farm' => '-X‚Ì”_ê-',
     'government' => '-“Ž¡Œö‹¤-',
     'god' => '-‚©‚Ý‚³‚Ü-',
-    'all' => '‚·‚×‚Ä',
   );  
 
   my %tagset = (

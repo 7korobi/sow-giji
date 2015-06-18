@@ -4,7 +4,7 @@ package SWHtmlChrList;
 # キャラ一覧画面のタイトル
 #----------------------------------------
 sub GetHTMLChrListTitle { 
-	return 'キャラ人気投票、募集中！';
+	return 'キャラクター一覧';
 }
 
 #----------------------------------------
@@ -25,9 +25,6 @@ sub OutHTMLChrList {
 	} else {
 		$csid = $cfg->{'CSIDLIST'}->[0];
 	}
-
-	$query->{'csid'} = $csid;
-	$query->{'cmd'}  = 'facevote';
 
 	# リソースの読み込み
 	$sow->{'charsets'}->loadchrrs($csid);
@@ -68,6 +65,7 @@ _HTML_
 	}
 	print <<"_HTML_";
 </select>
+<input type="hidden" name="csid" value="$query->{'csid'}"$net>$hidden
 <input type="hidden" name="cmd" value="$query->{'cmd'}"$net>$hidden
 <input type="submit" value="探す"$net>
 </div>
