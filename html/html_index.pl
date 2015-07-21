@@ -158,7 +158,7 @@ updated_at: new Date(1389008975000),template:"message/say",mestype:"SAY",csid:"a
 gon.rule = [
 { mesicon:'',
   name:'学者 レオナルド',
-  text:'<a href="sow.cgi?cmd=rule" class="mark">ルールと心構\え</a>を守って、楽しく、強く遊ぼう。<br>\\
+  text:'<a href="http://giji-assets.s3-website-ap-northeast-1.amazonaws.com/assets-master/rule.html" class="mark">ルールと心構\え</a>を守って、楽しく、強く遊ぼう。<br>\\
 ここでは、みんなに守ってほしいルールや、吟味してほしい心構\えを紹介するよ。<br>\\
 では、リンク先の１ページ目から\―\―\―\ ',
 updated_at: new Date(1389008975000),template:"message/say",mestype:"SAY",csid:"all",face_id:"c96",style:"head"},
