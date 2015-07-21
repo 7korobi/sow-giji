@@ -7,6 +7,7 @@ sub InitConst {
 	# 引数リスト（NaN/Infチェック用）
 	# 数値データは0、文字列は1、改行を許す文字列は2
 	my %queryinvalid = (
+		scr     => 1, 
 		ua      => 1, # ユーザエージェント
 		css     => 1, # CSS指定（オプション）
 		uid     => 1, # ユーザID

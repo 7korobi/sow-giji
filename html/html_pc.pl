@@ -9,7 +9,6 @@ package SWHtmlPC;
 #----------------------------------------
 sub OutHTMLHeaderPC {
   my ($sow, $title) = @_;
-  my $net = $sow->{'html'}->{'net'};
   my $cfg = $sow->{'cfg'};
   my $cookie = $sow->{'cookie'};
 
@@ -27,29 +26,24 @@ sub OutHTMLHeaderPC {
   # Content-Type / Content-Style-Type の出力
   # 通常はHTTPに出力するので不要
   if ($sow->{'cfg'}->{'OUTPUT_HTTP_EQUIV'} > 0) {
-    print "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=Shift_JIS\"$net>\n" if ($sow->{'http'}->{'contenttype'} eq 'html');
-    print "  <meta http-equiv=\"Content-Style-Type\" content=\"$sow->{'http'}->{'styletype'}\"$net>\n" if ($sow->{'http'}->{'styletype'} ne '');
-    print "  <meta http-equiv=\"Content-Script-Type\" content=\"$sow->{'http'}->{'scripttype'}\"$net>\n" if ($sow->{'http'}->{'scripttype'} ne '');
+    print "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=Shift_JIS\">\n" if ($sow->{'http'}->{'contenttype'} eq 'html');
+    print "  <meta http-equiv=\"Content-Style-Type\" content=\"$sow->{'http'}->{'styletype'}\">\n" if ($sow->{'http'}->{'styletype'} ne '');
+    print "  <meta http-equiv=\"Content-Script-Type\" content=\"$sow->{'http'}->{'scripttype'}\">\n" if ($sow->{'http'}->{'scripttype'} ne '');
   }
 
   my $robots = $sow->{'cfg'}->{'ROBOTS'};
   foreach (@$robots) {
-    print "  <meta name=\"robots\" content=\"$_\"$net>\n";
+    print "  <meta name=\"robots\" content=\"$_\">\n";
   }
 
   print <<"_HTML_";
-  <meta name="Author" content="$sow->{'NAME_AUTHOR'}"$net>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="Author" content="$sow->{'NAME_AUTHOR'}">
+  <meta content="yes" name="apple-mobile-web-app-capable" />
+  <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style" />
+  <meta content="telephone=no" name="format-detection" />
+  <meta content="initial-scale=1.0" name="viewport" />
 
-<!--[if lt IE 9]>
-  <script src="$cfg->{'BASEDIR_DOC'}//javascripts/json3.min.js"></script>
-  <script src="$cfg->{'BASEDIR_DOC'}//javascripts/jquery-1.10.2.min.js"></script>
-<![endif]-->
-<!--[if (gte IE 9)|!(IE)]><!-->
-  <script src="$cfg->{'BASEDIR_DOC'}/javascripts/jquery-2.0.3.min.js"></script>
-<!--<![endif]-->
-
-  <link rel="shortcut icon" href="$cfg->{'BASEDIR_DOC'}/$cfg->{'FILE_FAVICON'}"$net>
+  <link rel="shortcut icon" href="$cfg->{'BASEDIR_DOC'}/$cfg->{'FILE_FAVICON'}">
 _HTML_
 
   # スタイルシートの出力
@@ -62,47 +56,26 @@ _HTML_
 
   # RSSの出力
   if (($sow->{'html'}->{'rss'} ne '') && ($cfg->{'ENABLED_RSS'} > 0)) {
-    print "  <link rel=\"Alternate\" type=\"application/rss+xml\" title=\"RSS\" href=\"$sow->{'html'}->{'rss'}\"$net>\n";
+    print "  <link rel=\"Alternate\" type=\"application/rss+xml\" title=\"RSS\" href=\"$sow->{'html'}->{'rss'}\">\n";
   }
 
   # ナビゲーションの出力
   my $url_home = $cfg->{'URL_SW'} . '/sow.cgi';
   print <<"_HTML_";
-  <link rev="Made" href="mailto:$sow->{'MAIL_AUTHOR'}"$net>
-  <link rel="Start" href="$url_home" title="$cfg->{'NAME_HOME'}"$net>
+  <link rev="Made" href="mailto:$sow->{'MAIL_AUTHOR'}">
+  <link rel="Start" href="$url_home" title="$cfg->{'NAME_HOME'}">
 _HTML_
 
   # link要素の出力
   foreach (@{$sow->{'html'}->{'links'}}) {
-    print "  <link rel=\"$_->{'rel'}\" href=\"$_->{'url'}\" title=\"$_->{'title'}\"$net>\n";
-  }
-
-  # JavaScriptの出力
-  if (defined($sow->{'html'}->{'file_js'})) {
-    my $file_js = $sow->{'html'}->{'file_js'};
-    foreach (@$file_js) {
-      print "  <script type=\"text/javascript\" src=\"$cfg->{'BASEDIR_DOC'}/$_\" charset=\"UTF-8\"></script>\n";
-    }
+    print "  <link rel=\"$_->{'rel'}\" href=\"$_->{'url'}\" title=\"$_->{'title'}\">\n";
   }
 
   # タイトルの出力
   print <<"_HTML_";
 <title>$title$cfg->{'NAME_HOME'}</title>
 </head>
-_HTML_
-
-  # body要素開始タグの出力
-  print "<body";
-  my $bodyjs = $sow->{'html'}->{'bodyjs'};
-  my @bodyjskeys = keys(%$bodyjs);
-  foreach (@bodyjskeys) {
-    print " $_=\"$bodyjs->{$_}\"";
-  }
-  print ">\n";
-
-  # 外枠
-  print <<"_HTML_";
-
+<body>
 <div id="outframe" class="outframe">
 _HTML_
 
@@ -113,7 +86,6 @@ _HTML_
 #----------------------------------------
 sub OutHTMLContentFrameHeader {
   my $sow = shift;
-  my $net   = $sow->{'html'}->{'net'};
   my $cfg   = $sow->{'cfg'};
   my $query = $sow->{'query'};
   my $urlsow = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}";
@@ -132,8 +104,7 @@ sub OutHTMLContentFrameHeader {
 
   print <<"_HTML_";
 <div id="contentframe" class="contentframe">
-<h1>$titlestart<img ng-src="{{h1.path}}" ng-cloak $net>$titleend</h1>
-
+<h1 id="to_root"></h1>
 <div class="inframe">
 _HTML_
 
@@ -144,23 +115,28 @@ _HTML_
 #----------------------------------------
 sub OutHTMLContentFrameFooter {
   my $sow = $_[0];
-  my $net = $sow->{'html'}->{'net'};
   my $atr_id = $sow->{'html'}->{'atr_id'};
 
   print <<"_HTML_";
 <address>
-<a tabindex="-1" $atr_id="bottom">$sow->{'VERSION_SW'}</a> <a tabindex="-1" href="$sow->{'URL_AUTHOR'}">$sow->{'COPY_AUTHOR'}</a><br$net>
+<a tabindex="-1" $atr_id="bottom">$sow->{'VERSION_SW'}</a> <a tabindex="-1" href="$sow->{'URL_AUTHOR'}">$sow->{'COPY_AUTHOR'}</a><br>
 _HTML_
 
   my $copyrights = $sow->{'cfg'}->{'COPYRIGHTS'};
   foreach (@$copyrights) {
-    print "$_<br$net>\n";
+    print "$_<br>\n";
   }
 
   print <<"_HTML_";
 </address>
 </div><!-- inframe footer -->
 </div><!-- contentframe footer -->
+<div id="footer"></div>
+<div id="tab">
+  <div id="topviewer"></div>
+  <div id="sayfilter"></div>
+  <div id="buttons"></div>
+</div>
 _HTML_
 
 }
@@ -171,15 +147,21 @@ _HTML_
 sub OutHTMLFooterPC {
   my $sow = $_[0];
   my $cput = int($_[1] * 1000) / 1000;
-  my $net = $sow->{'html'}->{'net'};
 
   print <<"_HTML_";
 ($cput CPUs)
 </div>
 </body>
-<script>
-\$(function(){\$('.finished_log').hide()});
-</script>
+_HTML_
+
+  # JavaScriptの出力
+  if (defined($sow->{'html'}->{'file_js'})) {
+    my $file_js = $sow->{'html'}->{'file_js'};
+    foreach (@$file_js) {
+      print "  <script type=\"text/javascript\" src=\"$cfg->{'BASEDIR_DOC'}/$_\" charset=\"UTF-8\"></script>\n";
+    }
+  }
+  print <<"_HTML_";
 </html>
 _HTML_
 }
@@ -191,15 +173,15 @@ sub OutHTMLLogin {
   my $sow = $_[0];
   my $query = $sow->{'query'};
   my $cfg   = $sow->{'cfg'};
-  my $net   = $sow->{'html'}->{'net'};
 
   my $urlsow = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}";
   my $reqvals = &SWBase::GetRequestValues($sow);
   my $hidden = &SWBase::GetHiddenValues($sow, $reqvals, '  ');
 
   print <<"_HTML_";
-<div template="sow/login" ng-if="form.login"></div>
-<hr class="invisible_hr"$net>
+<div class="login" id="headline"></div>
+<div class="paragraph" id="sow_auth"></div>
+<div id="css_changer"></div>
 _HTML_
 }
 
@@ -216,17 +198,20 @@ sub OutHTMLGonInit {
 
   print <<"_HTML_";
 <script>
-window.gon = giji.gon();
-gon.form.login = {
-  "cmd": "login",
-  "admin_uri": "$admin_uri",
-  "is_admin": $is_admin,
-  "cmdfrom": "$cmdfrom",
-  "expired": new Date(1000 * $expired),
-  "uidtext": "$uid".replace(" ","&nbsp;"),
-  "uid": "$uid"
+window.gon = {
+  url: "$path",
+  sow_auth: null
 }
-gon.form.uri = "$path";
+
+window.gon.sow_auth = {
+  cmd: "login",
+  cmdfrom: "$cmdfrom",
+  uid: "$uid",
+  is_login: $logined,
+  is_admin: $is_admin,
+  admin_uri: "$admin_uri",
+  expired: new Date(1000 * $expired)
+};
 _HTML_
 }
 
@@ -236,7 +221,6 @@ _HTML_
 sub OutHTMLReturnPC {
   my $sow = $_[0];
   my $cfg = $sow->{'cfg'};
-  my $net = $sow->{'html'}->{'net'};
 
   my $reqvals = &SWBase::GetRequestValues($sow);
   $reqvals->{'cmd'} = '';
@@ -246,10 +230,10 @@ sub OutHTMLReturnPC {
   my $link = &SWBase::GetLinkValues($sow, $reqvals);
 
   print <<"_HTML_";
-<p class="return">
+<p class="btn edge">
 <a tabindex="-1" href="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$link">トップページに戻る</a>
 </p>
-<hr class="invisible_hr"$net>
+<hr class="black">
 
 _HTML_
 }
@@ -263,11 +247,7 @@ sub OutHTMLChangeCSS {
   my $theme = $cfg->{'THEME'};
 
   print <<"_HTML_";
-<div class="choice css_changer">
-  <span><a class="mark" href="sow.cgi?ua=mb">携帯</a></span>
-  <span theme="$theme"></span>
-</div>
-<div class="paginavi" template="theme/style_navi"></div>
+<div class="choice css_changer"></div>
 _HTML_
 }
 

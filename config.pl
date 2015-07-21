@@ -491,20 +491,18 @@ sub GetConfig {
 	);
 
 	my @file_css = (
-		'assets-show-fix/application.css',
+		'assets-master/application.css',
 	);
 
 	my @file_js = (
-		'assets-show-fix/data.js',
-		'assets-show-fix/base.js',
-		'assets-show-fix/sow.js',
-		'assets-show-fix/boot.js',
+		'assets-master/base.js',
+		'assets-master/const.js',
+		'assets-master/sow.js',
 	);
 	my @file_js_vil = (
-		'assets-show-fix/data.js',
-		'assets-show-fix/base.js',
-		'assets-show-fix/sow.js',
-		'assets-show-fix/boot.js',
+		'assets-master/base.js',
+		'assets-master/const.js',
+		'assets-master/sow.js',
 	);
 
 	my %cfg = (
@@ -516,14 +514,14 @@ sub GetConfig {
 		USERID_NPC     => "master",
 		USERID_ADMIN   => "admin",
 		ENABLED_VMAKE  => 1,
-		URL_SW         => "http://localhost/show-fix",
+		URL_SW         => "http://localhost/master",
 		NAME_HOME      => "l˜T‹cŽ– ŽI‚Ì–¡‘XŽÏ",
 		RULE           => "BRAID",
 		MAX_VILLAGES   => 2,
 		TIMEOUT_SCRAP  => 5,
 		TIMEOUT_ENTRY  => 2,
 		TOPPAGE_INFO   => "./_info.pl",
-		BASEDIR_CGIERR => "http://localhost/show-fix//",
+		BASEDIR_CGIERR => "http://localhost/master//",
 		BASEDIR_CGI    => ".",
 		BASEDIR_DAT    => "./data",
 		BASEDIR_DOC    => "http://localhost",

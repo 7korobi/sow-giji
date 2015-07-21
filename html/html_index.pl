@@ -71,11 +71,6 @@ _HTML_
 	my $linkspec    = $urlwiki.'(What)Other';
 	my $linksaycnt  = $urlwiki.'(List)SayCnt';
 
-	require "$cfg->{'DIR_RS'}/doc_rule.pl";
-	my $docprohibit = SWDocRule->new($sow);
-	$docprohibit->outhtmlsimple();
-
-
 	my $imgrating = '';
 	my $rating = $cfg->{'RATING'};
 	my $ratingorder = $rating->{'ORDER'};
@@ -115,59 +110,50 @@ _HTML_
 	print <<"_HTML_";
 <script>
 var hello;
-if (new Date % (24*3600000) - 9 * 3600000 < 0) {
+var now = new Date() - 0;
+if (now % (24*3600000) - 9 * 3600000 < 0) {
   hello = "こんにちわ";
 }else{
   hello = "こんばんわ";
 }
 
-gon.oldlog = [
-{ mesicon:'',
+gon.items = [
+{ _id: "oldlog-talk-TSAY-1",
   name:'留守番 ジョージ',
-  text:'この奥だよ。もう<a class="mark" href="$urlsow?cmd=oldlog">終了した村</a>の記録が眠っている。\\
+  log:'この奥だよ。もう<a class="btn edge" href="$urlsow?cmd=oldlog">終了した村</a>の記録が眠っている。\\
 静かに、ひっそりとね。',
-updated_at: new Date(1389008975000),template:"message/say",mestype:"TSAY",csid:"all",face_id:"c76"},
-];
+updated_at: now + 1,face_id:"c76"},
 
-gon.guide = [
-{ name:'ティモシー',
-  text:'（↓）をそっと畳み、営業を再開した。<br><a href="http://crazy-crazy.sakura.ne.jp/giji/"><img src="$urlimg/banner/guide.png"></a>',
-updated_at: new Date(1389008975000),template:"message/action",mestype:"SAY"},
-{ mesicon:'',
+{ _id: "guide-action-SAY-2",
+  name:'ティモシー',
+  log:'（↓）をそっと畳み、営業を再開した。<br><a href="http://crazy-crazy.sakura.ne.jp/giji/"><img src="$urlimg/banner/guide.png"></a>',
+updated_at: now + 2},
+
+{ _id: "guide-talk-SAY-3",
   name:'雑貨屋 ティモシー',
-  text: 'いらっしゃい。$cfg->{'NAME_SW'}のことを知りたいんだね。それなら、人狼議事公式ガイドブックを開いてごらん。<br>\\
+  log: 'いらっしゃい。$cfg->{'NAME_SW'}のことを知りたいんだね。それなら、人狼議事公式ガイドブックを開いてごらん。<br>\\
 あるいは、ほかのリンク先をお求めかな。<br>\\
 <br>\\
 <ul class="text">\\
-<li><a class="mark" href="$urlsow?cmd=about">ご紹介</a>そもそも、どういうものなんだろう\\
-<li><a class="mark" href="$urlsow?cmd=howto">遊び方</a>参加から終了までの流れが知りたい\\
-<li><a class="mark" href="$urlwiki$linkoperate">操作方法</a>プレイ中の詳しい操作を知りたい\\
+<li><a class="btn edge" href="$urlsow?cmd=about">ご紹介</a>そもそも、どういうものなんだろう\\
+<li><a class="btn edge" href="$urlsow?cmd=howto">遊び方</a>参加から終了までの流れが知りたい\\
+<li><a class="btn edge" href="$urlwiki$linkoperate">操作方法</a>プレイ中の詳しい操作を知りたい\\
 </ul>',
-updated_at: new Date(1389008975000),template:"message/say",mestype:"SAY",csid:"all",face_id:"c07"},
-{ mesicon:'',
+updated_at: now + 3,face_id:"c07"},
+
+{ _id: "guide-talk-SAY-4",
   name:'花売り メアリー',
-  text: hello + '。もしあなたが、どこかで人狼ゲームを遊んだ事があるなら、<a class="mark" href="$urlwiki$linkspec">他の人狼ゲームとの違い</a>をどうぞ。<br>\\
+  log: hello + '。もしあなたが、どこかで人狼ゲームを遊んだ事があるなら、<a class="btn edge" href="$urlwiki$linkspec">他の人狼ゲームとの違い</a>をどうぞ。<br>\\
 それとも調べ物？だったらお好きな一輪を。<br><br>\\
 <ul class="text">\\
-<li><a class="mark" href="$urlsow?cmd=roleaspect&trsid=all">役職と能\力の一覧\表\</a>を調べる。\\
-<li><a class="mark" href="$urlsow?cmd=rolelist">役職ごとのインターフェース</a>を調べる。\\
+<li><a class="btn edge" href="$urlsow?cmd=roleaspect&trsid=all">役職と能\力の一覧\表\</a>を調べる。\\
+<li><a class="btn edge" href="$urlsow?cmd=rolelist">役職ごとのインターフェース</a>を調べる。\\
 </ul>',
-updated_at: new Date(1389008975000),template:"message/say",mestype:"SAY",csid:"all",face_id:"c01"},
-];
+updated_at: now + 4,face_id:"c01"},
 
-gon.rule = [
-{ mesicon:'',
-  name:'学者 レオナルド',
-  text:'<a href="sow.cgi?cmd=rule" class="mark">ルールと心構\え</a>を守って、楽しく、強く遊ぼう。<br>\\
-ここでは、みんなに守ってほしいルールや、吟味してほしい心構\えを紹介するよ。<br>\\
-では、リンク先の１ページ目から\―\―\―\ ',
-updated_at: new Date(1389008975000),template:"message/say",mestype:"SAY",csid:"all",face_id:"c96",style:"head"},
-];
-
-gon.setting = [
-{ mesicon:'【赤】',
+{ _id: "setting-talk-WSAY-5",
   name:'新聞配達 モリス', to:'？',
-  text:'<a class="mark" href="$link_state_page">くわしい特徴</a>はこうだ。わかるか？…またな。<br>\\
+  log:'<a class="btn edge" href="$link_state_page">くわしい特徴</a>はこうだ。わかるか？…またな。<br>\\
 <ul class="text">\\
 <li>廃村期限は$cfg->{'TIMEOUT_SCRAP'}日間\\
 <li>内緒話の村を$enabled_aiming\\
@@ -178,27 +164,12 @@ gon.setting = [
 <li>少女や降霊者に聞こえるのは$enabled_bitty\\
 <li>日食で見えるのは会話内容のみ\\
 </ul>',
-updated_at: new Date(1370662886000),template:"message/aim",mestype:"WSAY",csid:"all",face_id:"c95"},
-{ name:'新聞配達 モリス',
-  text:'人目を避けて去っていった…。',
-updated_at: new Date(1370662886000),template:"message/action",mestype:"WSAY"}
-];
+updated_at: now + 5,face_id:"c95"},
 
-gon.browsers = [
-{ mesicon:'【人】',
-  name:'店番 ソ\フィア',
-  text:'これらのブラウザで動作確認済みです。\\
-<br>\\
-<ul class="text">\\
-<li>Internet Explorer : 9 以降\\
-<li>Firefox : 20.0 以降\\
-<li>Opera 12.15 以降\\
-<li>Safari : 6.0.3 以降\\
-<li>iOS : 5.1.1 以降\\
-<li>Chrome : 26.0 以降\\
-<li>Android : 2.2.1 以降\\
-</ul>',
-updated_at: new Date(1370662886000),template:"message/say",style:"head",mestype:"SAY",csid:"all",face_id:"c67"}
+{ _id: "setting-action-WSAY-6",
+  name:'新聞配達 モリス',
+  log:'人目を避けて去っていった…。',
+updated_at: now + 6}
 ];
 
 
@@ -236,34 +207,34 @@ _HTML_
 </script>
 
 <dl class="accordion">
-<dt> <span class="mark"> &#x2718; </span>
+<dt> <span class="btn edge"> &#x2718; </span>
 
 <dt>終了した村
 <dd class="plain">
-<div class="message_filter" logs="oldlog"></div>
+<div class="message_filter" id="index-oldlog"></div>
 
 <dt>プレイガイド
 <dd class="plain">
-<div class="message_filter" logs="guide"></div>
+<div class="message_filter" id="index-guide"></div>
 
 </dl>
 
 <h2>村を選ぶ</h2>
-<div class="message_filter" logs="rule"></div>
+<div class="message_filter" id="index-rule"></div>
 
 
 <dl class="accordion">
-<dt> <span class="mark"> &#x2718; </span>
+<dt> <span class="btn edge"> &#x2718; </span>
 
 <dt>キャラクター画像一覧
 <dd class="plain">
 <div class="chrlist">
-<p>キャラクターを選ぶ参考に、<a class="mark" href="http://giji.check.jp/map_reduce/faces">人気度集計</a>をチェックしてもいいかもね。</p>
+<p>キャラクターを選ぶ参考に、<a class="btn edge" href="http://giji.check.jp/map_reduce/faces">人気度集計</a>をチェックしてもいいかもね。</p>
 <div template="navi/chr_list">
 </div></div>
 <dt>この州の設定
 <dd class="plain">
-<div class="message_filter" logs="setting"></div>
+<div class="message_filter" id="index-setting"></div>
 </dl>
 
 <h3>募集中／開始待ち$linkrss</h3>
@@ -307,16 +278,16 @@ _HTML_
 
 <dl class="paragraph">
 
-<dt><a class="mark" href="http://giji.check.jp/">人狼議事総合トップ</a>
+<dt><a class="btn edge" href="http://giji.check.jp/">人狼議事総合トップ</a>
 <dd>人狼議事全体の過去ログ、募集中の村の一覧など。
 
-<dt><a class="mark" href="{{link.plan}}">企画村\予\定\表\</a>（wiki：stinさん管理）
+<dt><a class="btn edge" href="{{link.plan}}">企画村\予\定\表\</a>（wiki：stinさん管理）
 <dd>これから始まる村の予\定が並んでいる。好みの村があるかもね。
 
-<dt><a class="mark" href="http://melon-cirrus.sakura.ne.jp/wiki/?%A5%B5%A1%BC%A5%D0%A1%BC%A5%EA%A5%B9%A5%C8">人狼物語Server一覧</a>
+<dt><a class="btn edge" href="http://melon-cirrus.sakura.ne.jp/wiki/?%A5%B5%A1%BC%A5%D0%A1%BC%A5%EA%A5%B9%A5%C8">人狼物語Server一覧</a>
 <dd>「人狼物語」シリーズのサイトについてまとめてある。
 
-<dt><a class="mark" href="http://melon-cirrus.sakura.ne.jp/wiki/">人狼物語専用wiki</a>（wiki：melonkoさん管理）
+<dt><a class="btn edge" href="http://melon-cirrus.sakura.ne.jp/wiki/">人狼物語専用wiki</a>（wiki：melonkoさん管理）
 <dd>「人狼物語」スクリプトを利用して運営されている国のための総合wiki。
 
 </dl>
@@ -328,7 +299,7 @@ _HTML_
 		if ('CHEAT' eq $cfg->{'TYPE'}){
 			print <<"_HTML_";
 <p class="text">
-便利な<a class="mark" href="{{link.plan}}">企画村予\定表\</a>はもう見た？建てた村に人が集まりそうかどうか、\予\想できるかもしれないよ。<br>
+便利な<a class="btn edge" href="{{link.plan}}">企画村予\定表\</a>はもう見た？建てた村に人が集まりそうかどうか、\予\想できるかもしれないよ。<br>
 </p>
 <h6><input type="checkbox" ng-model="yes_i_read_it"> 見たよ！今から、村を立てるよ！</h6>
 <h6>$caution_vmake</h6>
@@ -366,16 +337,16 @@ _HTML_
 	print <<"_HTML_";
 </div></div></div>
 <dl class="paragraph">
-<dt><a class="mark" href="http://crazy-crazy.sakura.ne.jp/giji_lobby/lobby/sow.cgi?vid=11#mode=talk_all_open&navi=info">村建て相談所</a>
+<dt><a class="btn edge" href="http://crazy-crazy.sakura.ne.jp/giji_lobby/lobby/sow.cgi?vid=11#mode=talk_all_open&navi=info">村建て相談所</a>
 <dd>遊びたい村の相談をする場所。迷ったら飛び込むといい。
 
-<dt><a class="mark" href="$linkmake">村建てマニュアル</a>
+<dt><a class="btn edge" href="$linkmake">村建てマニュアル</a>
 <dd>自分で村を建てる手順や考え方の解説。
 
-<dt><a class="mark" href="$urlsow?$linkrolematrix">役職配分一覧</a>
+<dt><a class="btn edge" href="$urlsow?$linkrolematrix">役職配分一覧</a>
 <dd>役職配分をシステム任せにするときの参考に。
 
-<dt><a class="mark" href="$linksaycnt">発言pt量の一覧</a>
+<dt><a class="btn edge" href="$linksaycnt">発言pt量の一覧</a>
 <dd>村で使う発言ptの設定内容について、詳しい一覧表
 
 <dt>ゲーム内での文章
@@ -408,10 +379,10 @@ _HTML_
 <h2>技術情報</h2>
 
 <dl class="accordion">
-<dt> <span class="mark"> &#x2718; </span>
+<dt> <span class="btn edge"> &#x2718; </span>
 <dt> 対応ブラウザ
 <dd class="plain">
-<div class="message_filter" logs="browsers"></div>
+<div class="message_filter" id="index-browsers"></div>
 <dt> プログラム
 <dd>
 <ul>
@@ -450,6 +421,7 @@ _HTML_
 	print "</DIV>";
 	$sow->{'html'}->outcontentfooter();
 	$sow->{'html'}->outfooter(); # HTMLフッタの出力
+
 	$sow->{'http'}->outfooter();
 
 	return;

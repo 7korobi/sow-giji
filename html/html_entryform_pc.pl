@@ -87,7 +87,7 @@ _HTML_
 	my $csid_val;
 	foreach $csid_val (@csidkey) {
 		my $charset = $sow->{'charsets'}->{'csid'}->{$csid_val};
-		my $chrorder = $charset->{'CHRORDER'}->{$tag};
+		my $chrorder = $charset->{'ORDER'};
 		foreach (@$chrorder) {
 			next if (defined($csid_cid{"$csid_val/$_"})); # ŽQ‰ÁÏ‚Ý‚ÌƒLƒƒƒ‰‚ÍœŠO
 			my $chrname = $sow->{'charsets'}->getchrname($csid_val, $_);

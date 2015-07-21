@@ -327,7 +327,6 @@ sub TaskBranch {
 	       ||($cmd eq 'howto')
 	       ||($cmd eq 'operate')
 	       ||($cmd eq 'prohibit')
-	       ||($cmd eq 'rule')
 	       ||($cmd eq 'about')
 	       ||($cmd eq 'rolematrix')
 	       ||($cmd eq 'rolelist')
