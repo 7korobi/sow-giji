@@ -23,7 +23,7 @@ sub OutHTMLIndex {
 	my $urlimg  = $cfg->{'DIR_IMG'};
 
 	my $infodt = 0;
-	$infodt = (stat($urlinfo))[9] if (-e $urlinfo); 
+	$infodt = (stat($urlinfo))[9] if (-e $urlinfo);
 	my $changelogdt = (stat("./$cfg->{'DIR_RS'}/doc_changelog.pl"))[9];
 	$infodt = $changelogdt if ($changelogdt > $infodt);
 	&SetHTTPUpdateIndex($sow, $infodt, $vindex->getupdatedt());
@@ -47,11 +47,11 @@ sub OutHTMLIndex {
 		require $urlinfo;
 		&SWAdminInfo::OutHTMLAdminInfo($sow);
 	}
-	
+
 	print <<"_HTML_";
 <h2 style="font-size: xx-large;">$cfg->{'NAME_HOME'}</h2>
 _HTML_
-	
+
 	# 州を紹介
 	if (-e $urlinfo) {
 		require $urlinfo;
@@ -114,7 +114,7 @@ _HTML_
 <p class="paragraph">
 <ol type="1">
 <li><a href="$urlsow?cmd=about">$cfg->{'NAME_SW'}とは？</a>
-<li><a href="$urlsow?$linkvalue">遊び方</a>、<a href="$urlwiki$linkoperate">操作方法</a>、<a href="$urlsow?$linkrule">ルール</a>、<a href="$urlsow?$linkrule#mind">心構\え</a>をよく読もう。なにをする遊び場かわかったら、すぐ下に村がある。
+<li><a href="$urlsow?$linkvalue">遊び方</a>、<a href="$urlwiki$linkoperate">操作方法</a>、<a href="http://giji-assets.s3-website-ap-northeast-1.amazonaws.com/assets-master/rule.html?scr=nation~~">ルール</a>、<a href="http://giji-assets.s3-website-ap-northeast-1.amazonaws.com/assets-master/rule.html?scr=player~~">心構\え</a>をよく読もう。なにをする遊び場かわかったら、すぐ下に村がある。
 <br>他の人狼クローンを遊んだ事のあるきみは、まず<a href="$urlwiki$linkspec">他の人狼ゲームとの違い</a>を読もう。多くのことがここに書かれている。
 <li>人狼ゲームの基本的な知識、人狼議事独自システムの説明は、公式まとめサイトで知ろう。
 <br><a href="http://crazy-crazy.sakura.ne.jp/giji/"><img src="$urlimg/banner/guide.png"></a>
@@ -296,27 +296,27 @@ _HTML_
 
 	print <<"_HTML_";
 
-<h2>謝辞</h2> 
-<p class="paragraph"> 
+<h2>謝辞</h2>
+<p class="paragraph">
 このCGIを作成するに辺り、以下のサイトを参考にさせて頂きました。ありがとうございます。
-</p> 
- 
-<ul> 
-  <li>人狼審問 - Neighbour Wolves - (終了)</li> 
-  <li>The Village of Headless Knight (一時休止中)</li> 
-  <li>おとぎの国の人狼（欧州 <a href="http://euros.sakura.ne.jp/wolf/">おしまい</a>）</li> 
-  <li><!-- a href="http://werewolves.jp/" -->人狼の悪夢 (閉鎖)<!-- /a --></li> 
-  <li><a href="http://homepage2.nifty.com/ninjinia/">人狼BBS</a></li> 
-  <li><a href="http://wolfbbs.jp/">人狼BBS まとめサイト</a></li> 
-  <li><a href="http://mshe.skr.jp/">人狼BBQ 四国</a></li> 
-  <li><a href="http://shadow.s63.xrea.com/jinro2/index.cgi">汝は人狼なりや？Shadow Gallery Ver 2.0</a></li> 
-  <li><a href="http://melon-cirrus.sakura.ne.jp/sow/">人狼物語 瓜科国</a></li> 
-  <li><a href="http://www3.marimo.or.jp/~fgmaster/cabala/sow.cgi">人狼物語 ぐたるてぃめっと</a></li> 
-  <li><a href="http://o8o8.o0o0.jp/wolf/sow.cgi">人狼物語暗黒編</a></li> 
-  <li><a href="http://tkingdom.dtdns.net/m_jinro/index.html">メビウス人狼</a></li> 
-  <li><a href="http://straws.sakura.ne.jp/madb01/">MAD PEOPLE</a></li> 
-  <li><a href="http://members.at.infoseek.co.jp/Paranoia_O/">PARANOIA O</a></li> 
-</ul> 
+</p>
+
+<ul>
+  <li>人狼審問 - Neighbour Wolves - (終了)</li>
+  <li>The Village of Headless Knight (一時休止中)</li>
+  <li>おとぎの国の人狼（欧州 <a href="http://euros.sakura.ne.jp/wolf/">おしまい</a>）</li>
+  <li><!-- a href="http://werewolves.jp/" -->人狼の悪夢 (閉鎖)<!-- /a --></li>
+  <li><a href="http://homepage2.nifty.com/ninjinia/">人狼BBS</a></li>
+  <li><a href="http://wolfbbs.jp/">人狼BBS まとめサイト</a></li>
+  <li><a href="http://mshe.skr.jp/">人狼BBQ 四国</a></li>
+  <li><a href="http://shadow.s63.xrea.com/jinro2/index.cgi">汝は人狼なりや？Shadow Gallery Ver 2.0</a></li>
+  <li><a href="http://melon-cirrus.sakura.ne.jp/sow/">人狼物語 瓜科国</a></li>
+  <li><a href="http://www3.marimo.or.jp/~fgmaster/cabala/sow.cgi">人狼物語 ぐたるてぃめっと</a></li>
+  <li><a href="http://o8o8.o0o0.jp/wolf/sow.cgi">人狼物語暗黒編</a></li>
+  <li><a href="http://tkingdom.dtdns.net/m_jinro/index.html">メビウス人狼</a></li>
+  <li><a href="http://straws.sakura.ne.jp/madb01/">MAD PEOPLE</a></li>
+  <li><a href="http://members.at.infoseek.co.jp/Paranoia_O/">PARANOIA O</a></li>
+</ul>
 <hr class="invisible_hr"$net>
 
 _HTML_
