@@ -2058,7 +2058,8 @@ _HTML_
 			$pseudobonds = $pl->{'pseudobonds'};
 			$pseudobonds =~ s/\//,/g;
 		} else {
-			my $bond_values = $pl->getvisiblebonds($vil);
+			my $bond_pls = $pl->getvisiblebonds($vil);
+			my $bond_values = map {$_->{'pno'}} @$bond_pls;
 			$win_visible = $pl->win_visible();
 			$love = $pl->getvisiblelovestate();
 			$bonds = join(',', @$bond_values);
