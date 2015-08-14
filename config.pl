@@ -526,7 +526,7 @@ sub GetConfig {
 		BASEDIR_CGIERR => "http://localhost/show-fix//",
 		BASEDIR_CGI    => ".",
 		BASEDIR_DAT    => "./data",
-		BASEDIR_DOC    => "http://localhost",
+		BASEDIR_DOC    => "http://giji-assets.s3-website-ap-northeast-1.amazonaws.com",
 
 		ENABLED_DELETED      => 1, # íœ”­Œ¾‚ð•\Ž¦‚·‚é‚©‚Ç‚¤‚©
 		ENABLED_WINNER_LABEL => 0, # 1:Ÿ—˜ŽÒ•\Ž¦‚ð‚·‚éB
