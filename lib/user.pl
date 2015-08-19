@@ -302,7 +302,7 @@ sub setcookie {
 sub resetcookie {
 	my ($self, $setcookie) = @_;
 
-	my $query = $self->{'sow'}->{'query'};
+	$self->{'logined'} = 0;
 	if ($self->{'sow'}->{'cfg'}->{'ENABLED_TYPEKEY'} > 0) {
 		$setcookie->{'name'} = '';
 		$setcookie->{'nick'} = '';

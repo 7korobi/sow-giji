@@ -206,36 +206,23 @@ _HTML_
 	print <<"_HTML_";
 </script>
 
-<dl class="accordion">
-<dt> <span class="btn edge"> &#x2718; </span>
-
-<dt>終了した村
-<dd class="plain">
+<h6>終了した村</h6>
 <div class="message_filter" id="index-oldlog"></div>
 
-<dt>プレイガイド
-<dd class="plain">
+<h6>プレイガイド</h6>
 <div class="message_filter" id="index-guide"></div>
-
-</dl>
 
 <h2>村を選ぶ</h2>
 <div class="message_filter" id="index-rule"></div>
 
-
-<dl class="accordion">
-<dt> <span class="btn edge"> &#x2718; </span>
-
-<dt>キャラクター画像一覧
-<dd class="plain">
+<h6>キャラクター画像一覧</h6>
 <div class="chrlist">
 <p>キャラクターを選ぶ参考に、<a class="btn edge" href="http://giji.check.jp/map_reduce/faces">人気度集計</a>をチェックしてもいいかもね。</p>
 <div template="navi/chr_list">
 </div></div>
-<dt>この州の設定
-<dd class="plain">
+
+<h6>この州の設定</h6>
 <div class="message_filter" id="index-setting"></div>
-</dl>
 
 <h3>募集中／開始待ち$linkrss</h3>
 <div class="paragraph">
@@ -293,7 +280,7 @@ _HTML_
 </dl>
 
 <h3>自分で村をつくる</h3>
-<div class="ng-scope ng-binding"><div class="VSAY"><div class="action">
+<div class="VSAY action">
 _HTML_
 	if ( $sow->{'cfg'}->{'ENABLED_VMAKE'} > 0 ) {
 		if ('CHEAT' eq $cfg->{'TYPE'}){
@@ -335,7 +322,7 @@ $linkvmake
 _HTML_
 	}
 	print <<"_HTML_";
-</div></div></div>
+</div>
 <dl class="paragraph">
 <dt><a class="btn edge" href="http://crazy-crazy.sakura.ne.jp/giji_lobby/lobby/sow.cgi?vid=11#mode=talk_all_open&navi=info">村建て相談所</a>
 <dd>遊びたい村の相談をする場所。迷ったら飛び込むといい。
@@ -378,43 +365,14 @@ _HTML_
 
 <h2>技術情報</h2>
 
-<dl class="accordion">
-<dt> <span class="btn edge"> &#x2718; </span>
-<dt> 対応ブラウザ
-<dd class="plain">
+<h6> 対応ブラウザ </h6>
 <div class="message_filter" id="index-browsers"></div>
-<dt> プログラム
-<dd>
-<ul>
-<li><a href="https://github.com/7korobi/sow-giji/tree/angular">最新版　人狼議事サイト プログラム</a>
-<li><a href="https://github.com/7korobi/sow-giji/releases">ダウンロード ページ</a>
-<li><a href="https://github.com/7korobi/giji_rails/tree/renewal">人狼議事 総合トップ、javascript、stylesheet</a>
-<li>ライセンスは<a href="$license">修正済みBSDライセンス</a>となっています。永遠にバグ取り中。
-</ul>
-<dt> 謝辞
-<dd>
-<p>
-作成にあたり、こちらのサイトを参考にさせていただきました。<br>
-ありがとうございます。
-</p>
-<ul>
-  <li>人狼審問 - Neighbour Wolves - (終了)</li>
-  <li>The Village of Headless Knight (一時休止中)</li>
-  <li>おとぎの国の人狼（欧州 おしまい）</li>
-  <li>人狼の悪夢 (閉鎖)</li>
-  <li>汝は人狼なりや？Shadow Gallery Ver 2.0（終了）</li>
-  <li>MAD PEOPLE（終了）</li>
-  <li><a href="http://ninjinix.com/">人狼BBS</a></li>
-  <li><a href="http://wolfbbs.jp/">人狼BBS まとめサイト</a></li>
-  <li><a href="http://mshe.skr.jp/">人狼BBQ 四国</a></li>
-  <li><a href="http://melon-cirrus.sakura.ne.jp/sow/">人狼物語 瓜科国</a></li>
-  <li><a href="http://www3.marimo.or.jp/~fgmaster/cabala/sow.cgi">人狼物語 ぐたるてぃめっと</a></li>
-  <li><a href="http://o8o8.o0o0.jp/wolf/sow.cgi">人狼物語暗黒編</a></li>
-  <li><a href="http://tkido.com/m_jinro/index.html">メビウス人狼</a></li>
-  <li><a href="http://trpg.scenecritique.com/Paranoia_O/">PARANOIA O</a></li>
-  <li><a href="http://scpjapan.wiki.fc2.com">The SCP Foundation</a></li>
-</ul>
-</dl>
+
+<h6> プログラム </h6>
+<div class="message_filter" id="index-program"></div>
+
+<h6> 謝辞 </h6>
+<div class="message_filter" id="index-thanks"></div>
 _HTML_
 
 	$vindex->closevindex();

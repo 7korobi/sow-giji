@@ -161,20 +161,23 @@ sub OutHTMLError {
 	$self->{'error'} = 1;
 
 	require "$sow->{'cfg'}->{'DIR_HTML'}/html.pl";
-	$sow->{'html'} = SWHtml->new($sow) if (!defined($sow->{'html'}->{'sow'}));;
-	$sow->{'http'}->outheader();
-	$sow->{'html'}->outheader($mes1);
-	$sow->{'html'}->outcontentheader();
 
 	if ($sow->{'outmode'} eq 'mb') {
+		$sow->{'html'} = SWHtml->new($sow) if (!defined($sow->{'html'}->{'sow'}));;
+		$sow->{'http'}->outheader();
+		$sow->{'html'}->outheader($mes1);
+		$sow->{'html'}->outcontentheader();
 		$self->OutHTMLErrorMb($mes1, $mes2, $mes3, $mes4);
+		$sow->{'html'}->outcontentfooter();
 	} else {
+		$sow->{'html'} = SWHtml->new($sow, "javascript") if (!defined($sow->{'html'}->{'sow'}));;
+		$sow->{'http'}->outheader();
+		$sow->{'html'}->outheader($mes1);
 		$self->OutHTMLErrorPC($mes1, $mes2, $mes3, $mes4);
 	}
-
-	$sow->{'html'}->outcontentfooter();
 	$sow->{'html'}->outfooter();
 	$sow->{'http'}->outfooter();
+
 	exit();
 }
 
@@ -192,7 +195,15 @@ sub OutHTMLErrorPC {
 var e = [];
 e.push("$mes1");
 e.push("$mes2");
+_HTML_
+	if (defined($mes3)) {
+		print <<"_HTML_";
+e.push("$mes3");
+e.push("$mes4");
+_HTML_
+	}
 
+  print <<"_HTML_";
 window.gon = {
 	"errors": {
 		"$cmd": e

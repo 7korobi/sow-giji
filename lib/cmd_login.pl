@@ -8,23 +8,29 @@ sub CmdLogin {
 	my $query = $sow->{'query'};
 	my $cfg    = $sow->{'cfg'};
 
+	# ライブラリの読み込み
+	require "$cfg->{'DIR_HTML'}/html.pl";
+	require "$cfg->{'DIR_HTML'}/html_pc.pl";
+
 	# データ処理
 	&SetDataCmdLogin($sow);
+	$sow->{'uid'} = $query->{'uid'};
 
-	# HTTP出力
-	my $reqvals = &SWBase::GetRequestValues($sow);
-	$reqvals->{'uid'} = '';
-	$reqvals->{'pwd'} = '';
-	$reqvals->{'cmd'} = $query->{'cmdfrom'} if ($query->{'cmdfrom'} ne '');
-	my $link = &SWBase::GetLinkValues($sow, $reqvals);
-	$link = '?' . $link if ($link ne '');
-	$link = "$cfg->{'URL_SW'}/$cfg->{'FILE_SOW'}$link";
-	$link .= '#newsay' if (defined($query->{'vid'}));
+	# HTMLモードの初期化
+	$sow->{'html'} = SWHtml->new($sow, "javascript");
+	my $net = $sow->{'html'}->{'net'}; # Null End Tag
+	my $amp = $sow->{'html'}->{'amp'};
 
-	$sow->{'http'}->{'location'} = "$link";
-	$sow->{'http'}->outheader();
+	# HTTPヘッダ・HTMLヘッダの出力
+	my $outhttp = $sow->{'http'}->outheader();
+	return if ($outhttp == 0); # ヘッダ出力のみ
+	$sow->{'html'}->outheader('js');
+
+	&SWHtmlPC::OutHTMLGonInit($sow);
+	print "\n</script>\n";
+
+	$sow->{'html'}->outfooter(); # HTMLフッタの出力
 	$sow->{'http'}->outfooter();
-
 	return;
 }
 
