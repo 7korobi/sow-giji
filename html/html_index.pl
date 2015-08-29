@@ -45,7 +45,6 @@ sub OutHTMLIndex {
 	&SWHtmlPC::OutHTMLGonInit($sow); # ログイン欄の出力
 	print <<"_HTML_";
 </script>
-<h2>$cfg->{'NAME_HOME'}</h2>
 _HTML_
 
 	# 州を紹介
@@ -112,30 +111,17 @@ if (now % (24*3600000) - 9 * 3600000 < 0) {
 }
 
 gon.items = [
-{ _id: "oldlog-talk-TSAY-1",
+{ _id: "title-head-h2-1",
+  log: "$cfg->{'NAME_HOME'}",
+	updated_at: now },
+
+{ _id: "title-talk-TSAY-3",
   name:'留守番 ジョージ',
   log:'この奥だよ。もう<a class="btn edge" href="$urlsow?cmd=oldlog">終了した村</a>の記録が眠っている。\\
 静かに、ひっそりとね。',
-updated_at: now + 1,face_id:"c76"},
+updated_at: now,face_id:"c76"},
 
-{ _id: "guide-action-SAY-2",
-  name:'ティモシー',
-  log:'（↓）をそっと畳み、営業を再開した。<br><a href="http://crazy-crazy.sakura.ne.jp/giji/"><img src="$urlimg/banner/guide.png"></a>',
-updated_at: now + 2},
-
-{ _id: "guide-talk-SAY-3",
-  name:'雑貨屋 ティモシー',
-  log: 'いらっしゃい。$cfg->{'NAME_SW'}のことを知りたいんだね。それなら、人狼議事公式ガイドブックを開いてごらん。<br>\\
-あるいは、ほかのリンク先をお求めかな。<br>\\
-<br>\\
-<ul class="text">\\
-<li><a class="btn edge" href="$urlsow?cmd=about">ご紹介</a>そもそも、どういうものなんだろう\\
-<li><a class="btn edge" href="$urlsow?cmd=howto">遊び方</a>参加から終了までの流れが知りたい\\
-<li><a class="btn edge" href="$urlwiki$linkoperate">操作方法</a>プレイ中の詳しい操作を知りたい\\
-</ul>',
-updated_at: now + 3,face_id:"c07"},
-
-{ _id: "guide-talk-SAY-4",
+{ _id: "title-talk-SAY-99",
   name:'花売り メアリー',
   log: hello + '。もしあなたが、どこかで人狼ゲームを遊んだ事があるなら、<a class="btn edge" href="$urlwiki$linkspec">他の人狼ゲームとの違い</a>をどうぞ。<br>\\
 それとも調べ物？だったらお好きな一輪を。<br><br>\\
@@ -143,9 +129,9 @@ updated_at: now + 3,face_id:"c07"},
 <li><a class="btn edge" href="$urlsow?cmd=roleaspect&trsid=all">役職と能\力の一覧\表\</a>を調べる。\\
 <li><a class="btn edge" href="$urlsow?cmd=rolelist">役職ごとのインターフェース</a>を調べる。\\
 </ul>',
-updated_at: now + 4,face_id:"c01"},
+updated_at: now,face_id:"c01"},
 
-{ _id: "setting-talk-WSAY-5",
+{ _id: "play-talk-WSAY-14",
   name:'新聞配達 モリス', to:'？',
   log:'<a class="btn edge" href="$link_state_page">くわしい特徴</a>はこうだ。わかるか？…またな。<br>\\
 <ul class="text">\\
@@ -158,12 +144,16 @@ updated_at: now + 4,face_id:"c01"},
 <li>少女や降霊者に聞こえるのは$enabled_bitty\\
 <li>日食で見えるのは会話内容のみ\\
 </ul>',
-updated_at: now + 5,face_id:"c95"},
+updated_at: now,face_id:"c95"},
 
-{ _id: "setting-action-WSAY-6",
+{ _id: "play-action-WSAY-15",
   name:'新聞配達 モリス',
   log:'人目を避けて去っていった…。',
-updated_at: now + 6}
+updated_at: now},
+
+{ _id: "play-head-h3-16",
+  log: '募集中／開始待ち$linkrss',
+updated_at: now }
 ];
 
 
@@ -200,44 +190,12 @@ _HTML_
 	print <<"_HTML_";
 </script>
 
-<h6>終了した村</h6>
-<div class="message_filter" id="index-oldlog"></div>
+<div class="message_filter" id="item-title"></div>
+<div class="message_filter" id="item-play"></div>
 
-<h6>プレイガイド</h6>
-<div class="message_filter" id="index-guide"></div>
-
-<h2>村を選ぶ</h2>
-<div class="message_filter" id="index-rule"></div>
-
-<h6>キャラクター画像一覧</h6>
 <div class="chrlist">
-<p>キャラクターを選ぶ参考に、<a class="btn edge" href="http://giji.check.jp/map_reduce/faces">人気度集計</a>をチェックしてもいいかもね。</p>
 <div template="navi/chr_list">
 </div></div>
-
-<h6>この州の設定</h6>
-<div class="message_filter" id="index-setting"></div>
-
-<h3>募集中／開始待ち$linkrss</h3>
-<div class="paragraph">
-<img src="$cfg->{'DIR_IMG'}/icon/key.png">
-マークの付いた村は、参加にパスワードが必要です。<br$net>
-<img src="$cfg->{'DIR_IMG'}/icon/cd_love.png">
-<img src="$cfg->{'DIR_IMG'}/icon/cd_sexy.png">
-<img src="$cfg->{'DIR_IMG'}/icon/cd_violence.png">
-<img src="$cfg->{'DIR_IMG'}/icon/cd_teller.png">
-<img src="$cfg->{'DIR_IMG'}/icon/cd_drunk.png">
-<img src="$cfg->{'DIR_IMG'}/icon/cd_gamble.png">
-<img src="$cfg->{'DIR_IMG'}/icon/cd_crime.png">
-<img src="$cfg->{'DIR_IMG'}/icon/cd_drug.png">
-<img src="$cfg->{'DIR_IMG'}/icon/cd_word.png">
-<img src="$cfg->{'DIR_IMG'}/icon/cd_fireplace.png">
-<img src="$cfg->{'DIR_IMG'}/icon/cd_appare.png">
-<img src="$cfg->{'DIR_IMG'}/icon/cd_ukkari.png">
-<img src="$cfg->{'DIR_IMG'}/icon/cd_child.png">
-<img src="$cfg->{'DIR_IMG'}/icon/cd_biohazard.png">
-マークは、<a href="$linkmake#mark">こだわり</a>のある村についています。まず村の情報をよく読んで、好みのあう村を選びましょう。
-</div>
 _HTML_
 
 	# 募集中／開始待ち村の表示
@@ -254,26 +212,8 @@ _HTML_
 	$linkvalue = &SWBase::GetLinkValues($sow, $reqvals);
 
 	print <<"_HTML_";
+<div class="message_filter" id="item-create"></div>
 
-<h3>別のサイトから探す</h3>
-
-<dl class="XSAY paragraph">
-
-<dt><a class="btn edge" href="http://giji.check.jp/">人狼議事総合トップ</a>
-<dd>人狼議事全体の過去ログ、募集中の村の一覧など。
-
-<dt><a class="btn edge" href="{{link.plan}}">企画村\予\定\表\</a>（wiki：stinさん管理）
-<dd>これから始まる村の予\定が並んでいる。好みの村があるかもね。
-
-<dt><a class="btn edge" href="http://melon-cirrus.sakura.ne.jp/wiki/?%A5%B5%A1%BC%A5%D0%A1%BC%A5%EA%A5%B9%A5%C8">人狼物語Server一覧</a>
-<dd>「人狼物語」シリーズのサイトについてまとめてある。
-
-<dt><a class="TSAY btn edge" href="http://melon-cirrus.sakura.ne.jp/wiki/">人狼物語専用wiki</a>（wiki：melonkoさん管理）
-<dd>「人狼物語」スクリプトを利用して運営されている国のための総合wiki。
-
-</dl>
-
-<h3>自分で村をつくる</h3>
 <div class="VSAY action">
 _HTML_
 	if ( $sow->{'cfg'}->{'ENABLED_VMAKE'} > 0 ) {
@@ -356,17 +296,7 @@ _HTML_
 
 </dl>
 
-
-<h2>技術情報</h2>
-
-<h6> 対応ブラウザ </h6>
-<div class="message_filter" id="index-browsers"></div>
-
-<h6> プログラム </h6>
-<div class="message_filter" id="index-program"></div>
-
-<h6> 謝辞 </h6>
-<div class="message_filter" id="index-thanks"></div>
+<div class="message_filter" id="item-tech"></div>
 _HTML_
 
 	$vindex->closevindex();
