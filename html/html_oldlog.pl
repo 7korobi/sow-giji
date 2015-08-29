@@ -12,9 +12,6 @@ sub OutHTMLOldLog {
 	require "$cfg->{'DIR_HTML'}/html.pl";
 	require "$cfg->{'DIR_HTML'}/html_vindex.pl";
 
-	# 村一覧データ読み込み
-	my $vindex = SWFileVIndex->new($sow);
-	$vindex->openvindex();
 
 	my $urlsow = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}";
 
@@ -24,30 +21,27 @@ sub OutHTMLOldLog {
 	return if ($outhttp == 0); # ヘッダ出力のみ
 	$sow->{'html'}->outheader('終了済みの村の一覧'); # HTMLヘッダの出力
 	$sow->{'html'}->outcontentheader();
-
+	print "<DIV class=toppage>";
 	&SWHtmlPC::OutHTMLLogin($sow); # ログイン欄の出力
-    &SWHtmlPC::OutHTMLChangeCSS($sow);
+	&SWHtmlPC::OutHTMLChangeCSS($sow);
+	&SWHtmlPC::OutHTMLGonInit($sow); # ログイン欄の出力
 
-	print <<"_HTML_";
-<h2>終了済みの村の一覧</h2>
-
-_HTML_
-
-	# 終了済み村の表示
-	&SWHtmlVIndex::OutHTMLVIndex($sow, $vindex, 'oldlog');
-
-	print <<"_HTML_";
-<h2>廃村の一覧</h2>
-
-_HTML_
-
-	# 終了済み村の表示
-	&SWHtmlVIndex::OutHTMLVIndex($sow, $vindex, 'dispose');
-
+	# 村一覧データ読み込み
+	my $vindex = SWFileVIndex->new($sow);
+	$vindex->openvindex();
+	&SWHtmlVIndex::OutHTMLVIndex($sow, $vindex, 'oldlog'); # 終了済み村の表示
+	&SWHtmlVIndex::OutHTMLVIndex($sow, $vindex, 'dispose'); # 終了済み村の表示
 	$vindex->closevindex();
 
-	&SWHtmlPC::OutHTMLReturnPC($sow); # トップページへ戻る
+	print <<"_HTML_";
+</script>
+<h2>終了済みの村の一覧</h2>
+<div id="oldlog"></div>
+<h2>廃村の一覧</h2>
+<div id="dispose"></div>
+_HTML_
 
+	&SWHtmlPC::OutHTMLReturnPC($sow); # トップページへ戻る
 	$sow->{'html'}->outcontentfooter();
 	$sow->{'html'}->outfooter(); # HTMLフッタの出力
 	$sow->{'http'}->outfooter();

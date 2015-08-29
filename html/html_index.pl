@@ -38,20 +38,14 @@ sub OutHTMLIndex {
 	$sow->{'html'}->outheader('トップページ'); # HTMLヘッダの出力
 	$sow->{'html'}->outcontentheader();
 
+	my $net = $sow->{'html'}->{'net'}; # Null End Tag
 	print "<DIV class=toppage>";
 	&SWHtmlPC::OutHTMLLogin($sow); # ログイン欄の出力
-
-	my $net = $sow->{'html'}->{'net'}; # Null End Tag
-
-	print <<"_HTML_";
-<div class="login" template="navi/headline"></div>
-_HTML_
-    &SWHtmlPC::OutHTMLChangeCSS($sow);
-
+	&SWHtmlPC::OutHTMLChangeCSS($sow);
 	&SWHtmlPC::OutHTMLGonInit($sow); # ログイン欄の出力
 	print <<"_HTML_";
 </script>
-<h2 style="font-size: xx-large;">$cfg->{'NAME_HOME'}</h2>
+<h2>$cfg->{'NAME_HOME'}</h2>
 _HTML_
 
 	# 州を紹介
@@ -82,7 +76,7 @@ _HTML_
 	$linkrss = '' if ($cfg->{'ENABLED_RSS'} == 0);
 
 
-	my $linkvmake = '<input type="submit"  class="btn btn-default" value="村の作成">';
+	my $linkvmake = '<input type="submit"  class="btn edge" value="村の作成">';
 	my $vcnt          = $sow->{'cfg'}->{'MAX_VILLAGES'} - $vindex->getactivevcnt() ;
 	my $caution_vmake = 'あと'.$vcnt.'村が建てられます。';
 
@@ -263,7 +257,7 @@ _HTML_
 
 <h3>別のサイトから探す</h3>
 
-<dl class="paragraph">
+<dl class="XSAY paragraph">
 
 <dt><a class="btn edge" href="http://giji.check.jp/">人狼議事総合トップ</a>
 <dd>人狼議事全体の過去ログ、募集中の村の一覧など。
@@ -274,7 +268,7 @@ _HTML_
 <dt><a class="btn edge" href="http://melon-cirrus.sakura.ne.jp/wiki/?%A5%B5%A1%BC%A5%D0%A1%BC%A5%EA%A5%B9%A5%C8">人狼物語Server一覧</a>
 <dd>「人狼物語」シリーズのサイトについてまとめてある。
 
-<dt><a class="btn edge" href="http://melon-cirrus.sakura.ne.jp/wiki/">人狼物語専用wiki</a>（wiki：melonkoさん管理）
+<dt><a class="TSAY btn edge" href="http://melon-cirrus.sakura.ne.jp/wiki/">人狼物語専用wiki</a>（wiki：melonkoさん管理）
 <dd>「人狼物語」スクリプトを利用して運営されている国のための総合wiki。
 
 </dl>
@@ -323,7 +317,7 @@ _HTML_
 	}
 	print <<"_HTML_";
 </div>
-<dl class="paragraph">
+<dl class="TSAY paragraph">
 <dt><a class="btn edge" href="http://crazy-crazy.sakura.ne.jp/giji_lobby/lobby/sow.cgi?vid=11#mode=talk_all_open&navi=info">村建て相談所</a>
 <dd>遊びたい村の相談をする場所。迷ったら飛び込むといい。
 
@@ -334,7 +328,7 @@ _HTML_
 <dd>役職配分をシステム任せにするときの参考に。
 
 <dt><a class="btn edge" href="$linksaycnt">発言pt量の一覧</a>
-<dd>村で使う発言ptの設定内容について、詳しい一覧表
+<dd>村で使う発言ptの設定内容について、詳しい一覧表\
 
 <dt>ゲーム内での文章
 <dd>
@@ -357,7 +351,7 @@ _HTML_
 
 	print <<"_HTML_";
 </select>
-<input type="submit"  class="btn btn-default" value="文章を見る">
+<input type="submit"  class="btn edge" value="文章を見る">
 </form>
 
 </dl>
