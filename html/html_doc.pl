@@ -57,17 +57,20 @@ sub OutHTMLDocument {
 	$sow->{'html'}->outcontentheader();
 
 	&SWHtmlPC::OutHTMLLogin($sow); # ログイン欄の出力
-    &SWHtmlPC::OutHTMLChangeCSS($sow);
+	&SWHtmlPC::OutHTMLChangeCSS($sow);
+	&SWHtmlPC::OutHTMLGonInit($sow); # ログイン欄の出力
+	print <<"_HTML_";
+</script>
+_HTML_
 
 	$sow->{'query'}->{'trsid'} = $sow->{'cfg'}->{'DEFAULT_TEXTRS'} if ( "" eq $sow->{'query'}->{'trsid'});
 	my $theme = $cfg->{'THEME'};
 	print <<"_HTML_";
-<div class="choice">
-<p class="paragraph">
+<div class="paragraph">
 <form action="$urlsow" method="get" class="form-inline">
 <input type="hidden" name="cmd" value="$sow->{'query'}->{'cmd'}">
 <input type="hidden" name="css" value="$sow->{'query'}->{'css'}">
-<label for="trsid">基本設定</label>
+<label for="trsid" class="mark">基本設定</label>
 <select id="trsid" name="trsid" class="input-small">
 _HTML_
 	my $trsidlist = $sow->{'cfg'}->{'TRSIDLIST'};
@@ -83,7 +86,7 @@ _HTML_
 
 	print <<"_HTML_";
 </select>
-<label for="game">ゲームルール</label>
+<label for="game" class="mark">ゲームルール</label>
 <select id="game" name="game" class="input-small">
 _HTML_
 
@@ -100,7 +103,10 @@ _HTML_
 </select>
 <input type="submit" value="編成を見る">
 </form>
-</p>
+
+<div class="TSAY emboss">
+基本設定で、ゲームの詳細なルールを決めています。ルールを確認したい基本設定を選んでから、この下を読みましょう。
+</div>
 </div>
 
 _HTML_

@@ -43,9 +43,6 @@ sub OutHTMLIndex {
 	&SWHtmlPC::OutHTMLLogin($sow); # ログイン欄の出力
 	&SWHtmlPC::OutHTMLChangeCSS($sow);
 	&SWHtmlPC::OutHTMLGonInit($sow); # ログイン欄の出力
-	print <<"_HTML_";
-</script>
-_HTML_
 
 	# 州を紹介
 	if (-e $urlinfo) {
@@ -101,7 +98,6 @@ _HTML_
 	my $enabled_winner_label  = ($cfg->{'ENABLED_WINNER_LABEL'})?('見える'):('見えない');
 
 	print <<"_HTML_";
-<script>
 var hello;
 var now = new Date() - 0;
 if (now % (24*3600000) - 9 * 3600000 < 0) {
@@ -113,7 +109,7 @@ if (now % (24*3600000) - 9 * 3600000 < 0) {
 gon.items = [
 { _id: "title-head-h2-1",
   log: "$cfg->{'NAME_HOME'}",
-	updated_at: now },
+updated_at: now },
 
 { _id: "title-talk-TSAY-3",
   name:'留守番 ジョージ',
