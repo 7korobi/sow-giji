@@ -189,9 +189,6 @@ _HTML_
 <div class="message_filter" id="item-title"></div>
 <div class="message_filter" id="item-play"></div>
 
-<div class="chrlist">
-<div template="navi/chr_list">
-</div></div>
 _HTML_
 
 	# 募集中／開始待ち村の表示
