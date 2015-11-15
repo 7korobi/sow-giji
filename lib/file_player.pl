@@ -1976,7 +1976,7 @@ sub gon_potof {
 	print <<"_HTML_";
 var pl = {
 	"turn":    $turn,
-    "pno":     $pl->{'pno'},
+	"pno":     $pl->{'pno'},
 	"csid":    "$pl->{'csid'}",
 	"face_id": "$pl->{'cid'}",
 	"deathday": $pl->{'deathday'},

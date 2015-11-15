@@ -157,150 +157,12 @@ sub GetConfig {
 		infinity => \%saycnt_infinity ,
 	);
 
-
 	# 画像の作者等の表示用
 	my @copyrights = (
 		'あっぱれ、うっかりアイコン by 小由流',
 		'人狼議事キャラセット by りりんら',
 		'管理<code> sol・la</code><code><a href="mailto:7korobi@gmail.com">ななころび</a></code>',
 		'<code style="display:inline-block;">人狼議事で使っているキャラチップは原則として、　　<br />他所での利用を許諾しておりません。ご了承ください。</code>',
-	);
-
-	my %css_star480 = (
-		TITLE => '水の☆に愛を込めて',
-		FILE  => 'star480.css',
-		WIDTH => 480,
-		ROOM  => 20,
-		FILE_TOPBANNER_D => 'banner/title458r.jpg',
-		FILE_TOPBANNER_N => 'banner/title458c.jpg',
-		TOPBANNER_WIDTH  => 458,
-		TOPBANNER_HEIGHT => 112,
-	);
-
-	my %css_star800 = (
-		TITLE => '月は無慈悲な夜の女王',
-		FILE  => 'star800.css',
-		WIDTH => 800,
-		ROOM  => 20,
-		FILE_TOPBANNER_D => 'banner/title580r.jpg',
-		FILE_TOPBANNER_N => 'banner/title580c.jpg',
-		TOPBANNER_WIDTH  => 580,
-		TOPBANNER_HEIGHT => 161,
-	);
-
-	my %css_night480 = (
-		TITLE => '青EM-ONE',
-		FILE  => 'night480.css',
-		WIDTH => 480,
-		ROOM  => 10,
-		FILE_TOPBANNER_D => 'banner/title458b.jpg',
-		FILE_TOPBANNER_N => 'banner/title458w.jpg',
-		TOPBANNER_WIDTH  => 458,
-		TOPBANNER_HEIGHT => 112,
-	);
-
-	my %css_night800 = (
-		TITLE => '青い月',
-		FILE  => 'night800.css',
-		WIDTH => 800,
-		ROOM  => 20,
-		FILE_TOPBANNER_D => 'banner/title580b.jpg',
-		FILE_TOPBANNER_N => 'banner/title580w.jpg',
-		TOPBANNER_WIDTH  => 580,
-		TOPBANNER_HEIGHT => 161,
-	);
-
-	my %css_cinema480 = (
-		TITLE => 'EM-ONE',
-		FILE  => 'cinema480.css',
-		WIDTH => 480,
-		ROOM  => 20,
-		FILE_TOPBANNER_D => 'banner/title458r.jpg',
-		FILE_TOPBANNER_N => 'banner/title458c.jpg',
-		TOPBANNER_WIDTH  => 458,
-		TOPBANNER_HEIGHT => 112,
-	);
-
-	my %css_cinema800 = (
-		TITLE => 'シネマ',
-		FILE  => 'cinema800.css',
-		WIDTH => 800,
-		ROOM  => 20,
-		FILE_TOPBANNER_D => 'banner/title580r.jpg',
-		FILE_TOPBANNER_N => 'banner/title580c.jpg',
-		TOPBANNER_WIDTH  => 580,
-		TOPBANNER_HEIGHT => 161,
-	);
-
-	my %css_village_t = (
-		TITLE => '北欧の村',
-		FILE  => 'village480.css',
-		WIDTH => 480,
-		ROOM  => 20,
-		FILE_TOPBANNER_D => 'banner/title458r.jpg',
-		FILE_TOPBANNER_N => 'banner/title458c.jpg',
-		TOPBANNER_WIDTH  => 458,
-		TOPBANNER_HEIGHT => 112,
-	);
-
-	my %css_village_w = (
-		TITLE => '北欧の村',
-		FILE  => 'village800.css',
-		WIDTH => 800,
-		ROOM  => 20,
-		FILE_TOPBANNER_D => 'banner/title580r.jpg',
-		FILE_TOPBANNER_N => 'banner/title580c.jpg',
-		TOPBANNER_WIDTH  => 580,
-		TOPBANNER_HEIGHT => 161,
-	);
-
-	my %css_wa480 = (
-		TITLE => '大和EM-ONE',
-		FILE  => 'wa480.css',
-		WIDTH => 480,
-		ROOM  => 20,
-		FILE_TOPBANNER_D => 'banner/title458b.jpg',
-		FILE_TOPBANNER_N => 'banner/title458w.jpg',
-		TOPBANNER_WIDTH  => 458,
-		TOPBANNER_HEIGHT => 112,
-	);
-
-	my %css_wa800 = (
-		TITLE => '大和',
-		FILE  => 'wa800.css',
-		WIDTH => 800,
-		ROOM  => 20,
-		FILE_TOPBANNER_D => 'banner/title580b.jpg',
-		FILE_TOPBANNER_N => 'banner/title580w.jpg',
-		TOPBANNER_WIDTH  => 580,
-		TOPBANNER_HEIGHT => 161,
-	);
-
-	my %css_ririnra = (
-		TITLE => '漆黒',
-		FILE  => 'ririnra.css',
-		WIDTH => 800,
-		ROOM  => 20,
-		FILE_TOPBANNER_D => 'banner/title580r.jpg',
-		FILE_TOPBANNER_N => 'banner/title580b.jpg',
-		TOPBANNER_WIDTH  => 580,
-		TOPBANNER_HEIGHT => 161,
-	);
-
-
-	my %csslist = (
-		star800    => \%css_star800,
-		star480    => \%css_star480,
-		night800   => \%css_night800,
-		night480   => \%css_night480,
-		cinema800  => \%css_cinema800,
-		cinema480  => \%css_cinema480,
-		village_w => \%css_village_w,
-		village_t => \%css_village_t,
-		wa800      => \%css_wa800,
-		wa480      => \%css_wa480,
-		ririnra   => \%css_ririnra,
-		default   => \%css_cinema800,
 	);
 
 	# ロボット検索用の設定
@@ -690,14 +552,18 @@ sub GetConfig {
 		PERMITION_MKDIR => 0777, # 未使用（おい）
 
 		MIKUJI           => \@mikuji,
-		COPYRIGHTS       => \@copyrights,
+		COPYRIGHTS       => [
+		'あっぱれ、うっかりアイコン by 小由流',
+		'人狼議事キャラセット by りりんら',
+		'管理<code> sol・la</code><code><a href="mailto:7korobi@gmail.com">ななころび</a></code>',
+		'<code style="display:inline-block;">人狼議事で使っているキャラチップは原則として、　　<br />他所での利用を許諾しておりません。ご了承ください。</code>',
+		],
 		COUNTS_SAY       => \%saycnt,
 		CSIDLIST         => \@csidlist,
 		TRSIDLIST        => \@trsidlist,
 		GAMELIST         => \@gamelist,
 		ROW_MB           => \@row_mb,
 		ROW_PC           => \@row_pc,
-		CSS              => \%csslist,
 		RATING           => \%rating,
 		MOB              => \%mob,
 		ROBOTS           => \@robots,
@@ -728,7 +594,6 @@ sub GetConfig {
 		require $cfglocalfile;
 		&SWLocalConfig::GetLocalConfig(\%cfg);
 	}
-
 	return \%cfg;
 }
 

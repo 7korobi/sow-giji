@@ -82,10 +82,7 @@ sub OutHTMLIndex {
 		$caution_vmake = '現在稼働中の村の数が上限に達しているので、村を作成できません。';
 	}
 
-	my $defaulttrsid = $sow->{'trsid'};
-	my $defaulttextrs = $sow->{'textrs'};
 	my $trsidlist = $sow->{'cfg'}->{'TRSIDLIST'};
-
 
 	my $license = 'https://github.com/7korobi/sow-giji/blob/master/cabala/license.txt';
 
@@ -111,13 +108,7 @@ gon.items = [
   log: "$cfg->{'NAME_HOME'}",
 updated_at: now },
 
-{ _id: "title-talk-TSAY-3",
-  name:'留守番 ジョージ',
-  log:'この奥だよ。もう<a class="btn edge" href="$urlsow?cmd=oldlog">終了した村</a>の記録が眠っている。\\
-静かに、ひっそりとね。',
-updated_at: now,face_id:"c76"},
-
-{ _id: "title-talk-SAY-99",
+{ _id: "title-talk-SAY-9",
   name:'花売り メアリー',
   log: hello + '。もしあなたが、どこかで人狼ゲームを遊んだ事があるなら、<a class="btn edge" href="$urlwiki$linkspec">他の人狼ゲームとの違い</a>をどうぞ。<br>\\
 それとも調べ物？だったらお好きな一輪を。<br><br>\\
@@ -127,7 +118,7 @@ updated_at: now,face_id:"c76"},
 </ul>',
 updated_at: now,face_id:"c01"},
 
-{ _id: "play-talk-WSAY-14",
+{ _id: "title-talk-WSAY-17",
   name:'新聞配達 モリス', to:'？',
   log:'<a class="btn edge" href="$link_state_page">くわしい特徴</a>はこうだ。わかるか？…またな。<br>\\
 <ul class="text">\\
@@ -142,17 +133,10 @@ updated_at: now,face_id:"c01"},
 </ul>',
 updated_at: now,face_id:"c95"},
 
-{ _id: "play-action-WSAY-15",
-  name:'新聞配達 モリス',
-  log:'人目を避けて去っていった…。',
-updated_at: now},
-
-{ _id: "play-head-h3-16",
+{ _id: "title-head-h3-19",
   log: '募集中／開始待ち$linkrss',
 updated_at: now }
 ];
-
-
 gon.chrs = [];
 _HTML_
 	my $csidlist = $cfg->{'CSIDLIST'};
@@ -180,117 +164,15 @@ gon.chrs.push({
 });
 _HTML_
 	}
-	$sow->{'trsid'} = $defaulttrsid;
-	$sow->{'textrs'} = $defaulttextrs;
-
 	print <<"_HTML_";
 </script>
-
 <div class="message_filter" id="item-title"></div>
-<div class="message_filter" id="item-play"></div>
-
 _HTML_
 
 	# 募集中／開始待ち村の表示
 	&SWHtmlVIndex::OutHTMLVIndex($sow, $vindex, 'prologue');
-
-	print <<"_HTML_";
-<h3>進行中</h3>
-
-_HTML_
 	# 進行中の村の表示
 	&SWHtmlVIndex::OutHTMLVIndex($sow, $vindex, 'playing');
-
-	$reqvals->{'cmd'} = 'oldlog';
-	$linkvalue = &SWBase::GetLinkValues($sow, $reqvals);
-
-	print <<"_HTML_";
-<div class="message_filter" id="item-create"></div>
-
-<div class="VSAY action">
-_HTML_
-	if ( $sow->{'cfg'}->{'ENABLED_VMAKE'} > 0 ) {
-		if ('CHEAT' eq $cfg->{'TYPE'}){
-			print <<"_HTML_";
-<p class="text">
-便利な<a class="btn edge" href="{{link.plan}}">企画村予\定表\</a>はもう見た？建てた村に人が集まりそうかどうか、\予\想できるかもしれないよ。<br>
-</p>
-<h6><input type="checkbox" ng-model="yes_i_read_it"> 見たよ！今から、村を立てるよ！</h6>
-<h6>$caution_vmake</h6>
-_HTML_
-		} else {
-			print <<"_HTML_";
-<h6 ng-init="yes_i_read_it = true">$caution_vmake</h6>
-_HTML_
-		}
-		print <<"_HTML_";
-<div class="mark ng-binding"></div>
-<div class="controls controls-row formpl_content" ng-show="yes_i_read_it">
-<form class="form-inline" action="$urlsow" method="get" ng-show="yes_i_read_it">
-<input type="hidden" name="cmd" value="makevilform">
-<input type="hidden" name="css" value="$sow->{'query'}->{'css'}">
-<select class="form-control input-large" id="trsid" name="trsid">
-_HTML_
-		foreach (@$trsidlist) {
-			my %dummyvil = (
-				trsid => $_,
-			);
-			&SWBase::LoadTextRS($sow, \%dummyvil);
-			print "      <option value=\"$_\">$sow->{'textrs'}->{'CAPTION'}$sow->{'html'}->{'option'}\n";
-		}
-
-
-		print <<"_HTML_";
-</select>
-$linkvmake
-</form>
-<p class="text">基本設定（↑）を選び「村の作成」を押そう。</p>
-</div>
-_HTML_
-	}
-	print <<"_HTML_";
-</div>
-<dl class="TSAY paragraph">
-<dt><a class="btn edge" href="http://crazy-crazy.sakura.ne.jp/giji_lobby/lobby/sow.cgi?vid=11#mode=talk_all_open&navi=info">村建て相談所</a>
-<dd>遊びたい村の相談をする場所。迷ったら飛び込むといい。
-
-<dt><a class="btn edge" href="$linkmake">村建てマニュアル</a>
-<dd>自分で村を建てる手順や考え方の解説。
-
-<dt><a class="btn edge" href="$urlsow?$linkrolematrix">役職配分一覧</a>
-<dd>役職配分をシステム任せにするときの参考に。
-
-<dt><a class="btn edge" href="$linksaycnt">発言pt量の一覧</a>
-<dd>村で使う発言ptの設定内容について、詳しい一覧表\
-
-<dt>ゲーム内での文章
-<dd>
-ゲーム内で現れる文章の一覧を見ることができます。参考にどうぞ。
-<form class="form-inline" action="$urlsow" method="get" >
-<input type="hidden" name="cmd" value="trslist">
-<input type="hidden" name="css" value="$sow->{'query'}->{'css'}">
-<select class="form-control input-large" id="trsid" name="trsid">
-_HTML_
-	foreach (@$trsidlist) {
-		my %dummyvil = (
-			trsid => $_,
-		);
-		&SWBase::LoadTextRS($sow, \%dummyvil);
-		print "      <option value=\"$_\">$sow->{'textrs'}->{'CAPTION'}$sow->{'html'}->{'option'}\n";
-	}
-	$sow->{'trsid'} = $defaulttrsid;
-	$sow->{'textrs'} = $defaulttextrs;
-
-
-	print <<"_HTML_";
-</select>
-<input type="submit"  class="btn edge" value="文章を見る">
-</form>
-
-</dl>
-
-<div class="message_filter" id="item-tech"></div>
-_HTML_
 
 	$vindex->closevindex();
 	print "</DIV>";
