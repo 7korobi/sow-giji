@@ -135,6 +135,12 @@ updated_at: now,face_id:"c95"},
 
 { _id: "title-head-h3-19",
   log: '募集中／開始待ち$linkrss',
+updated_at: now },
+
+{ _id: "title-stories-prologue-21",
+updated_at: now },
+
+{ _id: "title-stories-playing-23",
 updated_at: now }
 ];
 gon.chrs = [];
@@ -162,18 +168,18 @@ gon.chrs.push({
 	"img": '$csidimg',
  	"text": '$csidtext'
 });
+
+gon.stories = [];
 _HTML_
 	}
-	print <<"_HTML_";
-</script>
-<div class="message_filter" id="item-title"></div>
-_HTML_
-
 	# 募集中／開始待ち村の表示
 	&SWHtmlVIndex::OutHTMLVIndex($sow, $vindex, 'prologue');
 	# 進行中の村の表示
 	&SWHtmlVIndex::OutHTMLVIndex($sow, $vindex, 'playing');
-
+	print <<"_HTML_";
+</script>
+<div class="message_filter" id="item-title"></div>
+_HTML_
 	$vindex->closevindex();
 	print "</DIV>";
 	$sow->{'html'}->outcontentfooter();
