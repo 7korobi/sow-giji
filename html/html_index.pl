@@ -137,10 +137,10 @@ updated_at: now,face_id:"c95"},
   log: '•åW’†^ŠJn‘Ò‚¿$linkrss',
 updated_at: now },
 
-{ _id: "title-stories-prologue-21",
+gon.story_prologue = { _id: "title-stories-prologue-21",
 updated_at: now },
 
-{ _id: "title-stories-playing-23",
+gon.story_playing = { _id: "title-stories-playing-23",
 updated_at: now }
 ];
 gon.chrs = [];

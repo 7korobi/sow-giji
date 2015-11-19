@@ -6,6 +6,7 @@ package SWHtmlVIndex;
 sub OutHTMLVIndex {
 	my ($sow, $vindex, $vmode) = @_;
 	my $vilist = $vindex->getvilist();
+	my $vicount = 0;
 
 	foreach (@$vilist) {
 		my $date = sprintf("%02d:%02d", $_->{'updhour'}, $_->{'updminite'});
@@ -26,10 +27,11 @@ sub OutHTMLVIndex {
 		if (!defined($vil->{'trsid'})) {
 			# 村データがぶっ飛んだ場合に一応被害を食い止める
 			print <<"_HTML_";
-gon.stories.push({});
+gon.story_$vmode.error = "$_->{'vid'} 村のデータが取得できません。"
 _HTML_
 			next;
 		}
+	  $vicount ++;
 
 		&SWBase::LoadTextRS($sow, $vil);
 		my $plcnt = sprintf("%02d",scalar(@$pllist));
@@ -115,6 +117,11 @@ gon.stories.push({
 });
 _HTML_
 
+	}
+	if ( 0 == $vicount ) {
+		print <<"_HTML_";
+gon.story_$vmode.error = "現在、村はありません。"
+_HTML_
 	}
 }
 
