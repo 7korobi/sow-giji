@@ -19,14 +19,7 @@ sub OutHTMLIndex {
 	my $reqvals = &SWBase::GetRequestValues($sow);
 	my $urlsow  = $cfg->{'BASEDIR_CGI'}.'/'.$cfg->{'FILE_SOW'};
 	my $urlwiki = $cfg->{'URL_CONST'};
-	my $urlinfo = $cfg->{'TOPPAGE_INFO'};
 	my $urlimg  = $cfg->{'DIR_IMG'};
-
-	my $infodt = 0;
-	$infodt = (stat($urlinfo))[9] if (-e $urlinfo);
-	my $changelogdt = (stat("./$cfg->{'DIR_RS'}/doc_changelog.pl"))[9];
-	$infodt = $changelogdt if ($changelogdt > $infodt);
-	&SetHTTPUpdateIndex($sow, $infodt, $vindex->getupdatedt());
 
 	$sow->{'http'}->setnotmodified(); # 最終更新日時
 
@@ -43,12 +36,6 @@ sub OutHTMLIndex {
 	&SWHtmlPC::OutHTMLLogin($sow); # ログイン欄の出力
 	&SWHtmlPC::OutHTMLChangeCSS($sow);
 	&SWHtmlPC::OutHTMLGonInit($sow); # ログイン欄の出力
-
-	# 州を紹介
-	if (-e $urlinfo) {
-		require $urlinfo;
-		&SWAdminInfo::OutHTMLStateInfo($sow);
-	}
 
 	my $topcss  = &SWBase::GetLinkValues($sow, $reqvals);
 	$reqvals->{'cmd'} = 'rolematrix';

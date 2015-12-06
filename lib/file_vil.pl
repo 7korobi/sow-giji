@@ -874,9 +874,6 @@ sub gon_story {
 		$csidcaptions .= "$sow->{'charsets'}->{'csid'}->{$_}->{'CAPTION'} ";
 	}
 
-	require "$cfg->{'DIR_RS'}/doc_rule.pl";
-	my $doc = SWDocRule->new($sow);
-	my $nrule = $doc->{'n_rule'};
 	my $turn = $vil->{'turn'} + 0;
 	my $aiming       = $vil->{'aiming'      } + 0;
 	my $entrust      = $vil->{'entrust'     } + 0;
@@ -886,20 +883,11 @@ sub gon_story {
 	my $showid       = $vil->{'showid'      } + 0;
 	my $undead       = $vil->{'undead'      } + 0;
 	my $totalcommit = -1;
-	my $totalcommit = -1;
-	my $totalcommitannounce = "";
-	my $rating_announce = $sow->{'cfg'}->{'RATING'}->{$vil->{'rating'}}->{'CAPTION'};
-	my $gamename_announce = $sow->{'basictrs'}->{'GAME'}->{$vil->{'game'}}->{'CAPTION'};
-	my $gamehelp_announce = $sow->{'basictrs'}->{'GAME'}->{$vil->{'game'}}->{'HELP'};
-	my $trsname_announce = $sow->{'textrs'}->{'CAPTION'};
-	my $trshelp_announce = $sow->{'textrs'}->{'HELP'};
-	my $starttype_announce = $sow->{'basictrs'}->{'STARTTYPE'}->{$vil->{'starttype'}};
 
 	if (($vil->{'turn'} > 0) && ($vil->isepilogue() == 0)) {
 		# コミット状況
 		my $textrs = $sow->{'textrs'};
 		$totalcommit = &SWBase::GetTotalCommitID($sow, $vil) + 0;
-		$totalcommitannounce = $textrs->{'ANNOUNCE_TOTALCOMMIT'}->[$totalcommit];
 	}
 
 	print <<"_HTML_";
@@ -908,7 +896,7 @@ gon.story = {
 	"vid": $vil->{'vid'},
     "turn":   $turn,
 
-	"link": _.unescape("$linkvinfo"),
+	"link": unescape("$linkvinfo"),
 	"name":    "$vil->{'vname'}",
 	"rating":  "$vil->{'rating'}",
 	"comment": "$vil->{'vcomment'}",
@@ -928,27 +916,17 @@ gon.story = {
 	},
 
 	"card":{
-		"discard": giji.story.card.discard("$rolediscard"),
-		"event":   giji.story.card.event("$eventcard"),
+		"discard": "$rolediscard",
+		"event":   "$eventcard",
 		"config":  "$config".split('/')
-	},
-	"announce":{
-		"game_name": "$gamename_announce",
-		"game_help": "$gamehelp_announce",
-		"trs_name": "$trsname_announce",
-		"trs_help": "$trshelp_announce",
-		"csidcaptions": "$csidcaptions",
-		"starttype": "$starttype_announce",
-		"totalcommit": "$totalcommitannounce",
-		"rating": "$rating_announce"
 	},
 	"timer":{
 		"extend":   $vil->{'extend'},
-		"updateddt":    new Date(1000 * $vil->{'updateddt'}),
-		"nextupdatedt": new Date(1000 * $vil->{'nextupdatedt'}),
-		"nextchargedt": new Date(1000 * $vil->{'nextchargedt'}),
-		"nextcommitdt": new Date(1000 * $vil->{'nextcommitdt'}),
-		"scraplimitdt": new Date(1000 * $vil->{'scraplimitdt'})
+		"updateddt":    1000 * $vil->{'updateddt'},
+		"nextupdatedt": 1000 * $vil->{'nextupdatedt'},
+		"nextchargedt": 1000 * $vil->{'nextchargedt'},
+		"nextcommitdt": 1000 * $vil->{'nextcommitdt'},
+		"scraplimitdt": 1000 * $vil->{'scraplimitdt'}
 	},
 	"type":{
 		"roletable": "$roletable",
@@ -975,19 +953,6 @@ if(1 !== $noselrole   ){ gon.story.options.push("select-role");   }
 if(1 === $seqevent    ){ gon.story.options.push("seq-event");     }
 if(1 === $showid      ){ gon.story.options.push("show-id");       }
 if(1 === $undead      ){ gon.story.options.push("undead-talk");   }
-(function(){
-var a = [];
-_HTML_
-	$list = $nrule->{'name'};
-	for( $i=0, $no=1; $i<@$list; $i++ ){
-		next if ( '' eq $list->[$i] );
-		my $name = $nrule->{'name'}->[$i];
-		print "a.push(\"$no.".$name."\");";
-		$no++;
-	}
-	print <<"_HTML_";
-gon.story.announce.nrules = a;
-})();
 _HTML_
 	if ($maker || $admin) {
 		print <<"_HTML_";
@@ -1056,11 +1021,10 @@ sub gon_event {
 	my $turn = 0 + $sow->{'turn'};
 
 	print <<"_HTML_";
-gon.form.turn = $turn;
 gon.event = {
 	"turn":   $turn,
-	"winner": giji.event.winner($vil->{'winner'}),
-	"event":  giji.event.event($vil->{'event'}),
+	"winner": Mem.winners.sow($vil->{'winner'})._id,
+	"event":  Mem.traps.sow($vil->{'event'})._id,
 	"riot":      $vil->{'riot'},
 	"scapegoat": $vil->{'scapegoat'},
 	"is_seance": (0 !== $isseance),
@@ -1077,12 +1041,12 @@ gon.event = {
 		"commitable": $committablepl
 	},
 	"say":{
-		"modifiedsay":   new Date(1000 * $vil->{'modifiedsay'}),
-		"modifiedwsay":  new Date(1000 * $vil->{'modifiedwsay'}),
-		"modifiedgsay":  new Date(1000 * $vil->{'modifiedgsay'}),
-		"modifiedspsay": new Date(1000 * $vil->{'modifiedspsay'}),
-		"modifiedxsay":  new Date(1000 * $vil->{'modifiedxsay'}),
-		"modifiedvsay":  new Date(1000 * $vil->{'modifiedvsay'})
+		"modifiedsay":   1000 * $vil->{'modifiedsay'},
+		"modifiedwsay":  1000 * $vil->{'modifiedwsay'},
+		"modifiedgsay":  1000 * $vil->{'modifiedgsay'},
+		"modifiedspsay": 1000 * $vil->{'modifiedspsay'},
+		"modifiedxsay":  1000 * $vil->{'modifiedxsay'},
+		"modifiedvsay":  1000 * $vil->{'modifiedvsay'}
 	},
 	"messages": []
 };
