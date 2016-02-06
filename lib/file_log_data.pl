@@ -93,7 +93,7 @@ sub getlogdatalabel {
 		'agent',
 	);
 
-	return @datalabel;		
+	return @datalabel;
 }
 
 1;

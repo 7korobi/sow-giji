@@ -130,35 +130,9 @@ updated_at: now },
 gon.story_playing = { _id: "title-stories-playing-23",
 updated_at: now }
 ];
-gon.chrs = [];
-_HTML_
-	my $csidlist = $cfg->{'CSIDLIST'};
-	foreach (@$csidlist) {
-		next if (index($_, '/') >= 0);
-
-		$sow->{'charsets'}->loadchrrs($_);
-		my $charset = $sow->{'charsets'}->{'csid'}->{$_};
-		my $csidname = $sow->{'charsets'}->{'csid'}->{$_}->{'CAPTION'};
-		$csidname =~ s/ /<br>/g;
-		$csidname =~ s/（/<br>/g;
-		$csidname =~ s/・セット「/<br>/g;
-		$csidname =~ s/）//g;
-		$csidname =~ s/」//g;
-
-		$reqvals->{'cmd'}  = 'chrlist';
-		$reqvals->{'csid'} = $_;
-		$linkvalue = &SWBase::GetLinkValues($sow, $reqvals);
-		my $csidimg = $charset->{'DIR'}. "/" . $charset->{'NPCID'} . "$expression$charset->{'EXT'}";
-		my $csidtext = "<a href=\"$urlsow?$linkvalue\">$csidname</a>";
-		print <<"_HTML_";
-gon.chrs.push({
-	"img": '$csidimg',
- 	"text": '$csidtext'
-});
 
 gon.stories = [];
 _HTML_
-	}
 	# 募集中／開始待ち村の表示
 	&SWHtmlVIndex::OutHTMLVIndex($sow, $vindex, 'prologue');
 	# 進行中の村の表示

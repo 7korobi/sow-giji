@@ -199,8 +199,13 @@ sub OutHTMLGonInit {
   print <<"_HTML_";
 <script>
 window.gon = {
-  url: "$path",
-  sow_auth: null
+  form: {
+    texts: [],
+    secrets: [],
+		commands: {}
+  },
+  cautions: [],
+  url: "$path"
 }
 
 window.gon.sow_auth = {
@@ -214,6 +219,8 @@ window.gon.sow_auth = {
 };
 _HTML_
 }
+
+
 
 #----------------------------------------
 # 「トップページに戻る」HTML出力

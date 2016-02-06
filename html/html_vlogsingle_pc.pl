@@ -105,6 +105,8 @@ sub OutHTMLSingleLogPC {
 	my ($sow, $vil, $log, $no, $newsay, $anchor, $modesingle) = @_;
 	my $cfg = $sow->{'cfg'};
 
+	return if ("" eq $log->{'agent'});
+
 	my $logmestype = substr($log->{'logid'}, 0, 1);
 
 	my $to   = "";
@@ -137,7 +139,9 @@ sub OutHTMLSingleLogPC {
 	print <<"_HTML_";
 var mes_log = "$log->{'log'}";
 var mes = {
-	"_id": "SOW-$vid-$turn-$logid",
+	"sow": {
+		"mestype": "$log->{'mestype'}"
+	},
 	"subid": "$log->{'logsubid'}",
 	"logid": "$logid",
 	"csid": "$log->{'csid'}",
@@ -145,8 +149,6 @@ var mes = {
 	"style": "$style",
 	"name": "$name",
 	"to": "$to",
-	"mesicon": giji.log.mesicon($log->{'mestype'}),
-	"mestype": giji.log.mestype($log->{'mestype'}),
 	"date": 1000 * $log->{'date'},
 	"log": mes_log
 };
@@ -175,6 +177,8 @@ sub OutHTMLMemoSinglePC {
 	my $cfg   = $sow->{'cfg'};
 
 	my $log = $memofile->read($memoidx->{'pos'},$memoidx->{'logpermit'});
+	return if ("" eq $log->{'agent'});
+
 	my $append  = "<br>(‘º‚ðo‚Ü‚µ‚½)";
 
 	my $curpl = $vil->getplbyface($memoidx->{'csid'},$memoidx->{'cid'});
@@ -213,7 +217,9 @@ sub OutHTMLMemoSinglePC {
 	print <<"_HTML_";
 var mes_log = "$log->{'log'}";
 var mes = {
-	"_id": "SOW-$vid-$turn-$logid",
+	"sow": {
+		"mestype": $log->{'mestype'},
+	},
 	"subid": "M",
 	"logid": "$logid",
 	"csid": "$log->{'csid'}",
@@ -221,8 +227,6 @@ var mes = {
 	"style": "$style",
 	"name": "$name",
 	"to": "$to",
-	"mesicon": giji.log.mesicon($log->{'mestype'}),
-	"mestype": giji.log.mestype($log->{'mestype'}),
 	"date": 1000 * $log->{'date'},
 	"log": mes_log
 };

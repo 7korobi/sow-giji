@@ -5,12 +5,11 @@ package SWHtmlVIndex;
 #----------------------------------------
 sub OutHTMLVIndex {
 	my ($sow, $vindex, $vmode) = @_;
+	my $cfg   = $sow->{'cfg'};
 	my $vilist = $vindex->getvilist();
 	my $vicount = 0;
 
 	foreach (@$vilist) {
-		my $date = sprintf("%02d:%02d", $_->{'updhour'}, $_->{'updminite'});
-
 		my $vstatusno = 'playing';
 		$vstatusno = 'prologue' if ($_->{'vstatus'} == $sow->{'VSTATUSID_PRO'}); # ƒvƒƒ[ƒO
 		$vstatusno = 'oldlog'   if ($_->{'vstatus'} == $sow->{'VSTATUSID_END'});
@@ -52,7 +51,7 @@ _HTML_
 			$cssid = '';
 			$cssid = '&css='.$sow->{'query'}->{'css'} if ($sow->{'query'}->{'css'} ne '');
 			$vstatus = '”p‘º';
-			$vstatus = '<a href="sow.cgi?cmd=editvilform&status=dispose'.$vid.$cssid.'">‚â‚è’¼‚·</a>' if(($sow->{'uid'} ne '')&&($sow->{'uid'} ne $vil->{'makeruid'}));
+			$vstatus = "<a href='sow.cgi?cmd=editvilform&status=dispose$vid$cssid'>‚â‚è’¼‚·</a>" if(($sow->{'uid'} ne '')&&($sow->{'uid'} ne $vil->{'makeruid'}));
 		}
 		if ($vmode eq 'oldlog') {
 			my $numdays = $vil->{'turn'} - 2;
@@ -85,6 +84,8 @@ _HTML_
 
 		print <<"_HTML_";
 gon.stories.push({
+	_id: "$cfg->{'RULE'}-$vid",
+	folder: "$cfg->{'RULE'}",
 	trs: "$sow->{'textrs'}->{'CAPTION'}",
 	mode: "$vmode",
 	status: "$vstatus",
@@ -92,10 +93,11 @@ gon.stories.push({
 	player_count: "$plcnt",
 
 	vid: "$vid",
-	turn $vil->{'turn'},
+	turn: $vil->{'turn'},
 	name: "$vil->{'vname'}",
 	link: "$link",
 	rating: "$vil->{'rating'}",
+	csid: "$vil->{'csid'}",
 	sow_auth_id: "$vil->{'makeruid'}",
 	vpl: [ $vil->{'vplcnt'}, $vil->{'vplcntstart'}],
 	card: {
@@ -110,8 +112,8 @@ gon.stories.push({
 		say: "$vil->{'saycnttype'}"
 	},
 	upd: {
-	  hour, $vil->{'updhour'},
-		minute, $vil->{'updminute'},
+		hour: "$vil->{'updhour'}",
+		minute: "$vil->{'updminute'}",
 		interval: $vil->{'updinterval'}
 	}
 });

@@ -379,7 +379,7 @@ sub GetConfig {
 		URL_SW         => "http://localhost/master",
 		NAME_HOME      => "l˜T‹cŽ– ŽI‚Ì–¡‘XŽÏ",
 		RULE           => "BRAID",
-		MAX_VILLAGES   => 2,
+		MAX_VILLAGES   => 5,
 		TIMEOUT_SCRAP  => 5,
 		TIMEOUT_ENTRY  => 2,
 		TOPPAGE_INFO   => "./_info.pl",

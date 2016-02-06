@@ -802,6 +802,8 @@ sub gon_story {
 	my $cfg = $sow->{'cfg'};
 	my $amp = $sow->{'html'}->{'amp'};
 
+	require "$sow->{'cfg'}->{'DIR_LIB'}/file_log_data.pl";
+
 	my $secret = $vil->isepilogue();
 	my $admin = ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'});
 	my $maker = ($sow->{'uid'} eq $vil->{'makeruid'});
@@ -892,9 +894,9 @@ sub gon_story {
 
 	print <<"_HTML_";
 gon.story = {
+	"_id": "$cfg->{'RULE'}-$vil->{'vid'}",
 	"folder": "$cfg->{'RULE'}",
 	"vid": $vil->{'vid'},
-    "turn":   $turn,
 
 	"link": unescape("$linkvinfo"),
 	"name":    "$vil->{'vname'}",
@@ -933,7 +935,7 @@ gon.story = {
 		"say":   "$vil->{'saycnttype'}",
 		"start": "$vil->{'starttype'}",
 		"vote":  "$vil->{'votetype'}",
-		"mob":   "$vil->{'mob'}",
+		"mob":   "$vil->{'mob'}" || "visiter",
 		"game":  "$vil->{'game'}"
 	},
 	"upd":{
@@ -966,9 +968,12 @@ _HTML_
 
 	my $i;
 	for ($i = 0; $i <= $vil->{'turn'}; $i++) {
-    	next if ($i > $vil->{'epilogue'});
+		next if ($i > $vil->{'epilogue'});
 
-        my $is_progress = 0;
+		my $file = SWBoaLog->new($sow, $vil, $i, $mode)->getfnamelog();
+		my $created_at = (stat($file))[ 9];
+		my $updated_at = (stat($file))[10];
+		my $is_progress = 0;
 		my $turnname = "$i日目";
 		$turnname = "プロローグ" if ($i == 0);
 		$turnname = "エピローグ" if ($i == $vil->{'epilogue'});
@@ -984,11 +989,19 @@ _HTML_
 		my $news_to = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}?$linkturns$newsturn";
 		print <<"_HTML_";
 var event = {
+	"sow": {
+		"winner": $vil->{'winner'},
+		"event": $vil->{'event'}
+	},
+	"_id": "$cfg->{'RULE'}-$vil->{'vid'}-$i",
+	"story_id": "$cfg->{'RULE'}-$vil->{'vid'}",
 	"is_progress": (1 == $is_progress),
 	"name": "$turnname",
 	"link": "$link_to",
 	"news": null,
-	"turn": $i
+	"turn": $i,
+	"created_at": 1000 * $created_at,
+	"updated_at": 1000 * $updated_at
 }
 gon.events.push(event);
 _HTML_
@@ -1018,13 +1031,21 @@ sub gon_event {
 
 	my $committablepl = $vil->getcommittablepl();
 	my $votablepl    = $vil->getvotablepl();
-	my $turn = 0 + $sow->{'turn'};
+	my $turn = $sow->{'turn'} - 0;
+	my $turnname = "$i日目";
+	$turnname = "プロローグ" if ($turn == 0);
+	$turnname = "エピローグ" if ($turn == $vil->{'epilogue'});
 
 	print <<"_HTML_";
 gon.event = {
-	"turn":   $turn,
-	"winner": Mem.winners.sow($vil->{'winner'})._id,
-	"event":  Mem.traps.sow($vil->{'event'})._id,
+	"sow": {
+		"winner": $vil->{'winner'},
+		"event": $vil->{'event'}
+	},
+	"_id": "$cfg->{'RULE'}-$vil->{'vid'}-$turn",
+	"story_id": "$cfg->{'RULE'}-$vil->{'vid'}",
+	"turn": $turn,
+	"name": "$turnname",
 	"riot":      $vil->{'riot'},
 	"scapegoat": $vil->{'scapegoat'},
 	"is_seance": (0 !== $isseance),

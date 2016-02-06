@@ -27,10 +27,8 @@ sub OutHTMLVlogPC {
 	$linkrss = '' if ($cfg->{'ENABLED_RSS'} == 0);
 
 	print <<"_HTML_";
-<h2>{{story.vid}} {{story.name}} $linkrss</h2>
-<h3>{{subtitle}}</h3>
-<div template="navi/messages" id="messages"></div>
-<div template="navi/forms" id="forms"></div>
+<div id="messages"></div>
+<div id="forms"></div>
 <hr class="invisible_hr"$net>
 _HTML_
 

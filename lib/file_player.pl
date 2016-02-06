@@ -1975,6 +1975,10 @@ sub gon_potof {
 
 	print <<"_HTML_";
 var pl = {
+	"_id": "$cfg->{'RULE'}-$vil->{'vid'}-$turn-$pl->{'pno'}",
+	"story_id": "$cfg->{'RULE'}-$vil->{'vid'}",
+	"event_id": "$cfg->{'RULE'}-$vil->{'vid'}-$turn",
+
 	"turn":    $turn,
 	"pno":     $pl->{'pno'},
 	"csid":    "$pl->{'csid'}",
@@ -2076,9 +2080,12 @@ pl.win = {
 };
 
 pl.live = "$pl->{'live'}";
-pl.role = giji.potof.roles($role, $gift);
 pl.rolestate = $pl->{'rolestate'};
-pl.select = giji.potof.select($selrole);
+pl.sow = {
+	"role": $role,
+	"gift": $gift,
+	"selrole": $selrole
+}
 
 pl.history = "$history";
 pl.sheep = "$pl->{'sheep'}";

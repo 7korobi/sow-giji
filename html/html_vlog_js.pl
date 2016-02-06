@@ -7,7 +7,9 @@ sub OutHTMLVlogJS {
 	my ($sow, $vil, $maxrow, $logfile, $logs, $logkeys, $logrows, $memofile, $memos, $memokeys, $memorows) = @_;
 	my $cfg   = $sow->{'cfg'};
 
-	&OutHTMLGonInit($sow); # ログイン欄の出力
+	&SWHtmlPC::OutHTMLLogin($sow); # ログイン欄の出力
+	&SWHtmlPC::OutHTMLChangeCSS($sow);
+	&SWHtmlPC::OutHTMLGonInit($sow); # ログイン欄の出力
 	# アナウンス／入力・参加フォーム表示
 	if (($modesingle == 0) && ($sow->{'turn'} == $vil->{'turn'}) && ($logrows->{'end'} > 0)) {
 		&OutHTMLVlogFormArea($sow, $vil, $memofile)
@@ -16,30 +18,6 @@ sub OutHTMLVlogJS {
 	$vil->gon_story();
 	$vil->gon_event();
 	$vil->gon_potofs();
-
-	print <<"_HTML_";
-var mes = {
-	"template": "sow/unread_info",
-	"logid": "unread",
-	"date": 1
-};
-gon.event.messages.push(mes);
-
-var mes = {
-	"template": "message/cast",
-	"logid": "potofs",
-	"date": 2
-};
-gon.event.messages.push(mes);
-
-var mes = {
-	"template": "sow/village_info",
-	"logid": "vilinfo",
-	"date": 3
-};
-gon.event.messages.push(mes);
-
-_HTML_
 
 	# 村ログ表示
 	require "$cfg->{'DIR_HTML'}/html_vlogsingle_pc.pl";
@@ -74,7 +52,6 @@ _HTML_
 			rowover => $rowover,
 			reqvals => $reqvals,
 		);
-
 		my $i;
 		for ($i = 0; $i < @$logs; $i++) {
 			my $newsay = 0;
@@ -87,13 +64,9 @@ _HTML_
 	print <<"_HTML_";
 gon.event.is_news = (0 == $has_all_messages);
 gon.event.has_all_messages = (0 != $has_all_messages);
+gon.event.updated_at = 1000 * $logs->[-1]->{'date'};
+gon.event.created_at = 1000 * $logs->[0]->{'date'};
 
-var mes = {
-	"template": "sow/log_last",
-	"logid":  "IX99999",
-	"date":  new Date
-};
-gon.event.messages.push(mes);
 </script>
 _HTML_
 
@@ -196,33 +169,6 @@ _HTML_
 		}
 	}
 	return;
-}
-
-sub OutHTMLGonInit {
-  my $sow = $_[0];
-  my $cfg = $sow->{'cfg'};
-  my $uid = $sow->{'uid'};
-  my $path = "$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}";
-  my $cmdfrom = $query->{'cmd'};
-  my $logined = $sow->{'user'}->logined() + 0;
-  my $expired = $sow->{'time'} + $cfg->{'TIMEOUT_COOKIE'};
-  my $is_admin = ($sow->{'uid'} eq $cfg->{'USERID_ADMIN'}) + 0;
-  my $admin_uri = $path."?cmd=admin" if ($is_admin);
-
-  print <<"_HTML_";
-<script>
-window.gon = giji.gon();
-gon.form.login = {
-  "cmd": "login",
-  "admin_uri": "$admin_uri",
-  "is_admin": $is_admin,
-  "cmdfrom": "$cmdfrom",
-  "expired": new Date(1000 * $expired),
-  "uidtext": "$uid".replace(" ","&nbsp;"),
-  "uid": "$uid"
-}
-gon.form.uri = "$path";
-_HTML_
 }
 
 #----------------------------------------

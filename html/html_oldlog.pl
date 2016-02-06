@@ -26,6 +26,19 @@ sub OutHTMLOldLog {
 	&SWHtmlPC::OutHTMLChangeCSS($sow);
 	&SWHtmlPC::OutHTMLGonInit($sow); # ログイン欄の出力
 
+	print <<"_HTML_";
+var now = new Date() - 0;
+
+gon.stories = [];
+gon.items = [
+gon.story_oldlog = { _id: "oldlog-stories-oldlog-11",
+updated_at: now },
+
+gon.story_dispose = { _id: "oldlog-stories-dispose-21",
+updated_at: now }
+];
+_HTML_
+
 	# 村一覧データ読み込み
 	my $vindex = SWFileVIndex->new($sow);
 	$vindex->openvindex();
@@ -35,10 +48,7 @@ sub OutHTMLOldLog {
 
 	print <<"_HTML_";
 </script>
-<h2>終了済みの村の一覧</h2>
-<div id="oldlog"></div>
-<h2>廃村の一覧</h2>
-<div id="dispose"></div>
+<div class="message_filter" id="item-oldlog"></div>
 _HTML_
 
 	&SWHtmlPC::OutHTMLReturnPC($sow); # トップページへ戻る
