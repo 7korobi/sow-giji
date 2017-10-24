@@ -94,16 +94,6 @@ _HTML_
   }
   print ">\n";
 
-  # ŠO˜g
-  my $classoutframe = 'outframe';
-  if (($sow->{'query'}->{'cmd'} eq '') && (defined($sow->{'query'}->{'vid'})) && ($sow->{'query'}->{'logid'} eq '') && ($sow->{'filter'}->{'layoutfilter'} eq '1')) {
-    $classoutframe = 'outframe_navimode';
-  }
-  print <<"_HTML_";
-
-<div id="outframe" class="$classoutframe">
-_HTML_
-
 }
 
 #----------------------------------------
@@ -147,11 +137,16 @@ sub OutHTMLContentFrameHeader {
   $topbanner{'width'}  = $css->{'TOPBANNER_WIDTH'}  if (defined($css->{'TOPBANNER_WIDTH'}));
   $topbanner{'height'} = $css->{'TOPBANNER_HEIGHT'} if (defined($css->{'TOPBANNER_HEIGHT'}));
 
+  # ŠO˜g
+  my $classoutframe = 'outframe';
+  if (($sow->{'query'}->{'cmd'} eq '') && (defined($sow->{'query'}->{'vid'})) && ($sow->{'query'}->{'logid'} eq '') && ($sow->{'filter'}->{'layoutfilter'} eq '1')) {
+    $classoutframe = 'outframe_navimode';
+  }
+
   print <<"_HTML_";
+<h1 id="top">$titlestart<img src="$cfg->{'DIR_IMG'}/$topbanner{'file'}" width="$topbanner{'width'}" height="$topbanner{'height'}" alt="$cfg->{'NAME_SW'}"$net>$titleend</h1>
+<div id="outframe" class="$classoutframe">
 <div id="contentframe" class="$classcontentframe">
-
-<h1>$titlestart<img src="$cfg->{'DIR_IMG'}/$topbanner{'file'}" width="$topbanner{'width'}" height="$topbanner{'height'}" alt="$cfg->{'NAME_SW'}"$net>$titleend</h1>
-
 <div class="inframe">
 
 _HTML_

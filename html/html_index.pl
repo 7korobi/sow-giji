@@ -97,7 +97,7 @@ _HTML_
 	my $enabled_permit_dead  = ($cfg->{'ENABLED_PERMIT_DEAD'}  )?('見える'):('見えない');
 	my $enabled_winner_label  = ($cfg->{'ENABLED_WINNER_LABEL'})?('見える'):('見えない');
 	print <<"_HTML_";
-<p class="paragraph">
+<div class="paragraph">
 この州の設定は、廃村期限$cfg->{'TIMEOUT_SCRAP'}日、
 内緒話$enabled_aiming、
 狂人は$enabled_ambidexter、
@@ -106,12 +106,12 @@ _HTML_
 死んだあと仲間の囁きが$enabled_permit_dead。
 少女や降霊者に聞こえるのは$enabled_bitty。日食で見えるのは会話内容のみ。
 [<a href="$link_state_page">この州の特徴詳細</a>]
-</p>
+</div>
 _HTML_
 
 	print <<"_HTML_";
 <h2><a name="welcome">$cfg->{'NAME_SW'}へようこそ</a></h2>
-<p class="paragraph">
+<div class="paragraph">
 <ol type="1">
 <li><a href="$urlsow?cmd=about">$cfg->{'NAME_SW'}とは？</a>
 <li><a href="$urlsow?$linkvalue">遊び方</a>、<a href="$urlwiki$linkoperate">操作方法</a>、<a href="http://giji-assets.s3-website-ap-northeast-1.amazonaws.com/assets-master/rule.html?scr=nation~~">ルール</a>、<a href="http://giji-assets.s3-website-ap-northeast-1.amazonaws.com/assets-master/rule.html?scr=player~~">心構\え</a>をよく読もう。なにをする遊び場かわかったら、すぐ下に村がある。
@@ -119,7 +119,7 @@ _HTML_
 <li>人狼ゲームの基本的な知識、人狼議事独自システムの説明は、公式まとめサイトで知ろう。
 <br><a href="http://crazy-crazy.sakura.ne.jp/giji/"><img src="$urlimg/banner/guide.png"></a>
 </ol>
-</p>
+</div>
 
 <hr class="invisible_hr"$net>
 
@@ -139,7 +139,7 @@ _HTML_
 
 <h2>村の一覧</h2>
 
-<p class="paragraph">
+<div class="paragraph">
 名前欄に
 <img src="$cfg->{'DIR_IMG'}/icon/key.png">
 マークの付いた村は参加時に参加パスワードが必要です。<br$net>
@@ -157,7 +157,7 @@ _HTML_
 <img src="$cfg->{'DIR_IMG'}/icon/cd_ukkari.png">
 <img src="$cfg->{'DIR_IMG'}/icon/cd_child.png">
 マークの付いた村は、<a href="$linkmake#mark">こだわり</a>のある村です。好みの別れる場合もありますので、まず村の情報欄を開いて内容を確認しましょう。
-</p>
+</div>
 
 <h3>募集中／開始待ち$linkrss</h3>
 
@@ -182,9 +182,9 @@ _HTML_
 	print <<"_HTML_";
 <h3>終了済み</h3>
 
-<p class="paragraph">
+<div class="paragraph">
 <a href="$urlsow?$linkvalue">終了済みの村</a>
-</p>
+</div>
 <hr class="invisible_hr"$net>
 
 _HTML_
@@ -207,11 +207,11 @@ _HTML_
 
 		print <<"_HTML_";
 <h2>村の建て方</h2>
-<p class="paragraph">
+<div class="paragraph">
 まず<a href="$urlsow?$linkrule#make">村建て人の心構\え</a>、<a href="$linkmake">村建てマニュアル</a>を読んでから村を建てよう。<br>
 ◆参考：<a href="$urlsow?$linkrolematrix">役職配分一覧</a>｜<a href="$linkroledeal">編成実績</a>｜<a href="$linkscedure">企画村予\定表\</a>（wiki：stinさん管理）<br>
 <a href="sow.cgi?cmd=trsdiff">基本設定</a>を選んで「村の作成」を押すと、新しくゲームを作成できる。
-</p>
+</div>
 <script>
 go_make = function(){
   return(0 < \$("#yes_i_read_it:checked").length);
@@ -268,7 +268,7 @@ _HTML_
 </ul>
 
 <h2>ゲーム内での文章</h2>
-<p class="paragraph">
+<div class="paragraph">
 　ゲーム内で現れる文章の一覧を見ることができます。参考にどうぞ。
 <form action="$urlsow" method="get" >
 <input type="hidden" name="cmd" value="trslist">
@@ -290,16 +290,16 @@ _HTML_
 </select>
 <input type="submit" value="文章を見る">
 </form>
-</p>
+</div>
 
 _HTML_
 
 	print <<"_HTML_";
 
 <h2>謝辞</h2>
-<p class="paragraph">
+<div class="paragraph">
 このCGIを作成するに辺り、以下のサイトを参考にさせて頂きました。ありがとうございます。
-</p>
+</div>
 
 <ul>
   <li>人狼審問 - Neighbour Wolves - (終了)</li>
@@ -324,6 +324,15 @@ _HTML_
 	$vindex->closevindex();
 	print "</DIV>";
 	$sow->{'html'}->outcontentfooter();
+
+	print <<"_HTML_";
+	<script> window.welcome_navi = "full" </script>
+	<script src="http://s3-ap-northeast-1.amazonaws.com/giji-assets/js/base.js" charset="UTF-8"></script>
+	<script src="http://s3-ap-northeast-1.amazonaws.com/giji-assets/js/common.js" charset="UTF-8"></script>
+	<script src="http://s3-ap-northeast-1.amazonaws.com/giji-assets/js/chr.js" charset="UTF-8"></script>
+	<script src="http://s3-ap-northeast-1.amazonaws.com/giji-assets/js/sow.js" charset="UTF-8"></script>
+_HTML_
+
 	$sow->{'html'}->outfooter(); # HTMLフッタの出力
 	$sow->{'http'}->outfooter();
 
