@@ -114,7 +114,7 @@ _HTML_
 <div class="paragraph">
 <ol type="1">
 <li><a href="$urlsow?cmd=about">$cfg->{'NAME_SW'}とは？</a>
-<li><a href="$urlsow?$linkvalue">遊び方</a>、<a href="$urlwiki$linkoperate">操作方法</a>、<a href="http://giji.check.jp/rule-guide#nation">ルール</a>、<a href="http://giji.check.jp/rule-guide#player">心構\え</a>をよく読もう。なにをする遊び場かわかったら、すぐ下に村がある。
+<li><a href="$urlsow?$linkvalue">遊び方</a>、<a href="$urlwiki$linkoperate">操作方法</a>、<a href="http://giji.f5.si/rule-guide#nation">ルール</a>、<a href="http://giji.f5.si/rule-guide#player">心構\え</a>をよく読もう。なにをする遊び場かわかったら、すぐ下に村がある。
 <br>他の人狼クローンを遊んだ事のあるきみは、まず<a href="$urlwiki$linkspec">他の人狼ゲームとの違い</a>を読もう。多くのことがここに書かれている。
 <li>人狼ゲームの基本的な知識、人狼議事独自システムの説明は、公式まとめサイトで知ろう。
 <br><a href="http://crazy-crazy.sakura.ne.jp/giji/"><img src="$urlimg/banner/guide.png"></a>
