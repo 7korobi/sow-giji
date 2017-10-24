@@ -552,7 +552,7 @@ sub GetConfig {
 
 		NAME_SW    => '人狼議事',       # 名前
 		DESC_SW    => 'ウェブ版人狼クローン。',
-		URL_USER   => 'http://giji.check.jp/users',  # 戦跡ビュアーのURL
+		URL_USER   => 'http://giji.f5.si/users',  # 戦跡ビュアーのURL
 		URL_CONST  => 'http://crazy-crazy.sakura.ne.jp/giji/?',                # サポートwikiのURL
 		URL_ROLE   => 'http://crazy-crazy.sakura.ne.jp/giji/?(Role)ROLEID_',   # サポートwikiのURL
 		URL_GIFT   => 'http://crazy-crazy.sakura.ne.jp/giji/?(Gift)GIFTID_',   # サポートwikiのURL

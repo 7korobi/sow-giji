@@ -158,7 +158,7 @@ updated_at: new Date(1389008975000),template:"message/say",mestype:"SAY",csid:"a
 gon.rule = [
 { mesicon:'',
   name:'学者 レオナルド',
-  text:'<a href="http://giji-assets.s3-website-ap-northeast-1.amazonaws.com/assets-master/rule.html" class="mark">ルールと心構\え</a>を守って、楽しく、強く遊ぼう。<br>\\
+  text:'<a href="http://giji.f5.si/rule-guide" class="mark">ルールと心構\え</a>を守って、楽しく、強く遊ぼう。<br>\\
 ここでは、みんなに守ってほしいルールや、吟味してほしい心構\えを紹介するよ。<br>\\
 では、リンク先の１ページ目から\―\―\―\ ',
 updated_at: new Date(1389008975000),template:"message/say",mestype:"SAY",csid:"all",face_id:"c96",style:"head"},
@@ -258,7 +258,7 @@ _HTML_
 <dt>キャラクター画像一覧
 <dd class="plain">
 <div class="chrlist">
-<p>キャラクターを選ぶ参考に、<a class="mark" href="http://giji.check.jp/map_reduce/faces">人気度集計</a>をチェックしてもいいかもね。</p>
+<p>キャラクターを選ぶ参考に、<a class="mark" href="http://giji.f5.si/summary/faces?order=story_length">人気度集計</a>をチェックしてもいいかもね。</p>
 <div template="navi/chr_list">
 </div></div>
 <dt>この州の設定
@@ -307,7 +307,7 @@ _HTML_
 
 <dl class="paragraph">
 
-<dt><a class="mark" href="http://giji.check.jp/">人狼議事総合トップ</a>
+<dt><a class="mark" href="http://giji.f5.si/">人狼議事総合トップ</a>
 <dd>人狼議事全体の過去ログ、募集中の村の一覧など。
 
 <dt><a class="mark" href="{{link.plan}}">企画村\予\定\表\</a>（wiki：stinさん管理）
