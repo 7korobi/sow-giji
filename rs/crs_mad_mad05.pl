@@ -12,15 +12,15 @@ sub GetRSChr {
 
 
   # 表\示順
-  my @all = ('mad03', 'c103', 'mad06', 'c83', 'mad02', 'mad05', 'mad01', 'mad04', 'mad07', 'mad08', 'mad09', 'mad10', 'mad11');
-  my @marchen = ('mad03', 'mad06', 'c83', 'mad02', 'mad05', 'mad01', 'mad04', 'mad07', 'mad08', 'mad09', 'mad10', 'mad11');
+  my @all = ('mad01', 'mad03', 'mad10', 'mad11', 'c103', 'mad12', 'mad06', 'c83', 'mad02', 'mad05', 'mad04', 'mad07', 'mad08', 'mad09');
+  my @marchen = ('mad01', 'mad03', 'mad10', 'mad11', 'mad12', 'mad06', 'c83', 'mad02', 'mad05', 'mad04', 'mad07', 'mad08', 'mad09');
   my %chrorder = (
     'all' => \@all,
     'marchen' => \@marchen,
   );
 
   my @tag_order = ('marchen');
-  my @order = ('mad03', 'c103', 'mad06', 'c83', 'mad02', 'mad05', 'mad01', 'mad04', 'mad07', 'mad08', 'mad09', 'mad10', 'mad11');
+  my @order = ('mad01', 'mad03', 'mad10', 'mad11', 'c103', 'mad12', 'mad06', 'c83', 'mad02', 'mad05', 'mad04', 'mad07', 'mad08', 'mad09');
 
 
   # キャラの肩書き
@@ -38,6 +38,7 @@ sub GetRSChr {
     'mad09' => '隣席座り',
     'mad10' => '追憶探り',
     'mad11' => '乱痴気',
+    'mad12' => '自由滑落',
     $maker => '天上の調べ',
     $admin => '闇の呟き',
   );
@@ -57,6 +58,7 @@ sub GetRSChr {
     'mad09' => 'カナビス',
     'mad10' => 'ルグレ',
     'mad11' => 'オルギア',
+    'mad12' => 'パカロロ',
     $maker    => '（村建て人）',
     $admin    => '（管理人）',
   );
