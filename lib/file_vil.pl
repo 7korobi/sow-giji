@@ -75,7 +75,7 @@ sub createvil {
 	$self->{'modifiedxsay'}  = 0;
 	$self->{'modifiedvsay'}  = 0;
 	$self->{'cntmemo'}       = 0;
-	$self->{'extend'}        = 2;
+	$self->{'extend'}        = 4;
 	$self->{'emulated'}      = 0;
 	$self->{'grudge'}        = -1;
 	$self->{'riot'}          = -1;
