@@ -324,15 +324,6 @@ _HTML_
 	$vindex->closevindex();
 	print "</DIV>";
 	$sow->{'html'}->outcontentfooter();
-
-	print <<"_HTML_";
-	<script> window.welcome_navi = "full" </script>
-	<script src="http://s3-ap-northeast-1.amazonaws.com/giji-assets/js/base.js" charset="UTF-8"></script>
-	<script src="http://s3-ap-northeast-1.amazonaws.com/giji-assets/js/common.js" charset="UTF-8"></script>
-	<script src="http://s3-ap-northeast-1.amazonaws.com/giji-assets/js/chr.js" charset="UTF-8"></script>
-	<script src="http://s3-ap-northeast-1.amazonaws.com/giji-assets/js/sow.js" charset="UTF-8"></script>
-_HTML_
-
 	$sow->{'html'}->outfooter(); # HTMLフッタの出力
 	$sow->{'http'}->outfooter();
 

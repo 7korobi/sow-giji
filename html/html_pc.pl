@@ -67,15 +67,11 @@ _HTML_
     print "  <link rel=\"$_->{'rel'}\" href=\"$_->{'url'}\" title=\"$_->{'title'}\"$net>\n";
   }
 
-  print <<"_HTML_";
-<script type="text/javascript" src="http://www.google.com/jsapi"></script>
-<script type="text/javascript">   google.load("jquery", "1");</script>
-_HTML_
   # JavaScript‚Ìo—Í
   if (defined($sow->{'html'}->{'file_js'})) {
     my $file_js = $sow->{'html'}->{'file_js'};
     foreach (@$file_js) {
-      print "  <script type=\"text/javascript\" src=\"$cfg->{'DIR_JS'}/$_\"></script>\n";
+      print "  <script type=\"text/javascript\" src=\"$cfg->{'DIR_JS'}/$_\" charset=\"UTF-8\"></script>\n";
     }
   }
 
