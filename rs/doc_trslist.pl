@@ -275,7 +275,7 @@ _HTML_
 <table class="$style"> 
 <tbody> 
 <tr class="say"> 
-<td class="img" style=" width: 110px;"><img src="http://utage.sytes.net/wolf/img/ririnra/c$chrid.jpg" width="90" height="130" alt=""> 
+<td class="img" style=" width: 110px;"><img src="http://utage.sytes.net/wolf/img/ririnra/c$chrid.jpg" width="90" alt=""> 
 <td class="field"><DIV class="msg"> 
     <h3 class="mesname"> <a name="SS$index">œœ œœ</a></h3> 
 <p class="mes_text" style=" width: 442px;">$logmsg</p> 
