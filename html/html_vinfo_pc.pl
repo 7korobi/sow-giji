@@ -115,7 +115,7 @@ _HTML_
 	my $nrule = $doc->{'n_rule'};
 	
 	my $css      = $query->{'css'};
-	my $ncomment = "■<a href=\"sow.cgi?cmd=rule&css=$css#rule\">国のルール</a>";
+	my $ncomment = "■<a href=\"https://giji.f5.si/rule-guide/#nation\">国のルール</a>";
 
 	$list = $nrule->{'name'};
 	for( $i=0; $i<@$list; $i++ ){
@@ -126,7 +126,7 @@ _HTML_
 
 	print <<"_HTML_";
 <dl class="mes_text_report">
-<dd>$vil->{'vcomment'}<br$net>$ncomment<br$net>■<a href=\"sow.cgi?cmd=rule&css=$css#mind\">心構\え</a><br$net>
+<dd>$vil->{'vcomment'}<br$net>$ncomment<br$net>■<a href=\"https://giji.f5.si/rule-guide#player\">心構\え</a><br$net>
 </dl>
 </div></div>
 
