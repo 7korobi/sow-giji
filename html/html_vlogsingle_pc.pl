@@ -149,7 +149,7 @@ sub OutHTMLSingleLogSayPC {
 <table class="$messtyle">
 <tbody>
 <tr class="say">
-<td class="img"><img src="$img" width="$charset->{"IMG$imgwhid" . 'W'}" height="$charset->{"IMG$imgwhid" . 'H'}" alt=""$net>
+<td class="img"><img src="$img" width="$charset->{"IMG$imgwhid" . 'W'}" alt=""$net>
 <td class="field"><DIV class="msg">
 _HTML_
 

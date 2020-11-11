@@ -211,7 +211,7 @@ sub OutHTMLMemoFormPC {
 <table class="formpl_common">
 <tr class="say">
 <td class="img">
-<img src="$img" width="$charset->{'IMGBODYW'}" height="$charset->{'IMGBODYH'}" alt=""$net>
+<img src="$img" width="$charset->{'IMGBODYW'}" alt=""$net>
 
 _HTML_
 
@@ -304,7 +304,7 @@ sub OutHTMLVilMakerPC {
 <table class="formpl_common">
 <tr class="say">
 <td class="img">
-<img src="$img" width="$charset->{'IMGBODYW'}" height="$charset->{'IMGBODYH'}" alt=""$net>
+<img src="$img" width="$charset->{'IMGBODYW'}" alt=""$net>
 
 _HTML_
 

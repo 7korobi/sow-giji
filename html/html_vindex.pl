@@ -138,7 +138,7 @@ _HTML_
 		if ((defined($vil->{'rating'})) && ($vil->{'rating'} ne '')) {
 			if (defined($sow->{'cfg'}->{'RATING'}->{$vil->{'rating'}}->{'FILE'})) {
 				my $rating = $sow->{'cfg'}->{'RATING'}->{$vil->{'rating'}};
-				$imgrating = "<img src=\"$cfg->{'DIR_IMG'}/icon/$rating->{'FILE'}\" width=\"$rating->{'WIDTH'}\" height=\"$rating->{'HEIGHT'}\" alt=\"[$rating->{'ALT'}]\" title=\"$rating->{'CAPTION'}\"$net> " if ($rating->{'FILE'} ne '');
+				$imgrating = "<img src=\"$cfg->{'DIR_IMG'}/icon/$rating->{'FILE'}\" height=\"$rating->{'HEIGHT'}\" alt=\"[$rating->{'ALT'}]\" title=\"$rating->{'CAPTION'}\"$net> " if ($rating->{'FILE'} ne '');
 			}
 		}
 

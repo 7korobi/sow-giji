@@ -46,7 +46,7 @@ sub OutHTMLEntryFormPC {
 <div class="formpl_frame">
 <table class="formpl_common">
 <tr class="say">
-<td class="img"><img name="chr_img" src="$img" width="$charset->{'IMGBODYW'}" height="$charset->{'IMGBODYH'}">
+<td class="img"><img name="chr_img" src="$img" width="$charset->{'IMGBODYW'}">
 <td class="field"><div class="msg">
 <form action="$cfg->{'BASEDIR_CGI'}/$cfg->{'FILE_SOW'}#newsay" method="$cfg->{'METHOD_FORM_MB'}">
 <div class="formpl_content">

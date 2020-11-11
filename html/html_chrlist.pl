@@ -113,7 +113,7 @@ _HTML_
 
 <table class="mes_nom">
 <tr class="say">
-<td class="img"><img src="$img" width="$charset->{"IMG$imgwhid" . 'W'}" height="$charset->{"IMG$imgwhid" . 'H'}" alt="$chrname‚ÌŠç‰æ‘œ"$net>
+<td class="img"><img src="$img" width="$charset->{"IMG$imgwhid" . 'W'}" alt="$chrname‚ÌŠç‰æ‘œ"$net>
 <td class="field"><DIV class="msg">
   <h3 class="mesname"> <a name="SS00001">$chrjob $chrname</a></h3>
   <p class="mes_text">$charset->{'NPCSAY'}->[0]</p>
@@ -122,7 +122,7 @@ _HTML_
 </table>
 <table class="mes_nom">
 <tr class="say">
-<td class="img"><img src="$img" width="$charset->{"IMG$imgwhid" . 'W'}" height="$charset->{"IMG$imgwhid" . 'H'}" alt="$chrname‚ÌŠç‰æ‘œ"$net>
+<td class="img"><img src="$img" width="$charset->{"IMG$imgwhid" . 'W'}" alt="$chrname‚ÌŠç‰æ‘œ"$net>
 <td class="field"><DIV class="msg">
   <h3 class="mesname"> <a name="SS00002">$chrjob $chrname</a></h3>
   <p class="mes_text">$charset->{'NPCSAY'}->[1]</p>

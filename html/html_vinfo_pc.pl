@@ -91,7 +91,7 @@ _HTML_
 	}
 
 	print <<"_HTML_";
-<div class="mes_maker">
+<div class="mes_maker"><div class="guide">
 <p class="multicolumn_label">村の名前：</p>
 <p class="multicolumn_left">$vil->{'vname'}</p>
 <br class="multicolumn_clear"$net>
@@ -128,9 +128,9 @@ _HTML_
 <dl class="mes_text_report">
 <dd>$vil->{'vcomment'}<br$net>$ncomment<br$net>■<a href=\"sow.cgi?cmd=rule&css=$css#mind\">心構\え</a><br$net>
 </dl>
-</div>
+</div></div>
 
-<div class="mes_maker">
+<div class="mes_maker"><div class="guide">
 <dl class="mes_text_report">
 <dt>$sow->{'textrs'}->{'CAPTION'}
 <dd>$sow->{'textrs'}->{'HELP'}
@@ -281,9 +281,9 @@ _HTML_
 	}
 
 	print <<"_HTML_";
-</div>
+</div></div>
 
-<div class="mes_maker">
+<div class="mes_maker"><div class="guide">
 <p class="multicolumn_label">登場人物：</p>
 <p class="multicolumn_left">$csidcaptions</p>
 <br class="multicolumn_clear"$net>
@@ -358,7 +358,7 @@ _HTML_
 <img src="$imgurl" alt="QRコード画像"$net><br$net>
 </p>
 <br class="multicolumn_clear"$net>
-</div>
+</div></div>
 
 _HTML_
 	}
@@ -380,7 +380,7 @@ $textrs->{'ANNOUNCE_TOTALCOMMIT'}->[$totalcommit]<br$net>
 $nextcommitdt
 </p>
 <br class="multicolumn_clear"$net>
-</div>
+</div></div>
 
 _HTML_
 	}
