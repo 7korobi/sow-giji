@@ -596,12 +596,12 @@ sub GetConfig {
 
     NAME_SW    => '人狼議事',       # 名前
     DESC_SW    => 'ウェブ版人狼クローン。',
-    URL_USER   => 'http://utage.sytes.net/WebRecord/user/show',  # 戦跡ビュアーのURL
-    URL_CONST  => 'http://crazy-crazy.sakura.ne.jp/giji/?',                # サポートwikiのURL
-    URL_ROLE   => 'http://crazy-crazy.sakura.ne.jp/giji/?(Role)ROLEID_',   # サポートwikiのURL
-    URL_GIFT   => 'http://crazy-crazy.sakura.ne.jp/giji/?(Gift)GIFTID_',   # サポートwikiのURL
-    URL_WIN    => 'http://crazy-crazy.sakura.ne.jp/giji/?(Text)',          # サポートwikiのURL
-    URL_CONFIG => 'http://crazy-crazy.sakura.ne.jp/giji/?(What)State#l4',  # サポートwikiのURL
+    URL_USER   => 'https://waoon.net/record/',  # 戦跡ビュアーのURL
+    URL_CONST  => 'http://dais.kokage.cc/guide/?',                # サポートwikiのURL
+    URL_ROLE   => 'http://dais.kokage.cc/guide/?(Role)ROLEID_',   # サポートwikiのURL
+    URL_GIFT   => 'http://dais.kokage.cc/guide/?(Gift)GIFTID_',   # サポートwikiのURL
+    URL_WIN    => 'http://dais.kokage.cc/guide/?(Text)',          # サポートwikiのURL
+    URL_CONFIG => 'http://dais.kokage.cc/guide/?(What)State#l4',  # サポートwikiのURL
 
     # ファイルロック機能
     ENABLED_GLOCK => 1, # 0: none, 1: flock, 2: rename

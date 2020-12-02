@@ -117,7 +117,7 @@ _HTML_
 <li><a href="$urlsow?$linkvalue">遊び方</a>、<a href="$urlwiki$linkoperate">操作方法</a>、<a href="http://giji.f5.si/rule-guide#nation">ルール</a>、<a href="http://giji.f5.si/rule-guide#player">心構\え</a>をよく読もう。なにをする遊び場かわかったら、すぐ下に村がある。
 <br>他の人狼クローンを遊んだ事のあるきみは、まず<a href="$urlwiki$linkspec">他の人狼ゲームとの違い</a>を読もう。多くのことがここに書かれている。
 <li>人狼ゲームの基本的な知識、人狼議事独自システムの説明は、公式まとめサイトで知ろう。
-<br><a href="http://crazy-crazy.sakura.ne.jp/giji/"><img src="$urlimg/banner/guide.png"></a>
+<br><a href="http://dais.kokage.cc/guide/"><img src="$urlimg/banner/guide.png"></a>
 </ol>
 </div>
 
@@ -208,7 +208,7 @@ _HTML_
 		print <<"_HTML_";
 <h2>村の建て方</h2>
 <div class="paragraph">
-まず<a href="$urlsow?$linkrule#make">村建て人の心構\え</a>、<a href="$linkmake">村建てマニュアル</a>を読んでから村を建てよう。<br>
+まず<a href="https://giji.f5.si/rule-guide#maker">村建て人の心構\え</a>、<a href="$linkmake">村建てマニュアル</a>を読んでから村を建てよう。<br>
 ◆参考：<a href="$urlsow?$linkrolematrix">役職配分一覧</a>｜<a href="$linkroledeal">編成実績</a>｜<a href="$linkscedure">企画村予\定表\</a>（wiki：stinさん管理）<br>
 <a href="sow.cgi?cmd=trsdiff">基本設定</a>を選んで「村の作成」を押すと、新しくゲームを作成できる。
 </div>
