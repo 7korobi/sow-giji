@@ -2,13 +2,13 @@ package SWCommit;
 
 
 #----------------------------------------
-# Ÿ—˜”»’è
+# å‹åˆ©åˆ¤å®š
 #----------------------------------------
 sub WinnerCheckGM {
 	my ($sow, $vil) = @_;
 	my $pllist = $vil->getpllist();
 
-	# WŒvŠJn
+	# é›†è¨ˆé–‹å§‹
 	my $winner   = 0;
 	my $humen    = 0;
 	my $villager = 0;
@@ -34,19 +34,19 @@ sub WinnerCheckGM {
 
 	foreach $plsingle (@$pllist) {
 		$vil->{'wincnt_'.$plsingle->{'live'}}++;
-		# ŒÂ•ÊŸ—˜
+		# å€‹åˆ¥å‹åˆ©
 		if (($plsingle->{'role'} == $sow->{'ROLEID_DISH'})&&($plsingle->{'live'} eq 'victim')){
 			my $targetname = $plsingle->getlongchrname();
 			$dishes++;
 		}
 
-		# ˆÈ‰ºA¶‘¶Ò‚Ì‚İ•\¦B
+		# ä»¥ä¸‹ã€ç”Ÿå­˜è€…ã®ã¿è¡¨ç¤ºã€‚
 		next if ($plsingle->{'live'} ne 'live');
 		next if ($plsingle->{'role'} == $sow->{'ROLEID_MOB'});
 		next if ($plsingle->{'uid'} eq $sow->{'cfg'}->{'USERID_NPC'});
 		$lives++;
 
-		# ƒ]ƒ“ƒr[‚É‚È‚Á‚Ä‚¢‚È‚¢l•¨‚Ì‚İWŒv‚·‚éB
+		# ã‚¾ãƒ³ãƒ“ãƒ¼ã«ãªã£ã¦ã„ãªã„äººç‰©ã®ã¿é›†è¨ˆã™ã‚‹ã€‚
 		if ( $plsingle->isEnableState('MASKSTATE_ZOMBIE') ) {
 			if      ($plsingle->ishuman() > 0) {
 				$humen++;
@@ -64,24 +64,24 @@ sub WinnerCheckGM {
 			$zombies++;
 		}
 
-		# —U‚í‚ê‚½l‚Ü‚½‚ÍA‹³‘c‚Å‚ ‚ê‚ÎŠ©—UÏ‚İˆµ‚¢B
+		# èª˜ã‚ã‚ŒãŸäººã¾ãŸã¯ã€æ•™ç¥–ã§ã‚ã‚Œã°å‹§èª˜æ¸ˆã¿æ‰±ã„ã€‚
 		if ($plsingle->{'sheep'} eq 'pixi'){
 			$sheeps++;
 		}elsif($plsingle->{'role'} == $sow->{'ROLEID_GURU'}){
 			$sheeps++;
 		}
-		# •Ğ‘z‚¢‘Î‰
-		# ©•ª‚Ì‚½‚ß‚É€‚ñ‚Å‚­‚ê‚élƒŠƒXƒg‚ª‹ó‚Ì—öl‚ª‚ ‚è‚¦‚éB
+		# ç‰‡æƒ³ã„å¯¾å¿œ
+		# è‡ªåˆ†ã®ãŸã‚ã«æ­»ã‚“ã§ãã‚Œã‚‹äººãƒªã‚¹ãƒˆãŒç©ºã®æ‹äººãŒã‚ã‚Šãˆã‚‹ã€‚
 
-		# ‰^–½‚ÌãJi©•ª‚Ì‚½‚ß‚É€‚ñ‚Å‚­‚ê‚élj‚Éˆø‚©‚ê‚éÒ
+		# é‹å‘½ã®çµ†ï¼ˆè‡ªåˆ†ã®ãŸã‚ã«æ­»ã‚“ã§ãã‚Œã‚‹äººï¼‰ã«å¼•ã‹ã‚Œã‚‹è€…
 		if ('' ne $plsingle->{'bonds'}){
 			$bonds++;
 		}
-		# K•Ÿ‚È—öl
+		# å¹¸ç¦ãªæ‹äºº
 		if ($plsingle->ishappy($vil) > 0 ){
 			$loves++;
 		}
-		# E‚·‹C–X‚Ìl
+		# æ®ºã™æ°—æº€ã€…ã®äºº
 		if ('hate' eq $plsingle->{'love'}){
 			$hates++;
 		}
@@ -99,11 +99,11 @@ sub WinnerCheckGM {
 	$vil->{'wincnt_sheep'   } = $sheeps;
 	$vil->{'wincnt_live'    } = $lives;
 	$vil->{'wincnt_zombie'  } = $zombies;
-	# WŒv‚±‚±‚Ü‚Å
+	# é›†è¨ˆã“ã“ã¾ã§
 
 	my $win_wolf = 0;
 	my $win_vil  = 0;
-	# ˜T‚ÌŸ—˜ğŒ
+	# ç‹¼ã®å‹åˆ©æ¡ä»¶
 	$win_wolf = 1 if (($vil->{'game'} eq 'TABULA')           &&($humen <= $wolves));
 	$win_wolf = 1 if (($vil->{'game'} eq 'LIVE_TABULA')      &&($humen <= $wolves));
 	$win_wolf = 1 if (($vil->{'game'} eq 'TROUBLE')          &&($humen <= $wolves));
@@ -112,25 +112,25 @@ sub WinnerCheckGM {
 	$win_wolf = 1 if (($vil->{'game'} eq 'MISTERY')          &&(0 == $villager));
 	$win_wolf = 1 if (($vil->{'game'} eq 'MILLERHOLLOW')     &&(0 == $villager));
 	$win_wolf = 1 if (($vil->{'game'} eq 'LIVE_MILLERHOLLOW')&&(0 == $villager));
-	# ‘º‚ÌŸ—˜ğŒ
+	# æ‘ã®å‹åˆ©æ¡ä»¶
 	$win_vil  = 1 if ( 0 == $wolves );
 
 	if ($loves == $lives) {
-		# “Áê‚Èí—Ş‚Ì—ölŸ—˜i—ölˆÈŠO‚ª‘S–ÅB‚±‚ê‚ª‚È‚¢‚Æ—öl‚ªŸ—˜•s‰Â”\‚É‚È‚é‚±‚Æ‚ª‚ ‚éBj
+		# ç‰¹æ®Šãªç¨®é¡ã®æ‹äººå‹åˆ©ï¼ˆæ‹äººä»¥å¤–ãŒå…¨æ»…ã€‚ã“ã‚ŒãŒãªã„ã¨æ‹äººãŒå‹åˆ©ä¸å¯èƒ½ã«ãªã‚‹ã“ã¨ãŒã‚ã‚‹ã€‚ï¼‰
 		$winner = $sow->{'WINNER_LOVER'};
 	} elsif ( 1 == $win_vil ) {
-		# ‘ºl‘¤Ÿ—˜
+		# æ‘äººå´å‹åˆ©
 		$winner = $sow->{'WINNER_HUMAN'};
 	} elsif ( 1 == $win_wolf) {
-		# l˜T‘¤Ÿ—˜
+		# äººç‹¼å´å‹åˆ©
 		$winner = $sow->{'WINNER_WOLF'};
 		$winner = $sow->{'WINNER_LONEWOLF'} if( $wolves == $lonewolves );
 	}
 
-	# Ÿ—˜‚ğ‰¡æ‚è‚·‚é˜A’†
-	# ‚ ‚ç‚ä‚éãJ‚ÍŒã’Ç‚¢‚·‚éB×‹C‚É˜f‚Á‚½Ò‚¾‚¯‚ª—áŠOB
-	# —öl‚ªŸ—˜‚Å‚«‚È‚­‚È‚é‰Â”\«‚ª‚ ‚éi×‹C‚ğ’İ‚ç‚È‚¢‚Æ×‹CŸ—˜‚É‚È‚éó‹µ‚Ì‰Â”\«j
-	# ‚Ì‚ÅA×‹C‚Í©•ªˆÈŠO‚ÌãJi×‹C‚ÉŒÀ‚ç‚¸j‚ğ–Å‚Ú‚³‚È‚­‚Ä‚ÍŸ‚Ä‚È‚¢B
+	# å‹åˆ©ã‚’æ¨ªå–ã‚Šã™ã‚‹é€£ä¸­
+	# ã‚ã‚‰ã‚†ã‚‹çµ†ã¯å¾Œè¿½ã„ã™ã‚‹ã€‚é‚ªæ°—ã«æƒ‘ã£ãŸè€…ã ã‘ãŒä¾‹å¤–ã€‚
+	# æ‹äººãŒå‹åˆ©ã§ããªããªã‚‹å¯èƒ½æ€§ãŒã‚ã‚‹ï¼ˆé‚ªæ°—ã‚’åŠã‚‰ãªã„ã¨é‚ªæ°—å‹åˆ©ã«ãªã‚‹çŠ¶æ³ã®å¯èƒ½æ€§ï¼‰
+	# ã®ã§ã€é‚ªæ°—ã¯è‡ªåˆ†ä»¥å¤–ã®çµ†ï¼ˆé‚ªæ°—ã«é™ã‚‰ãšï¼‰ã‚’æ»…ã¼ã•ãªãã¦ã¯å‹ã¦ãªã„ã€‚
 	$winner = $sow->{'WINNER_PIXI_W'} if (($pixies > 0) && ($winner == $sow->{'WINNER_WOLF'}));
 	$winner = $sow->{'WINNER_PIXI_W'} if (($pixies > 0) && ($winner == $sow->{'WINNER_LONEWOLF'}));
 	$winner = $sow->{'WINNER_PIXI_H'} if (($pixies > 0) && ($winner == $sow->{'WINNER_HUMAN'}));
@@ -148,7 +148,7 @@ sub StartGM {
 	my $ar      = $textrs->{'ANNOUNCE_ROLE'};
 	&Deployment($sow, $vil, $logfile, $score);
 
-	# “‘¯‚É‚ ‚Ü‚èDŠJ¦A•Ïg‚Ì“s‡ãA‚È‚É‚æ‚è‚àè‘OB
+	# ç›—è³Šã«ã‚ã¾ã‚Šæœ­é–‹ç¤ºã€å¤‰èº«ã®éƒ½åˆä¸Šã€ãªã«ã‚ˆã‚Šã‚‚æ‰‹å‰ã€‚
 	$sow->{'debug'}->writeaplog($sow->{'APLOG_OTHERS'}, "rolediscard".$vil->{'rolediscard'});
 	my @rolediscard = split('/', $vil->{'rolediscard'});
 	my $pllist  = $vil->getlivepllist();
@@ -168,7 +168,7 @@ sub StartGM {
 		}
 	}
 
-	# ¹­Òˆ—
+	# è–ç—•è€…å‡¦ç†
 	my $stigma = $vil->getrolepllist($sow->{'ROLEID_STIGMA'});
 	if (@$stigma > 1) {
 		my $i;
@@ -184,13 +184,13 @@ sub StartGM {
 sub MidNight{
 	my ($sow, $vil, $logfile, $score, $jammtargetpl) = @_;
 
-	# è‚¢EôE
+	# å ã„ãƒ»å‘ªæ®º
 	&Seer($sow, $vil, $logfile, $score, $jammtargetpl);
 
-	# –‚—
+	# é­”å¥³
 	&Witch($sow, $vil, $logfile, $score, $jammtargetpl);
 
-	# ˜B‹àpt
+	# éŒ¬é‡‘è¡“å¸«
 	&Alchemist($sow, $vil, $logfile, $score, $jammtargetpl);
 }
 
@@ -201,43 +201,43 @@ sub UpdateGM {
 
 	&Deployment($sow, $vil, $logfile, $score);
 
-	# “Ë‘R€ ‚È‚É‚æ‚è‚àè‘O‚Éˆ—‚·‚éB
+	# çªç„¶æ­» ãªã«ã‚ˆã‚Šã‚‚æ‰‹å‰ã«å‡¦ç†ã™ã‚‹ã€‚
 	&SuddenDeath($sow, $vil, $logfile, $score ) if ($sow->{'cfg'}->{'ENABLED_SUDDENDEATH'} > 0);
 
-	# €”õƒtƒF[ƒY
+	# æº–å‚™ãƒ•ã‚§ãƒ¼ã‚º
 	&Equipment($sow, $vil, $logfile, $score );
 
-	# ˆŒY
+	# å‡¦åˆ‘
 	if ($vil->{'turn'}-1 > 1){
 		&Execution($sow, $vil, $logfile, $score, 1);
 		&Execution($sow, $vil, $logfile, $score, 2) if ($vil->{'riot'} == $vil->{'turn'}-1 );
 	}
 
-	# ‰©¨ƒtƒF[ƒY
+	# é»„æ˜ãƒ•ã‚§ãƒ¼ã‚º
 	&Twilight($sow, $vil, $logfile, $score ) ;
 
-	# Œì‰q‘ÎÛ•\¦
+	# è­·è¡›å¯¾è±¡è¡¨ç¤º
 	my $jammtargetpl = &WriteGuardTarget($sow, $vil, $logfile, $score, 'ROLEID_JAMMER','EXECUTEJAMM' );
 	my $guardtargetpl= &WriteGuardTarget($sow, $vil, $logfile, $score, 'ROLEID_GUARD' ,'EXECUTEGUARD');
 
-	# Œõ‚ÌŠÂE–‚‹¾E–‚—Eè—ì
+	# å…‰ã®ç’°ãƒ»é­”é¡ãƒ»é­”å¥³ãƒ»å éœŠ
 	&ThrowGift($sow, $vil, $logfile, $score, $jammtargetpl);
 	&MidNight($sow, $vil, $logfile, $score, $jammtargetpl);
 
-	# PŒ‚æŒˆ’è
+	# è¥²æ’ƒå…ˆæ±ºå®š
 	my ($murderpl, $killers ,$killedpl ) = &SelectKill($sow, $vil, $logfile, $score, 1);
 	my ($murderpl2,$killers2,$killedpl2) = &SelectKill($sow, $vil, $logfile, $score, 2) if ($vil->{'grudge'} == $vil->{'turn'}-1 );
 
-	# PŒ‚ (×–‚[‚ª’m˜T‚È‚Ç‚©‚ç”»’è‚ğ‰B‚·‚½‚ß‚É$jammtargetpl‚ğ“n‚·B$guardtargetpl‚Å‚Í‚È‚¢Bj
+	# è¥²æ’ƒ (é‚ªé­”ãƒ¼ãŒçŸ¥ç‹¼ãªã©ã‹ã‚‰åˆ¤å®šã‚’éš ã™ãŸã‚ã«$jammtargetplã‚’æ¸¡ã™ã€‚$guardtargetplã§ã¯ãªã„ã€‚ï¼‰
 	&Kill($sow, $vil, $logfile, $score, $murderpl , $killers,  $killedpl, $jammtargetpl);
 	&Kill($sow, $vil, $logfile, $score, $murderpl2, $killers2, $killedpl2,$jammtargetpl) if ($vil->{'grudge'} == $vil->{'turn'}-1);
 	&KillLoneWolf($sow, $vil, $logfile, $score);
 
-	# êt–¾ƒtƒF[ƒY
+	# é»æ˜ãƒ•ã‚§ãƒ¼ã‚º
 	&Dawn($sow, $vil, $logfile, $score );
 	&Snatch($sow, $vil, $logfile, $score );
 
-	# €–SÒ”­Œ©
+	# æ­»äº¡è€…ç™ºè¦‹
 	&Regret($sow, $vil, $logfile, $score, $jammtargetpl);
 
 	$score->write($vil->{'turn'}-1);
@@ -247,7 +247,7 @@ sub UpdateGM {
 
 sub EventReset {
 	my ($sow, $vil, $logfile) = @_;
-	# –Œ‚ÌIà
+	# äº‹ä»¶ã®çµ‚ç„‰
 	if ( $sow->{'EVENTID_UNDEF'} < $vil->{'event'} ){
 		$vil->{'event'} = $sow->{'EVENTID_UNDEF'};
 	}
@@ -258,9 +258,9 @@ sub EventGM {
 	require "$sow->{'cfg'}->{'DIR_LIB'}/score.pl";
 	my $score = SWScore->new($sow, $vil, 0);
 
-	# —‚“ú‚Ì‚½‚ß‚Ìˆ—
+	# ç¿Œæ—¥ã®ãŸã‚ã®å‡¦ç†
 
-	# €‚ñ‚¾ƒXƒP[ƒvƒS[ƒg‚Í™é‚ß‚ç‚ê‚È‚¢B
+	# æ­»ã‚“ã ã‚¹ã‚±ãƒ¼ãƒ—ã‚´ãƒ¼ãƒˆã¯å’ã‚ã‚‰ã‚Œãªã„ã€‚
 	my $scapegoatpl = $vil->getplbypno($vil->{'scapegoat'});
 	if ((0 < $vil->{'scapegoat'})&&( 'live' ne $scapegoatpl->{'live'} )) {
 		my $canceltext  = $vil->getText('RESULT_SCAPEGOAT');
@@ -270,7 +270,7 @@ sub EventGM {
 		$logfile->writeinfo('', $sow->{'MESTYPE_INFONOM'}, $canceltext);
 	}
 
-	# ¶‘¶ó‹µ‚ÌŠJ¦
+	# ç”Ÿå­˜çŠ¶æ³ã®é–‹ç¤º
 	if ('MISTERY' eq $vil->{'game'}){
 		my $balance = 0;
 		$balance = 1 if ($vil->{'wincnt_villager'} > $vil->{'wincnt_wolf'    });
@@ -278,7 +278,7 @@ sub EventGM {
 		$logfile->writeinfo('', $sow->{'MESTYPE_INFOWOLF'}, $vil->getTextByID('ANNOUNCE_LEAD',$balance));
 	}
 
-	# –Œ‚ÌIà
+	# äº‹ä»¶ã®çµ‚ç„‰
 	if ( $sow->{'EVENTID_UNDEF'} < $vil->{'event'} ){
 		if ($vil->{'event'} == $sow->{'EVENTID_APRIL_FOOL'}){
 			my $livepllist = $vil->getlivepllist();
@@ -304,7 +304,7 @@ sub EventGM {
 		$vil->{'event'} = $event;
 	}
 
-	# Ÿ‚Ì–Œ”­¶I
+	# æ¬¡ã®äº‹ä»¶ç™ºç”Ÿï¼
 	my $event_do;
 	if ($vil->{'seqevent'} > 0) {
 		$event_do = 1;
@@ -313,7 +313,7 @@ sub EventGM {
 	}
 	if ( $vil->{'event'} <= $sow->{'EVENTID_UNDEF'} ){
 		my @events = split('/', $vil->{'eventcard'});
-		# ƒCƒxƒ“ƒg‚ª‚Ü‚¾c‚Á‚Ä‚¢‚é‚È‚çAÁ”ï‚·‚éB
+		# ã‚¤ãƒ™ãƒ³ãƒˆãŒã¾ã æ®‹ã£ã¦ã„ã‚‹ãªã‚‰ã€æ¶ˆè²»ã™ã‚‹ã€‚
 		if ( 0 < scalar(@events) ){
 			my $choice = splice(@events, $event_do, 1);
 			$vil->{'eventcard'} = join('/', @events );
@@ -321,7 +321,7 @@ sub EventGM {
 		}
 	}
 
-	# –Œˆ—B•\¦B
+	# äº‹ä»¶å‡¦ç†ã€‚è¡¨ç¤ºã€‚
 	if ( $sow->{'EVENTID_UNDEF'} < $vil->{'event'} ){
 		my $livepllist = $vil->getlivepllist();
 		my $eventtext = $vil->getTextByID('EXPLAIN_EVENT',$vil->{'event'});
@@ -352,7 +352,7 @@ sub EventGM {
 			$score->addresult($eventname, "");
 		}
 
-		# “ñdƒXƒpƒC@–ğEŒn‚Ì‰¶ŒbˆÈŠO‚Íã‘‚«Œó•âB
+		# äºŒé‡ã‚¹ãƒ‘ã‚¤ã€€å½¹è·ç³»ã®æ©æµä»¥å¤–ã¯ä¸Šæ›¸ãå€™è£œã€‚
 		if ($vil->{'event'} == $sow->{'EVENTID_TURN_FINK'}){
 			my @cleanpllist;
 			foreach $plsingle (@$livepllist) {
@@ -363,7 +363,7 @@ sub EventGM {
 				next if ($plsingle->isenemy());
 				push(@cleanpllist,$plsingle);
 			}
-			# ‰¶Œb‚È‚µ‚Ìl‚ª‚¢‚ê‚ÎAˆêl‘I‚ÔB
+			# æ©æµãªã—ã®äººãŒã„ã‚Œã°ã€ä¸€äººé¸ã¶ã€‚
 			if ( 0 < scalar(@cleanpllist) ){
 				my $plsingle = splice(@cleanpllist, int(rand(@cleanpllist)), 1);
 				$plsingle->{'gift'} = $sow->{'GIFTID_FINK'};
@@ -372,7 +372,7 @@ sub EventGM {
 			}
 		}
 
-		# —d¸‚Ì—Ö@–ğEŒn‚Ì‰¶ŒbˆÈŠO‚Íã‘‚«Œó•âB
+		# å¦–ç²¾ã®è¼ªã€€å½¹è·ç³»ã®æ©æµä»¥å¤–ã¯ä¸Šæ›¸ãå€™è£œã€‚
 		if ($vil->{'event'} == $sow->{'EVENTID_TURN_FAIRY'}){
 			my @cleanpllist;
 			foreach $plsingle (@$livepllist) {
@@ -382,7 +382,7 @@ sub EventGM {
 				next if ($plsingle->iscursed('role'));
 				push(@cleanpllist,$plsingle);
 			}
-			# ‰¶Œb‚È‚µ‚Ìl‚ª‚¢‚ê‚ÎAˆêl‘I‚ÔB
+			# æ©æµãªã—ã®äººãŒã„ã‚Œã°ã€ä¸€äººé¸ã¶ã€‚
 			if ( 0 < scalar(@cleanpllist) ){
 				my $plsingle = splice(@cleanpllist, int(rand(@cleanpllist)), 1);
 				$plsingle->{'gift'} = $sow->{'GIFTID_FAIRY'};
@@ -390,7 +390,7 @@ sub EventGM {
 				$score->addresult($eventname, $plsingle->getlongchrname());
 			}
 		}
-		# ŠïÕ@‚»‚Ì“úPŒ‚€‚µ‚½l‚ª¶‚«•Ô‚éB‚½‚¾‚µA”\—Í‚ğ¸‚¤B
+		# å¥‡è·¡ã€€ãã®æ—¥è¥²æ’ƒæ­»ã—ãŸäººãŒç”Ÿãè¿”ã‚‹ã€‚ãŸã ã—ã€èƒ½åŠ›ã‚’å¤±ã†ã€‚
 		if ($vil->{'event'} == $sow->{'EVENTID_MIRACLE'}){
 			my $pllist = $vil->getpllist();
 			foreach $plsingle (@$pllist) {
@@ -404,7 +404,7 @@ sub EventGM {
 			}
 		}
 
-		# Œˆ’èÒ‚ğÄ‘I”C‚·‚éB
+		# æ±ºå®šè€…ã‚’å†é¸ä»»ã™ã‚‹ã€‚
 		if ($vil->{'event'} == $sow->{'EVENTID_PROPHECY'}){
 			my @selectpllist;
 			my @decidepllist;
@@ -414,16 +414,17 @@ sub EventGM {
 			}
 			foreach $plold (@decidepllist) {
 				my $plnew = splice(@selectpllist, int(rand(@selectpllist)), 1);
+    				if(!plnew){ last; }
 				$plnew->{'gift'} = $sow->{'GIFTID_DECIDE'}   if (defined($plnew->{'gift'}));
 				$plold->{'gift'} = $sow->{'GIFTID_NOT_HAVE'};
-				$score->addresult($eventname, $plold->getlongchrname()." Ë ".$plnew->getlongchrname() );
+				$score->addresult($eventname, $plold->getlongchrname()." â‡’ ".$plnew->getlongchrname() );
 			}
 		}
 
 		$logfile->writeinfo('', $sow->{'MESTYPE_INFONOM'}, $eventtext);
 	}
 
-	# ¶‘¶Ò•\¦
+	# ç”Ÿå­˜è€…è¡¨ç¤º
 	my @livesnamelist;
 	my $livepllist = $vil->getlivepllist();
 	my $livescnt = @$livepllist;
@@ -447,7 +448,7 @@ sub addcheckedday {
 	$self->{$target} = join('/', @list );
 }
 
-# ‘ÎÛ‚ªŒõ‚Ì—Ö‚ğ•Û’†A¸‚Á‚½‚ ‚ÆA–³”\A‚Ìê‡‚ÍŒõ‚Ì—Ö‚ğ“n‚³‚È‚¢B
+# å¯¾è±¡ãŒå…‰ã®è¼ªã‚’ä¿æŒä¸­ã€å¤±ã£ãŸã‚ã¨ã€ç„¡èƒ½ã€ã®å ´åˆã¯å…‰ã®è¼ªã‚’æ¸¡ã•ãªã„ã€‚
 sub breakGift {
 	my ($sow,$vil,$logfile,$targetpl,$giftname) = @_;
 	my $result = $targetpl->getText('EXECUTELOST');
@@ -459,7 +460,7 @@ sub breakGift {
 sub breakGiftCheck {
 	my ($sow,$vil,$plsingle,$logfile) = @_;
 
-	# ‘¡‚è•¨‚ª‚ ‚ê‚Î”j‰ó‚·‚éB
+	# è´ˆã‚Šç‰©ãŒã‚ã‚Œã°ç ´å£Šã™ã‚‹ã€‚
 	my $has_gift = 0;
 	$has_gift = $plsingle->{'gift'} if ($plsingle->{'gift'} == $sow->{'GIFTID_SHIELD'});
 	$has_gift = $plsingle->{'gift'} if ($plsingle->{'gift'} == $sow->{'GIFTID_GLASS' });
@@ -483,56 +484,56 @@ sub toZombie {
 	&breakGiftCheck($sow,$vil,$plsingle,$logfile);
 }
 
-# ‹¤’Ê‰º€”õ
+# å…±é€šä¸‹æº–å‚™
 sub Deployment{
 	my ($sow, $vil, $logfile, $score) = @_;
 
-	# ƒXƒP[ƒvƒS[ƒg‚Í“Š•[‘€ì‚É‰e‹¿‚·‚é‚Ì‚İ‚È‚Ì‚ÅAXV‚µ‚½‚ç‚à‚¤ƒŠƒZƒbƒg‚µ‚Ä‚æ‚¢B
+	# ã‚¹ã‚±ãƒ¼ãƒ—ã‚´ãƒ¼ãƒˆã¯æŠ•ç¥¨æ“ä½œã«å½±éŸ¿ã™ã‚‹ã®ã¿ãªã®ã§ã€æ›´æ–°ã—ãŸã‚‰ã‚‚ã†ãƒªã‚»ãƒƒãƒˆã—ã¦ã‚ˆã„ã€‚
 	$vil->{'scapegoat'} = $sow->{'TARGETID_TRUST'};
 
 	my $pllist = $vil->getpllist();
 	foreach $plsingle (@$pllist) {
-		# €–S’x‰„Aó‘Ô’x‰„ƒTƒ|[ƒgB
-		# ƒ^ƒCƒ~ƒ“ƒO‚ğ®—‚µA–¼•ë‡ƒƒ^‚ğ”rœ‚·‚éB
+		# æ­»äº¡é…å»¶ã€çŠ¶æ…‹é…å»¶ã‚µãƒãƒ¼ãƒˆã€‚
+		# ã‚¿ã‚¤ãƒŸãƒ³ã‚°ã‚’æ•´ç†ã—ã€åç°¿é †ãƒ¡ã‚¿ã‚’æ’é™¤ã™ã‚‹ã€‚
 		$plsingle->{'delay_rolestate'} = $plsingle->{'rolestate'};
 		$plsingle->{'delay_live'}      = $plsingle->{'live'};
-		# ˆê“Ió‘Ôi‚±‚Ì–é‚Ì‚İ—LŒø‚È“à—ej‚ğ‚±‚±‚Å‰Šú‰»B
+		# ä¸€æ™‚çš„çŠ¶æ…‹ï¼ˆã“ã®å¤œã®ã¿æœ‰åŠ¹ãªå†…å®¹ï¼‰ã‚’ã“ã“ã§åˆæœŸåŒ–ã€‚
 		$plsingle->{'tmp_rolestate'} = $plsingle->{'rolestate'};
 		$plsingle->{'tmp_suicide'}   = $sow->{'TARGETID_TRUST'};
 
 		next if ( $plsingle->{'deathday'} ne $vil->{'turn'} );
-		# iå‚É‘O“ú‚Ì•–‹‚Ì‚¹‚¢‚Åj€‚ñ‚¾‚Î‚©‚è‚Ìl•¨
+		# ï¼ˆä¸»ã«å‰æ—¥ã®é»’å¹•ã®ã›ã„ã§ï¼‰æ­»ã‚“ã ã°ã‹ã‚Šã®äººç‰©
 		&nowdead($sow, $vil, 0, $plsingle, $plsingle->{'live'}, $logfile, $score, 0);
 	}
 }
 
-# ”\—Í‚ğg‚¤l‚Ì‚½‚ß‚Ì€”õ
+# èƒ½åŠ›ã‚’ä½¿ã†äººã®ãŸã‚ã®æº–å‚™
 sub Equipment{
 	my ($sow, $vil, $logfile, $score) = @_;
 
-	# ”\—Í‘ÎÛƒ‰ƒ“ƒ_ƒ€w’èˆ—
-	# Œˆ’èÒ‚Ì”\—Ísg‘O‚Å‚ ‚é‚±‚Æ
+	# èƒ½åŠ›å¯¾è±¡ãƒ©ãƒ³ãƒ€ãƒ æŒ‡å®šæ™‚å‡¦ç†
+	# æ±ºå®šè€…ã®èƒ½åŠ›è¡Œä½¿å‰ã§ã‚ã‚‹ã“ã¨
 	&SetRandomTarget($sow, $vil, $logfile, 'role','ABI_ROLE');
 	&SetRandomTarget($sow, $vil, $logfile, 'gift','ABI_GIFT');
 
 	my $pllist = $vil->getactivepllist();
 	foreach $plsingle (@$pllist) {
 		if ($plsingle->isdo('role1')){
-			# ’N‚©‚Ì‚Æ‚±‚ë‚ÖB
+			# èª°ã‹ã®ã¨ã“ã‚ã¸ã€‚
 			my $targetpl = $vil->getplbypno($plsingle->{'role1'});
 
-			# –‚—‚Ì“Š–ò
-			# g‚¤–ò‚Ìí—Ş‚ÍA‘€ì‚É’N‚ğ‘ÎÛ‚É‘I‚ñ‚Å‚¢‚é‚©A‚ÅŒˆ‚Ü‚éB‚±‚Ì“_‚Ì¶€‚ğ•Û‘¶‚·‚éB
-			# i‚½‚¾‚µA“Ë‘R€‚Í“Š–ò‚ÉƒLƒƒƒ“ƒZƒ‹‚·‚éBj
+			# é­”å¥³ã®æŠ•è–¬
+			# ä½¿ã†è–¬ã®ç¨®é¡ã¯ã€æ“ä½œæ™‚ã«èª°ã‚’å¯¾è±¡ã«é¸ã‚“ã§ã„ã‚‹ã‹ã€ã§æ±ºã¾ã‚‹ã€‚ã“ã®æ™‚ç‚¹ã®ç”Ÿæ­»ã‚’ä¿å­˜ã™ã‚‹ã€‚
+			# ï¼ˆãŸã ã—ã€çªç„¶æ­»ã¯æŠ•è–¬æ™‚ã«ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã™ã‚‹ã€‚ï¼‰
 			if ( $plsingle->iscanrole($sow->{'ROLEID_WITCH'})
 			  || $plsingle->iscanrole($sow->{'ROLEID_WALPURGIS'}) ){
 				$plsingle->{'tmp_targetlive'} = $targetpl->{'live'};
 				$sow->{'debug'}->writeaplog($sow->{'APLOG_OTHERS'}, "target is " . $plsingle->{'tmp_targetlive'} );
 			}
 		}elsif($plsingle->{'role1'} == $plsingle->{'pno'}){
-			# “Æ‚è‚É‚È‚é
+			# ç‹¬ã‚Šã«ãªã‚‹
 		}else{
-			# ‚¨‚Ü‚©‚¹
+			# ãŠã¾ã‹ã›
 		}
 	}
 }
@@ -540,7 +541,7 @@ sub Equipment{
 
 
 #----------------------------------------
-# “Ë‘R€ˆ—
+# çªç„¶æ­»å‡¦ç†
 #----------------------------------------
 sub SuddenDeath {
 	my ($sow, $vil, $logfile, $score ) = @_;
@@ -550,17 +551,17 @@ sub SuddenDeath {
 
 	my $livepllist = $vil->getlivepllist();
 	foreach $plsingle (@$livepllist) {
-		next if ($plsingle->{'saidcount'} > 0); # ”­Œ¾‚µ‚Ä‚¢‚ê‚ÎœŠO
+		next if ($plsingle->{'saidcount'} > 0); # ç™ºè¨€ã—ã¦ã„ã‚Œã°é™¤å¤–
 		&nowdead($sow, $vil, 0, $plsingle, 'suddendead',$logfile, $score, 0);
 
-		# “Ë‘R€ƒƒbƒZ[ƒWo—Í
+		# çªç„¶æ­»ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å‡ºåŠ›
 		my $mes = $plsingle->getText('SUDDENDEATH');
 		$logfile->writeinfo('', $sow->{'MESTYPE_INFONOM'}, $mes);
 	}
 }
 
 #----------------------------------------
-# ˆŒYˆ—
+# å‡¦åˆ‘å‡¦ç†
 #----------------------------------------
 sub Execution {
 	my ($sow, $vil, $logfile, $score, $no) = @_;
@@ -572,21 +573,21 @@ sub Execution {
 	my $gift = 'gift'.$no;
 	my $entrust = 'temp_entrust'.$no;
 
-	# “Š•[”‚Ì‰Šú‰»
+	# æŠ•ç¥¨æ•°ã®åˆæœŸåŒ–
 	my @votes;
 	my $i;
 	for ($i = 0; $i < @$allpllist; $i++) {
 		$votes[$i] = 0;
 	}
 
-	# “Ë‘R€—Dæ“Š•[ˆ—i–¢À‘•j
+	# çªç„¶æ­»å„ªå…ˆæŠ•ç¥¨å‡¦ç†ï¼ˆæœªå®Ÿè£…ï¼‰
 
-	# “Š•[w¦‚ğ•¡»B“à•”g—p
+	# æŠ•ç¥¨æŒ‡ç¤ºã‚’è¤‡è£½ã€‚å†…éƒ¨ä½¿ç”¨
 	foreach $plsingle (@$allpllist) {
 		$plsingle->{$entrust} = $plsingle->{'entrust'};
 		next unless ( $plsingle->isvoter() );
 
-		# ƒ‰ƒ“ƒ_ƒ€ˆÏ”C
+		# ãƒ©ãƒ³ãƒ€ãƒ å§”ä»»
 		$plsingle->{'randomentrust'} = '';
 		if (($plsingle->{$entrust} > 0) && ($plsingle->{'entrust1'} == $sow->{'TARGETID_RANDOM'})) {
 			$plsingle->{$vote} = $livepllist->[rand(@$livepllist - 1)]->{'pno'};
@@ -595,7 +596,7 @@ sub Execution {
 		}
 	}
 
-	# ˆÏ”C“Š•[ˆ—
+	# å§”ä»»æŠ•ç¥¨å‡¦ç†
 	my $curpl;
 	foreach $curpl (@$allpllist) {
 		next unless ( $curpl->isvoter() );
@@ -603,20 +604,20 @@ sub Execution {
 		my $srcpl = $curpl;
 		$i = 0;
 
-		# ˆÏ”Cw¦‚Ìl‚½‚¿‚©‚çˆÏ”Cæ‚ğ“Á’èB
-		# ‚Ü‚½Aƒ‰ƒ“ƒ_ƒ€“Š•[‚Ìl‚ğØ‚è•ª‚¯B
+		# å§”ä»»æŒ‡ç¤ºã®äººãŸã¡ã‹ã‚‰å§”ä»»å…ˆã‚’ç‰¹å®šã€‚
+		# ã¾ãŸã€ãƒ©ãƒ³ãƒ€ãƒ æŠ•ç¥¨ã®äººã‚’åˆ‡ã‚Šåˆ†ã‘ã€‚
 		while ($srcpl->{$entrust} > 0) {
-			# “Š•[‚ğ‘¼l‚ÉˆÏ”C‚µ‚Ä‚¢‚él‚ğ”z—ñ‚É’Ç‰Á
+			# æŠ•ç¥¨ã‚’ä»–äººã«å§”ä»»ã—ã¦ã„ã‚‹äººã‚’é…åˆ—ã«è¿½åŠ 
 			push(@entrusts, $srcpl);
 			$i++;
 			$srcpl = $vil->getplbypno($srcpl->{'entrust1'});
 			if (($i > $votablepl) || ($srcpl->{'live'} ne 'live')) {
-				# ˆÏ”Cƒ‹[ƒv‚É“ü‚Á‚Ä‚¢‚é
-				# i–”‚ÍˆÏ”Cæ‚ª€Ò‚Ìj
+				# å§”ä»»ãƒ«ãƒ¼ãƒ—ã«å…¥ã£ã¦ã„ã‚‹æ™‚
+				# ï¼ˆåˆã¯å§”ä»»å…ˆãŒæ­»è€…ã®æ™‚ï¼‰
 				foreach $plentrust (@entrusts) {
 					next if ($plentrust->{$entrust} <= 0);
 
-					# “Š•[æ‚ğƒ‰ƒ“ƒ_ƒ€‚Éİ’è
+					# æŠ•ç¥¨å…ˆã‚’ãƒ©ãƒ³ãƒ€ãƒ ã«è¨­å®š
 					my $entrusttext = $plentrust->getTextByID('ANNOUNCE_ENTRUST',1);
 					my $targetpl = $vil->getplbypno($plentrust->{$vote});
 					my $targetname = $targetpl->getchrname();
@@ -632,22 +633,22 @@ sub Execution {
 		}
 
 		if (@entrusts > 0) {
-			# ˆÏ”C‚µ‚Ä‚¢‚é
+			# å§”ä»»ã—ã¦ã„ã‚‹æ™‚
 			my $entrust;
 			my $targetname = $srcpl->getchrname();
 			for ($i = 0; $i < @entrusts; $i++) {
-				#	ˆÏ”Cæ‚ğQÆ‚µ‚ÄA“Š•[‚Ö•ÏXB
+				#	å§”ä»»å…ˆã‚’å‚ç…§ã—ã¦ã€æŠ•ç¥¨ã¸å¤‰æ›´ã€‚
 				$entrusts[$i]->{$vote} = $srcpl->{$vote};
 				$entrusts[$i]->{$entrust} = 0;
 
 				my $randomvote = 0;
 				if (($entrusts[$i]->{$vote} == $entrusts[$i]->{'pno'}) || ($srcpl->{$entrust} < 0)) {
-					# ƒ‰ƒ“ƒ_ƒ€“Š•[
+					# ãƒ©ãƒ³ãƒ€ãƒ æŠ•ç¥¨
 					$randomvote = 1;
 					$entrusts[$i]->{$vote} = -1;
 				}
 
-				# ˆÏ”CƒƒbƒZ[ƒW•\¦
+				# å§”ä»»ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸è¡¨ç¤º
 				my $entrusttext = $entrusts[$i]->getTextByID('ANNOUNCE_ENTRUST',$randomvote);
 				$entrusttext =~ s/_TARGET_/$targetname/g;
 				$entrusttext =~ s/_RANDOM_/$entrusts[$i]->{'randomentrust'}/g;
@@ -658,7 +659,7 @@ sub Execution {
 
 	}
 
-	# “Š•[Œ‹‰ÊWŒv••\¦
+	# æŠ•ç¥¨çµæœé›†è¨ˆï¼†è¡¨ç¤º
 	my $votestext;
 	foreach $plvote (@$allpllist) {
 		if ( $plvote->isvoter() ){
@@ -672,7 +673,7 @@ sub Execution {
 			}
 			$votes[$plvote->{$vote}]++;
 
-			# Še“Š•[Œ‹‰Ê
+			# å„æŠ•ç¥¨çµæœ
 			my $votedpl   = $vil->getplbypno($plvote->{$vote});
 			my $votedname = $votedpl->getlongchrname();
 
@@ -686,7 +687,7 @@ sub Execution {
 		}
 
 		next if ( $plvote->{'live'} ne 'live');
-		# Œˆ’èÒ‚Ì”\—Í‚Í“Š•[‚É”½‰fBƒ‰ƒ“ƒ_ƒ€‰ğŒˆ‚Í‚±‚Ìè‘O‚ÅÏ‚ñ‚Å‚¢‚éB‚Í‚¸B
+		# æ±ºå®šè€…ã®èƒ½åŠ›ã¯æŠ•ç¥¨ã«åæ˜ ã€‚ãƒ©ãƒ³ãƒ€ãƒ è§£æ±ºã¯ã“ã®æ‰‹å‰ã§æ¸ˆã‚“ã§ã„ã‚‹ã€‚ã¯ãšã€‚
 		if ( $plvote->iscangift($sow->{'GIFTID_DECIDE'}) ){
 			next if ($plvote->{$gift} < 0);
 			$votes[$plvote->{$gift}]++;
@@ -705,7 +706,7 @@ sub Execution {
 
 	}
 
-	# –³‹L–¼“Š•[‚Ì“Š•[Œ‹‰Ê•\¦
+	# ç„¡è¨˜åæŠ•ç¥¨ã®æŠ•ç¥¨çµæœè¡¨ç¤º
 	for ($i = 0; $i < @votes; $i++) {
 		next if ($votes[$i] == 0);
 
@@ -716,77 +717,77 @@ sub Execution {
 		$votestext = $votestext . "$votetext<br>" if ($vil->{'votetype'} ne 'sign');
 	}
 
-	# Œ‹‰Ê‚ÍŒ©‚é‚ªA“Š•[‚ğ–³‹‚·‚éi‚©‚à‚µ‚ê‚È‚¢jB
+	# çµæœã¯è¦‹ã‚‹ãŒã€æŠ•ç¥¨ã‚’ç„¡è¦–ã™ã‚‹ï¼ˆã‹ã‚‚ã—ã‚Œãªã„ï¼‰ã€‚
 	if (($vil->{'event'} == $sow->{'EVENTID_COINTOSS'})&&(1 == int(rand(2)))) {
 		my $chrname  = $vil->getTextByID('EVENTNAME',$sow->{'EVENTID_COINTOSS'});
 		my $votetext = $vil->getText('CANCELTARGET');
 
 		$votetext    =~ s/_NAME_/$chrname/g;
-		$votetext    =~ s/_ABILITY_/ˆŒY/g;
-		# “Š•[Œ‹‰Ê‚Ìo—Í
+		$votetext    =~ s/_ABILITY_/å‡¦åˆ‘/g;
+		# æŠ•ç¥¨çµæœã®å‡ºåŠ›
 		$votestext = $votestext . "<br>$votetext<br>";
 		$logfile->writeinfo('', $sow->{'MESTYPE_INFONOM'}, $votestext);
 		return;
 	}
 
-	# Å‘å“¾•[”‚Ìƒ`ƒFƒbƒN
+	# æœ€å¤§å¾—ç¥¨æ•°ã®ãƒã‚§ãƒƒã‚¯
 	my $maxvote = 0;
 	for ($i = 0; $i < @votes; $i++) {
 		$maxvote = $votes[$i] if ($maxvote < $votes[$i]);
 	}
 
-	return if ($maxvote == 0); # ˆŒYŒó•â‚ª‚¢‚È‚¢i‘Sˆõ“Ë‘R€Hj
+	return if ($maxvote == 0); # å‡¦åˆ‘å€™è£œãŒã„ãªã„ï¼ˆå…¨å“¡çªç„¶æ­»ï¼Ÿï¼‰
 
-	# Å‘å“¾•[Ò‚Ìæ“¾
+	# æœ€å¤§å¾—ç¥¨è€…ã®å–å¾—
 	my @lastvote;
 	for ($i = 0; $i < @votes; $i++) {
 		push(@lastvote,      $i) if  ($votes[$i] == $maxvote);
 	}
 
-	return if (@lastvote == 0); # ˆŒYŒó•â‚ª‚¢‚È‚¢i‘Sˆõ“Ë‘R€Hj
+	return if (@lastvote == 0); # å‡¦åˆ‘å€™è£œãŒã„ãªã„ï¼ˆå…¨å“¡çªç„¶æ­»ï¼Ÿï¼‰
 
-	# ƒXƒP[ƒvƒS[ƒgŒvã
+	# ã‚¹ã‚±ãƒ¼ãƒ—ã‚´ãƒ¼ãƒˆè¨ˆä¸Š
 	my @scapegoat;
 	foreach $pl (@$livepllist) {
 		push(@scapegoat, $pl) if ( $pl->isbindrole($sow->{'ROLEID_SCAPEGOAT'}) );
 	}
 
-	# ˆŒY‘ÎÛ‚ÌŒˆ’è
+	# å‡¦åˆ‘å¯¾è±¡ã®æ±ºå®š
 	my $executepl;
 	my $executetype = 'execute';
 	if (@lastvote > 1){
 		if (@scapegoat > 0){
-			# ƒXƒP[ƒvƒS[ƒg‚ª‚¢‚é‚Ì‚ÅAƒXƒP[ƒvƒS[ƒgˆŒYB
-			# ƒXƒP[ƒvƒS[ƒg‚ª‹^‚¤Ò‚ª‚¢‚é‚È‚çAƒtƒ‰ƒO‚ğ—§‚Ä‚éB
+			# ã‚¹ã‚±ãƒ¼ãƒ—ã‚´ãƒ¼ãƒˆãŒã„ã‚‹ã®ã§ã€ã‚¹ã‚±ãƒ¼ãƒ—ã‚´ãƒ¼ãƒˆå‡¦åˆ‘ã€‚
+			# ã‚¹ã‚±ãƒ¼ãƒ—ã‚´ãƒ¼ãƒˆãŒç–‘ã†è€…ãŒã„ã‚‹ãªã‚‰ã€ãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹ã€‚
 			$executepl   = $scapegoat[int(rand(@scapegoat))];
 			$executetype = 'scapegoat' if (($executepl->isEnableState('MASKSTATE_ABI_ROLE'))&&( -1 < $executepl->{'role1'}));
 		} else {
-			# ƒ^ƒuƒ‰‚Ìê‡Aƒ‰ƒ“ƒ_ƒ€ˆŒY
-			# u[‚¢–¶‚Ì–év‚Ìê‡Aƒ‰ƒ“ƒ_ƒ€ˆŒY
-			# ƒ~ƒ‰[ƒYƒzƒƒE‚Ìê‡Aæ‚è‚â‚ßB
+			# ã‚¿ãƒ–ãƒ©ã®å ´åˆã€ãƒ©ãƒ³ãƒ€ãƒ å‡¦åˆ‘
+			# ã€Œæ·±ã„éœ§ã®å¤œã€ã®å ´åˆã€ãƒ©ãƒ³ãƒ€ãƒ å‡¦åˆ‘
+			# ãƒŸãƒ©ãƒ¼ã‚ºãƒ›ãƒ­ã‚¦ã®å ´åˆã€å–ã‚Šã‚„ã‚ã€‚
 			$executepl   = $vil->getplbypno( $lastvote[int(rand(@lastvote))] );
 			$executetype = 'abort' if ($vil->{'game'} eq 'MILLERHOLLOW');
 			$executetype = 'abort' if ($vil->{'game'} eq 'LIVE_MILLERHOLLOW');
 		}
 	} else {
-		# ˆŒYŒó•â‚ª“Æ‚è‚È‚Ì‚ÅAlX‚ÆˆŒYB
+		# å‡¦åˆ‘å€™è£œãŒç‹¬ã‚Šãªã®ã§ã€ç²›ã€…ã¨å‡¦åˆ‘ã€‚
 		$executepl = $vil->getplbypno($lastvote[0]);
 	}
 
 	my $chrname;
 	my $votetext;
 	if ($executetype eq 'abort') {
-		# ˆŒY‚ğæ‚è‚â‚ß‚éiƒ~ƒ‰[ƒYƒzƒƒEj
-		$chrname  = scalar(@lastvote).'–¼';
+		# å‡¦åˆ‘ã‚’å–ã‚Šã‚„ã‚ã‚‹ï¼ˆãƒŸãƒ©ãƒ¼ã‚ºãƒ›ãƒ­ã‚¦ï¼‰
+		$chrname  = scalar(@lastvote).'å';
 		$votetext = $vil->getTextByID('ANNOUNCE_VOTE',3);
 	} elsif ($executepl->{'live'} eq 'live') {
-		# ˆŒY‚ğÀ{‚·‚éB
+		# å‡¦åˆ‘ã‚’å®Ÿæ–½ã™ã‚‹ã€‚
 		$chrname = $executepl->getchrname();
 		$score->addresult($executetype,$chrname );
 		if ($vil->{'event'} == $sow->{'EVENTID_ESCAPE'}){
-			# ˆŒY‚Å‚Í‚È‚­A“¦‘–B
+			# å‡¦åˆ‘ã§ã¯ãªãã€é€ƒèµ°ã€‚
 		} elsif ( $executepl->iscanrole($sow->{'ROLEID_PRINCE'}) ){
-			# ‰¤q—l‚Í‹°‚ê‘½‚­‚àˆê“x‚¾‚¯ˆŒY‚³‚ê‚È‚¢B
+			# ç‹å­æ§˜ã¯æã‚Œå¤šãã‚‚ä¸€åº¦ã ã‘å‡¦åˆ‘ã•ã‚Œãªã„ã€‚
 			my $scorehead = $vil->getTextByID('ROLENAME',$sow->{'ROLEID_PRINCE'});
 			$score->addresult($scorehead,$chrname );
 
@@ -794,7 +795,7 @@ sub Execution {
 			$executepl->{'delay_rolestate'} &= $sow->{'ROLESTATE_ABI_NOROLE'};
 		} else {
 			if ($executetype eq 'scapegoat'){
-				# Ÿ‚ÌƒXƒP[ƒvƒS[ƒg‚ğw‚³‚·
+				# æ¬¡ã®ã‚¹ã‚±ãƒ¼ãƒ—ã‚´ãƒ¼ãƒˆã‚’æŒ‡ã•ã™
 				$votetext = $vil->getTextByID('ANNOUNCE_VOTE',4);
 				my $targetpl = $vil->getplbypno($executepl->{'role1'});
 				my $targetname = $targetpl->getchrname();
@@ -812,36 +813,36 @@ sub Execution {
 
 	$votetext  =~ s/_NAME_/$chrname/g;
 	$votestext .= "<br>$votetext";
-	# “Š•[Œ‹‰Ê‚Ìo—Í
+	# æŠ•ç¥¨çµæœã®å‡ºåŠ›
 	$logfile->writeinfo('', $sow->{'MESTYPE_INFONOM'}, $votestext);
 }
 
 sub ShootLink {
 	my ($sow, $vil, $logfile, $score, $plsingle, $roleid ) = @_;
 
-	# ˆ«‹Y—d¸i•K‚¸‘Å‚Âj
+	# æ‚ªæˆ¯å¦–ç²¾ï¼ˆå¿…ãšæ‰“ã¤ï¼‰
 	if ( $plsingle->{'role'} == $roleid ){
-		return if (($plsingle->{'role1'} < 0)&&($plsingle->{'role2'} < 0)); # ‚¨‚Ü‚©‚¹‚ÍœŠO
-		# ãJ‚Ì’Ç‰Á
-		# ‰A–d11 ãJ‚Ì–¼‘O‚ª‚È‚¢i$chrname–¢éŒ¾j
+		return if (($plsingle->{'role1'} < 0)&&($plsingle->{'role2'} < 0)); # ãŠã¾ã‹ã›ã¯é™¤å¤–
+		# çµ†ã®è¿½åŠ 
+		# é™°è¬€11 çµ†ã®åå‰ãŒãªã„ï¼ˆ$chrnameæœªå®£è¨€ï¼‰
 		my $targetpl  = $vil->getplbypno($plsingle->{'role1'});
 		my $target2pl = $vil->getplbypno($plsingle->{'role2'});
 		my $message   = '';
 
 		if ($targetpl->{'live'} ne 'live') {
-			# İ’è‘ÎÛ‚P‚ª“Ë‘R€‚µ‚Ä‚¢‚é
+			# è¨­å®šå¯¾è±¡ï¼‘ãŒçªç„¶æ­»ã—ã¦ã„ã‚‹æ™‚
 			my $srctargetpno;
 			$srctargetpno = $plsingle->{'role2'} if (($plsingle->{'role2'} >= 0) && ($target2pl->{'live'} eq 'live'));
 			$targetpl  = $plsingle->setRandomTarget('role',1, 'ABI_ROLE',$logfile, $srctargetpno);
 		}
 
 		if ($target2pl->{'live'} ne 'live') {
-			# İ’è‘ÎÛ‚Q‚ª“Ë‘R€‚µ‚Ä‚¢‚é
+			# è¨­å®šå¯¾è±¡ï¼’ãŒçªç„¶æ­»ã—ã¦ã„ã‚‹æ™‚
 			$target2pl = $plsingle->setRandomTarget('role',2, 'ABI_ROLE',$logfile, $plsingle->{'role1'});
 		}
 
 		if (($plsingle->{'role1'} < 0) || ($plsingle->{'role2'} < 0)) {
-			# ‘ÎÛŒó•â‚ª‘¶İ‚µ‚È‚¢
+			# å¯¾è±¡å€™è£œãŒå­˜åœ¨ã—ãªã„
 			my $ability = $vil->getTextByID('ABI_ROLE',$plsingle->{'role'});
 			my $canceltarget = $plsingle->getText('CANCELTARGET');
 			$canceltarget =~ s/_ABILITY_/$ability/g;
@@ -898,44 +899,44 @@ sub Twilight {
 	foreach $plsingle (@$livepllist) {
 		next if ($plsingle->issensible());
 		if     ($plsingle->{'role1'} == $plsingle->{'pno'}){
-			# “Æ‚è‚É‚È‚é
+			# ç‹¬ã‚Šã«ãªã‚‹
 			my $execute = $plsingle->getText('EXECUTEALONE');
 			$logfile->writeinfo($plsingle->{'uid'}, $sow->{'MESTYPE_INFOSP'}, $execute);
 		} elsif($plsingle->isdo('role1')) {
-			# ’N‚©‚Ì‚Æ‚±‚ë‚ÖB
+			# èª°ã‹ã®ã¨ã“ã‚ã¸ã€‚
 			my $targetpl = $vil->getplbypno($plsingle->{'role1'});
 			my $targetname = $targetpl->getchrname();
 			my $execute = $plsingle->getText('EXECUTEGOTO');
 			$execute =~ s/_TARGET_/$targetname/g;
 			$logfile->writeinfo($plsingle->{'uid'}, $sow->{'MESTYPE_INFOSP'}, $execute);
 		} else {
-			# ‚¨‚Ü‚©‚¹
+			# ãŠã¾ã‹ã›
 		}
 	}
 
-	# “‘¯‚Í‚ ‚Ü‚èD‚É•Ïg‚·‚é‚½‚ßA‰½‚æ‚è‚àè‘O‚Éˆµ‚¤B
+	# ç›—è³Šã¯ã‚ã¾ã‚Šæœ­ã«å¤‰èº«ã™ã‚‹ãŸã‚ã€ä½•ã‚ˆã‚Šã‚‚æ‰‹å‰ã«æ‰±ã†ã€‚
 	foreach $plsingle (@$livepllist) {
 		my $chrname  = $plsingle->getchrname();
 		my $targetpl = $vil->getplbypno($plsingle->{'role1'});
 
-		# “‘¯‚Ì•Ïgi•K‚¸•Ïg‚·‚éj
+		# ç›—è³Šã®å¤‰èº«ï¼ˆå¿…ãšå¤‰èº«ã™ã‚‹ï¼‰
 		if ($plsingle->{'role'} == $sow->{'ROLEID_ROBBER'}){
 			my @rolediscard = split('/', $vil->{'rolediscard'});
 			do {
 				my $choice = splice(@rolediscard, int(rand(@rolediscard)), 1);
-				# “‘¯‚ª“‘¯‚ğˆø‚­ê‡A‚à‚¤ˆê“xi“‘¯‚Í—]‚ç‚È‚¢‚Ì‚ÅA‚ ‚è‚¦‚È‚¢j
+				# ç›—è³ŠãŒç›—è³Šã‚’å¼•ãå ´åˆã€ã‚‚ã†ä¸€åº¦ï¼ˆç›—è³Šã¯ä½™ã‚‰ãªã„ã®ã§ã€ã‚ã‚Šãˆãªã„ï¼‰
 				next if ($choice == $sow->{'ROLEID_ROBBER'});
 				$plsingle->{'role'} = $choice;
-				# ‘I‘ğ‚É‚æ‚Á‚ÄŸ•‰‚ªI‚í‚Á‚Ä‚µ‚Ü‚¢AƒJ[ƒh‚ªc‚Á‚Ä‚¢‚é‚È‚çˆø‚«‚È‚¨‚·B
+				# é¸æŠã«ã‚ˆã£ã¦å‹è² ãŒçµ‚ã‚ã£ã¦ã—ã¾ã„ã€ã‚«ãƒ¼ãƒ‰ãŒæ®‹ã£ã¦ã„ã‚‹ãªã‚‰å¼•ããªãŠã™ã€‚
 			} while ((0 < scalar(@rolediscard))&&(0 < &WinnerCheckGM($sow,$vil)));
 			@rolediscard = split('/', $vil->{'rolediscard'});
-			# ÀÛ‚É‘I‚ñ‚¾ƒJ[ƒh‚ğˆê–‡”²‚­B
+			# å®Ÿéš›ã«é¸ã‚“ã ã‚«ãƒ¼ãƒ‰ã‚’ä¸€æšæŠœãã€‚
 			my $count;
 			for ($count = scalar(@rolediscard)-1; ( $count >= 0 )&&($plsingle->{'role'} != $rolediscard[$count] ); $count--){}
 			splice(@rolediscard, $count, 1);
 			$vil->{'rolediscard'} = join('/', @rolediscard );
 
-			# ƒ‰ƒ“ƒ_ƒ€‚Å”\—Ísg
+			# ãƒ©ãƒ³ãƒ€ãƒ ã§èƒ½åŠ›è¡Œä½¿
 			$plsingle->setRandomTarget('role',1, 'ABI_ROLE',$logfile, -1);
 			$plsingle->setRandomTarget('role',2, 'ABI_ROLE',$logfile, $plsingle->{'role1'});
 			$plsingle->setfriends();
@@ -946,8 +947,8 @@ sub Twilight {
 		}
 	}
 
-	# i[‚¢–¶j‘ºl“¯m‚ª‚¨Œİ‚¢‚ÉŒü‚©‚¤‚ÆAŒ‹Ğ‚ğŒ‹‚ÔB
-	# ‚¢‚Á‚½‚ñƒ{ƒc‚É‚·‚éB
+	# ï¼ˆæ·±ã„éœ§ï¼‰æ‘äººåŒå£«ãŒãŠäº’ã„ã«å‘ã‹ã†ã¨ã€çµç¤¾ã‚’çµã¶ã€‚
+	# ã„ã£ãŸã‚“ãƒœãƒ„ã«ã™ã‚‹ã€‚
 	if ($vil->{'game'} eq '--MISTERY--'){
 		foreach $pl1 (@$livepllist) {
 			next if ($pl1->{'role1'} < 1);
@@ -958,7 +959,7 @@ sub Twilight {
 			next if ($pl1->{'role'} != $sow->{'ROLEID_VILLAGER'});
 			next if ($pl2->{'role'} != $sow->{'ROLEID_VILLAGER'});
 
-			# Œ‹Ğ‰»”­“®I
+			# çµç¤¾åŒ–ç™ºå‹•ï¼
 			$pl1->{'role'} = $sow->{'ROLEID_FM'};
 			$pl2->{'role'} = $sow->{'ROLEID_FM'};
 			$pl1->setfriends();
@@ -966,42 +967,42 @@ sub Twilight {
 		}
 	}
 
-	# “ü–å‚É‚Í˜A½‚ª‚ ‚é‚½‚ßA“‘¯‚æ‚èŒã‚Éˆµ‚¤B
+	# å…¥é–€ã«ã¯é€£é–ãŒã‚ã‚‹ãŸã‚ã€ç›—è³Šã‚ˆã‚Šå¾Œã«æ‰±ã†ã€‚
 	foreach $plsingle (@$livepllist) {
 		my $targetpl = $vil->getplbypno($plsingle->{'role1'});
 
-		# “ü–åi•K‚¸“ü–å‚·‚éjB
+		# å…¥é–€ï¼ˆå¿…ãšå…¥é–€ã™ã‚‹ï¼‰ã€‚
 		if ($plsingle->{'role'} == $sow->{'ROLEID_LOVER'}){
 			$targetpl->addbond($plsingle->{'pno'});
 			$plsingle->addbond($plsingle->{'role1'});
 			my $targetname = $targetpl->getchrname();
-			# ãJ‚ğŒ‹‚ñ‚¾•\¦
+			# çµ†ã‚’çµã‚“ã è¡¨ç¤º
 			my $result = $plsingle->getText('EXECUTELOVER');
 			$result =~ s/_TARGET_/$targetname/g;
 			$logfile->writeinfo($plsingle->{'uid'}, $sow->{'MESTYPE_INFOSP'}, $result);
-			# “ü–å
+			# å…¥é–€
 			$result = $vil->getText('RESULT_LOVER');
 			$result =~ s/_TARGET_/$targetname/g;
 			$plsingle->addhistory($result);
 
 			$result = $plsingle->getText('RESULT_LOVEE');
 			$targetpl->addhistory($result);
-			# •Ïg‚Ì‰ğŒˆB’íq‚ª’íq‚ğw‚µ‚Ä‚¢‚éê‡A‚»‚Ìæ‚ğ’H‚éB
+			# å¤‰èº«ã®è§£æ±ºã€‚å¼Ÿå­ãŒå¼Ÿå­ã‚’æŒ‡ã—ã¦ã„ã‚‹å ´åˆã€ãã®å…ˆã‚’è¾¿ã‚‹ã€‚
 			my $loopcount = 0;
 			do {
 				$plsingle->{'role'} = $targetpl->{'role'};
 
 				$loopcount++;
 				if ($loopcount < @$livepllist) {
-					# ’Êí‚ÍA‘I‘ğæ‚Ì‘I‘ğæ‚É’–Ú
+					# é€šå¸¸ã¯ã€é¸æŠå…ˆã®é¸æŠå…ˆã«æ³¨ç›®
 					$targetpl = $vil->getplbypno($targetpl->{'role1'});
 				} else {
-					# ƒ‹[ƒv‚É“ü‚Á‚Ä‚é‚Íƒ‰ƒ“ƒ_ƒ€‚Éİ’è
+					# ãƒ«ãƒ¼ãƒ—ã«å…¥ã£ã¦ã‚‹æ™‚ã¯ãƒ©ãƒ³ãƒ€ãƒ ã«è¨­å®š
 					$targetpl = $livepllist->[int(rand(@$livepllist))];
 				}
 			} while ($plsingle->{'role'} == $sow->{'ROLEID_LOVER'});
 
-			# ƒ‰ƒ“ƒ_ƒ€‚Å”\—Ísg
+			# ãƒ©ãƒ³ãƒ€ãƒ ã§èƒ½åŠ›è¡Œä½¿
 			$plsingle->setRandomTarget('role',1, 'ABI_ROLE',$logfile, -1);
 			$plsingle->setRandomTarget('role',2, 'ABI_ROLE',$logfile, $plsingle->{'role1'});
 			$plsingle->setfriends();
@@ -1013,26 +1014,26 @@ sub Twilight {
 	foreach $plsingle (@$livepllist) {
 		my $targetpl = $vil->getplbypno($plsingle->{'role1'});
 
-		# ­—‚Ì–é—V‚Ñ
+		# å°‘å¥³ã®å¤œéŠã³
 		if ( $plsingle->iscanrole($sow->{'ROLEID_GIRL'}) ){
-			next if ( $plsingle->{'role1'} != $plsingle->{'pno'} ); # “Æ‚è‚É‚È‚ç‚È‚¢‚Æ‚¾‚ß
+			next if ( $plsingle->{'role1'} != $plsingle->{'pno'} ); # ç‹¬ã‚Šã«ãªã‚‰ãªã„ã¨ã ã‚
 
 			&addcheckedday($plsingle, 'overhear', $vil->{'turn'} - 1 );
-			# –é—V‚Ñ•\¦
+			# å¤œéŠã³è¡¨ç¤º
 			my $result = $plsingle->getText('EXECUTEGIRL');
 			$logfile->writeinfo($plsingle->{'uid'}, $sow->{'MESTYPE_INFOSP'}, $result);
 			my $scorehead = $vil->getTextByID('ABI_ROLE',$sow->{'ROLEID_GIRL'});
 			$score->addresult($scorehead,$chrname );
 		}
 
-		# è•‰‚¢‚ÌlŒ¢‚Í€‚ÊB
+		# æ‰‹è² ã„ã®äººçŠ¬ã¯æ­»ã¬ã€‚
 		if ( $plsingle->ishurtrole($sow->{'ROLEID_WEREDOG'}) ) {
 			&dead($sow, $vil, 0, $plsingle,'victim', $logfile, $score, 0);
 		}
 
-		# “J‚«
+		# ç¬›å¹ã
 		if ( $plsingle->iscanrole($sow->{'ROLEID_GURU'}) ){
-			next if (($plsingle->{'role1'} < 0)&&($plsingle->{'role2'} < 0)); # ‚¨‚Ü‚©‚¹‚ÍœŠO
+			next if (($plsingle->{'role1'} < 0)&&($plsingle->{'role2'} < 0)); # ãŠã¾ã‹ã›ã¯é™¤å¤–
 			my $targetname = '';
 
 			if ( -1 < $plsingle->{'role1'}){
@@ -1042,7 +1043,7 @@ sub Twilight {
 			if ( -1 < $plsingle->{'role2'}) {
 				my $target2pl = $vil->getplbypno($plsingle->{'role2'});
 				my $target2name = '<b>'.$target2pl->getchrname().'</b>';
-				$targetname .= '‚Æ' if ($targetname ne '');
+				$targetname .= 'ã¨' if ($targetname ne '');
 				$targetname .= $target2name;
 				$target2pl->{'sheep'} = 'pixi';
 			}
@@ -1060,33 +1061,33 @@ sub Twilight {
 		}
 	}
 
-	# ˆ«‹Y—d¸i•K‚¸‘Å‚Âj
+	# æ‚ªæˆ¯å¦–ç²¾ï¼ˆå¿…ãšæ‰“ã¤ï¼‰
 	foreach $plsingle (@$livepllist) {
 		&ShootLink($sow, $vil, $logfile, $score, $plsingle, $sow->{'ROLEID_TRICKSTER'} );
 	}
-	# ×‹Cˆ«–‚i•K‚¸‘Å‚Âj
+	# é‚ªæ°—æ‚ªé­”ï¼ˆå¿…ãšæ‰“ã¤ï¼‰
 	foreach $plsingle (@$livepllist) {
 		&ShootLink($sow, $vil, $logfile, $score, $plsingle, $sow->{'ROLEID_HATEDEVIL'} );
 	}
-	# —öˆ¤“Vgi•K‚¸‘Å‚Âj
+	# æ‹æ„›å¤©ä½¿ï¼ˆå¿…ãšæ‰“ã¤ï¼‰
 	foreach $plsingle (@$livepllist) {
 		&ShootLink($sow, $vil, $logfile, $score, $plsingle, $sow->{'ROLEID_LOVEANGEL'} );
 	}
-	# ˆ«—i•K‚¸‘Å‚Âj
+	# æ‚ªå¥³ï¼ˆå¿…ãšæ‰“ã¤ï¼‰
 	foreach $plsingle (@$livepllist) {
 		&ShootLink($sow, $vil, $logfile, $score, $plsingle, $sow->{'ROLEID_BITCH'}     );
 	}
-	# •Ğ‘z‚¢
+	# ç‰‡æƒ³ã„
 	foreach $plsingle (@$livepllist) {
 		my $targetpl = $vil->getplbypno($plsingle->{'role1'});
 
 		if ($plsingle->{'role'} == $sow->{'ROLEID_PASSION'}){
-			next if (1 != $plsingle->isdo('role1')); # ‚¨‚Ü‚©‚¹‚ÍœŠO
+			next if (1 != $plsingle->isdo('role1')); # ãŠã¾ã‹ã›ã¯é™¤å¤–
 			$targetpl->addbond($plsingle->{'pno'});
 			$plsingle->{'love'} = 'love';
 
 			my $targetname = $targetpl->getchrname();
-			# ãJ‚ğŒ‹‚ñ‚¾•\¦
+			# çµ†ã‚’çµã‚“ã è¡¨ç¤º
 			my $result = $plsingle->getText('EXECUTELOVER');
 			$result =~ s/_TARGET_/$targetname/g;
 			$logfile->writeinfo($plsingle->{'uid'}, $sow->{'MESTYPE_INFOSP'}, $result);
@@ -1106,10 +1107,10 @@ sub ThrowGift {
 	my $livepllist = $vil->getlivepllist();
 	my $pllist     = $vil->getpllist();
 	foreach $plsingle (@$livepllist) {
-		next if (1 != $plsingle->isdo('gift1')); # ‚¨‚Ü‚©‚¹‚ÍœŠO
+		next if (1 != $plsingle->isdo('gift1')); # ãŠã¾ã‹ã›ã¯é™¤å¤–
 		my $targetpl = $vil->getplbypno($plsingle->{'gift1'});
 
-		# ‘¡‚è•¨‚ğ‚È‚°‚éi•K‚¸j
+		# è´ˆã‚Šç‰©ã‚’ãªã’ã‚‹ï¼ˆå¿…ãšï¼‰
 		my $throw_gift = 0;
 		$throw_gift = $plsingle->{'gift'} if ($plsingle->{'gift'} == $sow->{'GIFTID_SHIELD'});
 		$throw_gift = $plsingle->{'gift'} if ($plsingle->{'gift'} == $sow->{'GIFTID_GLASS' });
@@ -1129,8 +1130,8 @@ sub ThrowGift {
 			my $scorehead = $vil->getTextByID('ABI_GIFT',$throw_gift);
 			$score->addresult($scorehead,$targetname );
 
-			# ”j‰ó‚·‚é‚©‚Ç‚¤‚©‚ğ–â‚¤‘O‚Éˆ—‚µAˆ—‡ƒƒ^‚ğ”r‚·‚éB
-			# –‚‹¾‚ğ“n‚·‚Æ‚«‚ÍAè‚¢Œ‹‰Ê‚ğ“¾‚éB
+			# ç ´å£Šã™ã‚‹ã‹ã©ã†ã‹ã‚’å•ã†å‰ã«å‡¦ç†ã—ã€å‡¦ç†é †ãƒ¡ã‚¿ã‚’æ’ã™ã‚‹ã€‚
+			# é­”é¡ã‚’æ¸¡ã™ã¨ãã¯ã€å ã„çµæœã‚’å¾—ã‚‹ã€‚
 			if ($throw_gift == $sow->{'GIFTID_GLASS' } ){
 				my $seerresultrole = GetResultSeer($sow, $vil, $score, $targetpl, $jammed);
 				&SeerEffect($sow, $vil, $plsingle, $targetpl, $result.$seerresultrole, $logfile, $score, $jammed);
@@ -1138,7 +1139,7 @@ sub ThrowGift {
 				$plsingle->addhistory($result);
 			}
 
-			# ‘ÎÛ‚ª‘¡‚è•¨‚ğ•Û’†A¸‚Á‚½‚ ‚ÆA–³”\A‚Ìê‡‚Í‘¡‚è•¨‚ğ‰ó‚·B
+			# å¯¾è±¡ãŒè´ˆã‚Šç‰©ã‚’ä¿æŒä¸­ã€å¤±ã£ãŸã‚ã¨ã€ç„¡èƒ½ã€ã®å ´åˆã¯è´ˆã‚Šç‰©ã‚’å£Šã™ã€‚
 			my $target_gift = 0;
 			$target_gift = 1 if($targetpl->isDisableState('MASKSTATE_ABI_GIFT'));
 			$target_gift = $targetpl->{'gift'} if($targetpl->{'gift'} == $sow->{'GIFTID_SHIELD'});
@@ -1152,7 +1153,7 @@ sub ThrowGift {
 			$targetpl->{'gift_tmp'} = $throw_gift;
 		}
 	}
-	# Œõ‚Ì—Ö‚ğó‚¯æ‚é
+	# å…‰ã®è¼ªã‚’å—ã‘å–ã‚‹
 	foreach $plsingle (@$livepllist) {
 		$plsingle->{'gift'} = $sow->{'GIFTID_SHIELD'} if ($plsingle->{'gift_tmp'} == $sow->{'GIFTID_SHIELD'});
 		$plsingle->{'gift'} = $sow->{'GIFTID_GLASS' } if ($plsingle->{'gift_tmp'} == $sow->{'GIFTID_GLASS' });
@@ -1165,16 +1166,16 @@ sub SelectKill {
 
 	my $pllist = $vil->getpllist();
 	my $livepllist = $vil->getlivepllist();
-	my $targetpl; # PŒ‚‘ÎÛ
+	my $targetpl; # è¥²æ’ƒå¯¾è±¡
 
-	# “Š•[”‚Ì‰Šú‰»
+	# æŠ•ç¥¨æ•°ã®åˆæœŸåŒ–
 	my @votes;
 	my $i;
 	for ($i = 0; $i < @$pllist; $i++) {
 		$votes[$i] = 0;
 	}
 
-	# PŒ‚æWŒv PŒ‚ƒtƒH[ƒ€‚Ì”‚¾‚¯‚¨‚±‚È‚¤B
+	# è¥²æ’ƒå…ˆé›†è¨ˆ è¥²æ’ƒãƒ•ã‚©ãƒ¼ãƒ ã®æ•°ã ã‘ãŠã“ãªã†ã€‚
 	my @cmdlist = ('role','gift');
 	foreach $cmd (@cmdlist) {
 		foreach $plsingle (@$livepllist) {
@@ -1182,9 +1183,9 @@ sub SelectKill {
 			my $target = $cmd.$no;
 			$sow->{'debug'}->writeaplog($sow->{'APLOG_OTHERS'}, "KillTarget: $plsingle->{'uid'}($plsingle->{'pno'})=$plsingle->{$target}");
 
-			next unless ($plsingle->isdo($target)); # ‚¨‚Ü‚©‚¹‚ÍœŠO
+			next unless ($plsingle->isdo($target)); # ãŠã¾ã‹ã›ã¯é™¤å¤–
 			my $targetpl   = $vil->getplbypno($plsingle->{$target});
-			# ­—‚ÍAl˜T‚É‚Ğ‚Æ‚É‚ç‚İ‚³‚ê‚é‚¾‚¯‚Å€‚Ê
+			# å°‘å¥³ã¯ã€äººç‹¼ã«ã²ã¨ã«ã‚‰ã¿ã•ã‚Œã‚‹ã ã‘ã§æ­»ã¬
 			if (($targetpl->{'live'} eq 'live') && ($targetpl->isbindrole($sow->{'ROLEID_GIRL'})) ) {
 				if ($targetpl->{'role1'} != $sow->{'TARGETID_TRUST'}){
 					&dead($sow, $vil, $plsingle, $targetpl, 'feared', $logfile, $score, 0);
@@ -1195,7 +1196,7 @@ sub SelectKill {
 				}
 			}
 			$votes[$plsingle->{$target}] += 1;
-			# [‚¢–¶‚Ì–éi‚ÆAŒ‚Á‚Ï‚ç‚¢j‚ÍA‘_‚í‚ê‚é‚Æ•sR‚Èl‰e‚ğŒ©‚éB
+			# æ·±ã„éœ§ã®å¤œï¼ˆã¨ã€é…”ã£ã±ã‚‰ã„ï¼‰ã¯ã€ç‹™ã‚ã‚Œã‚‹ã¨ä¸å¯©ãªäººå½±ã‚’è¦‹ã‚‹ã€‚
 			if (! $targetpl->issensible()){
 				my $murdername = $plsingle->getchrname();
 				my $votetext = $vil->getText('RESULT_ENCOUNT');
@@ -1205,13 +1206,13 @@ sub SelectKill {
 		}
 	}
 
-	# Å‘å“¾•[”‚Ìƒ`ƒFƒbƒN
+	# æœ€å¤§å¾—ç¥¨æ•°ã®ãƒã‚§ãƒƒã‚¯
 	my $murderpl;
 	my $maxvote = 0;
 	for ($i = 0; $i < @votes; $i++) {
 		$maxvote = $votes[$i] if ($maxvote < $votes[$i]);
 
-		# –³‹L–¼“Š•[•—‚É“Š•[Œ‹‰ÊWŒv
+		# ç„¡è¨˜åæŠ•ç¥¨é¢¨ã«æŠ•ç¥¨çµæœé›†è¨ˆ
 		next if ($votes[$i] == 0);
 		next if (($vil->{'game'} ne 'TROUBLE')&&($vil->{'game'} ne 'SECRET'));
 		my $targetpl = $vil->getplbypno($i);
@@ -1221,54 +1222,54 @@ sub SelectKill {
 		$logfile->writeinfo($targetpl->{'uid'}, $sow->{'MESTYPE_INFOWOLF'}, $votetext);
 	}
 
-	if ($maxvote > 0) { # ‘Sˆõ‚¨”C‚¹‚Å‚È‚¢ê‡
-		# PŒ‚æŒó•â‚Ìæ“¾
+	if ($maxvote > 0) { # å…¨å“¡ãŠä»»ã›ã§ãªã„å ´åˆ
+		# è¥²æ’ƒå…ˆå€™è£œã®å–å¾—
 		my @lastvote;
 		for ($i = 0; $i < @votes; $i++) {
 			push(@lastvote, $i) if ($votes[$i] == $maxvote);
 		}
 		$sow->{'debug'}->writeaplog($sow->{'APLOG_OTHERS'}, "KillTarget(All): @lastvote");
 
-		# PŒ‚‘ÎÛ‚ÌŒˆ’è
+		# è¥²æ’ƒå¯¾è±¡ã®æ±ºå®š
 		my $killtarget = $lastvote[int(rand(@lastvote))];
 		$targetpl = $vil->getplbypno($killtarget);
 		$sow->{'debug'}->writeaplog($sow->{'APLOG_OTHERS'}, "Final KillTarget: $targetname");
 
-		# PŒ‚ÒŒˆ’è “Š•[ƒtƒH[ƒ€‚Ì”‚¾‚¯Q‰Á‚·‚é
+		# è¥²æ’ƒè€…æ±ºå®š æŠ•ç¥¨ãƒ•ã‚©ãƒ¼ãƒ ã®æ•°ã ã‘å‚åŠ ã™ã‚‹
 		my @murders;
 		my @cmdlist = ('role','gift');
 		foreach $cmd (@cmdlist) {
 			foreach $plsingle (@$livepllist) {
 				next if ( 0 == $plsingle->iskiller($cmd) );
 				my $target = $cmd.$no;
-				next if ($plsingle->{$target} != $killtarget); # PŒ‚Œˆ’èÒ‚É“Š•[‚µ‚Ä‚¢‚È‚¢Ò‚ÍœŠO
+				next if ($plsingle->{$target} != $killtarget); # è¥²æ’ƒæ±ºå®šè€…ã«æŠ•ç¥¨ã—ã¦ã„ãªã„è€…ã¯é™¤å¤–
 				push(@murders, $plsingle);
 			}
 		}
 		$murderpl = $murders[int(rand(@murders))];
 
-		# Š´õÒ‚É‚æ‚éˆĞ—Í’Ç‰Á ‚½‚Ô‚ñA•s—vB
+		# æ„ŸæŸ“è€…ã«ã‚ˆã‚‹å¨åŠ›è¿½åŠ  ãŸã¶ã‚“ã€ä¸è¦ã€‚
 #		foreach $plsingle (@$livepllist) {
 #			$maxvote ++ if ( $self->isDisableState('MASKSTATE_ZOMBIE') );
 #		}
 
-		# PŒ‚ƒƒbƒZ[ƒW¶¬
+		# è¥²æ’ƒãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ç”Ÿæˆ
 		if (($vil->{'turn'}-1 > 1) && ($targetpl->{'live'} eq 'live')) {
-			# ƒ_ƒ~[ƒLƒƒƒ‰PŒ‚‚ÍœŠO‚·‚é
+			# ãƒ€ãƒŸãƒ¼ã‚­ãƒ£ãƒ©è¥²æ’ƒæ™‚ã¯é™¤å¤–ã™ã‚‹
 
-			# PŒ‚ƒƒbƒZ[ƒW
+			# è¥²æ’ƒãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
 			my $targetname = $targetpl->getchrname();
 
 			if (!defined($murderpl->{'uid'})) {
-				# PŒ‚Ò‚ª–¢’è‹`i‚ ‚è‚¦‚È‚¢‚Í‚¸j
+				# è¥²æ’ƒè€…ãŒæœªå®šç¾©ï¼ˆã‚ã‚Šãˆãªã„ã¯ãšï¼‰
 				$sow->{'debug'}->writeaplog($sow->{'APLOG_WARNING'}, "murderpl is undef.");
 			} elsif (($vil->{'game'} eq 'TROUBLE')||($vil->{'game'} eq 'SECRET')){
-				# –³‹L–¼“Š•[•—‚É“Š•[Œ‹‰Ê•\¦
+				# ç„¡è¨˜åæŠ•ç¥¨é¢¨ã«æŠ•ç¥¨çµæœè¡¨ç¤º
 				my $votetext = $targetpl->getTextByID('ANNOUNCE_SELECTKILL',2);
-				# “Š•[Œ‹‰Ê‚Ìo—Í
+				# æŠ•ç¥¨çµæœã®å‡ºåŠ›
 				$logfile->writeinfo($targetpl->{'uid'}, $sow->{'MESTYPE_INFOWOLF'}, $votetext);
 			} else {
-				# PŒ‚ƒƒbƒZ[ƒW‘‚«‚İ
+				# è¥²æ’ƒãƒ¡ãƒƒã‚»ãƒ¼ã‚¸æ›¸ãè¾¼ã¿
 				&postKillMessage($murderpl,$targetname,$logfile,'MESTYPE_WSAY');
 			}
 		}
@@ -1284,8 +1285,8 @@ sub WriteGuardTarget {
 	my $livepllist = $vil->getlivepllist();
 	my @guardtargetpl;
 	foreach $plsingle (@$livepllist) {
-		next unless ( $plsingle->iscanrole($sow->{$rolename})); # ëlˆÈŠO‚ÍœŠO
-		next unless ( $plsingle->isdo('role1') ); # ‚¨‚Ü‚©‚¹‚ÍœŠO
+		next unless ( $plsingle->iscanrole($sow->{$rolename})); # ç‹©äººä»¥å¤–ã¯é™¤å¤–
+		next unless ( $plsingle->isdo('role1') ); # ãŠã¾ã‹ã›ã¯é™¤å¤–
 
 		my $targetpl = $vil->getplbypno($plsingle->{'role1'});
 		my $targetname = $targetpl->getchrname();
@@ -1313,11 +1314,11 @@ sub Kill {
 				$targetpl->{'role'}      = $sow->{'ROLEID_WOLF'};
 				$targetpl->addhistory($vil->getText('RESULT_SEMIWOLF'));
 				$targetpl->setfriends();
-				$targetpl = $murderpl; # PŒ‚‘ÎÛPŒ‚ÒB‚Æ‚¢‚¤ˆµ‚¢‚ÅE‚³‚ê‚éB
+				$targetpl = $murderpl; # è¥²æ’ƒå¯¾è±¡ï¼è¥²æ’ƒè€…ã€‚ã¨ã„ã†æ‰±ã„ã§æ®ºã•ã‚Œã‚‹ã€‚
 			}
 			&dead($sow, $vil, $murderpl, $targetpl, $deadflag, $logfile, $score);
 
-			# PŒ‚Œ‹‰Ê’Ç‹L
+			# è¥²æ’ƒçµæœè¿½è¨˜
 			my $livepllist = $vil->getlivepllist();
 			foreach $plsingle (@$livepllist) {
 				next unless (  $plsingle->cankiller() );
@@ -1343,10 +1344,10 @@ sub KillLoneWolf {
 	my ($sow, $vil, $logfile, $score) = @_;
 	my $livepllist = $vil->getlivepllist();
 
-	# ˆê•C˜T‚ÌPŒ‚‚ğ•Êˆ—
+	# ä¸€åŒ¹ç‹¼ã®è¥²æ’ƒã‚’åˆ¥å‡¦ç†
 	foreach $murderpl (@$livepllist) {
 		if ( $murderpl->iscanrole($sow->{'ROLEID_LONEWOLF'}) ){
-			next if (1 != $murderpl->isdo('role1')); # ‚¨‚Ü‚©‚¹‚ÍœŠO
+			next if (1 != $murderpl->isdo('role1')); # ãŠã¾ã‹ã›ã¯é™¤å¤–
 			my $targetpl = $vil->getplbypno($murderpl->{'role1'});
 			my $targetname = $targetpl->getchrname();
 			if (($targetpl->{'live'} eq 'live')) {
@@ -1375,10 +1376,10 @@ sub Dawn{
 
 	my $pllist = $vil->getpllist();
 	my $livepllist = $vil->getlivepllist();
-	# ‚Å‚¡[‚Á‚µ‚ã
+	# ã§ãƒãƒ¼ã£ã—ã‚…
 	foreach $dish (@$livepllist) {
 		if ( $dish->iscanrole($sow->{'ROLEID_DISH'}) ){
-			next if ( $dish->{'role1'} != $dish->{'pno'} ); # ‚¨‚Ü‚©‚¹‚ÍœŠO
+			next if ( $dish->{'role1'} != $dish->{'pno'} ); # ãŠã¾ã‹ã›ã¯é™¤å¤–
 
 			my $scorehead = $vil->getTextByID('ABI_ROLE',$dish->{'role'});
 			$score->addresult($scorehead,$dish->getlongchrname() );
@@ -1389,7 +1390,7 @@ sub Dawn{
 		}
 	}
 
-	# u‰^–½‚Ì“úv‚ğŒvZ
+	# ã€Œé‹å‘½ã®æ—¥ã€ã‚’è¨ˆç®—
 	my $wolves = 0;
 	foreach $plsingle (@$livepllist) {
 		$wolves += 1 if ( $plsingle->iswolf() > 0 );
@@ -1398,7 +1399,7 @@ sub Dawn{
 	if ($wolves + 2 == $vil->{'turn'}){
 		foreach $plsingle (@$livepllist){
 			my $deadflag = 'live';
-			# €‚És‚­Ò
+			# æ­»ã«è¡Œãè€…
 			$deadflag = 'droop' if ($plsingle->isbindrole($sow->{'ROLEID_DYING'})       );
 			$deadflag = 'droop' if ($plsingle->isbindrole($sow->{'ROLEID_DYINGPOSSESS'}));
 			$deadflag = 'droop' if ($plsingle->isbindrole($sow->{'ROLEID_DYINGWOLF'})   );
@@ -1411,7 +1412,7 @@ sub Dawn{
 	if (0 < $wolves){
 		foreach $plsingle (@$livepllist){
 			next unless ( $plsingle->issensible() );
-			# ‰^–½‚ğ©Šo‚·‚éB
+			# é‹å‘½ã‚’è‡ªè¦šã™ã‚‹ã€‚
 			my $result = $vil->getText('RESULT_DYING');
 			$result =~ s/_NUMBER_/$wolves/g;
 			$plsingle->addhistory($result) if ($plsingle->isbindrole($sow->{'ROLEID_DYING'})       );
@@ -1427,17 +1428,17 @@ sub Snatch{
 	my $livepllist = $vil->getlivepllist();
 	my @snatch;
 
-	# ‚¢‚Á‚½‚ñƒXƒiƒbƒ`ƒƒ[Šˆ“®ÒƒŠƒXƒg‚ğì‚éB
+	# ã„ã£ãŸã‚“ã‚¹ãƒŠãƒƒãƒãƒ£ãƒ¼æ´»å‹•è€…ãƒªã‚¹ãƒˆã‚’ä½œã‚‹ã€‚
 	foreach $plsingle (@$livepllist) {
-		next if ( 1 != $plsingle->isdo('role1')); # ‚¨‚Ü‚©‚¹‚ÍœŠO
+		next if ( 1 != $plsingle->isdo('role1')); # ãŠã¾ã‹ã›ã¯é™¤å¤–
 		next if ( 0 == $plsingle->iscanrole($sow->{'ROLEID_SNATCH'}) );
 
-		# ƒXƒiƒbƒ`
+		# ã‚¹ãƒŠãƒƒãƒ
 		push(@snatch, $plsingle);
 		my $targetpl = $vil->getplbypno($plsingle->{'role1'});
 		my $snatchname = $plsingle->getchrname();
 		my $targetname = $targetpl->getchrname();
-		# î•ñ‘‚«‚İ
+		# æƒ…å ±æ›¸ãè¾¼ã¿
 		my $snatchtext = $plsingle->getText('EXECUTESNATCH');
 		$snatchtext =~ s/_NAME_/$snatchname/g;
 		$snatchtext =~ s/_TARGET_/$targetname/g;
@@ -1449,18 +1450,18 @@ sub Snatch{
 		$score->addresult($scorehead,$targetname );
 	}
 
-	# ƒXƒiƒbƒ`ƒƒ[”\—ÍsgB
+	# ã‚¹ãƒŠãƒƒãƒãƒ£ãƒ¼èƒ½åŠ›è¡Œä½¿ã€‚
 	foreach $snatchpl (@snatch) {
 		my $targetpl = $vil->getplbypno($snatchpl->{'role1'});
 
-		# ‚±‚ê‚ç‚ğæ‚èc‚·‚±‚Æ‚ÅA–eA–¼‘O‚Ì“ü‚ê‘Ö‚¦‚ğÀŒ»B
+		# ã“ã‚Œã‚‰ã‚’å–ã‚Šæ®‹ã™ã“ã¨ã§ã€è²Œã€åå‰ã®å…¥ã‚Œæ›¿ãˆã‚’å®Ÿç¾ã€‚
 		# ($snatchpl->{'cid'}, $targetpl->{'cid'}) = ($targetpl->{'cid'}, $snatchpl->{'cid'});
 		# ($snatchpl->{'csid'}, $targetpl->{'csid'}) = ($targetpl->{'csid'}, $snatchpl->{'csid'});
 		# ($snatchpl->{'jobname'}, $targetpl->{'jobname'}) = ($targetpl->{'jobname'}, $snatchpl->{'jobname'});
 		# ($snatchpl->{'postfix'}, $targetpl->{'postfix'}) = ($targetpl->{'postfix'}, $snatchpl->{'postfix'});
 		# ($snatchpl->{'clearance'}, $targetpl->{'clearance'}) = ($targetpl->{'clearance'}, $snatchpl->{'clearance'});
 
-		# sheep, bonds, lovers ‚ÍA–e‚É€‚¸‚é‚Ì‚Åæ‚èc‚·B
+		# sheep, bonds, lovers ã¯ã€è²Œã«æº–ãšã‚‹ã®ã§å–ã‚Šæ®‹ã™ã€‚
 		# <=> uid, role, rolesubid, selrole, live, deathday, vote, target, target2, entrust, history
 		($snatchpl->{'uid'},       $targetpl->{'uid'})       = ($targetpl->{'uid'},       $snatchpl->{'uid'}      );
 		($snatchpl->{'role'},      $targetpl->{'role'})      = ($targetpl->{'role'},      $snatchpl->{'role'}     );
@@ -1470,35 +1471,35 @@ sub Snatch{
 		($snatchpl->{'selrole'},   $targetpl->{'selrole'})   = ($targetpl->{'selrole'},   $snatchpl->{'selrole'}  );
 		($snatchpl->{'history'},   $targetpl->{'history'})   = ($targetpl->{'history'},   $snatchpl->{'history'}  );
 
-#		Œã’Ç‚¢ŒˆˆÓÒ‚ÉƒXƒiƒbƒ`‚µ‚¿‚á‚Á‚½‚çA‚¨‚Æ‚È‚µ‚­€‚ÊB
+#		å¾Œè¿½ã„æ±ºæ„è€…ã«ã‚¹ãƒŠãƒƒãƒã—ã¡ã‚ƒã£ãŸã‚‰ã€ãŠã¨ãªã—ãæ­»ã¬ã€‚
 #		($snatchpl->{'tmp_suicide'},$targetpl->{'tmp_suicide'})=($targetpl->{'tmp_suicide'},$snatchpl->{'tmp_suicide'});
 		($snatchpl->{'live'},      $targetpl->{'live'})      = ($targetpl->{'live'},      $snatchpl->{'live'}      );
 		($snatchpl->{'delay_live'},$targetpl->{'delay_live'})= ($targetpl->{'delay_live'},$snatchpl->{'delay_live'});
 		($snatchpl->{'deathday'},  $targetpl->{'deathday'})  = ($targetpl->{'deathday'},  $snatchpl->{'deathday'}  );
 		($snatchpl->{'saidcount'}, $targetpl->{'saidcount'}) = ($targetpl->{'saidcount'}, $snatchpl->{'saidcount'} );
 
-		# ƒJƒŒƒ“ƒgƒvƒŒƒCƒ„[iƒƒOƒCƒ“’†‚ÌƒvƒŒƒCƒ„[j‚ğ•ÏX‚·‚é‚©‚à‚µ‚ê‚È‚¢B
+		# ã‚«ãƒ¬ãƒ³ãƒˆãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ï¼ˆãƒ­ã‚°ã‚¤ãƒ³ä¸­ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ï¼‰ã‚’å¤‰æ›´ã™ã‚‹ã‹ã‚‚ã—ã‚Œãªã„ã€‚
 		$sow->{'curpl'} = $vil->getpl($sow->{'uid'}) if ($vil->checkentried() >= 0);
 	}
 }
 
 
 #----------------------------------------
-# –é–¾‚¯‚ÌŒã‰÷
-# €–SÒ‚Ì”»’è‚âA€–SÒ‚É‚æ‚é‰e‹¿‚ğ‰ğŒˆ‚·‚éB
+# å¤œæ˜ã‘ã®å¾Œæ‚”
+# æ­»äº¡è€…ã®åˆ¤å®šã‚„ã€æ­»äº¡è€…ã«ã‚ˆã‚‹å½±éŸ¿ã‚’è§£æ±ºã™ã‚‹ã€‚
 #----------------------------------------
 sub Regret{
 	my ($sow, $vil, $logfile, $score, $jammed ) = @_;
 
 	my $pllist = $vil->getpllist();
 
-	# €Ò‚ÌŠm’èB
-	# Œã’Ç‚¢‚µ‚½l‚É‘¼‚Ì€ˆö‚ª‚È‚¢‚È‚çAŒã’Ç‚¢‚à•\‹LB
-	# ‚½‚¾‚µAŒã’Ç‚¢Ò‚Ìs“®‚Íæ‚ÉÏ‚Ü‚¹‚Ä‚ ‚é‚Ì‚ÅA‚±‚±‚Í•\‹L‚Ì‚İB
+	# æ­»è€…ã®ç¢ºå®šã€‚
+	# å¾Œè¿½ã„ã—ãŸäººã«ä»–ã®æ­»å› ãŒãªã„ãªã‚‰ã€å¾Œè¿½ã„ã‚‚è¡¨è¨˜ã€‚
+	# ãŸã ã—ã€å¾Œè¿½ã„è€…ã®è¡Œå‹•ã¯å…ˆã«æ¸ˆã¾ã›ã¦ã‚ã‚‹ã®ã§ã€ã“ã“ã¯è¡¨è¨˜ã®ã¿ã€‚
 	foreach $targetpl (@$pllist){
 		$targetpl->define_delay();
 		if ($targetpl->{'delay_live'} eq 'live' ){
-			# ‘¼‚Ì——R‚Å‚Í€‚È‚È‚©‚Á‚½l‚¾‚¯AŒã’Ç‚¢ƒ`ƒFƒbƒNB
+			# ä»–ã®ç†ç”±ã§ã¯æ­»ãªãªã‹ã£ãŸäººã ã‘ã€å¾Œè¿½ã„ãƒã‚§ãƒƒã‚¯ã€‚
 			if ($targetpl->{'tmp_suicide'} != $sow->{'TARGETID_TRUST'} ){
 				$targetpl->{'live'}     = 'suicide';
 				$targetpl->{'deathday'} = $vil->{'turn'};
@@ -1519,10 +1520,10 @@ sub Regret{
 	my $deadtext = $vil->getTextByID('ANNOUNCE_KILL',0);
 	my $millerhollow;
 
-	# •½‘f‚ÍA•œQA–\“®‚Í”­¶‚µ‚È‚¢B
+	# å¹³ç´ ã¯ã€å¾©è®ã€æš´å‹•ã¯ç™ºç”Ÿã—ãªã„ã€‚
 	$vil->{'grudge'} = -1;
 	$vil->{'riot'} = -1;
-	# €Ò‚ğ•\‹LB
+	# æ­»è€…ã‚’è¡¨è¨˜ã€‚
 	foreach $plsingle (@$pllist){
 		next if ($plsingle->{'live'} eq 'live');
 		next if ($plsingle->{'deathday'} ne $vil->{'turn'});
@@ -1531,21 +1532,21 @@ sub Regret{
 		my $scorehead = $sow->{'textrs'}->{'STATUS_LIVE'}->{$plsingle->{'live'}};
 		$score->addresult($scorehead,$deadchrname );
 
-		# e˜T‚Ì€‘ÌB•œQI
+		# ä»”ç‹¼ã®æ­»ä½“ã€‚å¾©è®ï¼
 		if ($plsingle->iscanrole_or_dead($sow->{'ROLEID_CHILDWOLF'}) ){
 			$vil->{'grudge'} = $vil->{'turn'};
 			my $result = $plsingle->getText('EXECUTECHILDWOLF');
 			$logfile->writeinfo($plsingle->{'uid'}, $sow->{'MESTYPE_INFOWOLF'}, $result);
 		}
 
-		# ø“®Ò‚Ì€‘ÌB–\“®I
+		# ç…½å‹•è€…ã®æ­»ä½“ã€‚æš´å‹•ï¼
 		if ($plsingle->iscanrole_or_dead($sow->{'ROLEID_FAN'}) ){
 			$vil->{'riot'} = $vil->{'turn'};
 			my $result = $plsingle->getText('EXECUTEFAN');
 			$logfile->writeinfo('', $sow->{'MESTYPE_INFONOM'}, $result);
 		}
 
-		# ƒ~ƒ‰[ƒYƒzƒƒE‚Ì€Ò”»’è
+		# ãƒŸãƒ©ãƒ¼ã‚ºãƒ›ãƒ­ã‚¦ã®æ­»è€…åˆ¤å®š
 		$ismillerhollow = 0;
 		$ismillerhollow = 1 if ('MILLERHOLLOW'      eq $vil->{'game'});
 		$ismillerhollow = 1 if ('LIVE_MILLERHOLLOW' eq $vil->{'game'});
@@ -1556,14 +1557,14 @@ sub Regret{
 
 
 		if ( $plsingle->ismediumed() ){
-			# ˆŒYŒ‹‰Ê‚É‚æ‚Á‚Ä‚ÍAƒu[ƒCƒ“ƒO”­¶B
+			# å‡¦åˆ‘çµæœã«ã‚ˆã£ã¦ã¯ã€ãƒ–ãƒ¼ã‚¤ãƒ³ã‚°ç™ºç”Ÿã€‚
 			if ($plsingle->ishuman()){
 				$vil->{'content'} = 'boo' if (($vil->{'event'} == $sow->{'EVENTID_CLAMOR'}));
 			} else {
 				$vil->{'content'} = 'boo' if (($vil->{'event'} == $sow->{'EVENTID_FIRE'}  ));
 			}
 		} else {
-			# –³c‚È€‘Ì‚ğ”­Œ©A”‚¦ã‚°‚éB
+			# ç„¡æ®‹ãªæ­»ä½“ã‚’ç™ºè¦‹ã€æ•°ãˆä¸Šã’ã‚‹ã€‚
 			$deadplcnt += 1 ;
 
 			$deadtext .= '<br>'.$vil->getTextByID('ANNOUNCE_KILL',2);
@@ -1571,7 +1572,7 @@ sub Regret{
 		}
 	}
 	if ($deadplcnt == 0) {
-		# –³c‚Èr‘Ì‚È‚µ
+		# ç„¡æ®‹ãªå±ä½“ãªã—
 		$deadtext .= '<br>'.$vil->getTextByID('ANNOUNCE_KILL',1);
 	}
 	$logfile->writeinfo('', $sow->{'MESTYPE_INFONOM'}, $deadtext);
@@ -1583,13 +1584,13 @@ sub Regret{
 
 
 #----------------------------------------
-# Œã’Ç‚¢AÜ‹à‰Ò‚¬
+# å¾Œè¿½ã„ã€è³é‡‘ç¨¼ã
 #----------------------------------------
 sub cycle {
 	my ($sow, $vil, $deadpl, $logfile, $score) = @_;
 
 	my $chrname = $deadpl->getchrname();
-	# ãJ‚ÌŒã’Ç‚¢ ilŒ”n­‚Ì“ú‚É‚Í‚¨‚±‚ç‚È‚¢j
+	# çµ†ã®å¾Œè¿½ã„ ï¼ˆå››æœˆé¦¬é¹¿ã®æ—¥ã«ã¯ãŠã“ã‚‰ãªã„ï¼‰
 	if ( $vil->{'event'} != $sow->{'EVENTID_APRIL_FOOL'} ){
 		my @bonds = $deadpl->getbondlist();
 		foreach $plsingle (@bonds) {
@@ -1597,14 +1598,14 @@ sub cycle {
 			next if ('hate' eq $targetpl->{'love'}   );
 			next if (  -1   != $targetpl->{'tmp_suicide'});
 			$targetpl->{'tmp_suicide'} = $deadpl;
-			&cycle($sow, $vil, $targetpl, $logfile, $score); # Œã’Ç‚¢˜A½
+			&cycle($sow, $vil, $targetpl, $logfile, $score); # å¾Œè¿½ã„é€£é–
 		}
 	}
 
-	# Ü‹à‰Ò‚¬
+	# è³é‡‘ç¨¼ã
 	if ( $deadpl->iscanrole_or_dead($sow->{'ROLEID_HUNTER'}) ){
-		return if ( $deadpl->{'role1'} < 0); # ‚¨‚Ü‚©‚¹‚ÍœŠO
-		# u“––é“à–³”\v‚Éİ’è‚µAÜ‹à‰Ò‚¬‚Ì”\—Í‚ª“ñd”­“®‚µ‚È‚¢‚æ‚¤‚ÉB
+		return if ( $deadpl->{'role1'} < 0); # ãŠã¾ã‹ã›ã¯é™¤å¤–
+		# ã€Œå½“å¤œå†…ç„¡èƒ½ã€ã«è¨­å®šã—ã€è³é‡‘ç¨¼ãã®èƒ½åŠ›ãŒäºŒé‡ç™ºå‹•ã—ãªã„ã‚ˆã†ã«ã€‚
 		$deadpl->{'tmp_rolestate'} = $sow->{'ROLESTATE_ABI_NONE'};
 		my $targetpl = $vil->getplbypno($deadpl->{'role1'});
 		my $targetname = $targetpl->getchrname();
@@ -1624,22 +1625,22 @@ sub revenge {
 	return if ($deadpl->{'pno'} == $killer->{'pno'});
 
 	my $chrname = $deadpl->getchrname();
-	# ’·˜V‚ğEŠQ‚·‚é‚ÆAEŠQÒ‚Í”\—Í‚ğ¸‚¤B
-	# •al‚ğEŠQ‚·‚é‚ÆAEŠQÒ‚Í”\—Í‚ğ¸‚¤B
+	# é•·è€ã‚’æ®ºå®³ã™ã‚‹ã¨ã€æ®ºå®³è€…ã¯èƒ½åŠ›ã‚’å¤±ã†ã€‚
+	# ç—…äººã‚’æ®ºå®³ã™ã‚‹ã¨ã€æ®ºå®³è€…ã¯èƒ½åŠ›ã‚’å¤±ã†ã€‚
 	if (($deadpl->iscanrole_or_dead($sow->{'ROLEID_ELDER'})  )
 	  ||($deadpl->iscanrole_or_dead($sow->{'ROLEID_INVALID'}))  ) {
 		&toCurse($sow,$vil,$killer,$logfile);
 		my $scorehead = $vil->getTextByID('ROLENAME',$deadpl->{'role'});
 		$score->addresult($scorehead, $chrname );
 	}
-	# ˆù–ò‚·‚é‚Æ”\—Í‚ğ¸‚¤‚Ì‚ÅAˆù–ò’†‚Í‚·‚Å‚Éu—L”\‚È˜B‹àptv‚Å‚Í‚È‚¢B
-	# ˆù–ò’†‚Ì˜B‹àpt‚ğEŠQ‚·‚é‚ÆAEŠQÒ‚Í‚µ‚ÊB
+	# é£²è–¬ã™ã‚‹ã¨èƒ½åŠ›ã‚’å¤±ã†ã®ã§ã€é£²è–¬ä¸­ã¯ã™ã§ã«ã€Œæœ‰èƒ½ãªéŒ¬é‡‘è¡“å¸«ã€ã§ã¯ãªã„ã€‚
+	# é£²è–¬ä¸­ã®éŒ¬é‡‘è¡“å¸«ã‚’æ®ºå®³ã™ã‚‹ã¨ã€æ®ºå®³è€…ã¯ã—ã¬ã€‚
 	if (($deadpl->isbindrole($sow->{'ROLEID_ALCHEMIST'}))&&($deadpl->{'role1'} == $deadpl->{'pno'})) {
 		&dead($sow, $vil, $killer, $killer, 'cursed', $logfile, $score);
 	}
 
-	# €–S‚µ‚½‰…—ì‚ÍA’N‚©‚ğ‘h¶‚µA‚»‚Ì”\—Í‚ğ‹¤—L‚·‚éB
-	# ‚±‚ê‚É‚æ‚Á‚Ä‰‚ß‚ÄŸ—˜ğŒ‚ğ“¾‚éB
+	# æ­»äº¡ã—ãŸæ€¨éœŠã¯ã€èª°ã‹ã‚’è˜‡ç”Ÿã—ã€ãã®èƒ½åŠ›ã‚’å…±æœ‰ã™ã‚‹ã€‚
+	# ã“ã‚Œã«ã‚ˆã£ã¦åˆã‚ã¦å‹åˆ©æ¡ä»¶ã‚’å¾—ã‚‹ã€‚
 	if (($deadpl->iscanrole_or_dead($sow->{'ROLEID_TANGLE'}))){
 		my $targetpl = $vil->getplbypno($deadpl->{'role1'});
 
@@ -1657,7 +1658,7 @@ sub nowdead {
 sub dead {
 	my ($sow, $vil, $killer, $deadpl, $deadflag, $logfile, $score) = @_;
 	if ( 'zombie' eq $deadflag ){
-		# Š´õ‚Ìˆ—B
+		# æ„ŸæŸ“ã®å‡¦ç†ã€‚
 		&toZombie($sow,$vil,$deadpl,$logfile);
 	} else {
 		$deadpl->{'delay_live'} = $deadflag;
@@ -1669,11 +1670,11 @@ sub dead {
 sub heal {
 	my ($sow, $vil, $deadpl, $logfile) = @_;
 
-	# ‘h¶‚µ‚½ê‡Aƒ]ƒ“ƒró‘ÔA•‰ó‘Ô‚ª–ü‚¦‚éB
+	# è˜‡ç”Ÿã—ãŸå ´åˆã€ã‚¾ãƒ³ãƒ“çŠ¶æ…‹ã€è² å‚·çŠ¶æ…‹ãŒç™’ãˆã‚‹ã€‚
 	$deadpl->{'delay_live'} = 'live';
 	$deadpl->{'delay_rolestate'} |= $sow->{'MASKSTATE_HEAL'};
 
-	# ”\—Ísg‚ÌƒŠƒZƒbƒg
+	# èƒ½åŠ›è¡Œä½¿ã®ãƒªã‚»ãƒƒãƒˆ
 	$deadpl->{'vote1'} = $sow->{'TARGETID_TRUST'};
 	$deadpl->{'vote2'} = $sow->{'TARGETID_TRUST'};
 	$deadpl->{'role1'} = $sow->{'TARGETID_TRUST'};
@@ -1681,7 +1682,7 @@ sub heal {
 	$deadpl->{'gift1'} = $sow->{'TARGETID_TRUST'};
 	$deadpl->{'gift2'} = $sow->{'TARGETID_TRUST'};
 
-	# “Ë‘R€ƒƒbƒZ[ƒWo—Í
+	# çªç„¶æ­»ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å‡ºåŠ›
 	my $mes = $deadpl->getText('LIVE');
 	$logfile->writeinfo('', $sow->{'MESTYPE_INFONOM'}, $mes);
 }
@@ -1695,16 +1696,16 @@ sub CheckKill {
 	my $livepllist = $vil->getlivepllist();
 	my $targetname = $targetpl->getchrname();
 
-	# Š´õÒ‚ğ‚à‚¤ˆê“xPŒ‚‚µ‚½ê‡‚ÍAE—Í‚ğ‚ÂB
+	# æ„ŸæŸ“è€…ã‚’ã‚‚ã†ä¸€åº¦è¥²æ’ƒã—ãŸå ´åˆã¯ã€æ®ºå‚·åŠ›ã‚’æŒã¤ã€‚
 	$killers += 0.01 if ($targetpl->isDisableState('MASKSTATE_ZOMBIE'));
 
 	my $hasGJ=0;
 	my @guards;
-	# Œì‰q”»’è
+	# è­·è¡›åˆ¤å®š
 	foreach $plsingle (@$livepllist) {
-		next unless ( $plsingle->isdo('role1') );                      # ‚¨‚Ü‚©‚¹‚ÍœŠO
-		next unless ( $plsingle->iscanrole($sow->{'ROLEID_GUARD'}) );  # ëlˆÈŠO‚ÍœŠO
-		next if ($plsingle->{'role1'} != $targetpl->{'pno'});         # ‘ÎÛ‚ğŒì‰q‚µ‚Ä‚È‚¯‚ê‚ÎœŠO
+		next unless ( $plsingle->isdo('role1') );                      # ãŠã¾ã‹ã›ã¯é™¤å¤–
+		next unless ( $plsingle->iscanrole($sow->{'ROLEID_GUARD'}) );  # ç‹©äººä»¥å¤–ã¯é™¤å¤–
+		next if ($plsingle->{'role1'} != $targetpl->{'pno'});         # å¯¾è±¡ã‚’è­·è¡›ã—ã¦ãªã‘ã‚Œã°é™¤å¤–
 
 		my $result_guard = "";
 		if (($plsingle->issensible())){
@@ -1714,29 +1715,29 @@ sub CheckKill {
 		}
 		$result_guard =~ s/_TARGET_/$targetname/g;
 		$plsingle->addhistory($result_guard);
-		# Œì‰q‘¤‚ğWŒv
+		# è­·è¡›å´ã‚’é›†è¨ˆ
 		push(@guards, $plsingle);
 		$hasGJ++;
 	}
 	my $guardpl = $guards[int(rand(@guards))];
 
-	# Œõ‚Ì—Ö‚ğ‚Á‚Ä‚¢‚éi•K‚¸”­“®j
+	# å…‰ã®è¼ªã‚’æŒã£ã¦ã„ã‚‹ï¼ˆå¿…ãšç™ºå‹•ï¼‰
 	if (($targetpl->{'live'} eq 'live') && ($targetpl->{'gift'} == $sow->{'GIFTID_SHIELD'})) {
 		$hasGJ++;
 	}
 	$sow->{'debug'}->writeaplog($sow->{'APLOG_OTHERS'}, "GJ count $hasGJ.");
 
-	# uŠ´õ‚ ‚èvƒ‚[ƒh
+	# ã€Œæ„ŸæŸ“ã‚ã‚Šã€ãƒ¢ãƒ¼ãƒ‰
 	my $enable_zombie = 0;
 	$enable_zombie = 1 if ('TROUBLE' eq $vil->{'game'} );
 	$enable_zombie = 1 if ('VOV'     eq $vil->{'game'} );
 
 	if ((0 < $hasGJ)&&(0 < $killers)){
 		if ($enable_zombie){
-			# çŒì‘¤‚Æl˜T‘¤‚Ì‘ˆ‚¢B®”‰»‚µ‚Ä‚©‚ç”äŠr
+			# å®ˆè­·å´ã¨äººç‹¼å´ã®äº‰ã„ã€‚æ•´æ•°åŒ–ã—ã¦ã‹ã‚‰æ¯”è¼ƒ
 			if      (int($hasGJ) < int($killers)){
-				# PŒ‚‘¤‚ª—D¨
-				# —Í•‰‚¯‚µ‚½çŒìÒ’B‚ÍA‘¦€‚Å‚Í‚È‚¢iŠ´õ‚Å‚·‚Şj
+				# è¥²æ’ƒå´ãŒå„ªå‹¢
+				# åŠ›è² ã‘ã—ãŸå®ˆè­·è€…é”ã¯ã€å³æ­»ã§ã¯ãªã„ï¼ˆæ„ŸæŸ“ã§ã™ã‚€ï¼‰
 				foreach $guardpl (@guards) {
 					my $g_deadflag = &CheckKill($sow, $vil, $logfile, $score, $murderpl, 1, $guardpl);
 					if ($g_deadflag ne 'live') {
@@ -1744,30 +1745,30 @@ sub CheckKill {
 					}
 				}
 			} elsif (int($hasGJ) > int($killers)){
-				# Œì‰q‘¤‚ª—D¨
-				# Œì‰q‘¤‚©‚ç‚Ì•Ô‚è“¢‚¿‚Å‚ÍA‘ÎÛ‚Í€–S‚·‚éB
+				# è­·è¡›å´ãŒå„ªå‹¢
+				# è­·è¡›å´ã‹ã‚‰ã®è¿”ã‚Šè¨ã¡ã§ã¯ã€å¯¾è±¡ã¯æ­»äº¡ã™ã‚‹ã€‚
 				my $g_deadflag = &CheckKill($sow, $vil, $logfile, $score, $guardpl, $hasGJ + 0.01, $murderpl);
 				if ($g_deadflag ne 'live') {
 					&dead($sow, $vil, $guardpl, $murderpl, $g_deadflag, $logfile, $score);
 				}
 			}
 		}
-		# çŒì”­¶‚Ìê‡A‚Ç‚¤“]‚ñ‚Å‚à–{—ˆ‚Ì‹]µÒ‚Í–³–B
+		# å®ˆè­·ç™ºç”Ÿã®å ´åˆã€ã©ã†è»¢ã‚“ã§ã‚‚æœ¬æ¥ã®çŠ ç‰²è€…ã¯ç„¡äº‹ã€‚
 		return 'live';
 	} else {
 		if ($enable_zombie){
-			# çŒì‚Ì‚È‚¢ê‡B
+			# å®ˆè­·ã®ãªã„å ´åˆã€‚
 			if    (1 < $killers){
 			}elsif(0 < $killers){
 				$deadflag = 'zombie';
 			} else {
-				return 'live'; # ¶‘¶‚Ì‚Í‰º‚Ìƒ`ƒFƒbƒN‚ğ‹²‚Ü‚È‚¢B
+				return 'live'; # ç”Ÿå­˜ã®æ™‚ã¯ä¸‹ã®ãƒã‚§ãƒƒã‚¯ã‚’æŒŸã¾ãªã„ã€‚
 			}
 		}
 	}
 
-	# ’·˜V‚Íˆê“x‚¾‚¯€‚È‚È‚¢
-	# lŒ¢‚Í‘¦€‚µ‚È‚¢
+	# é•·è€ã¯ä¸€åº¦ã ã‘æ­»ãªãªã„
+	# äººçŠ¬ã¯å³æ­»ã—ãªã„
 	if ( ($targetpl->iscanrole($sow->{'ROLEID_ELDER'})  )
 	   ||($targetpl->iscanrole($sow->{'ROLEID_WEREDOG'})) ) {
 		if (($targetpl->issensible())){
@@ -1782,7 +1783,7 @@ sub CheckKill {
 		$score->addresult($scorehead, $targetname );
 	}
 
-	# ”¼˜T‚Í€‚È‚¸Al˜T‚É‚È‚éB
+	# åŠç‹¼ã¯æ­»ãªãšã€äººç‹¼ã«ãªã‚‹ã€‚
 	if ( $targetpl->iscanrole($sow->{'ROLEID_SEMIWOLF'})) {
 		$targetpl->{'role'}      = $sow->{'ROLEID_WOLF'};
 		$targetpl->addhistory($vil->getText('RESULT_SEMIWOLF'));
@@ -1793,7 +1794,7 @@ sub CheckKill {
 		$score->addresult($scorehead, $targetname );
 	}
 
-	# —d¸‚ÍPŒ‚‚Å‚Í€‚È‚È‚¢B
+	# å¦–ç²¾ã¯è¥²æ’ƒã§ã¯æ­»ãªãªã„ã€‚
 	if (( $targetpl->iscursed('role') )&&( $targetpl->isEnableState('MASKSTATE_ABI_ROLE') )){
 		$deadflag = 'live';
 		my $scorehead = $vil->getTextByID('ROLENAME',$targetpl->{'role'});
@@ -1823,7 +1824,7 @@ sub Seer {
 	foreach $plsingle (@$pllist) {
 		if ( $plsingle->{'live'} eq 'live' ) {
 			if ( $plsingle->isdo('role1') ) {
-				# ‚¨‚Ü‚©‚¹‚ÍœŠO
+				# ãŠã¾ã‹ã›ã¯é™¤å¤–
 				my $targetpl = $vil->getplbypno($plsingle->{'role1'});
 				my $seerresultrole = '';
 				my $isseer = 0;
@@ -1838,36 +1839,36 @@ sub Seer {
 					if ($plsingle->iscanrole($sow->{'ROLEID_SEER'    }) ){ $isseer = 1; $seerresultrole = GetResultSeerEncount  ($sow, $vil, $score, $targetpl, $jammed) };
 					if ($plsingle->iscanrole($sow->{'ROLEID_AURA'    }) ){ $isseer = 1; $seerresultrole = GetResultAuraEncount  ($sow, $vil, $score, $targetpl, $jammed) };
 				}
-				# ’q˜TA”»˜T‚Ì”»’è‚ÍAPŒ‚ƒtƒF[ƒY‚ÅB
+				# æ™ºç‹¼ã€åˆ¤ç‹¼ã®åˆ¤å®šã¯ã€è¥²æ’ƒãƒ•ã‚§ãƒ¼ã‚ºã§ã€‚
 
 				&SeerEffect($sow, $vil, $plsingle, $targetpl, $seerresultrole, $logfile, $score, $jammed) if ($isseer);
 			}
 
 			if ( $plsingle->isdo('gift1') ) {
-				# ‚¨‚Ü‚©‚¹‚ÍœŠO
+				# ãŠã¾ã‹ã›ã¯é™¤å¤–
 				my $targetpl = $vil->getplbypno($plsingle->{'gift1'});
 				my $seerresultgift = '';
 				my $isseer = 0;
 
 				if (    $plsingle->iscangift($sow->{'GIFTID_SEERONCE'}) ) { $isseer = 1; $seerresultgift = GetResultSeer($sow, $vil, $score, $targetpl, $jammed) };
 				&SeerEffect($sow, $vil, $plsingle, $targetpl, $seerresultgift, $logfile, $score, $jammed) if ($isseer);
-				# –²èt‚ª—Í‚ğg‚¢‰Ê‚½‚µ‚½B
+				# å¤¢å å¸«ãŒåŠ›ã‚’ä½¿ã„æœãŸã—ãŸã€‚
 				if ($plsingle->isbindgift($sow->{'GIFTID_SEERONCE'})){
 					$plsingle->{'delay_rolestate'} &= $sow->{'ROLESTATE_ABI_NOGIFT'};
 				}
 			}
 		} else {
-			# €Ò‚ÍA—ì”»’è‚Ì‘ÎÛ‚É‚È‚é‚©‚à‚µ‚ê‚È‚¢B
+			# æ­»è€…ã¯ã€éœŠåˆ¤å®šã®å¯¾è±¡ã«ãªã‚‹ã‹ã‚‚ã—ã‚Œãªã„ã€‚
 			next if ( $plsingle->{'deathday'} ne $vil->{'turn'} );
 			next unless ( $plsingle->ismediumed() );
-			# —ì”\”»’è
+			# éœŠèƒ½åˆ¤å®š
 			my $seerencount = GetResultSeerEncount($sow, $vil, $score, $plsingle, $jammed);
 			my $auraencount = GetResultAuraEncount($sow, $vil, $score, $plsingle, $jammed);
 			my $seerresult = GetResultSeer($sow, $vil, $score, $plsingle, $jammed);
 			my $auraresult = GetResultAura($sow, $vil, $score, $plsingle, $jammed);
 			my $winresult  = GetResultWin( $sow, $vil, $score, $plsingle, $jammed);
 			my $roleresult = GetResultRole($sow, $vil, $score, $plsingle, $jammed);
-			# —ì”\”»’è’Ç‹L
+			# éœŠèƒ½åˆ¤å®šè¿½è¨˜
 			my $livepllist = $vil->getlivepllist();
 			foreach $plsingle (@$livepllist) {
 				if (($plsingle->issensible())){
@@ -1884,11 +1885,11 @@ sub Seer {
 		}
 	}
 
-	# ¡—Ã‚ÌŒø‰Ê‚ğ‚¿ó‘Ô‚ğ•Ï‚¦‚Ä‚µ‚Ü‚¤‚Ì‚ÅAˆãt‚Ì”\—Í‚ÍÅŒãB
+	# æ²»ç™‚ã®åŠ¹æœã‚’æŒã¡çŠ¶æ…‹ã‚’å¤‰ãˆã¦ã—ã¾ã†ã®ã§ã€åŒ»å¸«ã®èƒ½åŠ›ã¯æœ€å¾Œã€‚
 	foreach $plsingle (@$pllist) {
 		next if ( $plsingle->{'live'} ne 'live' );
 		if ( $plsingle->isdo('role1') ) {
-			# ‚¨‚Ü‚©‚¹‚ÍœŠO
+			# ãŠã¾ã‹ã›ã¯é™¤å¤–
 			my $targetpl = $vil->getplbypno($plsingle->{'role1'});
 			my $seerresultrole = '';
 			my $isseer = 0;
@@ -1908,9 +1909,9 @@ sub SeerEffect {
 
 	my $livepllist = $vil->getlivepllist();
 
-	# è‚¢‚Ì•›ì—p‚ğÀ{B
-	# g‚¤‚Æ‚«‚Í‚©‚È‚ç‚¸Aè‚¢”­“®‚Ì‚İÀs‚·‚éH•v‚ğ‚·‚é‚±‚ÆB
-	# è‚¢”­“®
+	# å ã„ã®å‰¯ä½œç”¨ã‚’å®Ÿæ–½ã€‚
+	# ä½¿ã†ã¨ãã¯ã‹ãªã‚‰ãšã€å ã„ç™ºå‹•æ™‚ã®ã¿å®Ÿè¡Œã™ã‚‹å·¥å¤«ã‚’ã™ã‚‹ã“ã¨ã€‚
+	# å ã„ç™ºå‹•
 	my $targetname = $targetpl->getchrname();
 	$plsingle->addhistory($seerresult);
 	if (($plsingle->issensible())){
@@ -1920,7 +1921,7 @@ sub SeerEffect {
 	}
 	my $hasGJ=0;
 	foreach $plsingle (@$livepllist) {
-		# ×–‚‚Å‚ÌGJ
+		# é‚ªé­”ã§ã®GJ
 		if ($plsingle->{'role'} eq $sow->{'ROLEID_JAMMER'} && $plsingle->{'role1'} == $targetpl->{'pno'}) {
 			my $result = $vil->getText('RESULT_JAMM');
 			$result =~ s/_TARGET_/$targetname/g;
@@ -1929,19 +1930,19 @@ sub SeerEffect {
 		}
 	}
 	return if ($hasGJ > 0);
-	# —d¸ôE
+	# å¦–ç²¾å‘ªæ®º
 	if (($targetpl->{'live'} eq 'live') && ($targetpl->iscursed('role')+$targetpl->iscursed('gift'))) {
 		&dead($sow, $vil, $plsingle, $targetpl, 'cursed', $logfile, $score);
 	}
-	# ôl
+	# å‘ªäºº
 	if ($targetpl->iscanrole_or_dead($sow->{'ROLEID_CURSE'})) {
 		&dead($sow, $vil, $targetpl, $plsingle, 'cursed', $logfile, $score);
 	}
-	# ô˜T
+	# å‘ªç‹¼
 	if ($targetpl->iscanrole_or_dead($sow->{'ROLEID_CURSEWOLF'})) {
 		&dead($sow, $vil, $targetpl, $plsingle, 'cursed', $logfile, $score);
 	}
-	# ˜TŒŒ‘°
+	# ç‹¼è¡€æ—
 	if ($targetpl->isbindrole($sow->{'ROLEID_RIGHTWOLF'})) {
 		if (($targetpl->issensible())){
 			my $result_seered = $vil->getText('RESULT_RIGHTWOLF');
@@ -1956,10 +1957,10 @@ sub Alchemist{
 
 	my $pllist = $vil->getpllist();
 	foreach $plsingle (@$pllist) {
-		next if ( $plsingle->{'role1'} != $plsingle->{'pno'} ); # ‚¨‚Ü‚©‚¹‚ÍœŠO
+		next if ( $plsingle->{'role1'} != $plsingle->{'pno'} ); # ãŠã¾ã‹ã›ã¯é™¤å¤–
 		my $targetpl = $vil->getplbypno($plsingle->{'role1'});
 		my $targetname = $targetpl->getchrname();
-		# ˆù–ò
+		# é£²è–¬
 		if ($plsingle->iscanrole($sow->{'ROLEID_ALCHEMIST'})){
 			$plsingle->{'delay_rolestate'} &= $sow->{'ROLESTATE_ABI_NOROLE'};
 
@@ -1982,19 +1983,19 @@ sub Witch{
 	my ($sow, $vil, $logfile, $score, $jammtargetpl) = @_;
 	my $pllist = $vil->getactivepllist();
 	foreach $plsingle (@$pllist) {
-		next if (1 != $plsingle->isdo('role1')); # ‚¨‚Ü‚©‚¹‚ÍœŠO
+		next if (1 != $plsingle->isdo('role1')); # ãŠã¾ã‹ã›ã¯é™¤å¤–
 		my $targetpl = $vil->getplbypno($plsingle->{'role1'});
 		my $targetname = $targetpl->getchrname();
-		# –‚—‚Ì“Š–ò
+		# é­”å¥³ã®æŠ•è–¬
 		if ($plsingle->iscanrole($sow->{'ROLEID_WITCH'})
 		  ||$plsingle->iscanrole($sow->{'ROLEID_WALPURGIS'})){
 
-			# ÀÛ‚Ì¶€‚É‚©‚©‚í‚ç‚¸A–ò‚ğg‚¤B
+			# å®Ÿéš›ã®ç”Ÿæ­»ã«ã‹ã‹ã‚ã‚‰ãšã€è–¬ã‚’ä½¿ã†ã€‚
 			if ($plsingle->{'tmp_targetlive'} eq 'live'){
-				# “Å–ò‚ª‚È‚¢ê‡NG
+				# æ¯’è–¬ãŒãªã„å ´åˆNG
 				next if ($plsingle->isDisableState('MASKSTATE_ABI_KILL'));
 				$plsingle->{'delay_rolestate'} &= $sow->{'ROLESTATE_ABI_KILL'};
-				# “Å–ò‚ğg‚¤
+				# æ¯’è–¬ã‚’ä½¿ã†
 				if ($plsingle->issensible()){
 					my $result = $plsingle->getText('EXECUTEKILLWITCH');
 					$result =~ s/_TARGET_/$targetname/g;
@@ -2009,10 +2010,10 @@ sub Witch{
 
 				&dead($sow, $vil, $plsingle, $targetpl, 'cursed', $logfile, $score, $jammtargetpl);
 			} elsif ($plsingle->{'tmp_targetlive'} eq 'suddendead'){
-				# “Ë‘R€‘Šè‚ÉA–ò‚Íg‚í‚È‚¢B
+				# çªç„¶æ­»ç›¸æ‰‹ã«ã€è–¬ã¯ä½¿ã‚ãªã„ã€‚
 				next;
 			} else {
-				# ‘h¶–ò‚ª‚È‚¢ê‡NG
+				# è˜‡ç”Ÿè–¬ãŒãªã„å ´åˆNG
 				next if ($plsingle->isDisableState('MASKSTATE_ABI_LIVE'));
 				$plsingle->{'delay_rolestate'} &= $sow->{'ROLESTATE_ABI_LIVE'};
 				&WitchHeal($sow, $vil, $plsingle, $targetpl, $logfile, $score);
@@ -2024,7 +2025,7 @@ sub Witch{
 sub WitchHeal{
 	my ($sow, $vil, $plsingle, $deadpl, $logfile, $score) = @_;
 
-	# ‘h¶–ò‚ğg‚¤
+	# è˜‡ç”Ÿè–¬ã‚’ä½¿ã†
 	if ($plsingle->issensible()){
 		my $deadname = $deadpl->getchrname();
 		my $result = $plsingle->getText('EXECUTELIVEWITCH');
@@ -2046,10 +2047,10 @@ sub GetResultSeerEncount {
 	my ($sow, $vil, $score, $targetpl, $jammed) = @_;
 	my $result = "";
 	my $result_hit = $vil->getText('RESULT_ENCOUNT');
-	# l˜T”»’èB–ğE‚ªl˜TA‰¶Œb‚ªl˜TAˆê•C˜TA˜TŒŒ‘°B‚Ü‚½A”’˜T‚ÍlŠÔ”»’èB
-	$result = $result_hit if  ($targetpl->iskiller('role')); # l˜T¨—Í
-	$result = $result_hit if  ($targetpl->iskiller('gift')); # l˜T¨—Í
-	$result = $result_hit if  ($targetpl->isDisableState('MASKSTATE_ZOMBIE')); # ƒ]ƒ“ƒr‚É‚³‚ê‚Ü‚µ‚½B
+	# äººç‹¼åˆ¤å®šã€‚å½¹è·ãŒäººç‹¼ã€æ©æµãŒäººç‹¼ã€ä¸€åŒ¹ç‹¼ã€ç‹¼è¡€æ—ã€‚ã¾ãŸã€ç™½ç‹¼ã¯äººé–“åˆ¤å®šã€‚
+	$result = $result_hit if  ($targetpl->iskiller('role')); # äººç‹¼å‹¢åŠ›
+	$result = $result_hit if  ($targetpl->iskiller('gift')); # äººç‹¼å‹¢åŠ›
+	$result = $result_hit if  ($targetpl->isDisableState('MASKSTATE_ZOMBIE')); # ã‚¾ãƒ³ãƒ“ã«ã•ã‚Œã¾ã—ãŸã€‚
 	$result = $result_hit if  ($targetpl->{'role'}    ==    $sow->{'ROLEID_LONEWOLF'}  );
 	$result = $result_hit if  ($targetpl->{'role'}    ==    $sow->{'ROLEID_RIGHTWOLF'} );
 	$result = ""          if  ($targetpl->iscanrole_or_dead($sow->{'ROLEID_WHITEWOLF'}));
@@ -2068,8 +2069,8 @@ sub GetResultDoctorEncount {
 	my ($sow, $vil, $score, $targetpl, $jammed) = @_;
 	my $result = "";
 	my $result_hit = $vil->getText('RESULT_ENCOUNT');
-	# l˜T”»’èBŠ´õÒ‚Ì‚İB
-	$result = $result_hit if  ($targetpl->isDisableState('MASKSTATE_ZOMBIE')); # Š´õÒ
+	# äººç‹¼åˆ¤å®šã€‚æ„ŸæŸ“è€…ã®ã¿ã€‚
+	$result = $result_hit if  ($targetpl->isDisableState('MASKSTATE_ZOMBIE')); # æ„ŸæŸ“è€…
 	foreach $plsingle (@$jammed){
 		$result =  "" if ($plsingle == $targetpl);
 	}
@@ -2088,7 +2089,7 @@ sub GetResultAuraEncount {
 	$result = "" if ($targetpl->{'role'}    ==    $sow->{'ROLEID_VILLAGER'} );
 	$result = "" if ($targetpl->{'role'}    ==    $sow->{'ROLEID_WOLF'}     );
 	$result = "" if ($targetpl->iscanrole_or_dead($sow->{'ROLEID_WHITEWOLF'}));
-	$result = "" if ($targetpl->isDisableState('MASKSTATE_ZOMBIE')); # ƒ]ƒ“ƒr‚É‚³‚ê‚Ü‚µ‚½B
+	$result = "" if ($targetpl->isDisableState('MASKSTATE_ZOMBIE')); # ã‚¾ãƒ³ãƒ“ã«ã•ã‚Œã¾ã—ãŸã€‚
 	foreach $plsingle (@$jammed){
 		$result = "" if ($plsingle == $targetpl);
 	}
@@ -2104,10 +2105,10 @@ sub GetResultAuraEncount {
 sub GetResultSeer {
 	my ($sow, $vil, $score, $targetpl, $jammed) = @_;
 	my $result = 1;
-	# l˜T”»’èB–ğE‚ªl˜TA‰¶Œb‚ªl˜TAˆê•C˜TA˜TŒŒ‘°Bƒ]ƒ“ƒrB‚Ü‚½A”’˜T‚ÍlŠÔ”»’èB
-	$result = 2 if  ($targetpl->iskiller('role')); # l˜T¨—Í
-	$result = 2 if  ($targetpl->iskiller('gift')); # l˜T¨—Í
-	$result = 2 if  ($targetpl->isDisableState('MASKSTATE_ZOMBIE')); # ƒ]ƒ“ƒr‚É‚³‚ê‚Ü‚µ‚½B
+	# äººç‹¼åˆ¤å®šã€‚å½¹è·ãŒäººç‹¼ã€æ©æµãŒäººç‹¼ã€ä¸€åŒ¹ç‹¼ã€ç‹¼è¡€æ—ã€‚ã‚¾ãƒ³ãƒ“ã€‚ã¾ãŸã€ç™½ç‹¼ã¯äººé–“åˆ¤å®šã€‚
+	$result = 2 if  ($targetpl->iskiller('role')); # äººç‹¼å‹¢åŠ›
+	$result = 2 if  ($targetpl->iskiller('gift')); # äººç‹¼å‹¢åŠ›
+	$result = 2 if  ($targetpl->isDisableState('MASKSTATE_ZOMBIE')); # ã‚¾ãƒ³ãƒ“ã«ã•ã‚Œã¾ã—ãŸã€‚
 	$result = 2 if  ($targetpl->{'role'}    ==    $sow->{'ROLEID_LONEWOLF'}  );
 	$result = 2 if  ($targetpl->{'role'}    ==    $sow->{'ROLEID_RIGHTWOLF'} );
 	$result = 1 if  ($targetpl->iscanrole_or_dead($sow->{'ROLEID_WHITEWOLF'}));
@@ -2127,8 +2128,8 @@ sub GetResultSeer {
 sub GetResultDoctor {
 	my ($sow, $vil, $score, $targetpl, $jammed) = @_;
 	my $result = 5;
-	# l˜T”»’èBŠ´õÒ‚Ì‚İB
-	$result = 6 if ($targetpl->isDisableState('MASKSTATE_ZOMBIE')); # Š´õÒ
+	# äººç‹¼åˆ¤å®šã€‚æ„ŸæŸ“è€…ã®ã¿ã€‚
+	$result = 6 if ($targetpl->isDisableState('MASKSTATE_ZOMBIE')); # æ„ŸæŸ“è€…
 	foreach $plsingle (@$jammed){
 		$result = 8 if ($plsingle == $targetpl);
 	}
@@ -2149,7 +2150,7 @@ sub GetResultAura {
 	$result = 3 if ($targetpl->{'role'}    ==    $sow->{'ROLEID_VILLAGER'} );
 	$result = 3 if ($targetpl->{'role'}    ==    $sow->{'ROLEID_WOLF'}     );
 	$result = 3 if ($targetpl->iscanrole_or_dead($sow->{'ROLEID_WHITEWOLF'}));
-	$result = 3 if ($targetpl->isDisableState('MASKSTATE_ZOMBIE')); # ƒ]ƒ“ƒr‚É‚³‚ê‚Ü‚µ‚½B
+	$result = 3 if ($targetpl->isDisableState('MASKSTATE_ZOMBIE')); # ã‚¾ãƒ³ãƒ“ã«ã•ã‚Œã¾ã—ãŸã€‚
 	foreach $plsingle (@$jammed){
 		$result = 8 if ($plsingle == $targetpl);
 	}
@@ -2166,7 +2167,7 @@ sub GetResultAura {
 sub GetResultWin {
 	my ($sow, $vil, $score, $targetpl, $jammed) = @_;
 	my $textrs = $sow->{'textrs'};
-	# Ÿ—˜ğŒ‚ğQÆ‚·‚éB
+	# å‹åˆ©æ¡ä»¶ã‚’å‚ç…§ã™ã‚‹ã€‚
 	my $result = 7;
 	my $win    = $textrs->{'ROLEWIN'}->{ $targetpl->win_if() };
 	foreach $plsingle (@$jammed){
@@ -2202,7 +2203,7 @@ sub GetResultRole {
 }
 
 #----------------------------------------
-# ”\—Í‘ÎÛƒ‰ƒ“ƒ_ƒ€w’èˆ—
+# èƒ½åŠ›å¯¾è±¡ãƒ©ãƒ³ãƒ€ãƒ æŒ‡å®šæ™‚å‡¦ç†
 #----------------------------------------
 sub SetRandomTarget {
 	my ($sow, $vil, $logfile, $role,$abi_role) = @_;
@@ -2212,7 +2213,7 @@ sub SetRandomTarget {
 	foreach $srcpl (@$pllist) {
 		my $abirole = $vil->getTextByID($abi_role,$srcpl->{$role});
 		if ($srcpl->{$role.'1'} == $sow->{'TARGETID_RANDOM'}) {
-			# ƒ‰ƒ“ƒ_ƒ€‘ÎÛ
+			# ãƒ©ãƒ³ãƒ€ãƒ å¯¾è±¡
 			my $srctargetpno;
 			$srctargetpno = $srcpl->{$role.'2'} if (($srcpl->{$role.'2'} >= 0) && ($srcpl->{'live'} eq 'live'));
 			$srcpl->setRandomTarget($role,1, $abi_role,$logfile, $srctargetpno);
@@ -2225,7 +2226,7 @@ sub SetRandomTarget {
 }
 
 #----------------------------------------
-# ‰Šú“Š•[æ‚Ìİ’è
+# åˆæœŸæŠ•ç¥¨å…ˆã®è¨­å®š
 #----------------------------------------
 sub SetInitVoteTarget {
 	my ($sow, $vil, $logfile) = @_;
@@ -2234,16 +2235,16 @@ sub SetInitVoteTarget {
 	foreach $plsingle (@$allpllist) {
 		if( $plsingle->isactive() ){
 			$plsingle->setInitTarget('gift',1, $logfile, -1);
-			$plsingle->setInitTarget('gift',2, $logfile, $plsingle->{'gift1'}); # e˜T€–SB
+			$plsingle->setInitTarget('gift',2, $logfile, $plsingle->{'gift1'}); # ä»”ç‹¼æ­»äº¡æ™‚ã€‚
 			$plsingle->setInitTarget('role',1, $logfile, -1);
-			$plsingle->setInitTarget('role',2, $logfile, $plsingle->{'role1'}); # e˜T€–S‚ÆƒgƒŠƒbƒNƒXƒ^[‚Åg‚¢‰ñ‚µB
+			$plsingle->setInitTarget('role',2, $logfile, $plsingle->{'role1'}); # ä»”ç‹¼æ­»äº¡æ™‚ã¨ãƒˆãƒªãƒƒã‚¯ã‚¹ã‚¿ãƒ¼ã§ä½¿ã„å›ã—ã€‚
 		}
 		if( $plsingle->isvoter() ){
 			$plsingle->setInitTarget('entrust',1, $logfile, -1);
 			$plsingle->setInitTarget('vote',1, $logfile, -1);
-			$plsingle->setInitTarget('vote',2, $logfile, $plsingle->{'vote1'}); # î“®Ò€–SB
+			$plsingle->setInitTarget('vote',2, $logfile, $plsingle->{'vote1'}); # æ‰‡å‹•è€…æ­»äº¡æ™‚ã€‚
 		}
-		# ˆÏ”C
+		# å§”ä»»
 		if(     $plsingle->setentrust($sow,$vil) == 0 ){
 			$plsingle->{'entrust'} = 0 ;
 		}elsif( $plsingle->setvote_to($sow,$vil) == 0 ){
@@ -2256,7 +2257,7 @@ sub SetInitVoteTarget {
 }
 
 #----------------------------------------
-# Šm’è‘Ò‚¿”­Œ¾‚Ì‹­§Šm’è
+# ç¢ºå®šå¾…ã¡ç™ºè¨€ã®å¼·åˆ¶ç¢ºå®š
 #----------------------------------------
 sub FixQueUpdateSession {
 	my ($sow, $vil) = @_;
@@ -2284,7 +2285,7 @@ sub postKillMessage{
 		cid        => $murderpl->{'cid'},
 		chrname    => $murderpl->getlongchrname(),
 		mes        => $killtext,
-		undef      => 1, # š‘‚«‚Æ‚µ‚Äˆµ‚í‚È‚¢
+		undef      => 1, # å›ãã¨ã—ã¦æ‰±ã‚ãªã„
 		expression => 0,
 		monospace  => 0,
 		que        => 0,
@@ -2293,39 +2294,39 @@ sub postKillMessage{
 }
 
 #----------------------------------------
-# ‘ºŠJnˆ—
+# æ‘é–‹å§‹å‡¦ç†
 #----------------------------------------
 sub StartSession {
 	my ($sow, $vil, $commit) = @_;
 	my $textrs = $sow->{'textrs'};
 	my $pllist = $vil->getpllist();
 
-	# Šm’è‘Ò‚¿”­Œ¾‚Ì‹­§Šm’è
+	# ç¢ºå®šå¾…ã¡ç™ºè¨€ã®å¼·åˆ¶ç¢ºå®š
 	&FixQueUpdateSession($sow, $vil);
 
-	# ŠÔ‚ği‚ß‚é
+	# æ™‚é–“ã‚’é€²ã‚ã‚‹
 	$vil->UpdateTurn($commit);
 
-	# ƒƒOEƒƒ‚ƒf[ƒ^ƒtƒ@ƒCƒ‹‚Ìì¬
+	# ãƒ­ã‚°ãƒ»ãƒ¡ãƒ¢ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ã®ä½œæˆ
 	require "$sow->{'cfg'}->{'DIR_LIB'}/file_memo.pl";
 	my $logfile  = SWBoa->new($sow, $vil, $vil->{'turn'}, 1);
 	my $memofile = SWSnake->new($sow, $vil, $vil->{'turn'}, 1);
 
-	# –ğE”z•ªŠ„‚è“–‚Ä
+	# å½¹è·é…åˆ†å‰²ã‚Šå½“ã¦
 	require "$sow->{'cfg'}->{'DIR_LIB'}/setrole.pl";
 	my ( $rolematrix, $giftmatrix ) = &SWSetRole::SetRole($sow, $vil, $logfile);
 	foreach $plsingle (@$pllist) {
 		$plsingle->{'selrole'} = $plsingle->{'backupselrole'};
 	}
 
-	# ”­Œ¾”‰Šú‰»
+	# ç™ºè¨€æ•°åˆæœŸåŒ–
 	$vil->setsaycountall();
 
-	# ‚P“ú–ÚŠJnƒAƒiƒEƒ“ƒX
+	# ï¼‘æ—¥ç›®é–‹å§‹ã‚¢ãƒŠã‚¦ãƒ³ã‚¹
 	my $announce_first = $vil->getTextByID('ANNOUNCE_FIRST',1);
 	$logfile->writeinfo('', $sow->{'MESTYPE_INFONOM'}, $announce_first );
 
-	# –ğEŠ„‚è“–‚ÄƒAƒiƒEƒ“ƒX
+	# å½¹è·å‰²ã‚Šå½“ã¦ã‚¢ãƒŠã‚¦ãƒ³ã‚¹
 	if($vil->{'mob'} ne 'gamemaster'){
 		my $rolename = $textrs->{'ROLENAME'};
 		my $giftname = $textrs->{'GIFTNAME'};
@@ -2336,7 +2337,7 @@ sub StartSession {
 		my $ar = $textrs->{'ANNOUNCE_ROLE'};
 		for ($i = 0; $i < @{$sow->{'ROLEID'}}; $i++) {
 			my $roleplcnt = $rolematrix->[$i];
-			$roleplcnt++ if ($i == $sow->{'ROLEID_VILLAGER'}); # ƒ_ƒ~[ƒLƒƒƒ‰‚Ì•ª‚P‘‚â‚·
+			$roleplcnt++ if ($i == $sow->{'ROLEID_VILLAGER'}); # ãƒ€ãƒŸãƒ¼ã‚­ãƒ£ãƒ©ã®åˆ†ï¼‘å¢—ã‚„ã™
 			push (@rolelist, "$rolename->[$i]$ar->[1]$roleplcnt$ar->[2]") if ($roleplcnt > 0);
 		}
 		for ($i = 2; $i < @{$sow->{'GIFTID'}}; $i++) {
@@ -2350,7 +2351,7 @@ sub StartSession {
 		$logfile->writeinfo('', $sow->{'MESTYPE_INFONOM'}, $roleinfo);
 	}
 
-	# ƒ_ƒ~[ƒLƒƒƒ‰”­Œ¾
+	# ãƒ€ãƒŸãƒ¼ã‚­ãƒ£ãƒ©ç™ºè¨€
 	$plsingle = $vil->getpl($sow->{'cfg'}->{'USERID_NPC'});
 	my $charset = $sow->{'charsets'}->{'csid'}->{$plsingle->{'csid'}};
 	%say = (
@@ -2369,16 +2370,16 @@ sub StartSession {
 	);
 	$plsingle->{'lastwritepos'} = $logfile->executesay(\%say);
 	my $saypoint = &SWBase::GetSayPoint($sow, $vil, $say{'mes'});
-	$plsingle->{'say'} -= $saypoint; # ”­Œ¾”Á”ï
+	$plsingle->{'say'} -= $saypoint; # ç™ºè¨€æ•°æ¶ˆè²»
 	$plsingle->{'saidcount'}++;
 	$plsingle->{'saidpoint'} += $saypoint;
 
-	# ƒ_ƒ~[ƒLƒƒƒ‰‚ÌƒRƒ~ƒbƒg
+	# ãƒ€ãƒŸãƒ¼ã‚­ãƒ£ãƒ©ã®ã‚³ãƒŸãƒƒãƒˆ
 	$plsingle->{'commit'} = 1;
 	my $mes = $plsingle->getTextByID('ANNOUNCE_COMMIT',$plsingle->{'commit'});
 	$logfile->writeinfo($plsingle->{'uid'}, $sow->{'MESTYPE_INFOSP'}, $mes);
 
-	# l˜T•ˆ‚Ìo—Í
+	# äººç‹¼è­œã®å‡ºåŠ›
 	if ($sow->{'cfg'}->{'ENABLED_SCORE'} > 0) {
 		require "$sow->{'cfg'}->{'DIR_LIB'}/score.pl";
 		my $score = SWScore->new($sow, $vil, 0);
@@ -2386,14 +2387,14 @@ sub StartSession {
 		$score->close();
 	}
 
-	# ‰Šú“Š•[æ‚Ìİ’è
+	# åˆæœŸæŠ•ç¥¨å…ˆã®è¨­å®š
 	&SetInitVoteTarget($sow, $vil, $logfile);
 
 	$logfile->close();
 	$memofile->close();
 	$vil->writevil();
 
-	# ‘ºˆê——‚ÌXV
+	# æ‘ä¸€è¦§ã®æ›´æ–°
 	require "$sow->{'cfg'}->{'DIR_LIB'}/file_vindex.pl";
 	my $vindex = SWFileVIndex->new($sow);
 	$vindex->openvindex();
@@ -2406,22 +2407,22 @@ sub StartSession {
 }
 
 #----------------------------------------
-# ‘ºXVˆ—
+# æ‘æ›´æ–°å‡¦ç†
 #----------------------------------------
 sub UpdateSession {
 	my ($sow, $vil, $commit, $scrapvil) = @_;
 	my $pllist = $vil->getpllist();
 
-	return if ($vil->{'epilogue'} < $vil->{'turn'}); # I—¹Ï‚İ
+	return if ($vil->{'epilogue'} < $vil->{'turn'}); # çµ‚äº†æ¸ˆã¿
 
-	# Šm’è‘Ò‚¿”­Œ¾‚Ì‹­§Šm’è
+	# ç¢ºå®šå¾…ã¡ç™ºè¨€ã®å¼·åˆ¶ç¢ºå®š
 	&FixQueUpdateSession($sow, $vil);
 
-	# ŠÔ‚ği‚ß‚é
+	# æ™‚é–“ã‚’é€²ã‚ã‚‹
 	$vil->UpdateTurn($commit);
 
 	if ($vil->{'epilogue'} < $vil->{'turn'}) {
-		# I—¹
+		# çµ‚äº†
 		require "$sow->{'cfg'}->{'DIR_LIB'}/file_vindex.pl";
 		my $vindex = SWFileVIndex->new($sow);
 		$vindex->openvindex();
@@ -2431,7 +2432,7 @@ sub UpdateSession {
 		$vindex->updatevindex($vil, $vstatusid);
 		$vindex->closevindex();
 	} else {
-		# ƒƒOEƒƒ‚ƒf[ƒ^ƒtƒ@ƒCƒ‹‚Ìì¬
+		# ãƒ­ã‚°ãƒ»ãƒ¡ãƒ¢ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ã®ä½œæˆ
 		my $logfile = SWBoa->new($sow, $vil, $vil->{'turn'}, 1);
 		require "$sow->{'cfg'}->{'DIR_LIB'}/file_memo.pl";
 		my $memofile = SWSnake->new($sow, $vil, $vil->{'turn'}, 1);
@@ -2440,22 +2441,22 @@ sub UpdateSession {
 		if ($scrapvil == 0) {
 			&UpdateGM($sow, $vil, $logfile);
 
-			# l˜T•ˆo—Í‚Í‚Æ‚è‚ ‚¦‚¸ƒiƒVB‚ß‚Ç‚¢B
+			# äººç‹¼è­œå‡ºåŠ›ã¯ã¨ã‚Šã‚ãˆãšãƒŠã‚·ã€‚ã‚ã©ã„ã€‚
 
-			# Ÿ—˜”»’è
+			# å‹åˆ©åˆ¤å®š
 			$winner = &WinnerCheckGM($sow, $vil);
 		}
 
-		if (($winner > 0) || ($scrapvil > 0)) { # ƒQ[ƒ€I—¹
-			# I—¹ƒƒbƒZ[ƒW
+		if (($winner > 0) || ($scrapvil > 0)) { # ã‚²ãƒ¼ãƒ çµ‚äº†
+			# çµ‚äº†ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
 			my $epinfo = $vil->getTextByID('ANNOUNCE_WINNER',$winner);
 			$epinfo .= '<br>'. $vil->getText('ANNOUNCE_WINNER_DISH') if (0 < $vil->{'wincnt_dish'});
 			$logfile->writeinfo('', $sow->{'MESTYPE_INFONOM'}, $epinfo);
 
-			# ”z–ğˆê——
+			# é…å½¹ä¸€è¦§
 			$logfile->writeinfo('', $sow->{'MESTYPE_CAST'}, '*CAST*');
 
-			# ‘ºˆê——î•ñ‚ÌXV
+			# æ‘ä¸€è¦§æƒ…å ±ã®æ›´æ–°
 			my $vstatusid = $sow->{'VSTATUSID_EP'};
 			$vstatusid = $sow->{'VSTATUSID_SCRAP'} if ($winner == 0);
 			require "$sow->{'cfg'}->{'DIR_LIB'}/file_vindex.pl";
@@ -2469,25 +2470,25 @@ sub UpdateSession {
 			&EventReset($sow, $vil, $logfile);
 		} else {
 			if ($vil->{'turn'} == 2) {
-				# ‚Q“ú–ÚŠJnƒAƒiƒEƒ“ƒX
+				# ï¼’æ—¥ç›®é–‹å§‹ã‚¢ãƒŠã‚¦ãƒ³ã‚¹
 				my $announce_first = $vil->getTextByID('ANNOUNCE_FIRST',2);
 				$logfile->writeinfo('', $sow->{'MESTYPE_INFONOM'}, $announce_first );
 			}
 
-			# –Œ‚Ì”­“®
+			# äº‹ä»¶ã®ç™ºå‹•
 			&EventGM($sow, $vil, $logfile);
 
-			# è”²‚«B‚»‚Ì‚¤‚¿’¼‚»‚¤B
+			# æ‰‹æŠœãã€‚ãã®ã†ã¡ç›´ãã†ã€‚
 			require "$sow->{'cfg'}->{'DIR_LIB'}/file_vindex.pl";
 			my $vindex = SWFileVIndex->new($sow);
 			$vindex->openvindex();
 			$vindex->updatevindex($vil, $sow->{'VSTATUSID_PLAY'});
 			$vindex->closevindex();
 		}
-		# ”­Œ¾”‰Šú‰»
+		# ç™ºè¨€æ•°åˆæœŸåŒ–
 		$vil->setsaycountall();
 
-		# ‰Šú“Š•[æ‚Ìİ’è
+		# åˆæœŸæŠ•ç¥¨å…ˆã®è¨­å®š
 		&SetInitVoteTarget($sow, $vil, $logfile);
 
 		$logfile->close();
