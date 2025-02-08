@@ -414,6 +414,7 @@ sub EventGM {
 			}
 			foreach $plold (@decidepllist) {
 				my $plnew = splice(@selectpllist, int(rand(@selectpllist)), 1);
+				if(!$plnew){ last; }
 				$plnew->{'gift'} = $sow->{'GIFTID_DECIDE'}   if (defined($plnew->{'gift'}));
 				$plold->{'gift'} = $sow->{'GIFTID_NOT_HAVE'};
 				$score->addresult($eventname, $plold->getlongchrname()." Ë ".$plnew->getlongchrname() );
